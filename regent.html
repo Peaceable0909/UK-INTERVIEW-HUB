@@ -1,0 +1,2985 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Regent College Interview Prep — Credibility Interview Simulator
+    </title>
+    <!-- FIX: Added Puter.js for free AI without API keys -->
+    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#006a71",
+              "primary-light": "#e0f7f9",
+              "primary-mid": "#b2ebf2",
+              secondary: "#7c3aed",
+              "secondary-light": "#ede9fe",
+              accent: "#0891b2",
+              surface: "#ffffff",
+              "surface-low": "#f8fafc",
+              "surface-mid": "#f1f5f9",
+              "surface-high": "#e2e8f0",
+              border: "#e2e8f0",
+              "border-strong": "#cbd5e1",
+              muted: "#64748b",
+              "on-surface": "#0f172a",
+              error: "#dc2626",
+              success: "#16a34a",
+            },
+            fontFamily: {
+              headline: ["Space Grotesk"],
+              body: ["Inter"],
+              label: ["Manrope"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        vertical-align: middle;
+      }
+
+      /* NAV */
+      .top-nav {
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid #e2e8f0;
+      }
+      .side-nav {
+        background: #ffffff;
+        border-right: 1px solid #e2e8f0;
+      }
+
+      /* CARDS */
+      .course-card {
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        transition: all 0.25s;
+        cursor: pointer;
+      }
+      .course-card:hover {
+        border-color: #006a71;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(0, 106, 113, 0.1);
+      }
+      .course-card:hover .card-arrow {
+        opacity: 1;
+        transform: translateX(4px);
+      }
+      .card-arrow {
+        opacity: 0;
+        transition: all 0.2s;
+      }
+
+      /* PANEL */
+      .panel {
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 14px;
+      }
+      .panel-tinted {
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 14px;
+      }
+      .panel-primary {
+        background: #e0f7f9;
+        border: 1.5px solid #b2ebf2;
+        border-radius: 14px;
+      }
+      .panel-secondary {
+        background: #ede9fe;
+        border: 1.5px solid #ddd6fe;
+        border-radius: 14px;
+      }
+
+      /* BUTTONS */
+      .btn-primary {
+        background: #006a71;
+        color: #ffffff;
+        font-weight: 700;
+        transition: all 0.2s;
+      }
+      .btn-primary:hover {
+        background: #005e64;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(0, 106, 113, 0.25);
+      }
+      .btn-primary:active {
+        transform: scale(0.98);
+      }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+      .btn-ghost {
+        background: transparent;
+        border: 1.5px solid #e2e8f0;
+        color: #64748b;
+        transition: all 0.2s;
+      }
+      .btn-ghost:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+        border-color: #cbd5e1;
+      }
+
+      /* TABS */
+      .tab-btn {
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 8px 14px;
+        border-radius: 100px;
+        background: #f1f5f9;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .tab-btn:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+      }
+      .tab-btn.active {
+        background: #006a71;
+        color: #ffffff;
+        font-weight: 800;
+      }
+
+      /* SIDE LINKS */
+      .side-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 24px;
+        color: #64748b;
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transition: all 0.2s;
+        cursor: pointer;
+        border-left: 3px solid transparent;
+      }
+      .side-link:hover {
+        color: #0f172a;
+        background: #f8fafc;
+      }
+      .side-link.active {
+        color: #006a71;
+        background: #e0f7f9;
+        border-left-color: #006a71;
+      }
+
+      /* ACCORDION */
+      .acc-item {
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 8px;
+      }
+      .acc-item.open .acc-arrow {
+        transform: rotate(180deg);
+      }
+      .acc-body {
+        display: none;
+      }
+      .acc-item.open .acc-body {
+        display: block;
+      }
+
+      /* PROGRESS */
+      .progress-track {
+        background: #e2e8f0;
+        border-radius: 100px;
+        height: 6px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #7c3aed, #006a71);
+        border-radius: 100px;
+        transition: width 0.5s ease;
+        position: relative;
+      }
+      .progress-fill::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.6),
+          transparent
+        );
+        animation: sweep 3s ease infinite;
+      }
+      @keyframes sweep {
+        to {
+          left: 200%;
+        }
+      }
+
+      /* CHECKLIST */
+      .check-item {
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .check-item:last-child {
+        border-bottom: none;
+      }
+      .check-box {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #cbd5e1;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: all 0.15s;
+        margin-top: 2px;
+      }
+      .check-box:hover {
+        border-color: #006a71;
+      }
+      .check-box.done {
+        background: #006a71;
+        border-color: #006a71;
+      }
+      .check-box.done::after {
+        content: "✓";
+        color: #fff;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      /* FEEDBACK */
+      .fb-pass {
+        background: #f0fdf4;
+        border-left: 4px solid #16a34a;
+        border-radius: 0 10px 10px 0;
+      }
+      .fb-fail {
+        background: #fef2f2;
+        border-left: 4px solid #dc2626;
+        border-radius: 0 10px 10px 0;
+      }
+      .fb-loading {
+        background: #e0f7f9;
+        border-left: 4px solid #006a71;
+        border-radius: 0 10px 10px 0;
+      }
+
+      /* CHIPS */
+      .chip-pg {
+        background: #e0f7f9;
+        color: #006a71;
+        border: 1px solid #b2ebf2;
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 100px;
+        display: inline-block;
+      }
+      .chip-ug {
+        background: #ede9fe;
+        color: #7c3aed;
+        border: 1px solid #ddd6fe;
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 100px;
+        display: inline-block;
+      }
+
+      /* Q NUMBER */
+      .q-num {
+        background: #e0f7f9;
+        color: #006a71;
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        padding: 2px 7px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        margin-top: 2px;
+        letter-spacing: 0.05em;
+      }
+
+      /* FILTER BUTTONS */
+      .filter-btn {
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 6px 14px;
+        border-radius: 100px;
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .filter-btn:hover {
+        border-color: #cbd5e1;
+        color: #0f172a;
+      }
+      .filter-btn.active {
+        background: #e0f7f9;
+        border-color: #006a71;
+        color: #006a71;
+      }
+
+      /* RESOURCE CARDS */
+      .lcard {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        text-decoration: none;
+        color: #0f172a;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .lcard:hover {
+        background: #f0fdfe;
+        border-color: #006a71;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 106, 113, 0.08);
+      }
+      .lsub {
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 500;
+        margin-top: 2px;
+        display: block;
+        font-family: "Manrope", sans-serif;
+      }
+
+      /* TEXTAREA */
+      textarea.sim-input {
+        background: #f8fafc;
+        border: none;
+        border-bottom: 2px solid #e2e8f0;
+        border-radius: 0;
+        color: #0f172a;
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+        resize: vertical;
+        padding: 12px 0;
+        width: 100%;
+      }
+      textarea.sim-input:focus {
+        border-bottom-color: #006a71;
+        background: #fff;
+      }
+      textarea.sim-input::placeholder {
+        color: #94a3b8;
+      }
+
+      /* SCREENS */
+      .screen {
+        display: none;
+      }
+      .screen.active {
+        display: block;
+      }
+      .tc {
+        display: none;
+      }
+      .tc.active {
+        display: block;
+      }
+
+      /* SPINNER */
+      .spinner {
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* SCORE */
+      .score-num {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 2rem;
+        font-weight: 900;
+      }
+
+      /* INFO CARD */
+      .icard {
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 20px;
+      }
+
+      /* MODULE ITEM */
+      .mod-item {
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 18px 20px;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        margin-bottom: 8px;
+      }
+      .mod-num {
+        background: #006a71;
+        color: #fff;
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        padding: 3px 8px;
+        border-radius: 5px;
+        flex-shrink: 0;
+        margin-top: 2px;
+        letter-spacing: 0.05em;
+      }
+
+      /* Mobile layout */
+      @media (max-width: 768px) {
+        .side-panel {
+          display: none !important;
+        }
+        .main-offset {
+          margin-left: 0 !important;
+        }
+        .mobile-tab-bar {
+          display: flex !important;
+        }
+        .tc {
+          padding-top: 116px !important;
+        }
+      }
+
+      .mobile-tab-bar {
+        display: none;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-surface-low text-on-surface font-body min-h-screen"
+    style="font-family: &quot;Inter&quot;, sans-serif"
+  >
+    <!-- ======================================================
+     COURSE SELECT SCREEN
+====================================================== -->
+    <div id="s-select" class="screen active min-h-screen">
+      <div
+        class="top-nav fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-14"
+      >
+        <span
+          class="font-headline font-black text-primary text-lg tracking-tight"
+          >Regent Interview</span
+        >
+        <span
+          class="font-label text-xs font-bold uppercase tracking-widest text-muted"
+          >UK Visa Interview Prep</span
+        >
+      </div>
+
+      <div
+        class="pt-14 flex flex-col items-center px-6 py-16 max-w-4xl mx-auto"
+      >
+        <div class="text-center mb-14">
+          <div
+            class="inline-flex items-center gap-2 mb-5 px-4 py-1.5 rounded-full bg-primary-light border border-primary-mid"
+          >
+            <span class="material-symbols-outlined text-primary text-sm"
+              >school</span
+            >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-primary"
+              >Regent College London</span
+            >
+          </div>
+          <h1
+            class="font-headline text-4xl md:text-5xl font-black text-on-surface leading-tight mb-4"
+          >
+            Credibility Interview<br /><span class="text-primary"
+              >Simulator</span
+            >
+          </h1>
+          <p class="text-muted text-sm max-w-md mx-auto leading-relaxed">
+            Select your programme to get your personalised prep pack: training
+            video, full guide, all questions, sample answers, and AI marking.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3 mb-6 w-full">
+          <div class="h-px flex-1 bg-border"></div>
+          <span
+            class="font-label text-xs font-bold uppercase tracking-widest text-muted"
+            >Choose your programme</span
+          >
+          <div class="h-px flex-1 bg-border"></div>
+        </div>
+
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full"
+        >
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('mba')"
+          >
+            <span class="chip-pg mb-4">Postgraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              MBA
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              Holborn Campus · WC1X 8BH
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('msc-intmgmt')"
+          >
+            <span class="chip-pg mb-4">Postgraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              MSc International Management
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              Great Titchfield St · W1W 7PA
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('msc-socialcare')"
+          >
+            <span class="chip-pg mb-4">Postgraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              MSc Social Care, Health &amp; Wellbeing
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              Holborn Campus · WC1X 8BH
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('msc-softeng')"
+          >
+            <span class="chip-pg mb-4">Postgraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              MSc Software Engineering
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              Wembley Campus · HA9 0FJ
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('msc-psych')"
+          >
+            <span class="chip-pg mb-4">Postgraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              MSc Psychology
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              Great Titchfield St · W1W 7PA
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('bsc-business')"
+          >
+            <span class="chip-ug mb-4">Undergraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              BSc (Hons) Business Management
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              Southall Campus · UB2 4BL
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-secondary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('bsc-topup')"
+          >
+            <span class="chip-ug mb-4">Undergraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              BSc (Hons) Business Management Top Up
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              TBC — confirm with Regent
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-secondary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================
+     MAIN SCREEN
+====================================================== -->
+    <div id="s-main" class="screen">
+      <header
+        class="top-nav fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 h-14"
+      >
+        <div class="flex items-center gap-3">
+          <button
+            onclick="goBack()"
+            class="btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+          >
+            <span class="material-symbols-outlined text-sm">arrow_back</span
+            >Change
+          </button>
+          <div class="w-px h-5 bg-border"></div>
+          <div>
+            <div
+              class="font-headline font-bold text-sm text-on-surface"
+              id="tb-name"
+            ></div>
+            <div
+              class="font-label text-xs text-primary font-bold"
+              id="tb-campus"
+            ></div>
+          </div>
+        </div>
+        <span
+          class="font-headline font-black text-primary text-base tracking-tight hidden md:block"
+          >Regent Kinetic</span
+        >
+        <div class="w-32 hidden md:block"></div>
+      </header>
+
+      <div class="flex pt-14">
+        <!-- Side nav (desktop) -->
+        <aside
+          class="side-panel side-nav hidden md:flex w-56 fixed left-0 top-14 h-[calc(100vh-3.5rem)] flex-col z-40 overflow-y-auto"
+        >
+          <div class="px-6 py-5 border-b border-border">
+            <p
+              class="font-label text-xs font-bold uppercase tracking-widest text-muted"
+            >
+              Simulation Hub
+            </p>
+          </div>
+          <nav class="py-2 flex-1">
+            <div
+              class="side-link active"
+              id="sl-video"
+              onclick="showTab('video', 'sl-video')"
+            >
+              <span class="material-symbols-outlined text-base"
+                >play_circle</span
+              >Training Video
+            </div>
+            <div
+              class="side-link"
+              id="sl-guide"
+              onclick="showTab('guide', 'sl-guide')"
+            >
+              <span class="material-symbols-outlined text-base">menu_book</span
+              >Full Guide
+            </div>
+            <div
+              class="side-link"
+              id="sl-know"
+              onclick="showTab('know', 'sl-know')"
+            >
+              <span class="material-symbols-outlined text-base">school</span
+              >What to Know
+            </div>
+            <div
+              class="side-link"
+              id="sl-questions"
+              onclick="showTab('questions', 'sl-questions')"
+            >
+              <span class="material-symbols-outlined text-base">quiz</span>All
+              Questions
+            </div>
+            <div
+              class="side-link"
+              id="sl-samples"
+              onclick="showTab('samples', 'sl-samples')"
+            >
+              <span class="material-symbols-outlined text-base"
+                >chat_bubble</span
+              >Sample Answers
+            </div>
+            <div
+              class="side-link"
+              id="sl-practice"
+              onclick="showTab('practice', 'sl-practice')"
+            >
+              <span class="material-symbols-outlined text-base">biotech</span
+              >Practice &amp; Mark
+            </div>
+            <div
+              class="side-link"
+              id="sl-resources"
+              onclick="showTab('resources', 'sl-resources')"
+            >
+              <span class="material-symbols-outlined text-base">link</span
+              >Resources
+            </div>
+            <div
+              class="side-link"
+              id="sl-checklist"
+              onclick="showTab('checklist', 'sl-checklist')"
+            >
+              <span class="material-symbols-outlined text-base">checklist</span
+              >Checklist
+            </div>
+          </nav>
+        </aside>
+
+        <!-- Mobile tab bar -->
+        <div
+          class="mobile-tab-bar fixed top-14 left-0 right-0 z-40 bg-white border-b border-border shadow-sm"
+        >
+          <div
+            class="flex overflow-x-auto px-3 py-2 gap-2"
+            style="-ms-overflow-style: none; scrollbar-width: none"
+          >
+            <button
+              class="tab-btn active"
+              id="mt-video"
+              onclick="showTab('video', 'mt-video', true)"
+            >
+              Video
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-guide"
+              onclick="showTab('guide', 'mt-guide', true)"
+            >
+              Guide
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-know"
+              onclick="showTab('know', 'mt-know', true)"
+            >
+              Know
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-questions"
+              onclick="showTab('questions', 'mt-questions', true)"
+            >
+              Questions
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-samples"
+              onclick="showTab('samples', 'mt-samples', true)"
+            >
+              Samples
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-practice"
+              onclick="showTab('practice', 'mt-practice', true)"
+            >
+              Practice
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-resources"
+              onclick="showTab('resources', 'mt-resources', true)"
+            >
+              Resources
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-checklist"
+              onclick="showTab('checklist', 'mt-checklist', true)"
+            >
+              Checklist
+            </button>
+          </div>
+        </div>
+
+        <!-- Main content area -->
+        <main class="main-offset md:ml-56 flex-1 min-h-screen">
+          <!-- VIDEO TAB -->
+          <div
+            class="tc active px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-video"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 0 — Orientation</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                Training Video
+              </h2>
+              <p class="text-muted text-sm mb-7 leading-relaxed max-w-xl">
+                Watch this in full before your interview. It covers everything
+                the interviewer expects you to know.
+              </p>
+
+              <div
+                class="rounded-2xl overflow-hidden border border-border mb-8 shadow-sm"
+              >
+                <iframe
+                  id="yt-frame"
+                  class="w-full"
+                  style="aspect-ratio: 16/9"
+                  src="https://www.youtube.com/embed/KsvzkB-po-I?si=cXoDLhr-N0lYGgLb"
+                  title="Training Video"
+                  frameborder="0"
+                  allow="
+                    accelerometer;
+                    autoplay;
+                    clipboard-write;
+                    encrypted-media;
+                    gyroscope;
+                    picture-in-picture;
+                  "
+                  allowfullscreen
+                ></iframe>
+              </div>
+
+              <div class="panel-primary p-7 mb-5">
+                <div class="flex items-center gap-2 mb-4">
+                  <span class="material-symbols-outlined text-primary text-sm"
+                    >lightbulb</span
+                  >
+                  <span
+                    class="font-label text-xs font-bold uppercase tracking-widest text-primary"
+                    >After watching, make sure you know</span
+                  >
+                </div>
+                <div
+                  id="vid-notes"
+                  class="text-on-surface text-sm leading-relaxed space-y-2"
+                ></div>
+              </div>
+
+              <div class="panel-secondary p-7">
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="material-symbols-outlined text-secondary text-sm"
+                    >map</span
+                  >
+                  <span
+                    class="font-label text-xs font-bold uppercase tracking-widest text-secondary"
+                    >How to use this site</span
+                  >
+                </div>
+                <p class="text-on-surface text-sm leading-relaxed">
+                  Start with the video. Then go to
+                  <strong>Full Guide</strong> to read the complete preparation
+                  guide. Use <strong>What to Know</strong> for course-specific
+                  facts. Read <strong>All Questions</strong> so nothing
+                  surprises you. Study the <strong>Sample Answers</strong>. Then
+                  go to <strong>Practice and Mark</strong> — type your own
+                  answers and the AI will give you a pass or improvement
+                  feedback. Tick off the <strong>Checklist</strong> before your
+                  interview date.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FULL GUIDE TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-guide"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 1 — Preparation</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                Complete Interview Guide
+              </h2>
+              <p class="text-muted text-sm mb-7 max-w-xl leading-relaxed">
+                Everything you need to know, in the order you should learn it.
+                Read all sections.
+              </p>
+
+              <div class="acc-item open" id="ga0">
+                <button
+                  class="w-full flex items-center justify-between p-5 text-left"
+                  onclick="togAcc('ga0')"
+                >
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-9 h-9 rounded-xl bg-primary-light flex items-center justify-center flex-shrink-0"
+                    >
+                      <span
+                        class="font-headline font-black text-xs text-primary"
+                        >00</span
+                      >
+                    </div>
+                    <div>
+                      <h3
+                        class="font-headline font-bold text-sm text-on-surface"
+                      >
+                        Understanding the Interview Purpose
+                      </h3>
+                      <p
+                        class="font-label text-xs text-muted uppercase tracking-wider mt-0.5"
+                      >
+                        Foundation
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="material-symbols-outlined text-primary acc-arrow transition-transform duration-300 flex-shrink-0"
+                    >expand_more</span
+                  >
+                </button>
+                <div class="acc-body px-5 pb-5 pt-0">
+                  <div
+                    class="border-t border-border pt-4 text-muted text-sm leading-relaxed space-y-3"
+                  >
+                    <p>
+                      A credibility interview is the university's way of
+                      checking that you are genuinely prepared for your studies,
+                      understand what you are coming to study, and can
+                      realistically support yourself in the UK. The goal is not
+                      to trick you — they just want to be sure you know the
+                      basics about your course, accommodation, finances, future
+                      plans, and why you chose Regent.
+                    </p>
+                    <p>
+                      If you answer confidently, naturally, and truthfully, you
+                      will pass. Your answers should sound like things you
+                      discovered through your own research, not like a memorised
+                      script.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div id="guide-sections"></div>
+
+              <div class="panel-primary p-7 mt-4">
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="material-symbols-outlined text-primary text-sm"
+                    >verified</span
+                  >
+                  <span
+                    class="font-label text-xs font-bold uppercase tracking-widest text-primary"
+                    >Final tips to pass</span
+                  >
+                </div>
+                <p class="text-on-surface text-sm leading-relaxed">
+                  Speak slowly and calmly. Do not rush. Answer naturally, as if
+                  talking to a real person, not reading from memory. Be honest
+                  about your finances and your intentions at all times. Show
+                  that you researched Regent and London life fully. Stay
+                  consistent — every answer must match what is on your
+                  application.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- WHAT TO KNOW TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-know"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 2 — Intelligence Brief</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                What You Must Know
+              </h2>
+              <p class="text-muted text-sm mb-7 max-w-xl leading-relaxed">
+                These facts are specific to your course. Know all of them before
+                your interview.
+              </p>
+              <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8"
+                id="know-cards"
+              ></div>
+
+              <div class="flex items-center gap-2 mb-4">
+                <span class="material-symbols-outlined text-secondary text-sm"
+                  >layers</span
+                >
+                <span
+                  class="font-label text-xs font-bold uppercase tracking-widest text-secondary"
+                  >Your Course Modules</span
+                >
+              </div>
+              <div id="mod-list" class="mb-8"></div>
+
+              <div class="panel-primary p-7 mb-4">
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="material-symbols-outlined text-primary text-sm"
+                    >star</span
+                  >
+                  <span
+                    class="font-label text-xs font-bold uppercase tracking-widest text-primary"
+                    >Why Regent — Key Points</span
+                  >
+                </div>
+                <p class="text-on-surface text-sm leading-relaxed">
+                  93% student satisfaction rate in the National Student Survey.
+                  Small class sizes with personal academic and career support.
+                  Degrees awarded by the University of Bolton / University of
+                  Greater Manchester, ranked 28th in the UK. Free Thinking Into
+                  Character (TIC) leadership, entrepreneurship, and goal-setting
+                  programme. Free laptop loan. Strong student development and
+                  career support services.
+                </p>
+              </div>
+              <div id="course-spec-link"></div>
+            </div>
+          </div>
+
+          <!-- ALL QUESTIONS TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-questions"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 3 — Question Bank</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                All Interview Questions
+              </h2>
+              <p class="text-muted text-sm mb-7 max-w-xl leading-relaxed">
+                Every question you may be asked. Read all of them and prepare an
+                answer for each one.
+              </p>
+              <div id="all-questions-list"></div>
+            </div>
+          </div>
+
+          <!-- SAMPLE ANSWERS TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-samples"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 4 — Response Library</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                Sample Natural Answers
+              </h2>
+              <p class="text-muted text-sm mb-7 max-w-xl leading-relaxed">
+                Model answers in a calm, natural style. Adapt them with your own
+                details — never recite word for word.
+              </p>
+              <div class="space-y-5">
+                <div class="panel p-6">
+                  <div class="flex items-start gap-3 mb-4">
+                    <span class="q-num mt-0.5">Q</span>
+                    <p class="font-headline font-bold text-sm text-on-surface">
+                      Why did you choose the UK for your studies?
+                    </p>
+                  </div>
+                  <div
+                    class="border-l-4 border-primary-mid pl-5 mb-4 italic text-muted text-sm leading-relaxed"
+                  >
+                    "I chose the UK because the education system is practical,
+                    respected worldwide, and allows students to gain real career
+                    skills. The UK also has a diverse environment, so it is easy
+                    to meet people from different cultures. I felt the teaching
+                    style would help me grow academically and professionally."
+                  </div>
+                  <div
+                    class="flex items-start gap-2 text-xs text-muted border-t border-border pt-3"
+                  >
+                    <span
+                      class="material-symbols-outlined text-xs text-primary mt-0.5"
+                      >tips_and_updates</span
+                    ><span
+                      >Add something specific to your field — for example, "The
+                      UK is a global hub for finance / technology / healthcare,
+                      which is directly relevant to my career goals."</span
+                    >
+                  </div>
+                </div>
+                <div class="panel p-6">
+                  <div class="flex items-start gap-3 mb-4">
+                    <span class="q-num mt-0.5">Q</span>
+                    <p class="font-headline font-bold text-sm text-on-surface">
+                      Why Regent College London specifically?
+                    </p>
+                  </div>
+                  <div
+                    class="border-l-4 border-primary-mid pl-5 mb-4 italic text-muted text-sm leading-relaxed"
+                  >
+                    "I chose Regent because of their small class sizes and
+                    strong student support system. The 93% satisfaction rate and
+                    the fact that degrees are awarded by a well-ranked UK
+                    university gave me confidence in the quality of the
+                    programme. I also liked the Thinking Into Character
+                    leadership programme and the free laptop loan — it shows the
+                    college genuinely invests in its students beyond the
+                    classroom."
+                  </div>
+                  <div
+                    class="flex items-start gap-2 text-xs text-muted border-t border-border pt-3"
+                  >
+                    <span
+                      class="material-symbols-outlined text-xs text-primary mt-0.5"
+                      >tips_and_updates</span
+                    ><span
+                      >Make it personal. Mention something specific you found
+                      during your research — for example, a particular module,
+                      the campus location, or the student development
+                      services.</span
+                    >
+                  </div>
+                </div>
+                <div class="panel p-6">
+                  <div class="flex items-start gap-3 mb-4">
+                    <span class="q-num mt-0.5">Q</span>
+                    <p class="font-headline font-bold text-sm text-on-surface">
+                      How does your course relate to your background and
+                      previous experience?
+                    </p>
+                  </div>
+                  <div
+                    class="border-l-4 border-primary-mid pl-5 mb-4 italic text-muted text-sm leading-relaxed"
+                  >
+                    "My previous degree was in [subject] and I have worked in
+                    [field] for [X] years. This course builds directly on that
+                    foundation — particularly the modules on [Module A] and
+                    [Module B], which cover areas I want to develop further. The
+                    combination of theory and practical application in this
+                    programme is exactly what I need to move into [next career
+                    step]."
+                  </div>
+                  <div
+                    class="flex items-start gap-2 text-xs text-muted border-t border-border pt-3"
+                  >
+                    <span
+                      class="material-symbols-outlined text-xs text-primary mt-0.5"
+                      >tips_and_updates</span
+                    ><span
+                      >Fill in the brackets with your real details. Connect at
+                      least two specific modules to your actual background. Be
+                      concrete, not vague.</span
+                    >
+                  </div>
+                </div>
+                <div class="panel p-6">
+                  <div class="flex items-start gap-3 mb-4">
+                    <span class="q-num mt-0.5">Q</span>
+                    <p class="font-headline font-bold text-sm text-on-surface">
+                      Where will you be staying and how much will it cost?
+                    </p>
+                  </div>
+                  <div
+                    class="border-l-4 border-primary-mid pl-5 mb-4 italic text-muted text-sm leading-relaxed"
+                  >
+                    "I will be living in [area, e.g. Wembley], with a postcode
+                    of [e.g. HA9 7XX]. I researched accommodation on SpareRoom
+                    and found a room for approximately £[750] per month. I chose
+                    this area because it is close to my campus, well-connected
+                    by the London Underground, and the cost fits within my
+                    monthly budget."
+                  </div>
+                  <div
+                    class="flex items-start gap-2 text-xs text-muted border-t border-border pt-3"
+                  >
+                    <span
+                      class="material-symbols-outlined text-xs text-primary mt-0.5"
+                      >tips_and_updates</span
+                    ><span
+                      >You must have a specific area and postcode ready.
+                      Research SpareRoom now and pick a realistic option near
+                      your campus.</span
+                    >
+                  </div>
+                </div>
+                <div class="panel p-6">
+                  <div class="flex items-start gap-3 mb-4">
+                    <span class="q-num mt-0.5">Q</span>
+                    <p class="font-headline font-bold text-sm text-on-surface">
+                      How will you fund your studies?
+                    </p>
+                  </div>
+                  <div
+                    class="border-l-4 border-primary-mid pl-5 mb-4 italic text-muted text-sm leading-relaxed"
+                  >
+                    "My studies are funded by [myself / my family / my sponsor].
+                    The total tuition fee is £[X]. I estimate my monthly living
+                    costs at around £[1,300], covering rent of £[750], food of
+                    approximately £[250], transport of around £[130], and other
+                    utilities and expenses. I currently have savings of £[X]
+                    which I have already converted to GBP using Oanda. My
+                    [parent / sponsor] also earns approximately [£X / local
+                    currency equivalent] per year and will contribute to my
+                    living costs. I also have a contingency fund of £[X] for
+                    unexpected expenses."
+                  </div>
+                  <div
+                    class="flex items-start gap-2 text-xs text-muted border-t border-border pt-3"
+                  >
+                    <span
+                      class="material-symbols-outlined text-xs text-primary mt-0.5"
+                      >tips_and_updates</span
+                    ><span
+                      >The more specific your figures, the more credible you
+                      sound. Know the exact tuition fee. Know the exchange rate.
+                      Have the breakdown ready.</span
+                    >
+                  </div>
+                </div>
+                <div class="panel p-6">
+                  <div class="flex items-start gap-3 mb-4">
+                    <span class="q-num mt-0.5">Q</span>
+                    <p class="font-headline font-bold text-sm text-on-surface">
+                      What are your goals after graduation?
+                    </p>
+                  </div>
+                  <div
+                    class="border-l-4 border-primary-mid pl-5 mb-4 italic text-muted text-sm leading-relaxed"
+                  >
+                    "In the short term, I plan to return to [home country] and
+                    apply for a position as [job title] at companies such as
+                    [Company A] or [Company B]. I expect a starting salary in
+                    the range of [local currency equivalent]. In the long term,
+                    I want to [e.g. move into a management role / establish my
+                    own business] within five years. This course will give me
+                    the specific skills in [area] that are currently in high
+                    demand in my country."
+                  </div>
+                  <div
+                    class="flex items-start gap-2 text-xs text-muted border-t border-border pt-3"
+                  >
+                    <span
+                      class="material-symbols-outlined text-xs text-primary mt-0.5"
+                      >tips_and_updates</span
+                    ><span
+                      >The interviewer needs to be confident you plan to return
+                      home. State this clearly and give a concrete plan for what
+                      you will do when you get back.</span
+                    >
+                  </div>
+                </div>
+                <div class="panel p-6">
+                  <div class="flex items-start gap-3 mb-4">
+                    <span class="q-num mt-0.5">Q</span>
+                    <p class="font-headline font-bold text-sm text-on-surface">
+                      Do you understand your visa responsibilities?
+                    </p>
+                  </div>
+                  <div
+                    class="border-l-4 border-primary-mid pl-5 mb-4 italic text-muted text-sm leading-relaxed"
+                  >
+                    "Yes. As an international student on a student visa, I know
+                    I can work a maximum of 20 hours per week during term time
+                    and full-time during official university holidays. I must
+                    attend all scheduled classes and lectures. I am required to
+                    notify the university if I change my address. I also
+                    understand that I cannot claim public funds during my stay
+                    in the UK. I take these responsibilities seriously."
+                  </div>
+                  <div
+                    class="flex items-start gap-2 text-xs text-muted border-t border-border pt-3"
+                  >
+                    <span
+                      class="material-symbols-outlined text-xs text-primary mt-0.5"
+                      >tips_and_updates</span
+                    ><span
+                      >Say this clearly and without hesitation. If you stumble
+                      on the working hours limit (20 hours), the interviewer
+                      will notice. Know it by heart.</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PRACTICE TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-practice"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 5 — Practice Lab</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                Practice &amp; Mark
+              </h2>
+              <p class="text-muted text-sm mb-7 max-w-xl leading-relaxed">
+                Type your answer and press Check. The AI marks it and gives you
+                a pass or tells you what to improve.
+              </p>
+
+              <div
+                class="panel p-6 mb-7 flex items-center gap-6 flex-wrap shadow-sm"
+              >
+                <div class="text-center">
+                  <div class="score-num text-primary" id="sc-p">0</div>
+                  <div
+                    class="font-label text-xs font-bold uppercase tracking-widest text-muted mt-1"
+                  >
+                    Passed
+                  </div>
+                </div>
+                <div class="w-px h-10 bg-border"></div>
+                <div class="text-center">
+                  <div class="score-num text-error" id="sc-f">0</div>
+                  <div
+                    class="font-label text-xs font-bold uppercase tracking-widest text-muted mt-1"
+                  >
+                    Needs Work
+                  </div>
+                </div>
+                <div class="w-px h-10 bg-border"></div>
+                <div class="text-center">
+                  <div class="score-num text-on-surface" id="sc-t">0</div>
+                  <div
+                    class="font-label text-xs font-bold uppercase tracking-widest text-muted mt-1"
+                  >
+                    Checked
+                  </div>
+                </div>
+                <div class="w-px h-10 bg-border hidden sm:block"></div>
+                <p
+                  class="text-muted text-xs flex-1 min-w-32 leading-relaxed"
+                  id="sc-msg"
+                >
+                  Answer questions to track your readiness.
+                </p>
+              </div>
+
+              <div class="flex flex-wrap gap-2 mb-7">
+                <button class="filter-btn active" onclick="filtQ('all', this)">
+                  All
+                </button>
+                <button class="filter-btn" onclick="filtQ('course', this)">
+                  Course
+                </button>
+                <button class="filter-btn" onclick="filtQ('campus', this)">
+                  Campus
+                </button>
+                <button class="filter-btn" onclick="filtQ('career', this)">
+                  Career
+                </button>
+                <button class="filter-btn" onclick="filtQ('finance', this)">
+                  Finance
+                </button>
+                <button class="filter-btn" onclick="filtQ('visa', this)">
+                  Visa
+                </button>
+                <button class="filter-btn" onclick="filtQ('personal', this)">
+                  Personal
+                </button>
+              </div>
+
+              <div id="pqs" class="space-y-5 pb-10"></div>
+            </div>
+          </div>
+
+          <!-- RESOURCES TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-resources"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 6 — Research Links</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                Resources
+              </h2>
+              <p class="text-muted text-sm mb-7 max-w-xl leading-relaxed">
+                The interviewer expects you to know all of these websites. Click
+                each one and read the content thoroughly.
+              </p>
+              <div class="space-y-8 pb-10">
+                <div>
+                  <div
+                    class="font-label text-xs font-bold uppercase tracking-widest text-primary mb-4 flex items-center gap-2"
+                  >
+                    <span class="material-symbols-outlined text-sm">school</span
+                    >Regent College London
+                  </div>
+                  <div class="grid sm:grid-cols-2 gap-3">
+                    <a
+                      href="https://www.rcl.ac.uk/study/international-eu-students/courses-international-students/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >language</span
+                      >
+                      <div>
+                        <strong>Courses for International Students</strong
+                        ><span class="lsub">rcl.ac.uk</span>
+                      </div></a
+                    >
+                    <a
+                      href="https://www.rcl.ac.uk/study/thinking-into-character/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >auto_awesome</span
+                      >
+                      <div>
+                        <strong>Thinking Into Character (TIC)</strong
+                        ><span class="lsub">Free leadership programme</span>
+                      </div></a
+                    >
+                    <a
+                      href="https://www.rcl.ac.uk/study/support/student-development/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >support</span
+                      >
+                      <div>
+                        <strong>Student Development Services</strong
+                        ><span class="lsub">rcl.ac.uk</span>
+                      </div></a
+                    >
+                    <a
+                      href="https://www.rcl.ac.uk/study/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >workspace_premium</span
+                      >
+                      <div>
+                        <strong>What Makes Regent Unique</strong
+                        ><span class="lsub">Study at Regent</span>
+                      </div></a
+                    >
+                  </div>
+                </div>
+                <div>
+                  <div
+                    class="font-label text-xs font-bold uppercase tracking-widest text-secondary mb-4 flex items-center gap-2"
+                  >
+                    <span class="material-symbols-outlined text-sm"
+                      >location_on</span
+                    >Campus Locations
+                  </div>
+                  <div class="grid sm:grid-cols-2 gap-3">
+                    <a
+                      href="https://www.rcl.ac.uk/study/campus-locations/#holborn/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-secondary text-xl"
+                        >apartment</span
+                      >
+                      <div>
+                        <strong>Holborn Campus</strong
+                        ><span class="lsub"
+                          >338-346 Grays Inn Road, WC1X 8BH</span
+                        >
+                      </div></a
+                    >
+                    <a
+                      href="https://www.rcl.ac.uk/study/campus-locations/#great-titchfield-street/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-secondary text-xl"
+                        >apartment</span
+                      >
+                      <div>
+                        <strong>Great Titchfield Street</strong
+                        ><span class="lsub"
+                          >27 Great Titchfield Street, W1W 7PA</span
+                        >
+                      </div></a
+                    >
+                    <a
+                      href="https://www.rcl.ac.uk/study/campus-locations/#wembley/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-secondary text-xl"
+                        >apartment</span
+                      >
+                      <div>
+                        <strong>Wembley Campus</strong
+                        ><span class="lsub">Engineers Way, HA9 0FJ</span>
+                      </div></a
+                    >
+                    <a
+                      href="https://www.rcl.ac.uk/study/campus-locations/#southall/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-secondary text-xl"
+                        >apartment</span
+                      >
+                      <div>
+                        <strong>Southall Campus</strong
+                        ><span class="lsub">The Green, Southall, UB2 4BL</span>
+                      </div></a
+                    >
+                  </div>
+                </div>
+                <div>
+                  <div
+                    class="font-label text-xs font-bold uppercase tracking-widest text-accent mb-4 flex items-center gap-2"
+                  >
+                    <span class="material-symbols-outlined text-sm"
+                      >description</span
+                    >Course Specifications
+                  </div>
+                  <a
+                    href="https://www.rcl.ac.uk/study/international-eu-students/courses-international-students/"
+                    target="_blank"
+                    class="lcard"
+                    ><span class="material-symbols-outlined text-accent text-xl"
+                      >article</span
+                    >
+                    <div>
+                      <strong>University of Bolton Programmes</strong
+                      ><span class="lsub">All course specs — bolton.ac.uk</span>
+                    </div></a
+                  >
+                </div>
+                <div>
+                  <div
+                    class="font-label text-xs font-bold uppercase tracking-widest text-primary mb-4 flex items-center gap-2"
+                  >
+                    <span class="material-symbols-outlined text-sm"
+                      >currency_pound</span
+                    >Cost of Living
+                  </div>
+                  <div class="grid sm:grid-cols-2 gap-3">
+                    <a
+                      href="https://www.rcl.ac.uk/study/international-eu-students/international-tuition-fees/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >bar_chart</span
+                      >
+                      <div>
+                        <strong>Regent Tuition Fees</strong
+                        ><span class="lsub">International fee schedule</span>
+                      </div></a
+                    >
+                    <a
+                      href="https://www.which.co.uk/money/university-and-student-finance/student-money-and-budgeting/how-much-it-costs-to-live-at-university-aw9gp0v2sq7r"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >receipt_long</span
+                      >
+                      <div>
+                        <strong>Which.co.uk Student Budget</strong
+                        ><span class="lsub">University living cost guide</span>
+                      </div></a
+                    >
+                    <a
+                      href="https://www.oanda.com/currency-converter/en/?from=GBP&to=NGN&amount=1"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >currency_exchange</span
+                      >
+                      <div>
+                        <strong>Oanda Currency Converter</strong
+                        ><span class="lsub">Convert your currency to GBP</span>
+                      </div></a
+                    >
+                    <a
+                      href="https://www.spareroom.co.uk/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >home</span
+                      >
+                      <div>
+                        <strong>SpareRoom</strong
+                        ><span class="lsub">Find rooms near your campus</span>
+                      </div></a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CHECKLIST TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-checklist"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 7 — Readiness</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                Readiness Checklist
+              </h2>
+              <p class="text-muted text-sm mb-7 max-w-xl leading-relaxed">
+                Tick every item before your interview date. If anything is
+                unticked, go back and prepare it.
+              </p>
+
+              <div class="panel p-6 mb-7 shadow-sm">
+                <div class="flex justify-between items-center mb-3">
+                  <span
+                    class="font-label text-xs font-bold uppercase tracking-widest text-muted"
+                    id="prog-lbl"
+                    >0 of 0 completed</span
+                  >
+                  <span
+                    class="font-headline font-black text-primary text-sm"
+                    id="prog-pct"
+                    >0%</span
+                  >
+                </div>
+                <div class="progress-track">
+                  <div
+                    class="progress-fill"
+                    id="prog-fill"
+                    style="width: 0%"
+                  ></div>
+                </div>
+              </div>
+
+              <div id="chk-content" class="space-y-4 pb-10"></div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- ======================================================
+     JAVASCRIPT
+====================================================== -->
+    <script>
+      const COURSES = {
+        mba: {
+          name: "MBA",
+          campus: "Holborn Campus",
+          address: "338-346 Grays Inn Road, London, WC1X 8BH",
+          campusUrl: "https://www.rcl.ac.uk/study/campus-locations/#holborn/",
+          specUrl: "https://www.bolton.ac.uk/uob-programmes/",
+          videoNotes: [
+            "Your campus address: 338-346 Grays Inn Road, London, WC1X 8BH",
+            "Why you chose the MBA over other postgraduate degrees",
+            "How the MBA is assessed (assignments, group projects, presentations, dissertation)",
+            "At least 3 module names and why they interest you",
+            "The names of 2 other UK universities offering similar MBAs and why you chose Regent",
+            "Which specific companies you will apply to after graduation",
+            "Your expected salary in GBP",
+            "The breakdown of your monthly London living costs",
+            "Your accommodation area and postcode",
+            "Your visa working hours limit (20 hours per week during term time)",
+          ],
+          assessment:
+            "Written assignments, group projects, presentations, and a final dissertation or business project.",
+          modules: [
+            {
+              name: "Strategic Management",
+              why: "Covers how organisations make long-term competitive decisions and navigate changing markets.",
+            },
+            {
+              name: "Financial Management",
+              why: "Teaches how to analyse financial reports and manage organisational budgets effectively.",
+            },
+            {
+              name: "Marketing Management",
+              why: "Explores how companies build brands, understand customers, and drive growth.",
+            },
+            {
+              name: "Leadership and Organisational Behaviour",
+              why: "Develops the skills needed to manage teams and lead organisations through change.",
+            },
+            {
+              name: "Operations and Supply Chain Management",
+              why: "Shows how businesses design and deliver products and services efficiently.",
+            },
+            {
+              name: "Entrepreneurship and Innovation",
+              why: "Covers the skills and mindset needed to start and grow a new business venture.",
+            },
+            {
+              name: "Business Research Methods",
+              why: "Prepares you to carry out the research required for your final dissertation or business project.",
+            },
+          ],
+          roles: [
+            "Management Consultant",
+            "Business Development Manager",
+            "Operations Director",
+            "Strategy Analyst",
+          ],
+          companies: ["Deloitte", "McKinsey", "PwC", "KPMG", "Accenture"],
+          salary: "£40,000 – £65,000",
+        },
+        "msc-intmgmt": {
+          name: "MSc International Management",
+          campus: "Great Titchfield Street Campus",
+          address: "27 Great Titchfield Street, London, W1W 7PA",
+          campusUrl:
+            "https://www.rcl.ac.uk/study/campus-locations/#great-titchfield-street/",
+          specUrl: "https://www.bolton.ac.uk/uob-programmes/",
+          videoNotes: [
+            "Your primary campus: 27 Great Titchfield Street, London, W1W 7PA",
+            "Why international management fits your career goals",
+            "Your key modules and how the course is assessed",
+            "The names of 2 other UK universities offering international management and why you chose Regent",
+            "Jobs and companies you will target after graduation",
+            "Your monthly London living costs",
+            "Your accommodation area and postcode",
+            "Your visa responsibilities",
+          ],
+          assessment:
+            "Essays, group projects, presentations, and a final dissertation.",
+          modules: [
+            {
+              name: "International Business Strategy",
+              why: "Explains how companies operate, compete, and expand across different countries.",
+            },
+            {
+              name: "Cross-Cultural Management",
+              why: "Teaches how to lead and collaborate effectively in multicultural environments.",
+            },
+            {
+              name: "Global Marketing",
+              why: "Covers how to adapt marketing strategies to different international markets.",
+            },
+            {
+              name: "International Finance",
+              why: "Looks at exchange rates, trade finance, and managing money across borders.",
+            },
+            {
+              name: "Managing People in Organisations",
+              why: "Develops the HR and leadership skills needed to manage international teams.",
+            },
+            {
+              name: "Research Methods",
+              why: "Builds the skills needed to complete your final dissertation.",
+            },
+          ],
+          roles: [
+            "International Business Analyst",
+            "Global Operations Manager",
+            "Trade Development Officer",
+          ],
+          companies: [
+            "Unilever",
+            "Shell",
+            "British American Tobacco",
+            "Standard Chartered",
+          ],
+          salary: "£32,000 – £50,000",
+        },
+        "msc-socialcare": {
+          name: "MSc Social Care, Health and Wellbeing",
+          campus: "Holborn Campus",
+          address: "338-346 Grays Inn Road, London, WC1X 8BH",
+          campusUrl: "https://www.rcl.ac.uk/study/campus-locations/#holborn/",
+          specUrl: "https://www.bolton.ac.uk/uob-programmes/",
+          videoNotes: [
+            "Your campus address: 338-346 Grays Inn Road, London, WC1X 8BH",
+            "Why this course matches your professional background in health or social care",
+            "Your key modules and how the course is assessed",
+            "Two comparable UK postgraduate courses and why Regent stands out",
+            "The roles you will target after graduation",
+            "Your monthly living costs and accommodation postcode",
+          ],
+          assessment:
+            "Written assignments, case studies, presentations, and a final dissertation.",
+          modules: [
+            {
+              name: "Health Policy and Management",
+              why: "Examines how health systems are funded, organised, and reformed at a policy level.",
+            },
+            {
+              name: "Social Care Leadership",
+              why: "Builds the skills needed to manage and lead teams in social care settings.",
+            },
+            {
+              name: "Research Methods in Health and Social Care",
+              why: "Prepares you to carry out rigorous, evidence-based research in your field.",
+            },
+            {
+              name: "Safeguarding and Ethics",
+              why: "Covers the legal and ethical responsibilities when working with vulnerable adults and children.",
+            },
+            {
+              name: "Mental Health and Wellbeing",
+              why: "Explores how mental health services are delivered, evaluated, and improved.",
+            },
+          ],
+          roles: [
+            "Social Care Manager",
+            "Health Services Coordinator",
+            "Wellbeing Programme Lead",
+          ],
+          companies: [
+            "NHS",
+            "MIND",
+            "Age UK",
+            "Turning Point",
+            "Local Authority Social Services",
+          ],
+          salary: "£30,000 – £45,000",
+        },
+        "msc-softeng": {
+          name: "MSc Software Engineering",
+          campus: "Wembley Campus",
+          address: "Engineers Way, Wembley, HA9 0FJ",
+          campusUrl: "https://www.rcl.ac.uk/study/campus-locations/#wembley/",
+          specUrl: "https://www.bolton.ac.uk/uob-programmes/",
+          videoNotes: [
+            "Your campus address: Engineers Way, Wembley, HA9 0FJ",
+            "Why you chose software engineering at postgraduate level",
+            "Your key technical modules and how the course is assessed",
+            "Two UK universities offering similar MSc Software Engineering programmes and why you chose Regent",
+            "The tech companies you will target after graduation",
+            "Your expected salary in GBP",
+            "Your monthly London living costs and accommodation postcode",
+          ],
+          assessment:
+            "Programming assignments, group software projects, exams, and a final individual project or dissertation.",
+          modules: [
+            {
+              name: "Software Architecture and Design",
+              why: "Teaches how to design software systems that are scalable, maintainable, and robust.",
+            },
+            {
+              name: "Advanced Programming",
+              why: "Develops skills in modern programming languages and development practices.",
+            },
+            {
+              name: "Cloud Computing and DevOps",
+              why: "Covers deploying and managing software using platforms like AWS and Azure.",
+            },
+            {
+              name: "Agile Project Management",
+              why: "Explains how software teams plan, deliver, and continuously improve digital products.",
+            },
+            {
+              name: "Cybersecurity Principles",
+              why: "Introduces how to identify threats and protect systems and data from security breaches.",
+            },
+            {
+              name: "Machine Learning Fundamentals",
+              why: "Explores how AI models are built and applied to solve real-world software problems.",
+            },
+          ],
+          roles: [
+            "Software Engineer",
+            "Backend Developer",
+            "Cloud Solutions Architect",
+            "DevOps Engineer",
+          ],
+          companies: [
+            "Google",
+            "Microsoft",
+            "Amazon",
+            "Capgemini",
+            "Infosys",
+            "TCS",
+          ],
+          salary: "£40,000 – £70,000",
+        },
+        "msc-psych": {
+          name: "MSc Psychology",
+          campus: "Great Titchfield Street Campus",
+          address: "27 Great Titchfield Street, London, W1W 7PA",
+          campusUrl:
+            "https://www.rcl.ac.uk/study/campus-locations/#great-titchfield-street/",
+          specUrl: "https://www.bolton.ac.uk/uob-programmes/",
+          videoNotes: [
+            "Your campus address: 27 Great Titchfield Street, London, W1W 7PA",
+            "Why you chose psychology at postgraduate level and how it builds on your previous studies",
+            "Your key modules and assessment methods",
+            "Two other UK universities offering MSc Psychology and why you chose Regent",
+            "Career roles you are targeting",
+            "Monthly living costs",
+            "Accommodation area and postcode",
+          ],
+          assessment:
+            "Essays, research reports, presentations, and a final dissertation.",
+          modules: [
+            {
+              name: "Research Methods and Statistics",
+              why: "The foundation for all evidence-based psychological study and the basis for your dissertation.",
+            },
+            {
+              name: "Cognitive Psychology",
+              why: "Examines how people think, remember, make decisions, and solve problems.",
+            },
+            {
+              name: "Social Psychology",
+              why: "Looks at how people behave in groups and how social situations influence our actions.",
+            },
+            {
+              name: "Developmental Psychology",
+              why: "Studies how people grow, learn, and change across the lifespan from infancy to old age.",
+            },
+            {
+              name: "Clinical and Abnormal Psychology",
+              why: "Covers how mental health conditions are understood, diagnosed, and treated.",
+            },
+            {
+              name: "Occupational Psychology",
+              why: "Applies psychological principles to workplace behaviour and organisational performance.",
+            },
+          ],
+          roles: [
+            "Assistant Psychologist",
+            "HR Specialist",
+            "Mental Health Support Worker",
+            "Research Officer",
+          ],
+          companies: [
+            "NHS",
+            "Mind",
+            "Priory Group",
+            "Corporate HR departments",
+            "University research institutions",
+          ],
+          salary: "£28,000 – £42,000",
+        },
+        "bsc-business": {
+          name: "BSc (Hons) Business Management",
+          campus: "Southall Campus",
+          address: "The Green, Southall, London, UB2 4BL",
+          campusUrl: "https://www.rcl.ac.uk/study/campus-locations/#southall/",
+          specUrl: "https://www.bolton.ac.uk/uob-programmes/",
+          videoNotes: [
+            "Your campus address: The Green, Southall, London, UB2 4BL",
+            "Why business management is the right degree for your career goals",
+            "At least 3 module names and why they interest you",
+            "Two other UK universities offering BSc Business Management and why you chose Regent",
+            "Specific companies and roles you want after graduation",
+            "Your monthly London living costs and accommodation postcode",
+          ],
+          assessment:
+            "Coursework, group projects, presentations, and written exams.",
+          modules: [
+            {
+              name: "Principles of Management",
+              why: "Builds the theoretical and practical foundation of how organisations are structured and managed.",
+            },
+            {
+              name: "Business Finance",
+              why: "Teaches how to read financial statements, manage budgets, and assess business performance.",
+            },
+            {
+              name: "Marketing Fundamentals",
+              why: "Covers how businesses identify customer needs, build brands, and drive sales.",
+            },
+            {
+              name: "Business Law",
+              why: "Explains the legal framework that governs companies and commercial transactions.",
+            },
+            {
+              name: "Human Resource Management",
+              why: "Looks at how organisations recruit, develop, motivate, and retain their people.",
+            },
+            {
+              name: "Entrepreneurship",
+              why: "Teaches the mindset and practical skills needed to start and grow a business.",
+            },
+          ],
+          roles: [
+            "Business Analyst",
+            "Marketing Executive",
+            "Operations Coordinator",
+            "Entrepreneur",
+          ],
+          companies: [
+            "Unilever",
+            "Diageo",
+            "MTN Group",
+            "Zenith Bank",
+            "Access Bank",
+          ],
+          salary: "£25,000 – £38,000",
+        },
+        "bsc-topup": {
+          name: "BSc (Hons) Business Management Top Up",
+          campus: "TBC — confirm with Regent directly",
+          address:
+            "Contact Regent admissions to confirm your campus address before your interview.",
+          campusUrl: "https://www.rcl.ac.uk/study/campus-locations/",
+          specUrl: "https://www.bolton.ac.uk/uob-programmes/",
+          videoNotes: [
+            "Confirm your campus address with Regent before the interview",
+            "Explain clearly what the Top Up year adds on top of your HND or Foundation degree",
+            "Your module names and how the course is assessed",
+            "Why you chose Regent to complete your degree",
+            "Specific jobs and companies you will target after graduation",
+            "Monthly living costs",
+            "Accommodation area and postcode",
+          ],
+          assessment: "Assignments, group projects, and presentations.",
+          modules: [
+            {
+              name: "Strategic Management",
+              why: "Builds on prior business knowledge with a deeper focus on long-term strategic thinking.",
+            },
+            {
+              name: "International Business",
+              why: "Explores how businesses operate, compete, and expand across different countries and cultures.",
+            },
+            {
+              name: "Leadership and Change Management",
+              why: "Covers how effective leaders drive transformation within organisations.",
+            },
+            {
+              name: "Business Research Project",
+              why: "A practical, applied project that uses your skills to address a real business challenge.",
+            },
+          ],
+          roles: [
+            "Business Development Executive",
+            "Operations Manager",
+            "Project Coordinator",
+          ],
+          companies: [
+            "Local businesses in your home sector",
+            "NGOs",
+            "Government departments",
+          ],
+          salary: "£24,000 – £35,000",
+        },
+      };
+
+      const GUIDE_SECTIONS = [
+        {
+          id: "ga1",
+          num: "A",
+          title: "Your Campus and Address",
+          sub: "Location Intelligence",
+          content: `<p>Regent expects you to know exactly which campus your course is taught at and the full address including postcode. Learn the full street address and postcode, not just the area name.</p>`,
+        },
+        {
+          id: "ga2",
+          num: "B",
+          title: "Why You Chose Regent College London",
+          sub: "Institutional Choice",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Small class sizes with personal academic and career support.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>93% student satisfaction rate in the National Student Survey.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Degrees awarded by the University of Bolton / University of Greater Manchester, ranked 28th in the UK.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Free Thinking Into Character (TIC) leadership, entrepreneurship, and goal-setting programme.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Free laptop loan scheme.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Strong student development services and career support.</span></li></ul>`,
+        },
+        {
+          id: "ga3",
+          num: "C",
+          title: "What Extras Regent Offers",
+          sub: "Value Proposition",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Thinking Into Character (TIC)</strong> — free programme covering leadership, entrepreneurship, goal-setting, and workplace success.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Student Development Services</strong> — support for your academic journey and personal growth.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Career support</strong> — help preparing for work after graduation.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Free laptop loan</strong> — the college lends laptops to students who need them.</span></li></ul>`,
+        },
+        {
+          id: "ga4",
+          num: "D",
+          title: "Your Accommodation Details",
+          sub: "Living Arrangements",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>The specific area of London you will stay in.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>The full postcode (e.g. HA9 3BQ or N1 7GJ).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>How much rent costs per month.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Why you chose that area — proximity to campus, transport links, fits your budget.</span></li></ul>`,
+        },
+        {
+          id: "ga5",
+          num: "E",
+          title: "Modules in Your Course",
+          sub: "Academic Content",
+          content: `<p>You must name at least 3 modules, explain why they interest you, and connect them to your background or career goals. Also compare your course at Regent with at least two similar courses at other UK universities, and explain why you still chose Regent. Download the course specification from the University of Bolton website — find the link in the Resources tab.</p>`,
+        },
+        {
+          id: "ga6",
+          num: "F",
+          title: "How Your Course Is Assessed",
+          sub: "Assessment Methods",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Written assignments and coursework</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Group projects and presentations</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Written exams</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Case studies</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>A final dissertation or business project</span></li></ul>`,
+        },
+        {
+          id: "ga7",
+          num: "G",
+          title: "Your Future Plans After Graduation",
+          sub: "Career Trajectory",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Short-term goals</strong> — first role after graduation, with a specific job title.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Long-term plans</strong> — where you see yourself in 5 years.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Actual companies</strong> — name real organisations in your sector.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Expected salary range</strong> in GBP.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>How you will use the skills from your degree back in your home country.</span></li></ul>`,
+        },
+        {
+          id: "ga8",
+          num: "H",
+          title: "Your Financial Preparation",
+          sub: "Financial Credibility",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>The exact tuition fee for your course.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Cost of living in London — use £1,200 to £1,600 per month as a guide.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Total amount available, converted into both GBP and your local currency.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Who is funding you — yourself, family, sponsor — and their income or savings.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>How you will cover unexpected expenses.</span></li></ul>`,
+        },
+        {
+          id: "ga9",
+          num: "I",
+          title: "Visa Rules and Responsibilities",
+          sub: "Compliance",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Maximum of <strong class="text-primary">20 hours per week during term time</strong>.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Full-time work allowed during official university holidays.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Cannot claim public funds.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Must attend all scheduled classes.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Must notify the university if you change your address.</span></li></ul>`,
+        },
+        {
+          id: "ga10",
+          num: "J",
+          title: "What You Have Been Doing Since Your Last Qualification",
+          sub: "Personal History",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Work experience or employment since your last degree.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Internships or voluntary work.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Skills you have been developing.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Training or short courses you have completed.</span></li></ul><p class="mt-2">Avoid leaving unexplained gaps in your timeline.</p>`,
+        },
+        {
+          id: "ga11",
+          num: "K",
+          title: "Health Conditions",
+          sub: "Wellbeing Disclosure",
+          content: `<p>If you have no health issues, simply say: <em class="text-on-surface">"I have no health conditions that would affect my studies."</em></p><p class="mt-2">If you do have a condition, briefly explain how you manage it and confirm it will not impact your attendance or performance.</p>`,
+        },
+      ];
+
+      const ALL_QUESTIONS = [
+        {
+          cat: "Course Knowledge",
+          color: "text-primary",
+          bg: "bg-primary-light",
+          border: "border-primary-mid",
+          qs: [
+            "What is the exact name of your course?",
+            "Which modules interest you the most and why?",
+            "How is your course assessed?",
+            "Why did you choose this course over others?",
+            "How does this course relate to your previous studies or work experience?",
+            "Compare this course at Regent with two other universities. Why did you choose Regent?",
+            "What skills do you expect to gain from this course?",
+          ],
+        },
+        {
+          cat: "Campus and Academic Environment",
+          color: "text-secondary",
+          bg: "bg-secondary-light",
+          border: "border-purple-200",
+          qs: [
+            "Which campus will you be studying at?",
+            "What is the full address and postcode of your campus?",
+            "What facilities or resources at Regent attracted you?",
+            "What extra programmes does Regent offer — for example, Thinking Into Character?",
+            "Why did you choose Regent College London?",
+          ],
+        },
+        {
+          cat: "Career Plans and Aspirations",
+          color: "text-accent",
+          bg: "bg-cyan-50",
+          border: "border-cyan-200",
+          qs: [
+            "What are your short-term career goals after graduation?",
+            "What are your long-term career goals?",
+            "Which companies will you apply to after graduating?",
+            "What job title will you aim for?",
+            "What salary range do you expect?",
+            "How will this course help you achieve your career goals?",
+          ],
+        },
+        {
+          cat: "Course Relevance",
+          color: "text-primary",
+          bg: "bg-primary-light",
+          border: "border-primary-mid",
+          qs: [
+            "How does this course relate to your career plan?",
+            "Why is this course the right next step for you?",
+            "How will you use the skills from this course in your home country?",
+          ],
+        },
+        {
+          cat: "Accommodation and Living Plans",
+          color: "text-secondary",
+          bg: "bg-secondary-light",
+          border: "border-purple-200",
+          qs: [
+            "Where will you be living in the UK?",
+            "What is the full postcode of where you will be living?",
+            "How much will your accommodation cost per month?",
+            "Why did you choose that area?",
+          ],
+        },
+        {
+          cat: "Financial Preparedness",
+          color: "text-accent",
+          bg: "bg-cyan-50",
+          border: "border-cyan-200",
+          qs: [
+            "How much is your total tuition fee?",
+            "What is the cost of living in London per month?",
+            "How much will you spend on rent, transport, food, and utilities?",
+            "Who is funding your studies?",
+            "How much do you and your sponsor earn?",
+            "How will you handle unexpected expenses?",
+            "Have you converted your currency to GBP? How much is it?",
+          ],
+        },
+        {
+          cat: "Visa Rules and Responsibilities",
+          color: "text-primary",
+          bg: "bg-primary-light",
+          border: "border-primary-mid",
+          qs: [
+            "How many hours can you work during term time?",
+            "What are your responsibilities as an international student?",
+            "Do you understand the attendance requirements?",
+          ],
+        },
+        {
+          cat: "Personal Background and Intentions",
+          color: "text-secondary",
+          bg: "bg-secondary-light",
+          border: "border-purple-200",
+          qs: [
+            "What have you been doing since your last qualification?",
+            "Why did you choose the UK instead of other countries?",
+            "Why do you want to study now?",
+            "Do you plan to return home after your studies? Why?",
+            "Have you ever had a visa refusal? If yes, please explain.",
+            "Do you have any health conditions that could affect your studies?",
+          ],
+        },
+      ];
+
+      const PQS = [
+        {
+          id: "p1",
+          cat: "course",
+          q: "What is the exact name of your course and which university awards the degree?",
+          hint: "State the full course title exactly. The degree is awarded by the University of Bolton / University of Greater Manchester.",
+          cr: "Must state the exact course name and name the awarding university correctly.",
+        },
+        {
+          id: "p2",
+          cat: "course",
+          q: "Which modules interest you most and why?",
+          hint: "Name at least 3 modules from your course. Connect each one to your background or career goals.",
+          cr: "Must name at least 3 specific modules and give a personal reason for each one.",
+        },
+        {
+          id: "p3",
+          cat: "course",
+          q: "How is your course assessed?",
+          hint: "Mention the specific methods — assignments, group work, presentations, exams, dissertation.",
+          cr: "Must describe at least 2 assessment methods that match the actual course.",
+        },
+        {
+          id: "p4",
+          cat: "course",
+          q: "Compare your course at Regent with a similar programme at two other UK universities. Why did you choose Regent?",
+          hint: "Name 2 real UK universities offering similar programmes. Give specific reasons for choosing Regent: small class sizes, 93% satisfaction, TIC programme, University of Greater Manchester ranking.",
+          cr: "Must name 2 real UK universities by name and give at least 2 specific reasons for choosing Regent.",
+        },
+        {
+          id: "p5",
+          cat: "course",
+          q: "What skills do you expect to gain from this course and how will you use them?",
+          hint: "Connect skills from specific modules to your career goals.",
+          cr: "Must link at least 2 specific course skills to concrete career or life plans.",
+        },
+        {
+          id: "p6",
+          cat: "campus",
+          q: "Which campus will you study at and what is the full address including postcode?",
+          hint: "Use the campus address shown in the What to Know tab for your course.",
+          cr: "Must state the campus name, street address, and the correct postcode.",
+        },
+        {
+          id: "p7",
+          cat: "campus",
+          q: "What extra programmes does Regent offer beyond your academic course?",
+          hint: "Mention Thinking Into Character (TIC) — free leadership, entrepreneurship, and goal-setting programme. Also the free laptop loan and student development services.",
+          cr: "Must mention Thinking Into Character (TIC) by name and at least one other specific benefit.",
+        },
+        {
+          id: "p8",
+          cat: "campus",
+          q: "Why did you choose Regent College London over other colleges?",
+          hint: "93% satisfaction rate. Small class sizes. University of Greater Manchester ranked 28th in the UK. Free TIC programme. Free laptop loan. Strong student development services.",
+          cr: "Must give at least 3 specific and named reasons for choosing Regent.",
+        },
+        {
+          id: "p9",
+          cat: "career",
+          q: "Which companies will you apply to after graduating and what job title will you target?",
+          hint: "Name real, specific companies and a specific job title.",
+          cr: "Must name at least 2 real companies and a specific job title relevant to the course.",
+        },
+        {
+          id: "p10",
+          cat: "career",
+          q: "What salary range do you expect in your first role after graduation?",
+          hint: "Give a range in GBP. Use the salary range shown in your course What to Know tab.",
+          cr: "Must give a salary range in GBP that is realistic for the course level and role.",
+        },
+        {
+          id: "p11",
+          cat: "career",
+          q: "Do you plan to return to your home country after your studies? Why?",
+          hint: "Say yes clearly. Then explain exactly what you will do when you return.",
+          cr: "Must confirm intention to return home and give a concrete, specific reason tied to career plans.",
+        },
+        {
+          id: "p12",
+          cat: "finance",
+          q: "How much does it cost to live in London per month and how will you fund this?",
+          hint: "Estimate £1,200–£1,600 per month. Break it down: rent £600–£900, food £200–£300, transport £100–£150, utilities and extras. State who funds you.",
+          cr: "Must give a monthly total near £1,200–£1,600, break it into categories, and name the funding source clearly.",
+        },
+        {
+          id: "p13",
+          cat: "finance",
+          q: "How much is your total tuition fee and have you converted it to your local currency?",
+          hint: "Know the exact fee for your course. Use Oanda to convert it.",
+          cr: "Must state a tuition fee in GBP and confirm they have converted it to their local currency.",
+        },
+        {
+          id: "p14",
+          cat: "finance",
+          q: "Who is funding your studies and how will you cover unexpected expenses?",
+          hint: "Name your funding source. State their income or savings. Describe a specific backup plan.",
+          cr: "Must name the funding source clearly and describe at least one backup plan for unexpected costs.",
+        },
+        {
+          id: "p15",
+          cat: "visa",
+          q: "How many hours can you work per week during term time and what are your key responsibilities?",
+          hint: "20 hours per week during term time. Full-time during holidays. Must attend all classes. Must report address changes. Cannot claim public funds.",
+          cr: "Must state 20 hours correctly, mention class attendance, address reporting, and that public funds cannot be claimed.",
+        },
+        {
+          id: "p16",
+          cat: "visa",
+          q: "Where will you be living in the UK and what is the postcode?",
+          hint: "Give a specific London area and a real postcode. Explain how you found it and why it suits your budget and commute.",
+          cr: "Must give a real London area, a postcode, and a reason for choosing that location.",
+        },
+        {
+          id: "p17",
+          cat: "personal",
+          q: "Why did you choose the UK instead of studying in another country?",
+          hint: "Mention the quality and global recognition of UK qualifications. The practical teaching style. The diverse environment. Specific opportunities relevant to your field.",
+          cr: "Must give at least 2 specific reasons for choosing the UK.",
+        },
+        {
+          id: "p18",
+          cat: "personal",
+          q: "What have you been doing since your last qualification?",
+          hint: "Describe your work experience, skills developed, responsibilities, or any training since your last degree. Avoid leaving unexplained gaps.",
+          cr: "Must give a clear, honest account of activities since the last qualification with no unexplained gaps.",
+        },
+      ];
+
+      let course = null,
+        passN = 0,
+        failN = 0,
+        totN = 0;
+
+      function selectCourse(id) {
+        course = COURSES[id];
+        document.getElementById("s-select").classList.remove("active");
+        document.getElementById("s-main").classList.add("active");
+        document.getElementById("tb-name").textContent = course.name;
+        document.getElementById("tb-campus").textContent = course.campus;
+        passN = 0;
+        failN = 0;
+        totN = 0;
+        updScore();
+
+        document.getElementById("vid-notes").innerHTML = course.videoNotes
+          .map(
+            (n) => `
+    <div class="flex items-start gap-2">
+      <span class="material-symbols-outlined text-primary text-sm mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>
+      <span>${n}</span>
+    </div>
+  `,
+          )
+          .join("");
+
+        buildGuide();
+        buildKnow();
+        buildQuestions();
+        buildPractice();
+        buildChecklist();
+        showTab("video", "sl-video");
+      }
+
+      function goBack() {
+        document.getElementById("s-main").classList.remove("active");
+        document.getElementById("s-select").classList.add("active");
+      }
+
+      function showTab(name, btnId, isMobile) {
+        document
+          .querySelectorAll(".tc")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelectorAll(".side-link")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById("tab-" + name).classList.add("active");
+        const side = document.getElementById("sl-" + name);
+        const mob = document.getElementById("mt-" + name);
+        if (side) side.classList.add("active");
+        if (mob) mob.classList.add("active");
+      }
+
+      function togAcc(id) {
+        document.getElementById(id).classList.toggle("open");
+      }
+
+      function buildGuide() {
+        document.getElementById("guide-sections").innerHTML =
+          GUIDE_SECTIONS.map(
+            (s) => `
+    <div class="acc-item" id="${s.id}">
+      <button class="w-full flex items-center justify-between p-5 text-left" onclick="togAcc('${s.id}')">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-primary-light flex items-center justify-center flex-shrink-0">
+            <span class="font-headline font-black text-xs text-primary">${s.num}</span>
+          </div>
+          <div>
+            <h3 class="font-headline font-bold text-sm text-on-surface">${s.title}</h3>
+            <p class="font-label text-xs text-muted uppercase tracking-wider mt-0.5">${s.sub}</p>
+          </div>
+        </div>
+        <span class="material-symbols-outlined text-primary acc-arrow transition-transform duration-300 flex-shrink-0">expand_more</span>
+      </button>
+      <div class="acc-body px-5 pb-5 pt-0">
+        <div class="border-t border-border pt-4 text-muted text-sm leading-relaxed space-y-3">${s.content}</div>
+      </div>
+    </div>
+  `,
+          ).join("");
+      }
+
+      function buildKnow() {
+        const c = course;
+        document.getElementById("know-cards").innerHTML = `
+    <div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-primary text-base">location_on</span><span class="font-label text-xs font-bold uppercase tracking-widest text-primary">Your Campus</span></div><p class="font-headline font-bold text-sm text-on-surface mb-1">${c.campus}</p><p class="text-muted text-xs leading-relaxed mb-3">${c.address}</p><a href="${c.campusUrl}" target="_blank" class="font-label text-xs font-bold text-primary">View campus →</a></div>
+    <div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-secondary text-base">quiz</span><span class="font-label text-xs font-bold uppercase tracking-widest text-secondary">Assessment</span></div><p class="text-muted text-xs leading-relaxed">${c.assessment}</p></div>
+    <div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-accent text-base">work</span><span class="font-label text-xs font-bold uppercase tracking-widest text-accent">Target Roles</span></div><p class="text-muted text-xs leading-relaxed">${c.roles.join(" · ")}</p></div>
+    <div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-primary text-base">business</span><span class="font-label text-xs font-bold uppercase tracking-widest text-primary">Target Companies</span></div><p class="text-muted text-xs leading-relaxed">${c.companies.join(" · ")}</p></div>
+    <div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-secondary text-base">currency_pound</span><span class="font-label text-xs font-bold uppercase tracking-widest text-secondary">First Salary</span></div><p class="font-headline font-black text-primary text-lg">${c.salary}</p></div>
+    <div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-accent text-base">home</span><span class="font-label text-xs font-bold uppercase tracking-widest text-accent">Monthly Living</span></div><p class="font-headline font-black text-accent text-lg">£1,200–£1,600</p><p class="text-muted text-xs mt-1">rent · food · transport · utilities</p></div>
+  `;
+        document.getElementById("mod-list").innerHTML = c.modules
+          .map(
+            (m, i) => `
+    <div class="mod-item">
+      <span class="mod-num">M${String(i + 1).padStart(2, "0")}</span>
+      <div><p class="font-headline font-bold text-sm text-on-surface mb-1">${m.name}</p><p class="text-muted text-xs leading-relaxed">${m.why}</p></div>
+    </div>
+  `,
+          )
+          .join("");
+        document.getElementById("course-spec-link").innerHTML = `
+    <a href="${c.specUrl}" target="_blank" class="lcard"><span class="material-symbols-outlined text-primary text-xl">open_in_new</span><div><strong>Download Your Course Specification</strong><span class="lsub">University of Bolton — bolton.ac.uk</span></div></a>`;
+      }
+
+      function buildQuestions() {
+        document.getElementById("all-questions-list").innerHTML =
+          ALL_QUESTIONS.map(
+            (cat, ci) => `
+    <div class="mb-8">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="font-label text-xs font-bold uppercase tracking-widest ${cat.color}">${ci + 1}. ${cat.cat}</span>
+        <span class="font-label text-xs font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full ${cat.bg} border ${cat.border} ${cat.color}">${cat.qs.length} questions</span>
+      </div>
+      <div class="space-y-2">
+        ${cat.qs
+          .map(
+            (q, qi) => `
+          <div class="panel px-5 py-3.5 flex items-start gap-3">
+            <span class="q-num mt-0.5 flex-shrink-0">Q${qi + 1}</span>
+            <p class="text-on-surface text-sm leading-relaxed">${q}</p>
+          </div>
+        `,
+          )
+          .join("")}
+      </div>
+    </div>
+  `,
+          ).join("");
+      }
+
+      function buildPractice() {
+        renderPQs(PQS);
+      }
+
+      function filtQ(cat, btn) {
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderPQs(cat === "all" ? PQS : PQS.filter((q) => q.cat === cat));
+      }
+
+      function renderPQs(qs) {
+        document.getElementById("pqs").innerHTML = qs
+          .map(
+            (q) => `
+    <div class="panel p-6 shadow-sm" id="pc-${q.id}">
+      <div class="flex items-start gap-3 mb-4">
+        <span class="q-num mt-0.5 flex-shrink-0">Q</span>
+        <p class="font-headline font-bold text-sm text-on-surface leading-snug">${q.q}</p>
+      </div>
+      <textarea class="sim-input min-h-24 block" id="ans-${q.id}" placeholder="Type your answer here..."></textarea>
+      <div class="flex items-center gap-3 mt-4 flex-wrap">
+        <button class="btn-primary flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider" id="btn-${q.id}" onclick="chkAns('${q.id}')">
+          <span class="material-symbols-outlined text-sm">verified</span>Check Answer
+        </button>
+        <button class="btn-ghost flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider" onclick="togHint('${q.id}')">
+          <span class="material-symbols-outlined text-sm">lightbulb</span>Hint
+        </button>
+        <button class="btn-ghost flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider ml-auto" onclick="clrAns('${q.id}')">
+          <span class="material-symbols-outlined text-sm">refresh</span>Clear
+        </button>
+      </div>
+      <div id="hint-${q.id}" class="hidden mt-3 bg-secondary-light border border-purple-200 rounded-xl px-4 py-3 text-sm text-secondary leading-relaxed">${q.hint}</div>
+      <div id="fb-${q.id}" class="hidden mt-4 rounded-r-xl p-5 text-sm leading-relaxed">
+        <div class="font-headline font-bold text-sm mb-2" id="fbhd-${q.id}"></div>
+        <div id="fbb-${q.id}"></div>
+      </div>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      function togHint(id) {
+        document.getElementById("hint-" + id).classList.toggle("hidden");
+      }
+
+      function clrAns(id) {
+        document.getElementById("ans-" + id).value = "";
+        document.getElementById("fb-" + id).classList.add("hidden");
+      }
+
+      // ======================================================
+      // FIXED: Using Puter.js for FREE AI - no API key needed!
+      // ======================================================
+      async function chkAns(id) {
+        const q = PQS.find((x) => x.id === id);
+        const ans = document.getElementById("ans-" + id).value.trim();
+        if (!ans) {
+          alert("Please type your answer first.");
+          return;
+        }
+
+        const btn = document.getElementById("btn-" + id);
+        btn.disabled = true;
+        btn.innerHTML =
+          '<span class="spinner"></span><span class="ml-2">Marking...</span>';
+
+        const fb = document.getElementById("fb-" + id);
+        fb.className =
+          "mt-4 rounded-r-xl p-5 text-sm leading-relaxed fb-loading";
+        fb.classList.remove("hidden");
+        document.getElementById("fbhd-" + id).textContent =
+          "Marking your answer...";
+        document.getElementById("fbb-" + id).innerHTML = "";
+
+        const prompt = `You are a strict UK student visa credibility interviewer.
+
+The student is applying to study "${course.name}" at Regent College London, campus: "${course.campus}".
+
+Evaluate the student's answer based ONLY on:
+- Relevance to the course
+- Clear knowledge of the course content
+- Clear reason for choosing Regent College London specifically
+- Genuine study intent (not immigration intent)
+- Clarity, structure, and confidence
+
+Question: "${q.q}"
+
+What a strong answer MUST include: ${q.cr}
+
+Student answer: "${ans}"
+
+Be strict. Do not be nice if the answer is weak.
+
+Return ONLY valid JSON in this exact format:
+{"pass":true,"score":80,"summary":"One clear sentence verdict specific to the answer.","good":["specific strength based on answer"],"improve":["specific weakness and how to fix it"]}
+
+Rules:
+- Make feedback specific to THIS answer (no generic advice)
+- Mention the course or school if missing or weak
+- Score must reflect quality (0-100)
+- Output ONLY JSON, no markdown, no extra text`;
+
+        try {
+          // FIX: Use Puter.js - completely free, no API key required!
+          // Users just need to sign in with a free Puter account when prompted
+          const response = await puter.ai.chat(prompt, {
+            model: "gpt-4o-mini", // Fast and cost-effective
+            stream: false,
+          });
+
+          // Parse response - Puter returns the message content directly
+          let raw = "";
+          if (typeof response === "string") {
+            raw = response;
+          } else if (response.message?.content) {
+            raw = response.message.content;
+          } else if (response.content) {
+            raw = response.content;
+          } else {
+            throw new Error("Unexpected response format");
+          }
+
+          // Extract JSON from response
+          raw = raw
+            .replace(/```json|```/g, "")
+            .replace(/\n/g, " ")
+            .trim();
+          const match = raw.match(/\{.*\}/);
+          if (!match) throw new Error("Invalid JSON response from AI");
+
+          const j = JSON.parse(match[0]);
+          if (typeof j.pass !== "boolean")
+            throw new Error("Invalid response structure");
+
+          // Update scores
+          if (j.pass) passN++;
+          else failN++;
+          totN++;
+          updScore();
+
+          // Display feedback
+          fb.className =
+            "mt-4 rounded-r-xl p-5 text-sm leading-relaxed " +
+            (j.pass ? "fb-pass" : "fb-fail");
+          document.getElementById("fbhd-" + id).innerHTML = j.pass
+            ? `<span class="text-success font-bold">✓ Passed</span> — ${j.summary}`
+            : `<span class="text-error font-bold">✘ Needs Improvement</span> — ${j.summary}`;
+
+          let h = "";
+          if (j.good?.length) {
+            h += j.good
+              .map(
+                (g) => `
+        <div class="flex items-start gap-2 mt-2 text-xs text-on-surface">
+          <span class="material-symbols-outlined text-success text-xs mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>
+          <span>${g}</span>
+        </div>
+      `,
+              )
+              .join("");
+          }
+          if (j.improve?.length) {
+            h += j.improve
+              .map(
+                (x) => `
+        <div class="flex items-start gap-2 mt-2 text-xs text-on-surface">
+          <span class="material-symbols-outlined text-error text-xs mt-0.5">warning</span>
+          <span>${x}</span>
+        </div>
+      `,
+              )
+              .join("");
+          }
+          document.getElementById("fbb-" + id).innerHTML = h;
+        } catch (e) {
+          console.error("AI marking error:", e);
+          fb.className =
+            "mt-4 rounded-r-xl p-5 text-sm leading-relaxed fb-fail";
+          document.getElementById("fbhd-" + id).innerHTML =
+            '<span class="text-error font-bold">Service Unavailable</span>';
+          document.getElementById("fbb-" + id).innerHTML = `
+      <div class="text-xs text-muted mt-2">
+        <p class="mb-2">Unable to connect to the AI marking service. This could be because:</p>
+        <ul class="list-disc pl-4 space-y-1">
+          <li>You need to sign in to Puter (free account) when prompted</li>
+          <li>Your internet connection is unstable</li>
+          <li>The service is temporarily busy</li>
+        </ul>
+        <p class="mt-2">Please try again in a moment.</p>
+      </div>
+    `;
+        }
+
+        btn.disabled = false;
+        btn.innerHTML =
+          '<span class="material-symbols-outlined text-sm">refresh</span><span class="ml-1">Check Again</span>';
+      }
+
+      function updScore() {
+        document.getElementById("sc-p").textContent = passN;
+        document.getElementById("sc-f").textContent = failN;
+        document.getElementById("sc-t").textContent = totN;
+        const pct = totN ? Math.round((passN / totN) * 100) : 0;
+        let msg = "Answer questions to track your readiness.";
+        if (totN > 0 && pct === 100)
+          msg = "Perfect score! You are ready for the interview.";
+        else if (pct >= 70)
+          msg = `${pct}% pass rate — review the questions you missed.`;
+        else if (pct >= 40)
+          msg = `${pct}% pass rate — keep practising the weaker areas.`;
+        else if (totN > 0)
+          msg = `${pct}% pass rate — read the hints and try again.`;
+        document.getElementById("sc-msg").textContent = msg;
+      }
+
+      function buildChecklist() {
+        const groups = [
+          {
+            title: "Course and Campus",
+            icon: "school",
+            color: "text-primary",
+            bg: "bg-primary-light",
+            items: [
+              "Know the exact name of your course and the university that awards it",
+              "Know your campus name, full street address, and postcode",
+              "Name at least 3 modules from your course and explain why each interests you",
+              "Know how your course is assessed — the specific methods",
+              "Downloaded and read the course specification from the University of Bolton website",
+              "Compared your course at Regent with 2 similar courses at other named UK universities",
+            ],
+          },
+          {
+            title: "Why Regent",
+            icon: "star",
+            color: "text-secondary",
+            bg: "bg-secondary-light",
+            items: [
+              "Know the 93% student satisfaction rate figure",
+              "Know what Thinking Into Character (TIC) is and what it covers",
+              "Know about the free laptop loan scheme",
+              "Know about the Student Development Services",
+              "Can explain clearly why you chose Regent over the two other universities you compared",
+            ],
+          },
+          {
+            title: "Career Plans",
+            icon: "work",
+            color: "text-accent",
+            bg: "bg-cyan-50",
+            items: [
+              "Named at least 2 specific real companies you plan to apply to after graduating",
+              "Have a specific job title and a realistic salary range in GBP ready",
+              "Can explain how you will use your qualification back home",
+              "Have a short-term (1-2 year) and long-term (5 year) career plan ready",
+            ],
+          },
+          {
+            title: "Finance and Accommodation",
+            icon: "currency_pound",
+            color: "text-primary",
+            bg: "bg-primary-light",
+            items: [
+              "Know your total tuition fee in GBP",
+              "Converted your tuition fee and savings to your local currency using Oanda",
+              "Know your monthly living cost estimate broken down by category",
+              "Know who is funding your studies and their income or savings details",
+              "Have a specific accommodation area and postcode ready from SpareRoom",
+              "Have a plan for covering unexpected expenses",
+            ],
+          },
+          {
+            title: "Visa Rules",
+            icon: "verified_user",
+            color: "text-secondary",
+            bg: "bg-secondary-light",
+            items: [
+              "Know the 20 hours per week working limit during term time",
+              "Know you can work full-time during official university holidays",
+              "Know you must attend all classes and report address changes",
+              "Know you cannot claim public funds in the UK",
+            ],
+          },
+          {
+            title: "Personal",
+            icon: "person",
+            color: "text-accent",
+            bg: "bg-cyan-50",
+            items: [
+              "Ready to explain what you have been doing since your last qualification",
+              "Ready to explain why you chose the UK over other countries",
+              "Ready to confirm you plan to return home after your studies with a specific reason",
+            ],
+          },
+        ];
+        let html = "",
+          n = 0;
+        groups.forEach((g) => {
+          html += `<div class="panel p-6 shadow-sm"><div class="flex items-center gap-2 mb-4"><span class="material-symbols-outlined text-sm ${g.color}">${g.icon}</span><span class="font-label text-xs font-bold uppercase tracking-widest ${g.color}">${g.title}</span></div><div>`;
+          g.items.forEach((item) => {
+            html += `<div class="check-item flex items-start gap-3 py-3" id="ci${n}"><div class="check-box" onclick="togCB(this)"></div><span class="text-on-surface text-sm leading-relaxed ct">${item}</span></div>`;
+            n++;
+          });
+          html += `</div></div>`;
+        });
+        document.getElementById("chk-content").innerHTML = html;
+        updProg();
+      }
+
+      function togCB(cb) {
+        cb.classList.toggle("done");
+        const ct = cb.parentElement.querySelector(".ct");
+        if (cb.classList.contains("done")) {
+          ct.style.textDecoration = "line-through";
+          ct.style.color = "#94a3b8";
+        } else {
+          ct.style.textDecoration = "";
+          ct.style.color = "";
+        }
+        updProg();
+      }
+
+      function updProg() {
+        const all = document.querySelectorAll("#chk-content .check-box");
+        const done = document.querySelectorAll("#chk-content .check-box.done");
+        const pct = all.length
+          ? Math.round((done.length / all.length) * 100)
+          : 0;
+        document.getElementById("prog-lbl").textContent =
+          `${done.length} of ${all.length} completed`;
+        document.getElementById("prog-pct").textContent = pct + "%";
+        document.getElementById("prog-fill").style.width = pct + "%";
+      }
+    </script>
+  </body>
+</html>

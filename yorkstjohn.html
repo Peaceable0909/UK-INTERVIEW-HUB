@@ -1,0 +1,3243 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      York St John University Interview Prep — Pre-CAS Credibility Interview
+      Simulator
+    </title>
+    <!-- Puter.js for free AI -->
+    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#d4351c", // YSJ Red
+              "primary-light": "#fde8e5",
+              "primary-mid": "#f5c2bb",
+              secondary: "#1d4ed8", // YSJ Blue
+              "secondary-light": "#dbeafe",
+              accent: "#0891b2",
+              surface: "#ffffff",
+              "surface-low": "#f8fafc",
+              "surface-mid": "#f1f5f9",
+              "surface-high": "#e2e8f0",
+              border: "#e2e8f0",
+              "border-strong": "#cbd5e1",
+              muted: "#64748b",
+              "on-surface": "#0f172a",
+              error: "#dc2626",
+              success: "#16a34a",
+            },
+            fontFamily: {
+              headline: ["Space Grotesk"],
+              body: ["Inter"],
+              label: ["Manrope"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        vertical-align: middle;
+      }
+
+      /* NAV */
+      .top-nav {
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid #e2e8f0;
+      }
+      .side-nav {
+        background: #ffffff;
+        border-right: 1px solid #e2e8f0;
+      }
+
+      /* CARDS */
+      .course-card {
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        transition: all 0.25s;
+        cursor: pointer;
+      }
+      .course-card:hover {
+        border-color: #d4351c;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(212, 53, 28, 0.1);
+      }
+      .course-card:hover .card-arrow {
+        opacity: 1;
+        transform: translateX(4px);
+      }
+      .card-arrow {
+        opacity: 0;
+        transition: all 0.2s;
+      }
+
+      /* PANEL */
+      .panel {
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 14px;
+      }
+      .panel-tinted {
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 14px;
+      }
+      .panel-primary {
+        background: #fde8e5;
+        border: 1.5px solid #f5c2bb;
+        border-radius: 14px;
+      }
+      .panel-secondary {
+        background: #dbeafe;
+        border: 1.5px solid #bfdbfe;
+        border-radius: 14px;
+      }
+
+      /* BUTTONS */
+      .btn-primary {
+        background: #d4351c;
+        color: #ffffff;
+        font-weight: 700;
+        transition: all 0.2s;
+      }
+      .btn-primary:hover {
+        background: #b91c1c;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(212, 53, 28, 0.25);
+      }
+      .btn-primary:active {
+        transform: scale(0.98);
+      }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+      .btn-ghost {
+        background: transparent;
+        border: 1.5px solid #e2e8f0;
+        color: #64748b;
+        transition: all 0.2s;
+      }
+      .btn-ghost:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+        border-color: #cbd5e1;
+      }
+
+      /* TABS */
+      .tab-btn {
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 8px 14px;
+        border-radius: 100px;
+        background: #f1f5f9;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .tab-btn:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+      }
+      .tab-btn.active {
+        background: #d4351c;
+        color: #ffffff;
+        font-weight: 800;
+      }
+
+      /* SIDE LINKS */
+      .side-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 24px;
+        color: #64748b;
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transition: all 0.2s;
+        cursor: pointer;
+        border-left: 3px solid transparent;
+      }
+      .side-link:hover {
+        color: #0f172a;
+        background: #f8fafc;
+      }
+      .side-link.active {
+        color: #d4351c;
+        background: #fde8e5;
+        border-left-color: #d4351c;
+      }
+
+      /* ACCORDION */
+      .acc-item {
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 8px;
+      }
+      .acc-item.open .acc-arrow {
+        transform: rotate(180deg);
+      }
+      .acc-body {
+        display: none;
+      }
+      .acc-item.open .acc-body {
+        display: block;
+      }
+
+      /* PROGRESS */
+      .progress-track {
+        background: #e2e8f0;
+        border-radius: 100px;
+        height: 6px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #1d4ed8, #d4351c);
+        border-radius: 100px;
+        transition: width 0.5s ease;
+        position: relative;
+      }
+      .progress-fill::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.6),
+          transparent
+        );
+        animation: sweep 3s ease infinite;
+      }
+      @keyframes sweep {
+        to {
+          left: 200%;
+        }
+      }
+
+      /* CHECKLIST */
+      .check-item {
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .check-item:last-child {
+        border-bottom: none;
+      }
+      .check-box {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #cbd5e1;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: all 0.15s;
+        margin-top: 2px;
+      }
+      .check-box:hover {
+        border-color: #d4351c;
+      }
+      .check-box.done {
+        background: #d4351c;
+        border-color: #d4351c;
+      }
+      .check-box.done::after {
+        content: "✓";
+        color: #fff;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      /* FEEDBACK */
+      .fb-pass {
+        background: #f0fdf4;
+        border-left: 4px solid #16a34a;
+        border-radius: 0 10px 10px 0;
+      }
+      .fb-fail {
+        background: #fef2f2;
+        border-left: 4px solid #dc2626;
+        border-radius: 0 10px 10px 0;
+      }
+      .fb-loading {
+        background: #fde8e5;
+        border-left: 4px solid #d4351c;
+        border-radius: 0 10px 10px 0;
+      }
+
+      /* CHIPS */
+      .chip-pg {
+        background: #fde8e5;
+        color: #d4351c;
+        border: 1px solid #f5c2bb;
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 100px;
+        display: inline-block;
+      }
+      .chip-ug {
+        background: #dbeafe;
+        color: #1d4ed8;
+        border: 1px solid #bfdbfe;
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 100px;
+        display: inline-block;
+      }
+
+      /* Q NUMBER */
+      .q-num {
+        background: #fde8e5;
+        color: #d4351c;
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        padding: 2px 7px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        margin-top: 2px;
+        letter-spacing: 0.05em;
+      }
+
+      /* FILTER BUTTONS */
+      .filter-btn {
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 6px 14px;
+        border-radius: 100px;
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .filter-btn:hover {
+        border-color: #cbd5e1;
+        color: #0f172a;
+      }
+      .filter-btn.active {
+        background: #fde8e5;
+        border-color: #d4351c;
+        color: #d4351c;
+      }
+
+      /* RESOURCE CARDS */
+      .lcard {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        text-decoration: none;
+        color: #0f172a;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .lcard:hover {
+        background: #fff5f5;
+        border-color: #d4351c;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(212, 53, 28, 0.08);
+      }
+      .lsub {
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 500;
+        margin-top: 2px;
+        display: block;
+        font-family: "Manrope", sans-serif;
+      }
+
+      /* TEXTAREA */
+      textarea.sim-input {
+        background: #f8fafc;
+        border: none;
+        border-bottom: 2px solid #e2e8f0;
+        border-radius: 0;
+        color: #0f172a;
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+        resize: vertical;
+        padding: 12px 0;
+        width: 100%;
+      }
+      textarea.sim-input:focus {
+        border-bottom-color: #d4351c;
+        background: #fff;
+      }
+      textarea.sim-input::placeholder {
+        color: #94a3b8;
+      }
+
+      /* SCREENS */
+      .screen {
+        display: none;
+      }
+      .screen.active {
+        display: block;
+      }
+      .tc {
+        display: none;
+      }
+      .tc.active {
+        display: block;
+      }
+
+      /* SPINNER */
+      .spinner {
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* SCORE */
+      .score-num {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 2rem;
+        font-weight: 900;
+      }
+
+      /* INFO CARD */
+      .icard {
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 20px;
+      }
+
+      /* MODULE ITEM */
+      .mod-item {
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 18px 20px;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        margin-bottom: 8px;
+      }
+      .mod-num {
+        background: #d4351c;
+        color: #fff;
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        padding: 3px 8px;
+        border-radius: 5px;
+        flex-shrink: 0;
+        margin-top: 2px;
+        letter-spacing: 0.05em;
+      }
+
+      /* Mobile layout */
+      @media (max-width: 768px) {
+        .side-panel {
+          display: none !important;
+        }
+        .main-offset {
+          margin-left: 0 !important;
+        }
+        .mobile-tab-bar {
+          display: flex !important;
+        }
+        .tc {
+          padding-top: 116px !important;
+        }
+      }
+
+      .mobile-tab-bar {
+        display: none;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-surface-low text-on-surface font-body min-h-screen"
+    style="font-family: &quot;Inter&quot;, sans-serif"
+  >
+    <!-- ======================================================
+     COURSE SELECT SCREEN
+====================================================== -->
+    <div id="s-select" class="screen active min-h-screen">
+      <div
+        class="top-nav fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-14"
+      >
+        <span
+          class="font-headline font-black text-primary text-lg tracking-tight"
+          >YSJ Interview</span
+        >
+        <span
+          class="font-label text-xs font-bold uppercase tracking-widest text-muted"
+          >UK Visa Interview Prep</span
+        >
+      </div>
+
+      <div
+        class="pt-14 flex flex-col items-center px-6 py-16 max-w-4xl mx-auto"
+      >
+        <div class="text-center mb-14">
+          <div
+            class="inline-flex items-center gap-2 mb-5 px-4 py-1.5 rounded-full bg-primary-light border border-primary-mid"
+          >
+            <span class="material-symbols-outlined text-primary text-sm"
+              >school</span
+            >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-primary"
+              >York St John University</span
+            >
+          </div>
+          <h1
+            class="font-headline text-4xl md:text-5xl font-black text-on-surface leading-tight mb-4"
+          >
+            Pre-CAS Credibility Interview<br /><span class="text-primary"
+              >Simulator</span
+            >
+          </h1>
+          <p class="text-muted text-sm max-w-md mx-auto leading-relaxed">
+            Select your programme to get your personalised prep pack: training
+            video, full guide, all questions, sample answers, and AI marking.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3 mb-6 w-full">
+          <div class="h-px flex-1 bg-border"></div>
+          <span
+            class="font-label text-xs font-bold uppercase tracking-widest text-muted"
+            >Choose your programme</span
+          >
+          <div class="h-px flex-1 bg-border"></div>
+        </div>
+
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full"
+        >
+          <!-- York Campus - Undergraduate -->
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('ba-business')"
+          >
+            <span class="chip-ug mb-4">Undergraduate · York</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              BA (Hons) Business Management
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              York Campus · YO31 7EX
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('ba-marketing')"
+          >
+            <span class="chip-ug mb-4">Undergraduate · York</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              BA (Hons) Marketing
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              York Campus · YO31 7EX
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('ba-computing')"
+          >
+            <span class="chip-ug mb-4">Undergraduate · York</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              BSc (Hons) Computer Science
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              York Campus · YO31 7EX
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <!-- York Campus - Postgraduate -->
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('msc-intbusiness')"
+          >
+            <span class="chip-pg mb-4">Postgraduate · York</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              MSc International Business
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              York Campus · YO31 7EX
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('msc-datasci')"
+          >
+            <span class="chip-pg mb-4">Postgraduate · York</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              MSc Data Science
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              York Campus · YO31 7EX
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('msc-computing')"
+          >
+            <span class="chip-pg mb-4">Postgraduate · York</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              MSc Computing
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              York Campus · YO31 7EX
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <!-- London Campus -->
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('mba-london')"
+          >
+            <span class="chip-pg mb-4">Postgraduate · London</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              MBA (Master of Business Administration)
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              London Campus · E14 2BA
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-secondary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('msc-intbusiness-london')"
+          >
+            <span class="chip-pg mb-4">Postgraduate · London</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              MSc International Business (London)
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              London Campus · E14 2BA
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-secondary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('msc-datasci-london')"
+          >
+            <span class="chip-pg mb-4">Postgraduate · London</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              MSc Data Science (London)
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              London Campus · E14 2BA
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-secondary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================
+     MAIN SCREEN
+====================================================== -->
+    <div id="s-main" class="screen">
+      <header
+        class="top-nav fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 h-14"
+      >
+        <div class="flex items-center gap-3">
+          <button
+            onclick="goBack()"
+            class="btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+          >
+            <span class="material-symbols-outlined text-sm">arrow_back</span
+            >Change
+          </button>
+          <div class="w-px h-5 bg-border"></div>
+          <div>
+            <div
+              class="font-headline font-bold text-sm text-on-surface"
+              id="tb-name"
+            ></div>
+            <div
+              class="font-label text-xs text-primary font-bold"
+              id="tb-campus"
+            ></div>
+          </div>
+        </div>
+        <span
+          class="font-headline font-black text-primary text-base tracking-tight hidden md:block"
+          >YSJ Prep</span
+        >
+        <div class="w-32 hidden md:block"></div>
+      </header>
+
+      <div class="flex pt-14">
+        <!-- Side nav (desktop) -->
+        <aside
+          class="side-panel side-nav hidden md:flex w-56 fixed left-0 top-14 h-[calc(100vh-3.5rem)] flex-col z-40 overflow-y-auto"
+        >
+          <div class="px-6 py-5 border-b border-border">
+            <p
+              class="font-label text-xs font-bold uppercase tracking-widest text-muted"
+            >
+              Simulation Hub
+            </p>
+          </div>
+          <nav class="py-2 flex-1">
+            <div
+              class="side-link active"
+              id="sl-video"
+              onclick="showTab('video', 'sl-video')"
+            >
+              <span class="material-symbols-outlined text-base"
+                >play_circle</span
+              >Training Video
+            </div>
+            <div
+              class="side-link"
+              id="sl-guide"
+              onclick="showTab('guide', 'sl-guide')"
+            >
+              <span class="material-symbols-outlined text-base">menu_book</span
+              >Full Guide
+            </div>
+            <div
+              class="side-link"
+              id="sl-know"
+              onclick="showTab('know', 'sl-know')"
+            >
+              <span class="material-symbols-outlined text-base">school</span
+              >What to Know
+            </div>
+            <div
+              class="side-link"
+              id="sl-questions"
+              onclick="showTab('questions', 'sl-questions')"
+            >
+              <span class="material-symbols-outlined text-base">quiz</span>All
+              Questions
+            </div>
+            <div
+              class="side-link"
+              id="sl-samples"
+              onclick="showTab('samples', 'sl-samples')"
+            >
+              <span class="material-symbols-outlined text-base"
+                >chat_bubble</span
+              >Sample Answers
+            </div>
+            <div
+              class="side-link"
+              id="sl-practice"
+              onclick="showTab('practice', 'sl-practice')"
+            >
+              <span class="material-symbols-outlined text-base">biotech</span
+              >Practice &amp; Mark
+            </div>
+            <div
+              class="side-link"
+              id="sl-resources"
+              onclick="showTab('resources', 'sl-resources')"
+            >
+              <span class="material-symbols-outlined text-base">link</span
+              >Resources
+            </div>
+            <div
+              class="side-link"
+              id="sl-checklist"
+              onclick="showTab('checklist', 'sl-checklist')"
+            >
+              <span class="material-symbols-outlined text-base">checklist</span
+              >Checklist
+            </div>
+          </nav>
+        </aside>
+
+        <!-- Mobile tab bar -->
+        <div
+          class="mobile-tab-bar fixed top-14 left-0 right-0 z-40 bg-white border-b border-border shadow-sm"
+        >
+          <div
+            class="flex overflow-x-auto px-3 py-2 gap-2"
+            style="-ms-overflow-style: none; scrollbar-width: none"
+          >
+            <button
+              class="tab-btn active"
+              id="mt-video"
+              onclick="showTab('video', 'mt-video', true)"
+            >
+              Video
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-guide"
+              onclick="showTab('guide', 'mt-guide', true)"
+            >
+              Guide
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-know"
+              onclick="showTab('know', 'mt-know', true)"
+            >
+              Know
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-questions"
+              onclick="showTab('questions', 'mt-questions', true)"
+            >
+              Questions
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-samples"
+              onclick="showTab('samples', 'mt-samples', true)"
+            >
+              Samples
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-practice"
+              onclick="showTab('practice', 'mt-practice', true)"
+            >
+              Practice
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-resources"
+              onclick="showTab('resources', 'mt-resources', true)"
+            >
+              Resources
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-checklist"
+              onclick="showTab('checklist', 'mt-checklist', true)"
+            >
+              Checklist
+            </button>
+          </div>
+        </div>
+
+        <!-- Main content area -->
+        <main class="main-offset md:ml-56 flex-1 min-h-screen">
+          <!-- VIDEO TAB -->
+          <div
+            class="tc active px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-video"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 0 — Orientation</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                Training Video
+              </h2>
+              <p class="text-muted text-sm mb-7 leading-relaxed max-w-xl">
+                Watch this in full before your interview. It covers everything
+                the interviewer expects you to know.
+              </p>
+
+              <div
+                class="rounded-2xl overflow-hidden border border-border mb-8 shadow-sm"
+              >
+                <iframe
+                  id="yt-frame"
+                  class="w-full"
+                  style="aspect-ratio: 16/9"
+                  src="https://www.youtube.com/embed/KsvzkB-po-I?si=cXoDLhr-N0lYGgLb"
+                  title="Training Video"
+                  frameborder="0"
+                  allow="
+                    accelerometer;
+                    autoplay;
+                    clipboard-write;
+                    encrypted-media;
+                    gyroscope;
+                    picture-in-picture;
+                  "
+                  allowfullscreen
+                ></iframe>
+              </div>
+
+              <div class="panel-primary p-7 mb-5">
+                <div class="flex items-center gap-2 mb-4">
+                  <span class="material-symbols-outlined text-primary text-sm"
+                    >lightbulb</span
+                  >
+                  <span
+                    class="font-label text-xs font-bold uppercase tracking-widest text-primary"
+                    >After watching, make sure you know</span
+                  >
+                </div>
+                <div
+                  id="vid-notes"
+                  class="text-on-surface text-sm leading-relaxed space-y-2"
+                ></div>
+              </div>
+
+              <div class="panel-secondary p-7">
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="material-symbols-outlined text-secondary text-sm"
+                    >map</span
+                  >
+                  <span
+                    class="font-label text-xs font-bold uppercase tracking-widest text-secondary"
+                    >How to use this site</span
+                  >
+                </div>
+                <p class="text-on-surface text-sm leading-relaxed">
+                  Start with the video. Then go to
+                  <strong>Full Guide</strong> to read the complete preparation
+                  guide. Use <strong>What to Know</strong> for course-specific
+                  facts. Read <strong>All Questions</strong> so nothing
+                  surprises you. Study the <strong>Sample Answers</strong>. Then
+                  go to <strong>Practice and Mark</strong> — type your own
+                  answers and the AI will give you a pass or improvement
+                  feedback. Tick off the <strong>Checklist</strong> before your
+                  interview date.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FULL GUIDE TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-guide"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 1 — Preparation</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                Complete Interview Guide
+              </h2>
+              <p class="text-muted text-sm mb-7 max-w-xl leading-relaxed">
+                Everything you need to know, in the order you should learn it.
+                Read all sections.
+              </p>
+
+              <div class="acc-item open" id="ga0">
+                <button
+                  class="w-full flex items-center justify-between p-5 text-left"
+                  onclick="togAcc('ga0')"
+                >
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-9 h-9 rounded-xl bg-primary-light flex items-center justify-center flex-shrink-0"
+                    >
+                      <span
+                        class="font-headline font-black text-xs text-primary"
+                        >00</span
+                      >
+                    </div>
+                    <div>
+                      <h3
+                        class="font-headline font-bold text-sm text-on-surface"
+                      >
+                        Understanding the Pre-CAS Interview Purpose
+                      </h3>
+                      <p
+                        class="font-label text-xs text-muted uppercase tracking-wider mt-0.5"
+                      >
+                        Foundation
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="material-symbols-outlined text-primary acc-arrow transition-transform duration-300 flex-shrink-0"
+                    >expand_more</span
+                  >
+                </button>
+                <div class="acc-body px-5 pb-5 pt-0">
+                  <div
+                    class="border-t border-border pt-4 text-muted text-sm leading-relaxed space-y-3"
+                  >
+                    <p>
+                      The Pre-CAS interview is designed to confirm that you are
+                      a genuine student, have researched your course and
+                      university, and are prepared academically, financially,
+                      and personally for your studies in the UK. Your interview
+                      will be recorded and assessed before your CAS
+                      (Confirmation of Acceptance for Studies) is issued.
+                    </p>
+                    <p>
+                      If you answer confidently, naturally, and truthfully, you
+                      will pass. Your answers should sound like things you
+                      discovered through your own research, not like a memorised
+                      script. The interviewer is checking you are a genuine
+                      student with clear academic and career motivation.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div id="guide-sections"></div>
+
+              <div class="panel-primary p-7 mt-4">
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="material-symbols-outlined text-primary text-sm"
+                    >verified</span
+                  >
+                  <span
+                    class="font-label text-xs font-bold uppercase tracking-widest text-primary"
+                    >Final tips to pass</span
+                  >
+                </div>
+                <p class="text-on-surface text-sm leading-relaxed">
+                  Review your Statement of Purpose (SOP) before the interview.
+                  Answer clearly and confidently — avoid memorised scripts.
+                  Ensure a quiet environment, stable internet, and professional
+                  appearance. Prepare to speak naturally in English; your
+                  fluency is part of the assessment. Most importantly: show
+                  genuine enthusiasm for your course and university. Stay calm
+                  during follow-up questions and maintain eye contact.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- WHAT TO KNOW TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-know"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 2 — Intelligence Brief</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                What You Must Know
+              </h2>
+              <p class="text-muted text-sm mb-7 max-w-xl leading-relaxed">
+                These facts are specific to your course. Know all of them before
+                your interview.
+              </p>
+              <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8"
+                id="know-cards"
+              ></div>
+
+              <div class="flex items-center gap-2 mb-4">
+                <span class="material-symbols-outlined text-secondary text-sm"
+                  >layers</span
+                >
+                <span
+                  class="font-label text-xs font-bold uppercase tracking-widest text-secondary"
+                  >Your Course Modules</span
+                >
+              </div>
+              <div id="mod-list" class="mb-8"></div>
+
+              <div class="panel-primary p-7 mb-4">
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="material-symbols-outlined text-primary text-sm"
+                    >star</span
+                  >
+                  <span
+                    class="font-label text-xs font-bold uppercase tracking-widest text-primary"
+                    >Why YSJ — Key Points</span
+                  >
+                </div>
+                <p class="text-on-surface text-sm leading-relaxed">
+                  Ranked in the top 10 UK universities for student satisfaction
+                  (PTES 2025). 11-acre city centre campus in historic York,
+                  close to York Minster and city walls. £100 million invested in
+                  facilities including Creative Centre and Foss Building.
+                  Gold-rated teaching excellence. Strong employability support
+                  with career-focused courses. Smaller cohort sizes for
+                  personalised feedback. CMI-accredited leadership content in
+                  many business courses.
+                </p>
+              </div>
+              <div id="course-spec-link"></div>
+            </div>
+          </div>
+
+          <!-- ALL QUESTIONS TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-questions"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 3 — Question Bank</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                All Interview Questions
+              </h2>
+              <p class="text-muted text-sm mb-7 max-w-xl leading-relaxed">
+                Every question you may be asked. Read all of them and prepare an
+                answer for each one.
+              </p>
+              <div id="all-questions-list"></div>
+            </div>
+          </div>
+
+          <!-- SAMPLE ANSWERS TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-samples"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 4 — Response Library</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                Sample Natural Answers
+              </h2>
+              <p class="text-muted text-sm mb-7 max-w-xl leading-relaxed">
+                Model answers in a calm, natural style. Adapt them with your own
+                details — never recite word for word.
+              </p>
+              <div class="space-y-5">
+                <div class="panel p-6">
+                  <div class="flex items-start gap-3 mb-4">
+                    <span class="q-num mt-0.5">Q</span>
+                    <p class="font-headline font-bold text-sm text-on-surface">
+                      Why did you choose to study in the UK?
+                    </p>
+                  </div>
+                  <div
+                    class="border-l-4 border-primary-mid pl-5 mb-4 italic text-muted text-sm leading-relaxed"
+                  >
+                    "I chose the UK because of the international recognition of
+                    UK degrees, the shorter course duration of one year for
+                    masters, and the quality of teaching. The UK education
+                    system is intensive and globally respected. I also
+                    considered the post-study work opportunities available in
+                    the UK compared to other countries like the USA, which has
+                    higher costs, or Australia, which has more work
+                    restrictions."
+                  </div>
+                  <div
+                    class="flex items-start gap-2 text-xs text-muted border-t border-border pt-3"
+                  >
+                    <span
+                      class="material-symbols-outlined text-xs text-primary mt-0.5"
+                      >tips_and_updates</span
+                    ><span
+                      >Compare UK with other countries you considered. Mention
+                      specific advantages like duration, cost, or work
+                      opportunities.</span
+                    >
+                  </div>
+                </div>
+
+                <div class="panel p-6">
+                  <div class="flex items-start gap-3 mb-4">
+                    <span class="q-num mt-0.5">Q</span>
+                    <p class="font-headline font-bold text-sm text-on-surface">
+                      Why did you choose York St John University specifically?
+                    </p>
+                  </div>
+                  <div
+                    class="border-l-4 border-primary-mid pl-5 mb-4 italic text-muted text-sm leading-relaxed"
+                  >
+                    "I compared York St John with Northumbria and Sheffield
+                    Hallam. Northumbria offered a similar MSc, but I preferred
+                    YSJ because of its smaller cohort sizes, which I believe
+                    will allow me to receive more personalised feedback.
+                    Sheffield Hallam's course didn't include the leadership and
+                    professional development modules that YSJ offers. I also
+                    liked that the York campus is in a quieter, student-friendly
+                    city, which suits my study style. YSJ is also ranked in the
+                    top 10 for student satisfaction."
+                  </div>
+                  <div
+                    class="flex items-start gap-2 text-xs text-muted border-t border-border pt-3"
+                  >
+                    <span
+                      class="material-symbols-outlined text-xs text-primary mt-0.5"
+                      >tips_and_updates</span
+                    ><span
+                      >Name 2-3 other universities you compared YSJ with. Give
+                      specific reasons — rankings, course structure, teaching
+                      quality, location, or facilities.</span
+                    >
+                  </div>
+                </div>
+
+                <div class="panel p-6">
+                  <div class="flex items-start gap-3 mb-4">
+                    <span class="q-num mt-0.5">Q</span>
+                    <p class="font-headline font-bold text-sm text-on-surface">
+                      Why did you choose this programme?
+                    </p>
+                  </div>
+                  <div
+                    class="border-l-4 border-primary-mid pl-5 mb-4 italic text-muted text-sm leading-relaxed"
+                  >
+                    "I chose the MSc International Business at YSJ because of
+                    modules like Global Strategic Management and Business
+                    Analytics. In my final year of my BBA, I focused my
+                    dissertation on how SMEs use data to develop marketing
+                    strategies, which made me realise I want stronger analytical
+                    and global decision-making skills. The course's
+                    CMI-accredited leadership content will help me progress into
+                    an international business development role."
+                  </div>
+                  <div
+                    class="flex items-start gap-2 text-xs text-muted border-t border-border pt-3"
+                  >
+                    <span
+                      class="material-symbols-outlined text-xs text-primary mt-0.5"
+                      >tips_and_updates</span
+                    ><span
+                      >Connect specific modules to your previous study or work
+                      experience. Explain how this fills a gap in your skills or
+                      knowledge.</span
+                    >
+                  </div>
+                </div>
+
+                <div class="panel p-6">
+                  <div class="flex items-start gap-3 mb-4">
+                    <span class="q-num mt-0.5">Q</span>
+                    <p class="font-headline font-bold text-sm text-on-surface">
+                      What modules will you study?
+                    </p>
+                  </div>
+                  <div
+                    class="border-l-4 border-primary-mid pl-5 mb-4 italic text-muted text-sm leading-relaxed"
+                  >
+                    "I will study Corporate Finance, Risk Management, and
+                    Research Methods. I am particularly interested in Risk
+                    Management because it will help me understand how to assess
+                    financial uncertainties in international markets. I also
+                    look forward to the Research Methods module as it will
+                    prepare me for my dissertation."
+                  </div>
+                  <div
+                    class="flex items-start gap-2 text-xs text-muted border-t border-border pt-3"
+                  >
+                    <span
+                      class="material-symbols-outlined text-xs text-primary mt-0.5"
+                      >tips_and_updates</span
+                    ><span
+                      >Name at least 2-3 correct modules from your course.
+                      Briefly explain why one interests you specifically.</span
+                    >
+                  </div>
+                </div>
+
+                <div class="panel p-6">
+                  <div class="flex items-start gap-3 mb-4">
+                    <span class="q-num mt-0.5">Q</span>
+                    <p class="font-headline font-bold text-sm text-on-surface">
+                      Where will you stay in the UK?
+                    </p>
+                  </div>
+                  <div
+                    class="border-l-4 border-primary-mid pl-5 mb-4 italic text-muted text-sm leading-relaxed"
+                  >
+                    "I plan to stay in university-managed accommodation at The
+                    Grange, which costs approximately £129 per week. It is less
+                    than 1 mile from campus and is self-catered with single
+                    occupancy rooms. I have researched this thoroughly and it
+                    fits my budget well. The accommodation includes contents
+                    insurance and is covered by 24/7 security."
+                  </div>
+                  <div
+                    class="flex items-start gap-2 text-xs text-muted border-t border-border pt-3"
+                  >
+                    <span
+                      class="material-symbols-outlined text-xs text-primary mt-0.5"
+                      >tips_and_updates</span
+                    ><span
+                      >For York: mention specific accommodation name, weekly
+                      cost, and distance. For London: mention private
+                      accommodation as there is no university-provided
+                      accommodation.</span
+                    >
+                  </div>
+                </div>
+
+                <div class="panel p-6">
+                  <div class="flex items-start gap-3 mb-4">
+                    <span class="q-num mt-0.5">Q</span>
+                    <p class="font-headline font-bold text-sm text-on-surface">
+                      How much is your tuition fee?
+                    </p>
+                  </div>
+                  <div
+                    class="border-l-4 border-primary-mid pl-5 mb-4 italic text-muted text-sm leading-relaxed"
+                  >
+                    "My tuition fee is £11,800 for the full programme. I have
+                    already paid the £5,900 deposit, and the remaining £5,900
+                    will be paid in instalments. I have the funds available in
+                    my bank account and can show the bank statements as proof."
+                  </div>
+                  <div
+                    class="flex items-start gap-2 text-xs text-muted border-t border-border pt-3"
+                  >
+                    <span
+                      class="material-symbols-outlined text-xs text-primary mt-0.5"
+                      >tips_and_updates</span
+                    ><span
+                      >Know the exact figure. State how much you've paid and how
+                      much remains. Mention you have proof of funds
+                      available.</span
+                    >
+                  </div>
+                </div>
+
+                <div class="panel p-6">
+                  <div class="flex items-start gap-3 mb-4">
+                    <span class="q-num mt-0.5">Q</span>
+                    <p class="font-headline font-bold text-sm text-on-surface">
+                      Who is sponsoring you?
+                    </p>
+                  </div>
+                  <div
+                    class="border-l-4 border-primary-mid pl-5 mb-4 italic text-muted text-sm leading-relaxed"
+                  >
+                    "My father is sponsoring me. He is a civil engineer earning
+                    approximately £45,000 per year. He has been saving for my
+                    education for the past three years and has sufficient funds
+                    in his account to cover my tuition and living costs. I can
+                    provide his employment letter and bank statements as
+                    evidence."
+                  </div>
+                  <div
+                    class="flex items-start gap-2 text-xs text-muted border-t border-border pt-3"
+                  >
+                    <span
+                      class="material-symbols-outlined text-xs text-primary mt-0.5"
+                      >tips_and_updates</span
+                    ><span
+                      >State the relationship clearly. Mention their occupation
+                      and approximate income. Confirm you have documentary
+                      evidence.</span
+                    >
+                  </div>
+                </div>
+
+                <div class="panel p-6">
+                  <div class="flex items-start gap-3 mb-4">
+                    <span class="q-num mt-0.5">Q</span>
+                    <p class="font-headline font-bold text-sm text-on-surface">
+                      What are your plans after graduation?
+                    </p>
+                  </div>
+                  <div
+                    class="border-l-4 border-primary-mid pl-5 mb-4 italic text-muted text-sm leading-relaxed"
+                  >
+                    "I will return to Nigeria to work in investment banking. I
+                    plan to apply to companies like Stanbic IBTC or Access Bank
+                    in their corporate finance divisions. This course will give
+                    me the international business knowledge and analytical
+                    skills that are in high demand in Nigeria's growing
+                    financial sector. I expect a starting salary of
+                    approximately ₦8-10 million per annum."
+                  </div>
+                  <div
+                    class="flex items-start gap-2 text-xs text-muted border-t border-border pt-3"
+                  >
+                    <span
+                      class="material-symbols-outlined text-xs text-primary mt-0.5"
+                      >tips_and_updates</span
+                    ><span
+                      >Be specific about returning home. Name actual companies
+                      and job roles. Explain how the course qualifies you for
+                      these roles.</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PRACTICE TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-practice"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 5 — Practice Lab</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                Practice &amp; Mark
+              </h2>
+              <p class="text-muted text-sm mb-7 max-w-xl leading-relaxed">
+                Type your answer and press Check. The AI marks it and gives you
+                a pass or tells you what to improve.
+              </p>
+
+              <div
+                class="panel p-6 mb-7 flex items-center gap-6 flex-wrap shadow-sm"
+              >
+                <div class="text-center">
+                  <div class="score-num text-primary" id="sc-p">0</div>
+                  <div
+                    class="font-label text-xs font-bold uppercase tracking-widest text-muted mt-1"
+                  >
+                    Passed
+                  </div>
+                </div>
+                <div class="w-px h-10 bg-border"></div>
+                <div class="text-center">
+                  <div class="score-num text-error" id="sc-f">0</div>
+                  <div
+                    class="font-label text-xs font-bold uppercase tracking-widest text-muted mt-1"
+                  >
+                    Needs Work
+                  </div>
+                </div>
+                <div class="w-px h-10 bg-border"></div>
+                <div class="text-center">
+                  <div class="score-num text-on-surface" id="sc-t">0</div>
+                  <div
+                    class="font-label text-xs font-bold uppercase tracking-widest text-muted mt-1"
+                  >
+                    Checked
+                  </div>
+                </div>
+                <div class="w-px h-10 bg-border hidden sm:block"></div>
+                <p
+                  class="text-muted text-xs flex-1 min-w-32 leading-relaxed"
+                  id="sc-msg"
+                >
+                  Answer questions to track your readiness.
+                </p>
+              </div>
+
+              <div class="flex flex-wrap gap-2 mb-7">
+                <button class="filter-btn active" onclick="filtQ('all', this)">
+                  All
+                </button>
+                <button class="filter-btn" onclick="filtQ('course', this)">
+                  Course
+                </button>
+                <button class="filter-btn" onclick="filtQ('ysj', this)">
+                  Why YSJ
+                </button>
+                <button class="filter-btn" onclick="filtQ('career', this)">
+                  Career
+                </button>
+                <button class="filter-btn" onclick="filtQ('finance', this)">
+                  Finance
+                </button>
+                <button class="filter-btn" onclick="filtQ('living', this)">
+                  Living
+                </button>
+                <button class="filter-btn" onclick="filtQ('visa', this)">
+                  Visa
+                </button>
+              </div>
+
+              <div id="pqs" class="space-y-5 pb-10"></div>
+            </div>
+          </div>
+
+          <!-- RESOURCES TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-resources"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 6 — Research Links</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                Resources
+              </h2>
+              <p class="text-muted text-sm mb-7 max-w-xl leading-relaxed">
+                The interviewer expects you to know all of these websites. Click
+                each one and read the content thoroughly.
+              </p>
+              <div class="space-y-8 pb-10">
+                <div>
+                  <div
+                    class="font-label text-xs font-bold uppercase tracking-widest text-primary mb-4 flex items-center gap-2"
+                  >
+                    <span class="material-symbols-outlined text-sm">school</span
+                    >York St John University
+                  </div>
+                  <div class="grid sm:grid-cols-2 gap-3">
+                    <a
+                      href="https://www.yorksj.ac.uk/study/courses/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >language</span
+                      >
+                      <div>
+                        <strong>YSJ Course Finder</strong
+                        ><span class="lsub"
+                          >All undergraduate and postgraduate courses</span
+                        >
+                      </div></a
+                    >
+                    <a
+                      href="https://www.yorksj.ac.uk/campus-and-facilities/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >apartment</span
+                      >
+                      <div>
+                        <strong>Campus and Facilities</strong
+                        ><span class="lsub"
+                          >Virtual tours and campus information</span
+                        >
+                      </div></a
+                    >
+                    <a
+                      href="https://www.yorksj.ac.uk/study/accommodation/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >home</span
+                      >
+                      <div>
+                        <strong>Accommodation</strong
+                        ><span class="lsub">Halls and living costs</span>
+                      </div></a
+                    >
+                    <a
+                      href="https://www.yorksj.ac.uk/about/why-york-st-john/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >workspace_premium</span
+                      >
+                      <div>
+                        <strong>Why Choose YSJ</strong
+                        ><span class="lsub">Rankings and reputation</span>
+                      </div></a
+                    >
+                  </div>
+                </div>
+                <div>
+                  <div
+                    class="font-label text-xs font-bold uppercase tracking-widest text-secondary mb-4 flex items-center gap-2"
+                  >
+                    <span class="material-symbols-outlined text-sm"
+                      >location_on</span
+                    >Campus Locations
+                  </div>
+                  <div class="grid sm:grid-cols-2 gap-3">
+                    <a
+                      href="https://www.yorksj.ac.uk/campus-and-facilities/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-secondary text-xl"
+                        >apartment</span
+                      >
+                      <div>
+                        <strong>York Campus</strong
+                        ><span class="lsub"
+                          >Lord Mayor's Walk, York, YO31 7EX</span
+                        >
+                      </div></a
+                    >
+                    <a
+                      href="https://www.yorksj.ac.uk/london-campus/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-secondary text-xl"
+                        >apartment</span
+                      >
+                      <div>
+                        <strong>London Campus</strong
+                        ><span class="lsub"
+                          >6th Floor Export Building, 1 Clove Crescent, London
+                          E14 2BA</span
+                        >
+                      </div></a
+                    >
+                  </div>
+                </div>
+                <div>
+                  <div
+                    class="font-label text-xs font-bold uppercase tracking-widest text-accent mb-4 flex items-center gap-2"
+                  >
+                    <span class="material-symbols-outlined text-sm"
+                      >description</span
+                    >Course Specifications
+                  </div>
+                  <a
+                    href="https://www.yorksj.ac.uk/study/courses/"
+                    target="_blank"
+                    class="lcard"
+                    ><span class="material-symbols-outlined text-accent text-xl"
+                      >article</span
+                    >
+                    <div>
+                      <strong>YSJ Course Directory</strong
+                      ><span class="lsub"
+                        >Full course details and module information</span
+                      >
+                    </div></a
+                  >
+                </div>
+                <div>
+                  <div
+                    class="font-label text-xs font-bold uppercase tracking-widest text-primary mb-4 flex items-center gap-2"
+                  >
+                    <span class="material-symbols-outlined text-sm"
+                      >currency_pound</span
+                    >Cost of Living
+                  </div>
+                  <div class="grid sm:grid-cols-2 gap-3">
+                    <a
+                      href="https://www.yorksj.ac.uk/study/accommodation/paying-for-accommodation/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >receipt_long</span
+                      >
+                      <div>
+                        <strong>Accommodation Costs</strong
+                        ><span class="lsub">£129-£222 per week</span>
+                      </div></a
+                    >
+                    <a
+                      href="https://www.yorksj.ac.uk/study/fees-and-funding/living-costs/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >bar_chart</span
+                      >
+                      <div>
+                        <strong>Living Costs Guide</strong
+                        ><span class="lsub">Budgeting and expenses</span>
+                      </div></a
+                    >
+                    <a
+                      href="https://www.oanda.com/currency-converter/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >currency_exchange</span
+                      >
+                      <div>
+                        <strong>Oanda Currency Converter</strong
+                        ><span class="lsub">Convert your currency to GBP</span>
+                      </div></a
+                    >
+                    <a
+                      href="https://www.spareroom.co.uk/"
+                      target="_blank"
+                      class="lcard"
+                      ><span
+                        class="material-symbols-outlined text-primary text-xl"
+                        >home</span
+                      >
+                      <div>
+                        <strong>SpareRoom</strong
+                        ><span class="lsub"
+                          >Find rooms (especially for London)</span
+                        >
+                      </div></a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CHECKLIST TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-checklist"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 7 — Readiness</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                Readiness Checklist
+              </h2>
+              <p class="text-muted text-sm mb-7 max-w-xl leading-relaxed">
+                Tick every item before your interview date. If anything is
+                unticked, go back and prepare it.
+              </p>
+
+              <div class="panel p-6 mb-7 shadow-sm">
+                <div class="flex justify-between items-center mb-3">
+                  <span
+                    class="font-label text-xs font-bold uppercase tracking-widest text-muted"
+                    id="prog-lbl"
+                    >0 of 0 completed</span
+                  >
+                  <span
+                    class="font-headline font-black text-primary text-sm"
+                    id="prog-pct"
+                    >0%</span
+                  >
+                </div>
+                <div class="progress-track">
+                  <div
+                    class="progress-fill"
+                    id="prog-fill"
+                    style="width: 0%"
+                  ></div>
+                </div>
+              </div>
+
+              <div id="chk-content" class="space-y-4 pb-10"></div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- ======================================================
+     JAVASCRIPT
+====================================================== -->
+    <script>
+      const COURSES = {
+        "ba-business": {
+          name: "BA (Hons) Business Management",
+          campus: "York Campus",
+          city: "York",
+          address: "Lord Mayor's Walk, York, YO31 7EX",
+          campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/",
+          specUrl:
+            "https://www.yorksj.ac.uk/study/courses/undergraduate/business-management/",
+          videoNotes: [
+            "Your campus address: Lord Mayor's Walk, York, YO31 7EX",
+            "Why you chose Business Management at YSJ specifically",
+            "Your key modules and how the course is assessed",
+            "The names of 2 other UK universities you compared and why you chose YSJ",
+            "Placement or internship opportunities available",
+            "Jobs and companies you will target after graduation",
+            "Your expected salary in GBP",
+            "Your accommodation plan and weekly cost",
+            "Your visa working hours limit (20 hours per week during term time)",
+          ],
+          assessment:
+            "Coursework, group projects, presentations, and written exams. May include placement year option.",
+          modules: [
+            {
+              name: "Principles of Management",
+              why: "Builds foundational understanding of organisational structure and management theory.",
+            },
+            {
+              name: "Marketing Fundamentals",
+              why: "Covers customer behaviour, branding, and market research techniques.",
+            },
+            {
+              name: "Business Finance",
+              why: "Teaches financial statements, budgeting, and business performance analysis.",
+            },
+            {
+              name: "Human Resource Management",
+              why: "Develops skills in recruitment, training, and employee relations.",
+            },
+            {
+              name: "Strategic Management",
+              why: "Focuses on long-term business planning and competitive positioning.",
+            },
+            {
+              name: "Operations Management",
+              why: "Covers supply chain, logistics, and process improvement.",
+            },
+          ],
+          roles: [
+            "Business Analyst",
+            "Marketing Executive",
+            "HR Coordinator",
+            "Operations Manager",
+          ],
+          companies: [
+            "Nestlé",
+            "Aviva",
+            "Santander",
+            "Yorkshire Bank",
+            "Local SMEs in Yorkshire",
+          ],
+          salary: "£22,000 – £30,000",
+          tuition: "£11,800 per year",
+          livingCost: "£1,171 per month (UKVI requirement for York)",
+          accommodation: "£129-£222 per week",
+        },
+        "ba-marketing": {
+          name: "BA (Hons) Marketing",
+          campus: "York Campus",
+          city: "York",
+          address: "Lord Mayor's Walk, York, YO31 7EX",
+          campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/",
+          specUrl:
+            "https://www.yorksj.ac.uk/study/courses/undergraduate/marketing/",
+          videoNotes: [
+            "Your campus address: Lord Mayor's Walk, York, YO31 7EX",
+            "Why you chose Marketing at YSJ specifically",
+            "Your key modules including digital and traditional marketing",
+            "Two other universities you compared and why YSJ won",
+            "Practical projects and real client work opportunities",
+            "Career roles in marketing agencies or in-house teams",
+            "Expected starting salary range",
+            "Accommodation costs and location",
+            "Visa responsibilities and working rights",
+          ],
+          assessment:
+            "Coursework, live client projects, presentations, and digital portfolio development.",
+          modules: [
+            {
+              name: "Consumer Behaviour",
+              why: "Understanding how and why consumers make purchasing decisions.",
+            },
+            {
+              name: "Digital Marketing",
+              why: "Social media marketing, SEO, content strategy, and analytics.",
+            },
+            {
+              name: "Brand Management",
+              why: "Building and maintaining strong brand identities and equity.",
+            },
+            {
+              name: "Market Research",
+              why: "Techniques for gathering and analysing market data.",
+            },
+            {
+              name: "Advertising and PR",
+              why: "Creating campaigns and managing public relations.",
+            },
+            {
+              name: "Marketing Strategy",
+              why: "Developing comprehensive marketing plans and budgets.",
+            },
+          ],
+          roles: [
+            "Marketing Executive",
+            "Digital Marketing Specialist",
+            "Brand Manager",
+            "Social Media Manager",
+          ],
+          companies: [
+            "Yorkshire Tea",
+            "ASOS",
+            "John Lewis",
+            "Local marketing agencies",
+          ],
+          salary: "£20,000 – £28,000",
+          tuition: "£11,800 per year",
+          livingCost: "£1,171 per month",
+          accommodation: "£129-£222 per week",
+        },
+        "ba-computing": {
+          name: "BSc (Hons) Computer Science",
+          campus: "York Campus",
+          city: "York",
+          address: "Lord Mayor's Walk, York, YO31 7EX",
+          campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/",
+          specUrl:
+            "https://www.yorksj.ac.uk/study/courses/undergraduate/computer-science/",
+          videoNotes: [
+            "Your campus address: Lord Mayor's Walk, York, YO31 7EX",
+            "Why Computer Science at YSJ specifically",
+            "Key technical modules and programming languages",
+            "Creative Centre facilities for computing students",
+            "Two other universities compared and why YSJ",
+            "Software development and IT career paths",
+            "Expected graduate salary",
+            "Accommodation plan",
+            "Visa work restrictions",
+          ],
+          assessment:
+            "Programming assignments, software projects, exams, and final year dissertation.",
+          modules: [
+            {
+              name: "Programming Fundamentals",
+              why: "Core concepts in Python, Java, and software development.",
+            },
+            {
+              name: "Database Systems",
+              why: "Design and management of SQL and NoSQL databases.",
+            },
+            {
+              name: "Web Development",
+              why: "Front-end and back-end web technologies and frameworks.",
+            },
+            {
+              name: "Software Engineering",
+              why: "Agile methodologies, version control, and team development.",
+            },
+            {
+              name: "Artificial Intelligence",
+              why: "Machine learning basics and AI applications.",
+            },
+            {
+              name: "Cybersecurity",
+              why: "Network security, encryption, and threat prevention.",
+            },
+          ],
+          roles: [
+            "Software Developer",
+            "Web Developer",
+            "Database Administrator",
+            "IT Consultant",
+          ],
+          companies: [
+            "Sage",
+            "BT",
+            "IBM",
+            "Local tech startups",
+            "Government Digital Service",
+          ],
+          salary: "£25,000 – £35,000",
+          tuition: "£11,800 per year",
+          livingCost: "£1,171 per month",
+          accommodation: "£129-£222 per week",
+        },
+        "msc-intbusiness": {
+          name: "MSc International Business",
+          campus: "York Campus",
+          city: "York",
+          address: "Lord Mayor's Walk, York, YO31 7EX",
+          campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/",
+          specUrl:
+            "https://www.yorksj.ac.uk/study/courses/postgraduate/international-business/",
+          videoNotes: [
+            "Your campus address: Lord Mayor's Walk, York, YO31 7EX",
+            "Why MSc International Business at YSJ specifically",
+            "CMI-accredited leadership content",
+            "Modules like Global Strategic Management and Business Analytics",
+            "Two other universities compared (e.g., Northumbria, Sheffield Hallam)",
+            "How this builds on your previous degree",
+            "International business development career goals",
+            "Accommodation at The Grange or Limes Court",
+            "Visa working hours (20 hours term time)",
+          ],
+          assessment:
+            "Essays, case studies, group projects, presentations, and dissertation.",
+          modules: [
+            {
+              name: "Global Strategic Management",
+              why: "International business strategy and competitive advantage.",
+            },
+            {
+              name: "Business Analytics",
+              why: "Data-driven decision making and analytical tools.",
+            },
+            {
+              name: "International Marketing",
+              why: "Marketing across different cultures and markets.",
+            },
+            {
+              name: "Leadership and Professional Development",
+              why: "CMI-accredited leadership skills for managers.",
+            },
+            {
+              name: "International Finance",
+              why: "Global financial markets and international investment.",
+            },
+            {
+              name: "Research Methods",
+              why: "Preparation for dissertation and research projects.",
+            },
+          ],
+          roles: [
+            "International Business Analyst",
+            "Global Operations Manager",
+            "Business Development Executive",
+            "Export Manager",
+          ],
+          companies: [
+            "Unilever",
+            "Shell",
+            "Standard Chartered",
+            "British American Tobacco",
+            "DHL",
+          ],
+          salary: "£28,000 – £40,000",
+          tuition: "£11,800 total",
+          livingCost: "£1,171 per month",
+          accommodation: "£129-£177 per week",
+        },
+        "msc-datasci": {
+          name: "MSc Data Science",
+          campus: "York Campus",
+          city: "York",
+          address: "Lord Mayor's Walk, York, YO31 7EX",
+          campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/",
+          specUrl:
+            "https://www.yorksj.ac.uk/study/courses/postgraduate/data-science/",
+          videoNotes: [
+            "Your campus address: Lord Mayor's Walk, York, YO31 7EX",
+            "Why Data Science at YSJ specifically",
+            "Technical modules: machine learning, big data, statistical analysis",
+            "Programming languages: Python, R, SQL",
+            "Two other universities compared and why YSJ",
+            "Data analyst/scientist career goals",
+            "Expected salary range",
+            "Accommodation plan and costs",
+            "Visa responsibilities",
+          ],
+          assessment:
+            "Programming assignments, data projects, statistical reports, and dissertation.",
+          modules: [
+            {
+              name: "Machine Learning",
+              why: "Algorithms and techniques for predictive modelling.",
+            },
+            {
+              name: "Big Data Technologies",
+              why: "Hadoop, Spark, and cloud-based data processing.",
+            },
+            {
+              name: "Statistical Analysis",
+              why: "Advanced statistics for data interpretation.",
+            },
+            {
+              name: "Data Visualisation",
+              why: "Tools like Tableau and Power BI for presenting insights.",
+            },
+            {
+              name: "Database Management",
+              why: "SQL and NoSQL database design and optimisation.",
+            },
+            {
+              name: "Research Methods",
+              why: "Data collection, analysis, and dissertation preparation.",
+            },
+          ],
+          roles: [
+            "Data Scientist",
+            "Data Analyst",
+            "Business Intelligence Developer",
+            "Machine Learning Engineer",
+          ],
+          companies: [
+            "Google",
+            "Amazon",
+            "IBM",
+            "SAS",
+            "Local data consultancies",
+          ],
+          salary: "£30,000 – £45,000",
+          tuition: "£11,800 total",
+          livingCost: "£1,171 per month",
+          accommodation: "£129-£177 per week",
+        },
+        "msc-computing": {
+          name: "MSc Computing",
+          campus: "York Campus",
+          city: "York",
+          address: "Lord Mayor's Walk, York, YO31 7EX",
+          campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/",
+          specUrl:
+            "https://www.yorksj.ac.uk/study/courses/postgraduate/computing/",
+          videoNotes: [
+            "Your campus address: Lord Mayor's Walk, York, YO31 7EX",
+            "Why MSc Computing at YSJ specifically",
+            "Advanced programming and software engineering modules",
+            "Creative Centre facilities",
+            "Two other universities compared",
+            "Software engineering or IT management career path",
+            "Expected salary",
+            "Accommodation details",
+            "Visa work limits",
+          ],
+          assessment:
+            "Software development projects, technical reports, presentations, and dissertation.",
+          modules: [
+            {
+              name: "Advanced Programming",
+              why: "Advanced concepts in multiple programming languages.",
+            },
+            {
+              name: "Software Engineering",
+              why: "Systematic approaches to software development lifecycle.",
+            },
+            {
+              name: "Cloud Computing",
+              why: "AWS, Azure, and cloud architecture principles.",
+            },
+            {
+              name: "Database Systems",
+              why: "Advanced database design and management.",
+            },
+            {
+              name: "Cybersecurity",
+              why: "Advanced security protocols and ethical hacking.",
+            },
+            {
+              name: "Research Methods",
+              why: "Academic research and dissertation preparation.",
+            },
+          ],
+          roles: [
+            "Software Engineer",
+            "Systems Architect",
+            "DevOps Engineer",
+            "IT Project Manager",
+          ],
+          companies: [
+            "Microsoft",
+            "Amazon",
+            "Capgemini",
+            "Accenture",
+            "Government IT services",
+          ],
+          salary: "£30,000 – £45,000",
+          tuition: "£11,800 total",
+          livingCost: "£1,171 per month",
+          accommodation: "£129-£177 per week",
+        },
+        "mba-london": {
+          name: "MBA (Master of Business Administration)",
+          campus: "London Campus",
+          city: "London",
+          address:
+            "6th Floor, Export Building, 1 Clove Crescent, East India, London E14 2BA",
+          campusUrl: "https://www.yorksj.ac.uk/london-campus/",
+          specUrl:
+            "https://www.yorksj.ac.uk/study/courses/postgraduate/mba-master-of-business-administration/",
+          videoNotes: [
+            "Your campus address: 6th Floor Export Building, 1 Clove Crescent, London E14 2BA",
+            "Why MBA at YSJ London specifically",
+            "Strategic leadership and management modules",
+            "London location advantages for networking",
+            "Two other London business schools compared",
+            "Senior management or entrepreneurship goals",
+            "Expected salary post-MBA",
+            "Private accommodation in London (no uni halls)",
+            "Visa working hours and responsibilities",
+          ],
+          assessment:
+            "Case studies, business simulations, group projects, presentations, and dissertation.",
+          modules: [
+            {
+              name: "Strategic Leadership",
+              why: "Leadership theories and strategic decision making at executive level.",
+            },
+            {
+              name: "Financial Management",
+              why: "Corporate finance, investment decisions, and risk management.",
+            },
+            {
+              name: "Marketing Strategy",
+              why: "Strategic marketing planning and brand management.",
+            },
+            {
+              name: "Operations Management",
+              why: "Supply chain and operational excellence in global contexts.",
+            },
+            {
+              name: "Entrepreneurship and Innovation",
+              why: "Starting and scaling new business ventures.",
+            },
+            {
+              name: "Research Methods",
+              why: "Business research and dissertation/project preparation.",
+            },
+          ],
+          roles: [
+            "Management Consultant",
+            "Business Development Director",
+            "Operations Manager",
+            "Entrepreneur",
+          ],
+          companies: [
+            "Deloitte",
+            "KPMG",
+            "Barclays",
+            "HSBC",
+            "Tech startups in East London",
+          ],
+          salary: "£45,000 – £70,000",
+          tuition: "£14,000 total",
+          livingCost: "£1,529 per month (UKVI London requirement)",
+          accommodation: "£800-£1,500 per month (private rental)",
+        },
+        "msc-intbusiness-london": {
+          name: "MSc International Business (London)",
+          campus: "London Campus",
+          city: "London",
+          address:
+            "6th Floor, Export Building, 1 Clove Crescent, East India, London E14 2BA",
+          campusUrl: "https://www.yorksj.ac.uk/london-campus/",
+          specUrl:
+            "https://www.yorksj.ac.uk/study/courses/postgraduate/international-business-london/",
+          videoNotes: [
+            "Your campus address: 6th Floor Export Building, 1 Clove Crescent, London E14 2BA",
+            "Why MSc International Business at YSJ London",
+            "Global business modules with London industry access",
+            "East India DLR location",
+            "Two other London universities compared",
+            "International business career in London then home",
+            "Expected salary range",
+            "Private accommodation research (SpareRoom, etc.)",
+            "Visa rules",
+          ],
+          assessment:
+            "Essays, case studies, group projects, presentations, and dissertation.",
+          modules: [
+            {
+              name: "Global Business Strategy",
+              why: "Strategic management in multinational corporations.",
+            },
+            {
+              name: "International Marketing",
+              why: "Marketing strategies for global markets.",
+            },
+            {
+              name: "Cross-Cultural Management",
+              why: "Managing diverse teams across cultures.",
+            },
+            {
+              name: "International Finance",
+              why: "Global financial management and currency risk.",
+            },
+            {
+              name: "Business Analytics",
+              why: "Data analysis for international business decisions.",
+            },
+            {
+              name: "Research Methods",
+              why: "Dissertation preparation and research skills.",
+            },
+          ],
+          roles: [
+            "International Business Consultant",
+            "Global Marketing Manager",
+            "Import/Export Manager",
+            "Trade Analyst",
+          ],
+          companies: [
+            "Unilever",
+            "Procter & Gamble",
+            "DHL",
+            "FedEx",
+            "Canary Wharf financial firms",
+          ],
+          salary: "£32,000 – £45,000",
+          tuition: "£14,000 total",
+          livingCost: "£1,529 per month",
+          accommodation: "£800-£1,500 per month",
+        },
+        "msc-datasci-london": {
+          name: "MSc Data Science (London)",
+          campus: "London Campus",
+          city: "London",
+          address:
+            "6th Floor, Export Building, 1 Clove Crescent, East India, London E14 2BA",
+          campusUrl: "https://www.yorksj.ac.uk/london-campus/",
+          specUrl:
+            "https://www.yorksj.ac.uk/study/courses/postgraduate/data-science-london/",
+          videoNotes: [
+            "Your campus address: 6th Floor Export Building, 1 Clove Crescent, London E14 2BA",
+            "Why Data Science at YSJ London specifically",
+            "Technical modules with London tech scene access",
+            "Programming: Python, R, machine learning",
+            "Two other London universities compared",
+            "Data scientist career in UK then return home",
+            "Expected salary",
+            "Private accommodation in East London",
+            "Visa work restrictions",
+          ],
+          assessment:
+            "Programming assignments, data projects, machine learning models, and dissertation.",
+          modules: [
+            {
+              name: "Machine Learning",
+              why: "Predictive modelling and algorithm development.",
+            },
+            {
+              name: "Big Data Analytics",
+              why: "Processing large datasets with Spark and Hadoop.",
+            },
+            {
+              name: "Deep Learning",
+              why: "Neural networks and AI applications.",
+            },
+            {
+              name: "Data Engineering",
+              why: "Building data pipelines and infrastructure.",
+            },
+            {
+              name: "Statistical Modelling",
+              why: "Advanced statistical techniques for data science.",
+            },
+            {
+              name: "Research Methods",
+              why: "Research design and dissertation preparation.",
+            },
+          ],
+          roles: [
+            "Data Scientist",
+            "Machine Learning Engineer",
+            "AI Specialist",
+            "Data Engineer",
+          ],
+          companies: [
+            "DeepMind",
+            "Google",
+            "Facebook",
+            "London fintech startups",
+            "The Guardian",
+          ],
+          salary: "£40,000 – £60,000",
+          tuition: "£14,000 total",
+          livingCost: "£1,529 per month",
+          accommodation: "£800-£1,500 per month",
+        },
+      };
+
+      const GUIDE_SECTIONS = [
+        {
+          id: "ga1",
+          num: "A",
+          title: "Your Campus and Address",
+          sub: "Location Intelligence",
+          content: `<p>YSJ expects you to know exactly which campus your course is taught at and the full address including postcode. York Campus is at Lord Mayor's Walk, York YO31 7EX. London Campus is at 6th Floor Export Building, 1 Clove Crescent, London E14 2BA. Learn the full street address and postcode, not just the city name.</p>`,
+        },
+        {
+          id: "ga2",
+          num: "B",
+          title: "Why You Chose York St John University",
+          sub: "Institutional Choice",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Ranked in the top 10 UK universities for student satisfaction (PTES 2025).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>11-acre city centre campus in historic York, close to York Minster and city walls.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>£100 million invested in facilities including Creative Centre and Foss Building.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Gold-rated teaching excellence.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Strong employability support with career-focused courses.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Smaller cohort sizes for personalised feedback.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>CMI-accredited leadership content in many business courses.</span></li></ul>`,
+        },
+        {
+          id: "ga3",
+          num: "C",
+          title: "Why This Course Specifically",
+          sub: "Course Motivation",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Clear academic progression from your previous study or work.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Specific modules that fill gaps in your current knowledge.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Logical connection to your career goals.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Comparison with similar courses at other universities.</span></li></ul>`,
+        },
+        {
+          id: "ga4",
+          num: "D",
+          title: "Your Accommodation Details",
+          sub: "Living Arrangements",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>For York: Specific hall name (The Grange, Limes Court, etc.) and weekly cost (£129-£222).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>For London: Private accommodation area and monthly cost (£800-£1,500).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Distance from campus and transport options.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Why you chose that option — budget, facilities, location.</span></li></ul>`,
+        },
+        {
+          id: "ga5",
+          num: "E",
+          title: "Modules in Your Course",
+          sub: "Academic Content",
+          content: `<p>You must name at least 2-3 modules, explain why they interest you, and connect them to your background or career goals. Also compare your course at YSJ with at least two similar courses at other UK universities, and explain why you still chose YSJ. Download the course specification from the YSJ website.</p>`,
+        },
+        {
+          id: "ga6",
+          num: "F",
+          title: "How Your Course Is Assessed",
+          sub: "Assessment Methods",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Written assignments and coursework</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Group projects and presentations</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Written exams</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Case studies and business simulations</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>A final dissertation or research project</span></li></ul>`,
+        },
+        {
+          id: "ga7",
+          num: "G",
+          title: "Your Future Plans After Graduation",
+          sub: "Career Trajectory",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Clear return plan</strong> to your home country.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Specific job titles</strong> you will apply for.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Actual companies</strong> — name real organisations in your sector.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Expected salary range</strong> in your home currency.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>How the course will help you qualify for these roles.</span></li></ul>`,
+        },
+        {
+          id: "ga8",
+          num: "H",
+          title: "Your Financial Preparation",
+          sub: "Financial Credibility",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>The exact tuition fee for your course (£11,800 for York, £14,000 for London).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>How much you have already paid (deposit).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>UKVI minimum living cost requirements (£1,171/month York, £1,529/month London).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Who is funding you — yourself, parents, sponsor — and their income.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Evidence available: bank statements, employment letters.</span></li></ul>`,
+        },
+        {
+          id: "ga9",
+          num: "I",
+          title: "Visa Rules and Responsibilities",
+          sub: "Compliance",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Maximum of <strong class="text-primary">20 hours per week during term time</strong>.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Full-time work allowed during official university holidays.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Cannot claim public funds.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Must attend all scheduled classes.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Must notify the university if you change your address.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Dependent or work restrictions if applicable.</span></li></ul>`,
+        },
+        {
+          id: "ga10",
+          num: "J",
+          title: "What You Have Been Doing Since Your Last Qualification",
+          sub: "Personal History",
+          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Work experience or employment since your last degree.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Internships or voluntary work.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Skills you have been developing.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Training or short courses you have completed.</span></li></ul><p class="mt-2">Be honest and show how your experience led you to resume studies now. Avoid unexplained gaps.</p>`,
+        },
+        {
+          id: "ga11",
+          num: "K",
+          title: "Common Mistakes to Avoid",
+          sub: "Red Flags",
+          content: `<table class="w-full text-xs mt-2"><tr class="border-b border-border"><th class="text-left py-2 text-primary">Area</th><th class="text-left py-2 text-error">Mistake</th><th class="text-left py-2 text-success">Improvement</th></tr><tr class="border-b border-border"><td class="py-2">Why YSJ</td><td class="py-2 text-muted">Generic answers like "friendly staff"</td><td class="py-2">Specific facts: rankings, course structure, teaching reputation</td></tr><tr class="border-b border-border"><td class="py-2">Why this course</td><td class="py-2 text-muted">Not knowing modules</td><td class="py-2">Show understanding of content and career fit</td></tr><tr class="border-b border-border"><td class="py-2">Future plans</td><td class="py-2 text-muted">Vague answers, no company names</td><td class="py-2">Exact job titles and companies</td></tr><tr><td class="py-2">Study gap</td><td class="py-2 text-muted">Not explaining the gap</td><td class="py-2">Be honest, show how experience led to this decision</td></tr></table>`,
+        },
+      ];
+
+      const ALL_QUESTIONS = [
+        {
+          cat: "Studying in the UK",
+          color: "text-primary",
+          bg: "bg-primary-light",
+          border: "border-primary-mid",
+          qs: [
+            "Why did you choose to study in the UK instead of your home country?",
+            "Did you consider studying in other countries (USA, Canada, Australia)?",
+            "What are the advantages of the UK education system?",
+            "What do you know about UK university rankings and reputation?",
+          ],
+        },
+        {
+          cat: "Why York St John University",
+          color: "text-secondary",
+          bg: "bg-secondary-light",
+          border: "border-blue-200",
+          qs: [
+            "Why did you choose York St John University?",
+            "Did you apply to other universities? Which ones?",
+            "Why did you finally select YSJ over the others?",
+            "What do you know about YSJ's rankings and reputation?",
+          ],
+        },
+        {
+          cat: "Course Details",
+          color: "text-accent",
+          bg: "bg-cyan-50",
+          border: "border-cyan-200",
+          qs: [
+            "What is the name and duration of your course?",
+            "What are the core and optional modules?",
+            "Are there any placement or internship opportunities?",
+            "How does this course relate to your previous studies or work?",
+          ],
+        },
+        {
+          cat: "Future Career Plans",
+          color: "text-primary",
+          bg: "bg-primary-light",
+          border: "border-primary-mid",
+          qs: [
+            "What are your short-term and long-term career goals?",
+            "What job roles would you like to work for?",
+            "Which companies will you apply to?",
+            "What is your expected salary range after graduation?",
+          ],
+        },
+        {
+          cat: "Living in the UK",
+          color: "text-secondary",
+          bg: "bg-secondary-light",
+          border: "border-blue-200",
+          qs: [
+            "Where will you live — on campus or off campus?",
+            "What accommodation options have you researched?",
+            "What is the average cost of living in York or London?",
+            "What are the transport options?",
+          ],
+        },
+        {
+          cat: "Student Life",
+          color: "text-accent",
+          bg: "bg-cyan-50",
+          border: "border-cyan-200",
+          qs: [
+            "What are your expectations of student life in the UK?",
+            "What do you know about life in York/London?",
+            "Are you interested in clubs, societies, or travelling?",
+          ],
+        },
+        {
+          cat: "Finance",
+          color: "text-primary",
+          bg: "bg-primary-light",
+          border: "border-primary-mid",
+          qs: [
+            "What is your total tuition fee and how much have you paid?",
+            "Who is supporting you financially?",
+            "What is your estimate for living costs?",
+            "What evidence of funds can you provide?",
+          ],
+        },
+        {
+          cat: "Student Visa Knowledge",
+          color: "text-secondary",
+          bg: "bg-secondary-light",
+          border: "border-blue-200",
+          qs: [
+            "What are your working rights as a student visa holder?",
+            "How many hours can you work per week?",
+            "What are your obligations while on a student visa?",
+          ],
+        },
+      ];
+
+      const PQS = [
+        {
+          id: "p1",
+          cat: "ysj",
+          q: "Why did you choose York St John University specifically?",
+          hint: "Compare with 2 other universities by name. Mention specific facts: top 10 for student satisfaction, smaller cohort sizes, CMI accreditation, facilities, or location.",
+          cr: 'Must name 2 other UK universities compared and give at least 2 specific, researched reasons for choosing YSJ (not generic like "friendly staff").',
+        },
+        {
+          id: "p2",
+          cat: "course",
+          q: "What modules will you study and why do they interest you?",
+          hint: "Name 2-3 specific modules from your course. Connect each to your previous study/work and career goals.",
+          cr: "Must name at least 2-3 correct modules and explain personal interest in at least one, linking to career goals.",
+        },
+        {
+          id: "p3",
+          cat: "course",
+          q: "How does this course relate to your previous studies or work experience?",
+          hint: "Show clear academic progression or career development. Explain the gap this course fills in your knowledge.",
+          cr: "Must demonstrate logical progression from previous degree/work and explain specific skills/knowledge gaps this course addresses.",
+        },
+        {
+          id: "p4",
+          cat: "ysj",
+          q: "Did you apply to other universities? Why did you reject them?",
+          hint: "Name 2-3 other universities. Give specific reasons why YSJ was better (course content, location, ranking, facilities).",
+          cr: 'Must name specific universities and give course-specific reasons for rejection (e.g., "Sheffield Hallam didn\'t have the leadership modules").',
+        },
+        {
+          id: "p5",
+          cat: "living",
+          q: "Where will you stay in the UK and what are the costs?",
+          hint: "York: Name specific hall and weekly cost (£129-£222). London: Name area and monthly cost (£800-£1,500). Include distance from campus.",
+          cr: "Must give specific accommodation name/area, exact cost, and distance from campus. Must know London has no university accommodation.",
+        },
+        {
+          id: "p6",
+          cat: "finance",
+          q: "How much is your tuition fee and how much have you paid?",
+          hint: "York: £11,800. London: £14,000. State deposit paid and remaining balance.",
+          cr: "Must state exact tuition fee, amount already paid, and remaining balance.",
+        },
+        {
+          id: "p7",
+          cat: "finance",
+          q: "Who is sponsoring you and what is their occupation/income?",
+          hint: "State relationship clearly. Give occupation and approximate annual income. Mention evidence available.",
+          cr: "Must state relationship, occupation, and approximate income. Must mention documentary evidence available.",
+        },
+        {
+          id: "p8",
+          cat: "finance",
+          q: "What are your living costs and how will you fund them?",
+          hint: "York: £1,171/month. London: £1,529/month (UKVI requirements). Break down by rent, food, transport.",
+          cr: "Must state UKVI minimum living cost figure for the location and show awareness of monthly budgeting.",
+        },
+        {
+          id: "p9",
+          cat: "career",
+          q: "What are your career plans after graduation?",
+          hint: "Give specific job title, 2-3 company names, and expected salary in home currency. Emphasize returning home.",
+          cr: "Must give specific job title, name actual companies, expected salary, and confirm intention to return to home country.",
+        },
+        {
+          id: "p10",
+          cat: "career",
+          q: "How will this course help you achieve your career goals?",
+          hint: "Connect specific modules to job requirements. Explain how YSJ qualification is valued in your home country.",
+          cr: "Must link at least 2 specific course elements to job requirements and explain value of UK/YSJ qualification at home.",
+        },
+        {
+          id: "p11",
+          cat: "living",
+          q: "What do you know about life in York/London?",
+          hint: "Mention specific attractions (York Minster, museums) for York or business opportunities for London. Show research.",
+          cr: "Must demonstrate specific knowledge of the city beyond generic statements.",
+        },
+        {
+          id: "p12",
+          cat: "visa",
+          q: "What are your working rights and visa responsibilities?",
+          hint: "20 hours/week term time, full-time holidays. Cannot claim public funds. Must attend all classes. Report address changes.",
+          cr: "Must state 20 hours correctly, mention class attendance requirement, and address reporting obligation.",
+        },
+        {
+          id: "p13",
+          cat: "ysj",
+          q: "What do you know about YSJ's rankings and reputation?",
+          hint: "Top 10 for student satisfaction (PTES 2025), Gold teaching excellence, £100m facilities investment.",
+          cr: "Must mention at least one specific ranking or award (e.g., top 10 student satisfaction, Gold TEF).",
+        },
+        {
+          id: "p14",
+          cat: "course",
+          q: "How is your course assessed?",
+          hint: "Coursework, exams, presentations, group projects, dissertation. Know the specific methods for your course.",
+          cr: "Must describe at least 2 assessment methods specific to the course.",
+        },
+        {
+          id: "p15",
+          cat: "living",
+          q: "What accommodation options have you researched?",
+          hint: "York: University halls (The Grange, Limes Court). London: Private rental through SpareRoom, Rightmove, etc.",
+          cr: "Must show specific research: named halls for York or named areas/websites for London.",
+        },
+        {
+          id: "p16",
+          cat: "finance",
+          q: "How will you cover unexpected expenses?",
+          hint: "Mention contingency fund, parental support, or savings buffer. Show financial planning beyond minimum requirements.",
+          cr: "Must demonstrate awareness of need for emergency funds and explain backup plan.",
+        },
+        {
+          id: "p17",
+          cat: "ysj",
+          q: "Why study in York/London specifically?",
+          hint: "York: Historic city, student-friendly, lower cost than London. London: Business hub, networking, industry access.",
+          cr: "Must give location-specific reasons connected to study or career goals.",
+        },
+        {
+          id: "p18",
+          cat: "living",
+          q: "What are the transport options from your accommodation?",
+          hint: "York: Walking (under 1 mile) or buses. London: DLR (East India), Tube, buses. Know your route to campus.",
+          cr: "Must know specific transport links and approximate journey time.",
+        },
+      ];
+
+      let course = null,
+        passN = 0,
+        failN = 0,
+        totN = 0;
+
+      function selectCourse(id) {
+        course = COURSES[id];
+        document.getElementById("s-select").classList.remove("active");
+        document.getElementById("s-main").classList.add("active");
+        document.getElementById("tb-name").textContent = course.name;
+        document.getElementById("tb-campus").textContent = course.campus;
+        passN = 0;
+        failN = 0;
+        totN = 0;
+        updScore();
+
+        document.getElementById("vid-notes").innerHTML = course.videoNotes
+          .map(
+            (n) => `
+    <div class="flex items-start gap-2">
+      <span class="material-symbols-outlined text-primary text-sm mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>
+      <span>${n}</span>
+    </div>
+  `,
+          )
+          .join("");
+
+        buildGuide();
+        buildKnow();
+        buildQuestions();
+        buildPractice();
+        buildChecklist();
+        showTab("video", "sl-video");
+      }
+
+      function goBack() {
+        document.getElementById("s-main").classList.remove("active");
+        document.getElementById("s-select").classList.add("active");
+      }
+
+      function showTab(name, btnId, isMobile) {
+        document
+          .querySelectorAll(".tc")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelectorAll(".side-link")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById("tab-" + name).classList.add("active");
+        const side = document.getElementById("sl-" + name);
+        const mob = document.getElementById("mt-" + name);
+        if (side) side.classList.add("active");
+        if (mob) mob.classList.add("active");
+      }
+
+      function togAcc(id) {
+        document.getElementById(id).classList.toggle("open");
+      }
+
+      function buildGuide() {
+        document.getElementById("guide-sections").innerHTML =
+          GUIDE_SECTIONS.map(
+            (s) => `
+    <div class="acc-item" id="${s.id}">
+      <button class="w-full flex items-center justify-between p-5 text-left" onclick="togAcc('${s.id}')">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-primary-light flex items-center justify-center flex-shrink-0">
+            <span class="font-headline font-black text-xs text-primary">${s.num}</span>
+          </div>
+          <div>
+            <h3 class="font-headline font-bold text-sm text-on-surface">${s.title}</h3>
+            <p class="font-label text-xs text-muted uppercase tracking-wider mt-0.5">${s.sub}</p>
+          </div>
+        </div>
+        <span class="material-symbols-outlined text-primary acc-arrow transition-transform duration-300 flex-shrink-0">expand_more</span>
+      </button>
+      <div class="acc-body px-5 pb-5 pt-0">
+        <div class="border-t border-border pt-4 text-muted text-sm leading-relaxed space-y-3">${s.content}</div>
+      </div>
+    </div>
+  `,
+          ).join("");
+      }
+
+      function buildKnow() {
+        const c = course;
+        document.getElementById("know-cards").innerHTML = `
+    <div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-primary text-base">location_on</span><span class="font-label text-xs font-bold uppercase tracking-widest text-primary">Your Campus</span></div><p class="font-headline font-bold text-sm text-on-surface mb-1">${c.campus}</p><p class="text-muted text-xs leading-relaxed mb-3">${c.address}</p><a href="${c.campusUrl}" target="_blank" class="font-label text-xs font-bold text-primary">View campus →</a></div>
+    <div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-secondary text-base">quiz</span><span class="font-label text-xs font-bold uppercase tracking-widest text-secondary">Assessment</span></div><p class="text-muted text-xs leading-relaxed">${c.assessment}</p></div>
+    <div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-accent text-base">work</span><span class="font-label text-xs font-bold uppercase tracking-widest text-accent">Target Roles</span></div><p class="text-muted text-xs leading-relaxed">${c.roles.join(" · ")}</p></div>
+    <div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-primary text-base">business</span><span class="font-label text-xs font-bold uppercase tracking-widest text-primary">Target Companies</span></div><p class="text-muted text-xs leading-relaxed">${c.companies.join(" · ")}</p></div>
+    <div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-secondary text-base">currency_pound</span><span class="font-label text-xs font-bold uppercase tracking-widest text-secondary">First Salary</span></div><p class="font-headline font-black text-primary text-lg">${c.salary}</p></div>
+    <div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-accent text-base">home</span><span class="font-label text-xs font-bold uppercase tracking-widest text-accent">Monthly Living</span></div><p class="font-headline font-black text-accent text-lg">${c.livingCost}</p><p class="text-muted text-xs mt-1">${c.accommodation}</p></div>
+  `;
+        document.getElementById("mod-list").innerHTML = c.modules
+          .map(
+            (m, i) => `
+    <div class="mod-item">
+      <span class="mod-num">M${String(i + 1).padStart(2, "0")}</span>
+      <div><p class="font-headline font-bold text-sm text-on-surface mb-1">${m.name}</p><p class="text-muted text-xs leading-relaxed">${m.why}</p></div>
+    </div>
+  `,
+          )
+          .join("");
+        document.getElementById("course-spec-link").innerHTML = `
+    <a href="${c.specUrl}" target="_blank" class="lcard"><span class="material-symbols-outlined text-primary text-xl">open_in_new</span><div><strong>Download Your Course Specification</strong><span class="lsub">YSJ Official Course Page</span></div></a>`;
+      }
+
+      function buildQuestions() {
+        document.getElementById("all-questions-list").innerHTML =
+          ALL_QUESTIONS.map(
+            (cat, ci) => `
+    <div class="mb-8">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="font-label text-xs font-bold uppercase tracking-widest ${cat.color}">${ci + 1}. ${cat.cat}</span>
+        <span class="font-label text-xs font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full ${cat.bg} border ${cat.border} ${cat.color}">${cat.qs.length} questions</span>
+      </div>
+      <div class="space-y-2">
+        ${cat.qs
+          .map(
+            (q, qi) => `
+          <div class="panel px-5 py-3.5 flex items-start gap-3">
+            <span class="q-num mt-0.5 flex-shrink-0">Q${qi + 1}</span>
+            <p class="text-on-surface text-sm leading-relaxed">${q}</p>
+          </div>
+        `,
+          )
+          .join("")}
+      </div>
+    </div>
+  `,
+          ).join("");
+      }
+
+      function buildPractice() {
+        renderPQs(PQS);
+      }
+
+      function filtQ(cat, btn) {
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderPQs(cat === "all" ? PQS : PQS.filter((q) => q.cat === cat));
+      }
+
+      function renderPQs(qs) {
+        document.getElementById("pqs").innerHTML = qs
+          .map(
+            (q) => `
+    <div class="panel p-6 shadow-sm" id="pc-${q.id}">
+      <div class="flex items-start gap-3 mb-4">
+        <span class="q-num mt-0.5 flex-shrink-0">Q</span>
+        <p class="font-headline font-bold text-sm text-on-surface leading-snug">${q.q}</p>
+      </div>
+      <textarea class="sim-input min-h-24 block" id="ans-${q.id}" placeholder="Type your answer here..."></textarea>
+      <div class="flex items-center gap-3 mt-4 flex-wrap">
+        <button class="btn-primary flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider" id="btn-${q.id}" onclick="chkAns('${q.id}')">
+          <span class="material-symbols-outlined text-sm">verified</span>Check Answer
+        </button>
+        <button class="btn-ghost flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider" onclick="togHint('${q.id}')">
+          <span class="material-symbols-outlined text-sm">lightbulb</span>Hint
+        </button>
+        <button class="btn-ghost flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider ml-auto" onclick="clrAns('${q.id}')">
+          <span class="material-symbols-outlined text-sm">refresh</span>Clear
+        </button>
+      </div>
+      <div id="hint-${q.id}" class="hidden mt-3 bg-secondary-light border border-blue-200 rounded-xl px-4 py-3 text-sm text-secondary leading-relaxed">${q.hint}</div>
+      <div id="fb-${q.id}" class="hidden mt-4 rounded-r-xl p-5 text-sm leading-relaxed">
+        <div class="font-headline font-bold text-sm mb-2" id="fbhd-${q.id}"></div>
+        <div id="fbb-${q.id}"></div>
+      </div>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      function togHint(id) {
+        document.getElementById("hint-" + id).classList.toggle("hidden");
+      }
+
+      function clrAns(id) {
+        document.getElementById("ans-" + id).value = "";
+        document.getElementById("fb-" + id).classList.add("hidden");
+      }
+
+      // ======================================================
+      // FIXED: Using Puter.js for FREE AI - no API key needed!
+      // ======================================================
+      async function chkAns(id) {
+        const q = PQS.find((x) => x.id === id);
+        const ans = document.getElementById("ans-" + id).value.trim();
+        if (!ans) {
+          alert("Please type your answer first.");
+          return;
+        }
+
+        const btn = document.getElementById("btn-" + id);
+        btn.disabled = true;
+        btn.innerHTML =
+          '<span class="spinner"></span><span class="ml-2">Marking...</span>';
+
+        const fb = document.getElementById("fb-" + id);
+        fb.className =
+          "mt-4 rounded-r-xl p-5 text-sm leading-relaxed fb-loading";
+        fb.classList.remove("hidden");
+        document.getElementById("fbhd-" + id).textContent =
+          "Marking your answer...";
+        document.getElementById("fbb-" + id).innerHTML = "";
+
+        const prompt = `You are a strict UKVI Pre-CAS credibility interviewer for York St John University.
+
+The student is applying to study "${course.name}" at YSJ ${course.campus}, located at ${course.address}.
+
+Evaluate the student's answer based ONLY on:
+- Relevance to the course and YSJ specifically
+- Clear knowledge of course content and modules
+- Clear reason for choosing YSJ over other universities (must name specific unis)
+- Genuine study intent (not immigration intent)
+- Clear career plans with specific companies and return to home country
+- Financial preparedness (tuition fees, living costs)
+- Clarity, structure, and confidence
+
+Question: "${q.q}"
+
+What a strong answer MUST include: ${q.cr}
+
+Student answer: "${ans}"
+
+Be strict. Do not be nice if the answer is weak. Look for specific details, not generic statements.
+
+Return ONLY valid JSON in this exact format:
+{"pass":true,"score":80,"summary":"One clear sentence verdict specific to the answer.","good":["specific strength based on answer"],"improve":["specific weakness and how to fix it"]}
+
+Rules:
+- Make feedback specific to THIS answer (no generic advice)
+- Mention YSJ, course name, or specific modules if missing or weak
+- Score must reflect quality (0-100)
+- Output ONLY JSON, no markdown, no extra text`;
+
+        try {
+          // Use Puter.js - completely free, no API key required!
+          const response = await puter.ai.chat(prompt, {
+            model: "gpt-4o-mini", // Fast and cost-effective
+            stream: false,
+          });
+
+          // Parse response - Puter returns the message content directly
+          let raw = "";
+          if (typeof response === "string") {
+            raw = response;
+          } else if (response.message?.content) {
+            raw = response.message.content;
+          } else if (response.content) {
+            raw = response.content;
+          } else {
+            throw new Error("Unexpected response format");
+          }
+
+          // Extract JSON from response
+          raw = raw
+            .replace(/```json|```/g, "")
+            .replace(/\n/g, " ")
+            .trim();
+          const match = raw.match(/\{.*\}/);
+          if (!match) throw new Error("Invalid JSON response from AI");
+
+          const j = JSON.parse(match[0]);
+          if (typeof j.pass !== "boolean")
+            throw new Error("Invalid response structure");
+
+          // Update scores
+          if (j.pass) passN++;
+          else failN++;
+          totN++;
+          updScore();
+
+          // Display feedback
+          fb.className =
+            "mt-4 rounded-r-xl p-5 text-sm leading-relaxed " +
+            (j.pass ? "fb-pass" : "fb-fail");
+          document.getElementById("fbhd-" + id).innerHTML = j.pass
+            ? `<span class="text-success font-bold">✓ Passed</span> — ${j.summary}`
+            : `<span class="text-error font-bold">✘ Needs Improvement</span> — ${j.summary}`;
+
+          let h = "";
+          if (j.good?.length) {
+            h += j.good
+              .map(
+                (g) => `
+        <div class="flex items-start gap-2 mt-2 text-xs text-on-surface">
+          <span class="material-symbols-outlined text-success text-xs mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>
+          <span>${g}</span>
+        </div>
+      `,
+              )
+              .join("");
+          }
+          if (j.improve?.length) {
+            h += j.improve
+              .map(
+                (x) => `
+        <div class="flex items-start gap-2 mt-2 text-xs text-on-surface">
+          <span class="material-symbols-outlined text-error text-xs mt-0.5">warning</span>
+          <span>${x}</span>
+        </div>
+      `,
+              )
+              .join("");
+          }
+          document.getElementById("fbb-" + id).innerHTML = h;
+        } catch (e) {
+          console.error("AI marking error:", e);
+          fb.className =
+            "mt-4 rounded-r-xl p-5 text-sm leading-relaxed fb-fail";
+          document.getElementById("fbhd-" + id).innerHTML =
+            '<span class="text-error font-bold">Service Unavailable</span>';
+          document.getElementById("fbb-" + id).innerHTML = `
+      <div class="text-xs text-muted mt-2">
+        <p class="mb-2">Unable to connect to the AI marking service. This could be because:</p>
+        <ul class="list-disc pl-4 space-y-1">
+          <li>You need to sign in to Puter (free account) when prompted</li>
+          <li>Your internet connection is unstable</li>
+          <li>The service is temporarily busy</li>
+        </ul>
+        <p class="mt-2">Please try again in a moment.</p>
+      </div>
+    `;
+        }
+
+        btn.disabled = false;
+        btn.innerHTML =
+          '<span class="material-symbols-outlined text-sm">refresh</span><span class="ml-1">Check Again</span>';
+      }
+
+      function updScore() {
+        document.getElementById("sc-p").textContent = passN;
+        document.getElementById("sc-f").textContent = failN;
+        document.getElementById("sc-t").textContent = totN;
+        const pct = totN ? Math.round((passN / totN) * 100) : 0;
+        let msg = "Answer questions to track your readiness.";
+        if (totN > 0 && pct === 100)
+          msg = "Perfect score! You are ready for the interview.";
+        else if (pct >= 70)
+          msg = `${pct}% pass rate — review the questions you missed.`;
+        else if (pct >= 40)
+          msg = `${pct}% pass rate — keep practising the weaker areas.`;
+        else if (totN > 0)
+          msg = `${pct}% pass rate — read the hints and try again.`;
+        document.getElementById("sc-msg").textContent = msg;
+      }
+
+      function buildChecklist() {
+        const groups = [
+          {
+            title: "YSJ and Course",
+            icon: "school",
+            color: "text-primary",
+            bg: "bg-primary-light",
+            items: [
+              "Know the exact name of your course and duration",
+              "Know your campus name, full street address, and postcode",
+              "Name at least 2-3 modules and explain why each interests you",
+              "Know how your course is assessed — the specific methods",
+              "Compared YSJ with 2 other named UK universities with specific reasons",
+              "Know YSJ rankings: top 10 student satisfaction, Gold teaching excellence",
+            ],
+          },
+          {
+            title: "Why YSJ Specifically",
+            icon: "star",
+            color: "text-secondary",
+            bg: "bg-secondary-light",
+            items: [
+              "Can explain specific reasons for choosing YSJ (not generic)",
+              "Know about £100m facilities investment",
+              "Know about smaller cohort sizes and personalised feedback",
+              "Mention CMI accreditation if applicable to your course",
+              "Know campus location advantages (York historic city OR London business hub)",
+            ],
+          },
+          {
+            title: "Career Plans",
+            icon: "work",
+            color: "text-accent",
+            bg: "bg-cyan-50",
+            items: [
+              "Named at least 2-3 specific real companies you will apply to",
+              "Have a specific job title ready",
+              "Can explain how the course qualifies you for this role",
+              "Clear plan to return to home country after graduation",
+              "Expected salary range in home currency",
+            ],
+          },
+          {
+            title: "Finance and Accommodation",
+            icon: "currency_pound",
+            color: "text-primary",
+            bg: "bg-primary-light",
+            items: [
+              "Know exact tuition fee (£11,800 York / £14,000 London)",
+              "Know how much deposit you have paid",
+              "Know UKVI living cost requirement (£1,171 York / £1,529 London)",
+              "Know who is funding you, their occupation and income",
+              "Have specific accommodation: hall name (York) or area (London)",
+              "Know weekly/monthly accommodation costs",
+            ],
+          },
+          {
+            title: "Living in the UK",
+            icon: "home",
+            color: "text-secondary",
+            bg: "bg-secondary-light",
+            items: [
+              "Know specific attractions in York (Minster, museums) OR London business areas",
+              "Know transport options from accommodation to campus",
+              "Know distance from accommodation to campus",
+              "Aware of clubs, societies, or student activities you might join",
+            ],
+          },
+          {
+            title: "Visa Rules",
+            icon: "verified_user",
+            color: "text-accent",
+            bg: "bg-cyan-50",
+            items: [
+              "Know the 20 hours per week working limit during term time",
+              "Know full-time work allowed during official holidays",
+              "Know you must attend all classes",
+              "Know you must report address changes",
+              "Know you cannot claim public funds",
+            ],
+          },
+        ];
+        let html = "",
+          n = 0;
+        groups.forEach((g) => {
+          html += `<div class="panel p-6 shadow-sm"><div class="flex items-center gap-2 mb-4"><span class="material-symbols-outlined text-sm ${g.color}">${g.icon}</span><span class="font-label text-xs font-bold uppercase tracking-widest ${g.color}">${g.title}</span></div><div>`;
+          g.items.forEach((item) => {
+            html += `<div class="check-item flex items-start gap-3 py-3" id="ci${n}"><div class="check-box" onclick="togCB(this)"></div><span class="text-on-surface text-sm leading-relaxed ct">${item}</span></div>`;
+            n++;
+          });
+          html += `</div></div>`;
+        });
+        document.getElementById("chk-content").innerHTML = html;
+        updProg();
+      }
+
+      function togCB(cb) {
+        cb.classList.toggle("done");
+        const ct = cb.parentElement.querySelector(".ct");
+        if (cb.classList.contains("done")) {
+          ct.style.textDecoration = "line-through";
+          ct.style.color = "#94a3b8";
+        } else {
+          ct.style.textDecoration = "";
+          ct.style.color = "";
+        }
+        updProg();
+      }
+
+      function updProg() {
+        const all = document.querySelectorAll("#chk-content .check-box");
+        const done = document.querySelectorAll("#chk-content .check-box.done");
+        const pct = all.length
+          ? Math.round((done.length / all.length) * 100)
+          : 0;
+        document.getElementById("prog-lbl").textContent =
+          `${done.length} of ${all.length} completed`;
+        document.getElementById("prog-pct").textContent = pct + "%";
+        document.getElementById("prog-fill").style.width = pct + "%";
+      }
+    </script>
+  </body>
+</html>

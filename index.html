@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UK University Interview Prep Hub</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --navy: #0a1628;
+        --navy-light: #1e3a5f;
+        --red: #dc2626;
+        --red-light: #fee2e2;
+        --white: #ffffff;
+        --cream: #f8fafc;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--navy);
+        min-height: 100vh;
+        overflow-x: hidden;
+        color: var(--white);
+      }
+
+      /* Animated Background */
+      .bg-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 0;
+      }
+
+      .bg-animation::before {
+        content: "";
+        position: absolute;
+        width: 150%;
+        height: 150%;
+        background:
+          radial-gradient(
+            circle at 20% 80%,
+            rgba(220, 38, 38, 0.15) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(30, 58, 95, 0.4) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 40%,
+            rgba(220, 38, 38, 0.1) 0%,
+            transparent 40%
+          );
+        animation: bgPulse 15s ease-in-out infinite;
+      }
+
+      @keyframes bgPulse {
+        0%,
+        100% {
+          transform: scale(1) rotate(0deg);
+        }
+        50% {
+          transform: scale(1.1) rotate(5deg);
+        }
+      }
+
+      /* Floating Shapes */
+      .shape {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.1;
+        animation: float 20s infinite ease-in-out;
+      }
+
+      .shape-1 {
+        width: 400px;
+        height: 400px;
+        background: var(--red);
+        top: -100px;
+        right: -100px;
+        animation-delay: 0s;
+      }
+
+      .shape-2 {
+        width: 300px;
+        height: 300px;
+        background: var(--white);
+        bottom: -50px;
+        left: -50px;
+        animation-delay: -5s;
+      }
+
+      .shape-3 {
+        width: 200px;
+        height: 200px;
+        background: var(--red);
+        top: 50%;
+        left: 30%;
+        animation-delay: -10s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        25% {
+          transform: translate(50px, -50px) scale(1.1);
+        }
+        50% {
+          transform: translate(-30px, 30px) scale(0.9);
+        }
+        75% {
+          transform: translate(30px, 50px) scale(1.05);
+        }
+      }
+
+      /* Header */
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(
+          to bottom,
+          rgba(10, 22, 40, 0.95),
+          transparent
+        );
+      }
+
+      .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        animation: slideInLeft 1s ease-out;
+      }
+
+      .logo {
+        width: 60px;
+        height: 60px;
+        background: var(--white);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 900;
+        font-size: 28px;
+        color: var(--navy);
+        box-shadow: 0 10px 40px rgba(220, 38, 38, 0.3);
+        animation: logoPulse 2s ease-in-out infinite;
+      }
+
+      @keyframes logoPulse {
+        0%,
+        100% {
+          transform: scale(1);
+          box-shadow: 0 10px 40px rgba(220, 38, 38, 0.3);
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow: 0 15px 50px rgba(220, 38, 38, 0.5);
+        }
+      }
+
+      .logo-text {
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 700;
+        font-size: 22px;
+        line-height: 1.2;
+      }
+
+      .logo-text span {
+        display: block;
+        font-size: 12px;
+        font-weight: 500;
+        opacity: 0.8;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      /* Main Content */
+      .main-content {
+        position: relative;
+        z-index: 10;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 120px 20px 60px;
+      }
+
+      /* Hero Section */
+      .hero {
+        text-align: center;
+        margin-bottom: 60px;
+        animation: fadeInUp 1s ease-out 0.3s both;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(220, 38, 38, 0.2);
+        border: 1px solid rgba(220, 38, 38, 0.4);
+        padding: 10px 24px;
+        border-radius: 100px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 30px;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+        }
+        50% {
+          box-shadow: 0 0 0 10px rgba(220, 38, 38, 0);
+        }
+      }
+
+      .hero h1 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(36px, 8vw, 72px);
+        font-weight: 900;
+        line-height: 1.1;
+        margin-bottom: 20px;
+        background: linear-gradient(
+          135deg,
+          var(--white) 0%,
+          var(--red-light) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero h1 span {
+        display: block;
+        color: var(--red);
+        -webkit-text-fill-color: var(--red);
+      }
+
+      .hero p {
+        font-size: 18px;
+        opacity: 0.8;
+        max-width: 500px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      /* School Cards Grid */
+      .schools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        width: 100%;
+        max-width: 1200px;
+        animation: fadeInUp 1s ease-out 0.6s both;
+      }
+
+      /* School Card */
+      .school-card {
+        position: relative;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 35px 30px;
+        cursor: pointer;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
+        text-decoration: none;
+        color: var(--white);
+        display: block;
+      }
+
+      .school-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(220, 38, 38, 0.1) 0%,
+          transparent 50%
+        );
+        opacity: 0;
+        transition: opacity 0.4s;
+      }
+
+      .school-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        border-color: rgba(220, 38, 38, 0.5);
+        box-shadow:
+          0 30px 60px rgba(0, 0, 0, 0.4),
+          0 0 40px rgba(220, 38, 38, 0.2);
+      }
+
+      .school-card:hover::before {
+        opacity: 1;
+      }
+
+      /* Card Icon */
+      .card-icon {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, var(--red) 0%, #b91c1c 100%);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 25px;
+        font-size: 32px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.4s;
+      }
+
+      .school-card:hover .card-icon {
+        transform: scale(1.1) rotate(-5deg);
+      }
+
+      .card-icon::after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transform: rotate(45deg);
+        transition: all 0.6s;
+        opacity: 0;
+      }
+
+      .school-card:hover .card-icon::after {
+        animation: shine 0.6s ease-out;
+      }
+
+      @keyframes shine {
+        0% {
+          transform: translateX(-100%) translateY(-100%) rotate(45deg);
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateX(100%) translateY(100%) rotate(45deg);
+          opacity: 0;
+        }
+      }
+
+      /* Card Content */
+      .card-badge {
+        display: inline-block;
+        background: rgba(220, 38, 38, 0.2);
+        color: var(--red-light);
+        padding: 6px 14px;
+        border-radius: 100px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 15px;
+      }
+
+      .school-card h3 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        line-height: 1.3;
+      }
+
+      .school-card p {
+        font-size: 14px;
+        opacity: 0.7;
+        line-height: 1.6;
+        margin-bottom: 25px;
+      }
+
+      /* Arrow */
+      .card-arrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--red-light);
+        transition: all 0.3s;
+      }
+
+      .school-card:hover .card-arrow {
+        gap: 15px;
+        color: var(--white);
+      }
+
+      /* Coming Soon Badge */
+      .coming-soon {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 6px 12px;
+        border-radius: 100px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* Animations */
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .header {
+          padding: 15px 20px;
+        }
+
+        .logo {
+          width: 50px;
+          height: 50px;
+          font-size: 22px;
+        }
+
+        .logo-text {
+          font-size: 18px;
+        }
+
+        .schools-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .school-card {
+          padding: 25px;
+        }
+      }
+
+      /* Scroll indicator */
+      .scroll-indicator {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        opacity: 0.6;
+        animation: bounce 2s infinite;
+        z-index: 10;
+      }
+
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateX(-50%) translateY(0);
+        }
+        50% {
+          transform: translateX(-50%) translateY(-10px);
+        }
+      }
+
+      /* ============================================
+   INSTRUCTIONS FOR ADDING MORE SCHOOLS:
+   ============================================
+   
+   TO ADD A NEW SCHOOL, COPY THIS TEMPLATE 
+   AND PASTE INSIDE THE schools-grid div:
+   
+   <a href="YOUR-SCHOOL-FILENAME.html" class="school-card">
+     <div class="card-icon">
+       <span class="material-symbols-outlined">school</span>
+     </div>
+     <span class="card-badge">POSTGRADUATE</span>
+     <h3>School Name</h3>
+     <p>Brief description of what students will learn.</p>
+     <span class="card-arrow">
+       Start Training
+       <span class="material-symbols-outlined">arrow_forward</span>
+     </span>
+   </a>
+   
+   ============================================
+   WHERE TO PASTE YOUR EXISTING HTML FILES:
+   ============================================
+   
+   1. Regent College London → Save as: regent.html
+   2. York St John University → Save as: yorkstjohn.html  
+   3. UKVI Interview → Save as: ukvi.html
+   4. BPP University → Save as: bpp.html
+   5. Team Academy → Save as: teamacademy.html
+   
+   Then update the href links below to match!
+   
+   ============================================ */
+    </style>
+  </head>
+  <body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+      <div class="logo-container">
+        <!-- ============================================
+         REPLACE THIS LOGO SECTION:
+         Option 1: Use text logo (current)
+         Option 2: Replace with image:
+         <img src="your-logo.png" alt="Logo" style="height: 60px;">
+         ============================================ -->
+        <div class="logo">UK</div>
+        <div class="logo-text">
+          Interview Prep
+          <span>Visa Success Hub</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-badge">
+          <span class="material-symbols-outlined" style="font-size: 18px"
+            >verified</span
+          >
+          Trusted by 10,000+ Students
+        </div>
+        <h1>
+          Master Your
+          <span>UK Visa Interview</span>
+        </h1>
+        <p>
+          AI-powered training for university credibility interviews. Practice
+          questions, get instant feedback, and secure your CAS.
+        </p>
+      </section>
+
+      <!-- Schools Grid -->
+      <!-- ============================================
+       ADD NEW SCHOOL CARDS HERE!
+       Copy template from CSS comments above
+       ============================================ -->
+      <div class="schools-grid">
+        <!-- Regent College London -->
+        <!-- ============================================
+         PASTE YOUR REGENT COLLEGE HTML:
+         1. Save your Regent code as: regent.html
+         2. Link it below in href="regent.html"
+         ============================================ -->
+        <a href="regent.html" class="school-card">
+          <div class="card-icon">
+            <span class="material-symbols-outlined">apartment</span>
+          </div>
+          <span class="card-badge">LONDON CAMPUSES</span>
+          <h3>Regent College London</h3>
+          <p>
+            MBA, MSc International Management, Software Engineering & more.
+            Holborn, Wembley & Southall campuses.
+          </p>
+          <span class="card-arrow">
+            Start Training
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </span>
+        </a>
+
+        <!-- York St John University -->
+        <!-- ============================================
+         PASTE YOUR YORK ST JOHN HTML:
+         1. Save your YSJ code as: yorkstjohn.html
+         2. Link it below in href="yorkstjohn.html"
+         ============================================ -->
+        <a href="yorkstjohn.html" class="school-card">
+          <div class="card-icon">
+            <span class="material-symbols-outlined">castle</span>
+          </div>
+          <span class="card-badge">YORK & LONDON</span>
+          <h3>York St John University</h3>
+          <p>
+            Top 10 for student satisfaction. York campus & London campus.
+            Business, Computing & Data Science.
+          </p>
+          <span class="card-arrow">
+            Start Training
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </span>
+        </a>
+
+        <!-- UKVI Interview -->
+        <!-- ============================================
+         CREATE UKVI INTERVIEW HTML:
+         1. Save as: ukvi.html
+         2. Generic UKVI questions (not school-specific)
+         ============================================ -->
+        <a href="ukvi.html" class="school-card">
+          <div class="card-icon">
+            <span class="material-symbols-outlined">passport</span>
+          </div>
+          <span
+            class="card-badge"
+            style="background: rgba(30, 58, 95, 0.4); color: #93c5fd"
+            >GENERAL</span
+          >
+          <h3>UKVI Interview Prep</h3>
+          <p>
+            Generic UK visa credibility interview training. Universal questions
+            for any UK university application.
+          </p>
+          <span class="card-arrow">
+            Start Training
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </span>
+        </a>
+
+        <!-- BPP University -->
+        <!-- ============================================
+         CREATE BPP UNIVERSITY HTML:
+         1. Save as: bpp.html
+         2. Copy your Regent/YSJ template
+         3. Change colors to BPP branding
+         4. Update course info for BPP
+         ============================================ -->
+        <a href="bpp.html" class="school-card">
+          <div
+            class="card-icon"
+            style="
+              background: linear-gradient(135deg, #1e3a5f 0%, #0a1628 100%);
+            "
+          >
+            <span class="material-symbols-outlined">account_balance</span>
+          </div>
+          <span
+            class="card-badge"
+            style="background: rgba(30, 58, 95, 0.4); color: #93c5fd"
+            >PROFESSIONAL</span
+          >
+          <h3>BPP University</h3>
+          <p>
+            Professional education focus. Law, Business, Nursing & Healthcare.
+            Multiple UK locations.
+          </p>
+          <span class="card-arrow">
+            Start Training
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </span>
+        </a>
+
+        <!-- Team Academy -->
+        <!-- ============================================
+         CREATE TEAM ACADEMY HTML:
+         1. Save as: teamacademy.html
+         2. Copy your template
+         3. Update for Team Academy courses
+         ============================================ -->
+        <a href="teamacademy.html" class="school-card">
+          <div
+            class="card-icon"
+            style="
+              background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+            "
+          >
+            <span class="material-symbols-outlined">groups</span>
+          </div>
+          <span
+            class="card-badge"
+            style="background: rgba(234, 88, 12, 0.2); color: #fdba74"
+            >ENTREPRENEURSHIP</span
+          >
+          <h3>Team Academy</h3>
+          <p>
+            Entrepreneurship and business creation. Learn by doing. Build your
+            own business while you study.
+          </p>
+          <span class="card-arrow">
+            Start Training
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </span>
+        </a>
+
+        <!-- Template for NEW SCHOOL -->
+        <!-- ============================================
+         COPY THIS TEMPLATE FOR NEW SCHOOLS:
+         
+    <a href="SCHOOL-NAME.html" class="school-card">
+      <div class="card-icon" style="background: linear-gradient(135deg, #COLOR1 0%, #COLOR2 100%);">
+        <span class="material-symbols-outlined">ICON-NAME</span>
+      </div>
+      <span class="card-badge">SCHOOL TYPE</span>
+      <h3>School Name</h3>
+      <p>Description of courses and campuses.</p>
+      <span class="card-arrow">
+        Start Training
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </span>
+    </a>
+    
+    ============================================ -->
+      </div>
+    </main>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+      <span
+        style="font-size: 12px; text-transform: uppercase; letter-spacing: 2px"
+        >Choose Your School</span
+      >
+      <span class="material-symbols-outlined">expand_more</span>
+    </div>
+  </body>
+</html>
