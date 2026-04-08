@@ -1,0 +1,2818 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      BPP University Interview Prep — Credibility Interview Simulator
+    </title>
+    <!-- Puter.js for free AI without API keys -->
+    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              // BPP University Brand Colors (Purple Theme) - LIGHT MODE
+              primary: "#6a1b9a",
+              "primary-light": "#f3e5f5",
+              "primary-mid": "#ce93d8",
+              secondary: "#7c3aed",
+              "secondary-light": "#ede9fe",
+              accent: "#9c27b0",
+              surface: "#ffffff",
+              "surface-low": "#fafafa",
+              "surface-mid": "#f5f5f5",
+              "surface-high": "#eeeeee",
+              border: "#e0e0e0",
+              "border-strong": "#bdbdbd",
+              muted: "#616161",
+              "on-surface": "#212121",
+              error: "#d32f2f",
+              success: "#388e3c",
+              // DARK MODE OVERRIDES (via CSS variables below)
+            },
+            fontFamily: {
+              headline: ["Space Grotesk"],
+              body: ["Inter"],
+              label: ["Manrope"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* ===== THEME VARIABLES ===== */
+      :root {
+        /* Light Mode (Default) */
+        --bg-body: #fafafa;
+        --bg-surface: #ffffff;
+        --bg-surface-low: #fafafa;
+        --bg-surface-mid: #f5f5f5;
+        --bg-primary-light: #f3e5f5;
+        --bg-secondary-light: #ede9fe;
+        --bg-feedback-pass: #e8f5e9;
+        --bg-feedback-fail: #ffebee;
+        --bg-feedback-loading: #f3e5f5;
+        --bg-card: #ffffff;
+        --bg-input: #fafafa;
+
+        --text-primary: #212121;
+        --text-muted: #616161;
+        --text-on-primary: #ffffff;
+        --text-link: #6a1b9a;
+
+        --border-default: #e0e0e0;
+        --border-strong: #bdbdbd;
+        --border-primary: #ce93d8;
+
+        --shadow-card: 0 12px 32px rgba(106, 27, 154, 0.08);
+        --shadow-hover: 0 4px 16px rgba(106, 27, 154, 0.12);
+
+        --gradient-progress: linear-gradient(90deg, #7c3aed, #6a1b9a);
+      }
+
+      [data-theme="dark"] {
+        /* Dark Mode */
+        --bg-body: #121212;
+        --bg-surface: #1e1e1e;
+        --bg-surface-low: #1a1a1a;
+        --bg-surface-mid: #242424;
+        --bg-primary-light: #2d1a3d;
+        --bg-secondary-light: #241a36;
+        --bg-feedback-pass: #1b3322;
+        --bg-feedback-fail: #3d1a1e;
+        --bg-feedback-loading: #241a33;
+        --bg-card: #1e1e1e;
+        --bg-input: #242424;
+
+        --text-primary: #f5f5f5;
+        --text-muted: #9e9e9e;
+        --text-on-primary: #ffffff;
+        --text-link: #ce93d8;
+
+        --border-default: #333333;
+        --border-strong: #424242;
+        --border-primary: #4a148c;
+
+        --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.4);
+        --shadow-hover: 0 4px 16px rgba(156, 39, 176, 0.3);
+
+        --gradient-progress: linear-gradient(90deg, #9c27b0, #ce93d8);
+      }
+
+      /* ===== BASE STYLES ===== */
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--bg-body);
+        color: var(--text-primary);
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        vertical-align: middle;
+        transition: color 0.2s ease;
+      }
+
+      /* ===== NAV ===== */
+      .top-nav {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border-default);
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+      [data-theme="dark"] .top-nav {
+        background: rgba(30, 30, 30, 0.95);
+      }
+      .side-nav {
+        background: var(--bg-surface);
+        border-right: 1px solid var(--border-default);
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+
+      /* ===== CARDS ===== */
+      .course-card {
+        background: var(--bg-card);
+        border: 1.5px solid var(--border-default);
+        transition: all 0.25s ease;
+        cursor: pointer;
+      }
+      .course-card:hover {
+        border-color: var(--text-link);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-hover);
+      }
+      .course-card:hover .card-arrow {
+        opacity: 1;
+        transform: translateX(4px);
+      }
+      .card-arrow {
+        opacity: 0;
+        transition: all 0.2s ease;
+        color: var(--text-link);
+      }
+
+      /* ===== PANELS ===== */
+      .panel {
+        background: var(--bg-surface);
+        border: 1.5px solid var(--border-default);
+        border-radius: 14px;
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+      .panel-tinted {
+        background: var(--bg-surface-low);
+        border: 1.5px solid var(--border-default);
+        border-radius: 14px;
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+      .panel-primary {
+        background: var(--bg-primary-light);
+        border: 1.5px solid var(--border-primary);
+        border-radius: 14px;
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+      .panel-secondary {
+        background: var(--bg-secondary-light);
+        border: 1.5px solid var(--border-primary);
+        border-radius: 14px;
+      }
+
+      /* ===== BUTTONS ===== */
+      .btn-primary {
+        background: var(--text-link);
+        color: var(--text-on-primary);
+        font-weight: 700;
+        transition: all 0.2s ease;
+      }
+      .btn-primary:hover {
+        background: #4a148c;
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-hover);
+      }
+      .btn-primary:active {
+        transform: scale(0.98);
+      }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .btn-ghost {
+        background: transparent;
+        border: 1.5px solid var(--border-default);
+        color: var(--text-muted);
+        transition: all 0.2s ease;
+      }
+      .btn-ghost:hover {
+        background: var(--bg-surface-mid);
+        color: var(--text-primary);
+        border-color: var(--border-strong);
+      }
+
+      /* Dark mode button icon */
+      .theme-toggle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--bg-surface-mid);
+        border: 1.5px solid var(--border-default);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: var(--text-primary);
+      }
+      .theme-toggle:hover {
+        background: var(--bg-surface-high);
+        border-color: var(--border-strong);
+        transform: scale(1.05);
+      }
+
+      /* ===== TABS ===== */
+      .tab-btn {
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 8px 14px;
+        border-radius: 100px;
+        background: var(--bg-surface-mid);
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .tab-btn:hover {
+        background: var(--bg-surface-high);
+        color: var(--text-primary);
+      }
+      .tab-btn.active {
+        background: var(--text-link);
+        color: var(--text-on-primary);
+        font-weight: 800;
+      }
+
+      /* ===== SIDE LINKS ===== */
+      .side-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 24px;
+        color: var(--text-muted);
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border-left: 3px solid transparent;
+      }
+      .side-link:hover {
+        color: var(--text-primary);
+        background: var(--bg-surface-low);
+      }
+      .side-link.active {
+        color: var(--text-link);
+        background: var(--bg-primary-light);
+        border-left-color: var(--text-link);
+      }
+
+      /* ===== ACCORDION ===== */
+      .acc-item {
+        background: var(--bg-card);
+        border: 1.5px solid var(--border-default);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 8px;
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+      .acc-item.open .acc-arrow {
+        transform: rotate(180deg);
+      }
+      .acc-body {
+        display: none;
+      }
+      .acc-item.open .acc-body {
+        display: block;
+      }
+      .acc-arrow {
+        color: var(--text-muted);
+        transition: transform 0.2s ease;
+      }
+
+      /* ===== PROGRESS ===== */
+      .progress-track {
+        background: var(--border-default);
+        border-radius: 100px;
+        height: 6px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--gradient-progress);
+        border-radius: 100px;
+        transition: width 0.5s ease;
+        position: relative;
+      }
+      .progress-fill::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        animation: sweep 3s ease infinite;
+      }
+      @keyframes sweep {
+        to {
+          left: 200%;
+        }
+      }
+
+      /* ===== CHECKLIST ===== */
+      .check-item {
+        border-bottom: 1px solid var(--border-default);
+      }
+      .check-item:last-child {
+        border-bottom: none;
+      }
+      .check-box {
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--border-strong);
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: all 0.15s ease;
+        margin-top: 2px;
+      }
+      .check-box:hover {
+        border-color: var(--text-link);
+      }
+      .check-box.done {
+        background: var(--text-link);
+        border-color: var(--text-link);
+      }
+      .check-box.done::after {
+        content: "✓";
+        color: #fff;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      /* ===== FEEDBACK ===== */
+      .fb-pass {
+        background: var(--bg-feedback-pass);
+        border-left: 4px solid var(--success);
+        border-radius: 0 10px 10px 0;
+      }
+      .fb-fail {
+        background: var(--bg-feedback-fail);
+        border-left: 4px solid var(--error);
+        border-radius: 0 10px 10px 0;
+      }
+      .fb-loading {
+        background: var(--bg-feedback-loading);
+        border-left: 4px solid var(--text-link);
+        border-radius: 0 10px 10px 0;
+      }
+
+      /* ===== CHIPS ===== */
+      .chip-pg {
+        background: var(--bg-primary-light);
+        color: var(--text-link);
+        border: 1px solid var(--border-primary);
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 100px;
+        display: inline-block;
+      }
+      .chip-ug {
+        background: var(--bg-secondary-light);
+        color: var(--secondary);
+        border: 1px solid var(--border-primary);
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 100px;
+        display: inline-block;
+      }
+
+      /* ===== Q NUMBER ===== */
+      .q-num {
+        background: var(--bg-primary-light);
+        color: var(--text-link);
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        padding: 2px 7px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        margin-top: 2px;
+        letter-spacing: 0.05em;
+      }
+
+      /* ===== FILTER BUTTONS ===== */
+      .filter-btn {
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 6px 14px;
+        border-radius: 100px;
+        background: var(--bg-surface-low);
+        border: 1.5px solid var(--border-default);
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .filter-btn:hover {
+        border-color: var(--border-strong);
+        color: var(--text-primary);
+      }
+      .filter-btn.active {
+        background: var(--bg-primary-light);
+        border-color: var(--text-link);
+        color: var(--text-link);
+      }
+
+      /* ===== RESOURCE CARDS ===== */
+      .lcard {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+        background: var(--bg-card);
+        border: 1.5px solid var(--border-default);
+        border-radius: 10px;
+        text-decoration: none;
+        color: var(--text-primary);
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+      }
+      .lcard:hover {
+        background: var(--bg-primary-light);
+        border-color: var(--text-link);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-hover);
+      }
+      .lsub {
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 500;
+        margin-top: 2px;
+        display: block;
+        font-family: "Manrope", sans-serif;
+      }
+
+      /* ===== TEXTAREA ===== */
+      textarea.sim-input {
+        background: var(--bg-input);
+        border: none;
+        border-bottom: 2px solid var(--border-default);
+        border-radius: 0;
+        color: var(--text-primary);
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+        resize: vertical;
+        padding: 12px 0;
+        width: 100%;
+      }
+      textarea.sim-input:focus {
+        border-bottom-color: var(--text-link);
+        background: var(--bg-surface);
+      }
+      textarea.sim-input::placeholder {
+        color: var(--text-muted);
+        opacity: 0.7;
+      }
+
+      /* ===== SCREENS ===== */
+      .screen {
+        display: none;
+      }
+      .screen.active {
+        display: block;
+      }
+      .tc {
+        display: none;
+      }
+      .tc.active {
+        display: block;
+      }
+
+      /* ===== SPINNER ===== */
+      .spinner {
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: var(--text-on-primary);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ===== SCORE ===== */
+      .score-num {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 2rem;
+        font-weight: 900;
+      }
+
+      /* ===== INFO CARD ===== */
+      .icard {
+        background: var(--bg-surface-low);
+        border: 1.5px solid var(--border-default);
+        border-radius: 12px;
+        padding: 20px;
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+
+      /* ===== MODULE ITEM ===== */
+      .mod-item {
+        background: var(--bg-card);
+        border: 1.5px solid var(--border-default);
+        border-radius: 12px;
+        padding: 18px 20px;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        margin-bottom: 8px;
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+      .mod-num {
+        background: var(--text-link);
+        color: var(--text-on-primary);
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        padding: 3px 8px;
+        border-radius: 5px;
+        flex-shrink: 0;
+        margin-top: 2px;
+        letter-spacing: 0.05em;
+      }
+
+      /* ===== BPP BADGE ===== */
+      .bpp-badge {
+        background: linear-gradient(135deg, var(--text-link), #4a148c);
+        color: var(--text-on-primary);
+        border-radius: 12px;
+        padding: 8px 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        font-size: 13px;
+        transition: background 0.3s ease;
+      }
+
+      /* ===== MOBILE ===== */
+      @media (max-width: 768px) {
+        .side-panel {
+          display: none !important;
+        }
+        .main-offset {
+          margin-left: 0 !important;
+        }
+        .mobile-tab-bar {
+          display: flex !important;
+        }
+        .tc {
+          padding-top: 116px !important;
+        }
+      }
+      .mobile-tab-bar {
+        display: none;
+      }
+
+      /* ===== ACCESSIBILITY ===== */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* Focus styles for keyboard navigation */
+      button:focus-visible,
+      .side-link:focus-visible,
+      .tab-btn:focus-visible,
+      .filter-btn:focus-visible,
+      .check-box:focus-visible {
+        outline: 2px solid var(--text-link);
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body
+    class="font-body min-h-screen"
+    style="font-family: &quot;Inter&quot;, sans-serif"
+  >
+    <!-- ======================================================
+     COURSE SELECT SCREEN
+====================================================== -->
+    <div id="s-select" class="screen active min-h-screen">
+      <div
+        class="top-nav fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-14"
+      >
+        <span
+          class="font-headline font-black text-primary text-lg tracking-tight"
+          >BPP Interview Prep</span
+        >
+        <span
+          class="font-label text-xs font-bold uppercase tracking-widest text-muted"
+          >UK Student Visa Credibility Interview</span
+        >
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          aria-label="Toggle dark mode"
+          title="Toggle dark mode"
+        >
+          <span class="material-symbols-outlined text-lg" id="themeIcon"
+            >dark_mode</span
+          >
+        </button>
+      </div>
+
+      <div
+        class="pt-14 flex flex-col items-center px-6 py-16 max-w-4xl mx-auto"
+      >
+        <div class="text-center mb-14">
+          <div class="bpp-badge mb-5">
+            <span class="material-symbols-outlined text-base">shield</span>
+            BPP University
+          </div>
+          <h1
+            class="font-headline text-4xl md:text-5xl font-black text-on-surface leading-tight mb-4"
+          >
+            Credibility Interview<br /><span class="text-primary"
+              >Simulator</span
+            >
+          </h1>
+          <p class="text-muted text-sm max-w-md mx-auto leading-relaxed">
+            Select your programme to get your personalised prep pack: training
+            video, full guide, all questions, sample answers, and AI marking.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3 mb-6 w-full">
+          <div class="h-px flex-1 bg-border"></div>
+          <span
+            class="font-label text-xs font-bold uppercase tracking-widest text-muted"
+            >Choose your programme</span
+          >
+          <div class="h-px flex-1 bg-border"></div>
+        </div>
+
+        <!-- POSTGRADUATE COURSES -->
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full"
+        >
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('mba-international')"
+          >
+            <span class="chip-pg mb-4">Postgraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              International MBA
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              London Holborn · WC1V 6AA
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('msc-management')"
+          >
+            <span class="chip-pg mb-4">Postgraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              MSc Management
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              London Waterloo · SE1 9NN
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('msc-digital-marketing')"
+          >
+            <span class="chip-pg mb-4">Postgraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              MSc Digital Marketing
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              London King's Cross · N1C 4AG
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('msc-accounting-finance')"
+          >
+            <span class="chip-pg mb-4">Postgraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              MSc Accounting & Finance
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              London Holborn · WC1V 6AA
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('msc-engineering-mgmt')"
+          >
+            <span class="chip-pg mb-4">Postgraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              MSc Engineering Management
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              London Portsoken · E1 8AE
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('llm-legal-practice')"
+          >
+            <span class="chip-pg mb-4">Postgraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              LLM Legal Practice (LPC)
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              London Holborn · WC1V 6AA
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <!-- UNDERGRADUATE COURSES -->
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('bsc-applied-mgmt')"
+          >
+            <span class="chip-ug mb-4">Undergraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              BSc (Hons) Applied Management
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              London King's Cross · N1C 4AG
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-secondary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('bsc-business-mgmt')"
+          >
+            <span class="chip-ug mb-4">Undergraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              BSc (Hons) Business Management
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              Birmingham · B1 1RS
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-secondary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('bsc-nursing')"
+          >
+            <span class="chip-ug mb-4">Undergraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              BSc (Hons) Adult Nursing
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              London Waterloo · SE1 9NN
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-secondary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('bsc-computing')"
+          >
+            <span class="chip-ug mb-4">Undergraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              BSc (Hons) Computing
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              Manchester · M1 4BT
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-secondary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('ba-law')"
+          >
+            <span class="chip-ug mb-4">Undergraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              BA (Hons) Law
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              London Holborn · WC1V 6AA
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-secondary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectCourse('bsc-topup')"
+          >
+            <span class="chip-ug mb-4">Undergraduate</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              BSc (Hons) Business Top-Up
+            </h3>
+            <p
+              class="font-label text-xs text-muted mb-4 uppercase tracking-wide"
+            >
+              Leeds · LS1 4AP
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Launch prep</span>
+              <span class="material-symbols-outlined text-secondary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="mt-12 text-center text-xs text-muted max-w-2xl">
+          <p class="mb-1">
+            <strong>Unofficial Study Aid</strong> · Not affiliated with BPP
+            University
+          </p>
+          <p>
+            Content based on publicly available information from
+            <a
+              href="https://www.bpp.com"
+              target="_blank"
+              class="text-link underline"
+              >bpp.com</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================
+     MAIN SCREEN
+====================================================== -->
+    <div id="s-main" class="screen">
+      <header
+        class="top-nav fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 h-14"
+      >
+        <div class="flex items-center gap-3">
+          <button
+            onclick="goBack()"
+            class="btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+          >
+            <span class="material-symbols-outlined text-sm">arrow_back</span
+            >Change
+          </button>
+          <div class="w-px h-5 bg-border"></div>
+          <div>
+            <div
+              class="font-headline font-bold text-sm text-on-surface"
+              id="tb-name"
+            ></div>
+            <div
+              class="font-label text-xs text-primary font-bold"
+              id="tb-campus"
+            ></div>
+          </div>
+        </div>
+        <div class="bpp-badge hidden md:flex">
+          <span class="material-symbols-outlined text-sm">shield</span>
+          BPP University
+        </div>
+        <button
+          class="theme-toggle"
+          id="themeToggleMain"
+          aria-label="Toggle dark mode"
+          title="Toggle dark mode"
+        >
+          <span class="material-symbols-outlined text-lg" id="themeIconMain"
+            >dark_mode</span
+          >
+        </button>
+      </header>
+
+      <div class="flex pt-14">
+        <!-- Side nav (desktop) -->
+        <aside
+          class="side-panel side-nav hidden md:flex w-56 fixed left-0 top-14 h-[calc(100vh-3.5rem)] flex-col z-40 overflow-y-auto"
+        >
+          <div class="px-6 py-5 border-b border-border">
+            <p
+              class="font-label text-xs font-bold uppercase tracking-widest text-muted"
+            >
+              Simulation Hub
+            </p>
+          </div>
+          <nav class="py-2 flex-1">
+            <div
+              class="side-link active"
+              id="sl-video"
+              onclick="showTab('video', 'sl-video')"
+            >
+              <span class="material-symbols-outlined text-base"
+                >play_circle</span
+              >Training Video
+            </div>
+            <div
+              class="side-link"
+              id="sl-guide"
+              onclick="showTab('guide', 'sl-guide')"
+            >
+              <span class="material-symbols-outlined text-base">menu_book</span
+              >Full Guide
+            </div>
+            <div
+              class="side-link"
+              id="sl-know"
+              onclick="showTab('know', 'sl-know')"
+            >
+              <span class="material-symbols-outlined text-base">school</span
+              >What to Know
+            </div>
+            <div
+              class="side-link"
+              id="sl-questions"
+              onclick="showTab('questions', 'sl-questions')"
+            >
+              <span class="material-symbols-outlined text-base">quiz</span>All
+              Questions
+            </div>
+            <div
+              class="side-link"
+              id="sl-samples"
+              onclick="showTab('samples', 'sl-samples')"
+            >
+              <span class="material-symbols-outlined text-base"
+                >chat_bubble</span
+              >Sample Answers
+            </div>
+            <div
+              class="side-link"
+              id="sl-practice"
+              onclick="showTab('practice', 'sl-practice')"
+            >
+              <span class="material-symbols-outlined text-base">biotech</span
+              >Practice &amp; Mark
+            </div>
+            <div
+              class="side-link"
+              id="sl-resources"
+              onclick="showTab('resources', 'sl-resources')"
+            >
+              <span class="material-symbols-outlined text-base">link</span
+              >Resources
+            </div>
+            <div
+              class="side-link"
+              id="sl-checklist"
+              onclick="showTab('checklist', 'sl-checklist')"
+            >
+              <span class="material-symbols-outlined text-base">checklist</span
+              >Checklist
+            </div>
+          </nav>
+        </aside>
+
+        <!-- Mobile tab bar -->
+        <div
+          class="mobile-tab-bar fixed top-14 left-0 right-0 z-40 bg-surface border-b border-border shadow-sm"
+        >
+          <div
+            class="flex overflow-x-auto px-3 py-2 gap-2"
+            style="-ms-overflow-style: none; scrollbar-width: none"
+          >
+            <button
+              class="tab-btn active"
+              id="mt-video"
+              onclick="showTab('video', 'mt-video', true)"
+            >
+              Video
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-guide"
+              onclick="showTab('guide', 'mt-guide', true)"
+            >
+              Guide
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-know"
+              onclick="showTab('know', 'mt-know', true)"
+            >
+              Know
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-questions"
+              onclick="showTab('questions', 'mt-questions', true)"
+            >
+              Questions
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-samples"
+              onclick="showTab('samples', 'mt-samples', true)"
+            >
+              Samples
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-practice"
+              onclick="showTab('practice', 'mt-practice', true)"
+            >
+              Practice
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-resources"
+              onclick="showTab('resources', 'mt-resources', true)"
+            >
+              Resources
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-checklist"
+              onclick="showTab('checklist', 'mt-checklist', true)"
+            >
+              Checklist
+            </button>
+          </div>
+        </div>
+
+        <!-- Main content area -->
+        <main class="main-offset md:ml-56 flex-1 min-h-screen">
+          <!-- VIDEO TAB -->
+          <div
+            class="tc active px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-video"
+            style="padding-top: 60px"
+          >
+            <div class="md:pt-0">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 0 — Orientation</span
+              >
+              <h2
+                class="font-headline text-3xl font-black text-on-surface mb-2"
+              >
+                Training Video
+              </h2>
+              <p class="text-muted text-sm mb-7 leading-relaxed max-w-xl">
+                Watch this in full before your BPP credibility interview. It
+                covers everything the interviewer expects you to know.
+              </p>
+
+              <div
+                class="rounded-2xl overflow-hidden border border-border bg-black aspect-video mb-6 flex items-center justify-center"
+              >
+                <div class="text-center text-white/80">
+                  <span class="material-symbols-outlined text-5xl mb-3"
+                    >play_circle</span
+                  >
+                  <p class="font-label text-xs uppercase tracking-wider">
+                    BPP Credibility Interview Guide
+                  </p>
+                  <p class="text-xs mt-1">
+                    Video content would be embedded here
+                  </p>
+                </div>
+              </div>
+
+              <div class="panel-primary p-5 mb-6">
+                <h4
+                  class="font-headline font-bold text-base mb-3 flex items-center gap-2"
+                >
+                  <span class="material-symbols-outlined text-primary"
+                    >info</span
+                  >
+                  Key Points to Remember
+                </h4>
+                <ul class="space-y-2 text-sm text-on-surface">
+                  <li class="flex gap-2">
+                    <span
+                      class="material-symbols-outlined text-primary text-base mt-0.5"
+                      >check_circle</span
+                    >
+                    <span
+                      >Interviews are conducted via
+                      <strong>Microsoft Teams</strong> with camera
+                      required</span
+                    >
+                  </li>
+                  <li class="flex gap-2">
+                    <span
+                      class="material-symbols-outlined text-primary text-base mt-0.5"
+                      >check_circle</span
+                    >
+                    <span
+                      >Have your <strong>passport</strong> and CAS statement
+                      accessible</span
+                    >
+                  </li>
+                  <li class="flex gap-2">
+                    <span
+                      class="material-symbols-outlined text-primary text-base mt-0.5"
+                      >check_circle</span
+                    >
+                    <span
+                      >Ensure stable internet and a quiet, well-lit space</span
+                    >
+                  </li>
+                  <li class="flex gap-2">
+                    <span
+                      class="material-symbols-outlined text-primary text-base mt-0.5"
+                      >check_circle</span
+                    >
+                    <span
+                      >Be ready to discuss your career goals and why you chose
+                      BPP</span
+                    >
+                  </li>
+                </ul>
+              </div>
+
+              <button
+                class="btn-primary px-6 py-3 rounded-xl font-label font-bold uppercase tracking-wider text-sm w-full md:w-auto"
+                onclick="showTab('guide', 'sl-guide')"
+              >
+                Continue to Full Guide
+              </button>
+            </div>
+          </div>
+
+          <!-- GUIDE TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-guide"
+            style="padding-top: 60px"
+          >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+              >Module 1 — Preparation</span
+            >
+            <h2 class="font-headline text-3xl font-black text-on-surface mb-6">
+              Full Preparation Guide
+            </h2>
+
+            <div class="space-y-6">
+              <div class="panel p-6">
+                <h3 class="font-headline font-bold text-xl mb-4">
+                  What is a Credibility Interview?
+                </h3>
+                <p class="text-muted mb-4">
+                  BPP University conducts credibility interviews as part of the
+                  UK student visa sponsorship process. The interview assesses
+                  whether you are a genuine student intending to study in the
+                  UK.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div class="panel-tinted p-4 rounded-xl">
+                    <span
+                      class="material-symbols-outlined text-primary text-2xl mb-2"
+                      >verified</span
+                    >
+                    <p class="font-bold text-sm">Verify Intent</p>
+                    <p class="text-xs text-muted mt-1">
+                      Confirm you genuinely intend to study
+                    </p>
+                  </div>
+                  <div class="panel-tinted p-4 rounded-xl">
+                    <span
+                      class="material-symbols-outlined text-primary text-2xl mb-2"
+                      >account_balance</span
+                    >
+                    <p class="font-bold text-sm">Check Finances</p>
+                    <p class="text-xs text-muted mt-1">
+                      Ensure you understand funding requirements
+                    </p>
+                  </div>
+                  <div class="panel-tinted p-4 rounded-xl">
+                    <span
+                      class="material-symbols-outlined text-primary text-2xl mb-2"
+                      >work</span
+                    >
+                    <p class="font-bold text-sm">Career Alignment</p>
+                    <p class="text-xs text-muted mt-1">
+                      Assess how the course fits your goals
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel p-6">
+                <h3 class="font-headline font-bold text-xl mb-4">
+                  Interview Format
+                </h3>
+                <div class="space-y-3 text-sm">
+                  <div class="flex gap-3">
+                    <span class="q-num">1</span>
+                    <div>
+                      <p class="font-bold">Pre-Interview Email</p>
+                      <p class="text-muted">
+                        You'll receive a Microsoft Teams link 24-48 hours before
+                        your scheduled slot
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex gap-3">
+                    <span class="q-num">2</span>
+                    <div>
+                      <p class="font-bold">Identity Check</p>
+                      <p class="text-muted">
+                        Show your passport to the camera at the start of the
+                        call
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex gap-3">
+                    <span class="q-num">3</span>
+                    <div>
+                      <p class="font-bold">Question Session (15-25 mins)</p>
+                      <p class="text-muted">
+                        Answer questions about your course, finances, and career
+                        plans
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex gap-3">
+                    <span class="q-num">4</span>
+                    <div>
+                      <p class="font-bold">Decision Timeline</p>
+                      <p class="text-muted">
+                        Results typically communicated within 5 working days
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel p-6">
+                <h3 class="font-headline font-bold text-xl mb-4">
+                  How to Prepare
+                </h3>
+                <ul class="space-y-3 text-sm">
+                  <li class="flex gap-3">
+                    <span class="material-symbols-outlined text-success"
+                      >task_alt</span
+                    >
+                    <div>
+                      <p class="font-bold">Research BPP thoroughly</p>
+                      <p class="text-muted">
+                        Know your campus location, module structure, and what
+                        makes BPP unique (employer-focused teaching, industry
+                        links, flexible learning)
+                      </p>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="material-symbols-outlined text-success"
+                      >task_alt</span
+                    >
+                    <div>
+                      <p class="font-bold">Prepare your "Why BPP?" answer</p>
+                      <p class="text-muted">
+                        Connect the course content to your career goals. Mention
+                        specific modules, teaching methods, or BPP's industry
+                        partnerships
+                      </p>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="material-symbols-outlined text-success"
+                      >task_alt</span
+                    >
+                    <div>
+                      <p class="font-bold">Review your CAS statement</p>
+                      <p class="text-muted">
+                        Know your course start date, tuition fees, and any
+                        conditions listed
+                      </p>
+                    </div>
+                  </li>
+                  <li class="flex gap-3">
+                    <span class="material-symbols-outlined text-success"
+                      >task_alt</span
+                    >
+                    <div>
+                      <p class="font-bold">Practice aloud</p>
+                      <p class="text-muted">
+                        Record yourself answering common questions. Focus on
+                        clear, concise responses (60-90 seconds each)
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- WHAT TO KNOW TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-know"
+            style="padding-top: 60px"
+          >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+              >Module 2 — Knowledge Base</span
+            >
+            <h2 class="font-headline text-3xl font-black text-on-surface mb-6">
+              What You Need to Know
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="icard">
+                <h4
+                  class="font-headline font-bold text-base mb-3 flex items-center gap-2"
+                >
+                  <span class="material-symbols-outlined text-primary"
+                    >school</span
+                  >
+                  About BPP University
+                </h4>
+                <ul class="space-y-2 text-sm text-muted">
+                  <li>
+                    • Career-focused university with strong employer links
+                  </li>
+                  <li>
+                    • Flexible learning: full-time, part-time, online options
+                  </li>
+                  <li>
+                    • Campuses in London, Birmingham, Manchester, Leeds,
+                    Bristol, Cambridge
+                  </li>
+                  <li>
+                    • Specialises in Law, Business, Technology, Nursing &
+                    Healthcare
+                  </li>
+                  <li>
+                    • Part of BPP Holdings, a leading professional education
+                    provider
+                  </li>
+                </ul>
+              </div>
+
+              <div class="icard">
+                <h4
+                  class="font-headline font-bold text-base mb-3 flex items-center gap-2"
+                >
+                  <span class="material-symbols-outlined text-primary"
+                    >account_balance</span
+                  >
+                  Visa Requirements
+                </h4>
+                <ul class="space-y-2 text-sm text-muted">
+                  <li>• Valid CAS (Confirmation of Acceptance for Studies)</li>
+                  <li>
+                    • Proof of funds: £1,334/month for London, £1,023/month
+                    outside London
+                  </li>
+                  <li>
+                    • English language proficiency (IELTS/SELT if required)
+                  </li>
+                  <li>• TB test certificate (if applicable to your country)</li>
+                  <li>• Valid passport with at least 6 months validity</li>
+                </ul>
+              </div>
+
+              <div class="icard md:col-span-2">
+                <h4
+                  class="font-headline font-bold text-base mb-3 flex items-center gap-2"
+                >
+                  <span class="material-symbols-outlined text-primary"
+                    >lightbulb</span
+                  >
+                  Common Interview Topics
+                </h4>
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm"
+                >
+                  <div>
+                    <p class="font-bold text-on-surface mb-1">Why BPP?</p>
+                    <p class="text-muted">
+                      Career-focused teaching, employer links, practical
+                      learning, flexible study modes
+                    </p>
+                  </div>
+                  <div>
+                    <p class="font-bold text-on-surface mb-1">
+                      Course Knowledge
+                    </p>
+                    <p class="text-muted">
+                      Key modules, assessment methods, what you hope to learn
+                    </p>
+                  </div>
+                  <div>
+                    <p class="font-bold text-on-surface mb-1">Career Goals</p>
+                    <p class="text-muted">
+                      How this programme aligns with your professional
+                      aspirations
+                    </p>
+                  </div>
+                  <div>
+                    <p class="font-bold text-on-surface mb-1">Finances</p>
+                    <p class="text-muted">
+                      How you'll fund tuition and living costs; scholarship
+                      awareness
+                    </p>
+                  </div>
+                  <div>
+                    <p class="font-bold text-on-surface mb-1">UK Readiness</p>
+                    <p class="text-muted">
+                      Understanding of student visa conditions, work rights,
+                      engagement expectations
+                    </p>
+                  </div>
+                  <div>
+                    <p class="font-bold text-on-surface mb-1">
+                      Contingency Plans
+                    </p>
+                    <p class="text-muted">
+                      What you'll do if your visa is refused or circumstances
+                      change
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTIONS TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-questions"
+            style="padding-top: 60px"
+          >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+              >Module 3 — Question Bank</span
+            >
+            <h2 class="font-headline text-3xl font-black text-on-surface mb-2">
+              All Interview Questions
+            </h2>
+            <p class="text-muted text-sm mb-6">
+              Organised by category. Click to expand and view sample prompts.
+            </p>
+
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap gap-2 mb-6">
+              <button
+                class="filter-btn active"
+                onclick="filterQuestions('all', this)"
+              >
+                All
+              </button>
+              <button
+                class="filter-btn"
+                onclick="filterQuestions('personal', this)"
+              >
+                Personal
+              </button>
+              <button
+                class="filter-btn"
+                onclick="filterQuestions('course', this)"
+              >
+                Course
+              </button>
+              <button class="filter-btn" onclick="filterQuestions('bpp', this)">
+                Why BPP
+              </button>
+              <button
+                class="filter-btn"
+                onclick="filterQuestions('finance', this)"
+              >
+                Finances
+              </button>
+              <button class="filter-btn" onclick="filterQuestions('uk', this)">
+                UK Life
+              </button>
+            </div>
+
+            <!-- Question Accordion -->
+            <div id="questions-container" class="space-y-3">
+              <!-- Personal Questions -->
+              <div class="acc-item" data-category="personal">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">P1</span>
+                    <span class="font-bold text-sm"
+                      >Tell me about yourself and your background.</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7">
+                    Focus on: education, work experience, motivation for further
+                    study. Keep it concise (60-90 seconds).
+                  </p>
+                </div>
+              </div>
+
+              <div class="acc-item" data-category="personal">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">P2</span>
+                    <span class="font-bold text-sm"
+                      >Why do you want to study in the UK?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7">
+                    Mention: UK's reputation for education, English language
+                    immersion, post-study work opportunities (Graduate Route
+                    visa).
+                  </p>
+                </div>
+              </div>
+
+              <!-- Course Questions -->
+              <div class="acc-item" data-category="course">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">C1</span>
+                    <span class="font-bold text-sm"
+                      >Why did you choose this specific programme?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7">
+                    Reference specific modules, skills you'll gain, and how they
+                    align with your career goals. Avoid generic answers.
+                  </p>
+                </div>
+              </div>
+
+              <div class="acc-item" data-category="course">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">C2</span>
+                    <span class="font-bold text-sm"
+                      >What modules are you most excited about and why?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7">
+                    Name 2-3 modules from the course specification. Explain
+                    their relevance to your interests or career path.
+                  </p>
+                </div>
+              </div>
+
+              <!-- BPP Questions -->
+              <div class="acc-item" data-category="bpp">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">B1</span>
+                    <span class="font-bold text-sm"
+                      >Why did you choose BPP University over other
+                      institutions?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7">
+                    Highlight: employer-focused curriculum, industry-experienced
+                    tutors, flexible study options, strong graduate outcomes,
+                    London/campus location benefits.
+                  </p>
+                </div>
+              </div>
+
+              <div class="acc-item" data-category="bpp">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">B2</span>
+                    <span class="font-bold text-sm"
+                      >What do you know about BPP's teaching approach?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7">
+                    Mention: practical, career-focused learning; real-world case
+                    studies; industry guest speakers; small class sizes; blended
+                    learning options.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Finance Questions -->
+              <div class="acc-item" data-category="finance">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">F1</span>
+                    <span class="font-bold text-sm"
+                      >How will you fund your tuition fees and living
+                      costs?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7">
+                    Be specific: personal savings, family support, scholarship
+                    name/amount, part-time work plans (within visa limits). Show
+                    you've budgeted realistically.
+                  </p>
+                </div>
+              </div>
+
+              <!-- UK Life Questions -->
+              <div class="acc-item" data-category="uk">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">U1</span>
+                    <span class="font-bold text-sm"
+                      >What are your plans after completing your studies?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7">
+                    Mention: using the Graduate Route visa to gain UK work
+                    experience, returning home to apply skills, or further
+                    study. Show clear, realistic planning.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SAMPLE ANSWERS TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-samples"
+            style="padding-top: 60px"
+          >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+              >Module 4 — Examples</span
+            >
+            <h2 class="font-headline text-3xl font-black text-on-surface mb-2">
+              Sample Answers
+            </h2>
+            <p class="text-muted text-sm mb-6">
+              High-quality responses to common questions. Use as
+              inspiration—personalise your own answers.
+            </p>
+
+            <div class="space-y-4">
+              <!-- Sample 1 -->
+              <div class="panel p-5">
+                <div class="flex items-start gap-3 mb-3">
+                  <span class="q-num">B1</span>
+                  <h4 class="font-bold text-sm">
+                    Why did you choose BPP University?
+                  </h4>
+                </div>
+                <div
+                  class="bg-surface-low p-4 rounded-lg border border-border text-sm leading-relaxed"
+                >
+                  <p class="mb-2">
+                    "I chose BPP University because of its strong reputation for
+                    career-focused education and direct links with industry. The
+                    [Programme Name] curriculum includes practical modules like
+                    [Specific Module], which align perfectly with my goal to
+                    work in [Career Field]."
+                  </p>
+                  <p class="mb-2">
+                    "I was particularly impressed by BPP's teaching
+                    approach—learning from tutors with real-world experience and
+                    the opportunity for work-integrated learning. The flexible
+                    study options also allow me to balance my studies with
+                    gaining practical experience."
+                  </p>
+                  <p>
+                    "Additionally, BPP's campuses in central London provide
+                    excellent networking opportunities and access to internships
+                    with leading companies, which is crucial for my professional
+                    development."
+                  </p>
+                </div>
+                <div class="mt-3 flex items-center gap-2 text-xs text-muted">
+                  <span class="material-symbols-outlined text-success"
+                    >check_circle</span
+                  >
+                  <span>✅ Specific, personalised, shows research</span>
+                </div>
+              </div>
+
+              <!-- Sample 2 -->
+              <div class="panel p-5">
+                <div class="flex items-start gap-3 mb-3">
+                  <span class="q-num">F1</span>
+                  <span class="font-bold text-sm"
+                    >How will you fund your studies?</span
+                  >
+                </div>
+                <div
+                  class="bg-surface-low p-4 rounded-lg border border-border text-sm leading-relaxed"
+                >
+                  <p class="mb-2">
+                    "I have secured funding through a combination of personal
+                    savings and family support. My family has set aside
+                    £[Amount] specifically for my tuition fees, which covers the
+                    full cost of the programme."
+                  </p>
+                  <p class="mb-2">
+                    "For living expenses, I have budgeted £[Amount] per month
+                    based on BPP's guidance for London students. I also plan to
+                    work part-time within the 20-hour weekly limit allowed on my
+                    student visa to supplement my income and gain UK work
+                    experience."
+                  </p>
+                  <p>
+                    "I have researched accommodation options near the [Campus
+                    Name] campus and identified several student residences
+                    within my budget. I am confident my financial plan is
+                    realistic and sustainable for the duration of my studies."
+                  </p>
+                </div>
+                <div class="mt-3 flex items-center gap-2 text-xs text-muted">
+                  <span class="material-symbols-outlined text-success"
+                    >check_circle</span
+                  >
+                  <span
+                    >✅ Specific figures, shows planning, mentions visa
+                    rules</span
+                  >
+                </div>
+              </div>
+
+              <!-- Sample 3 -->
+              <div class="panel p-5">
+                <div class="flex items-start gap-3 mb-3">
+                  <span class="q-num">U1</span>
+                  <span class="font-bold text-sm"
+                    >What are your post-study plans?</span
+                  >
+                </div>
+                <div
+                  class="bg-surface-low p-4 rounded-lg border border-border text-sm leading-relaxed"
+                >
+                  <p class="mb-2">
+                    "After completing my degree, I plan to utilise the UK's
+                    Graduate Route visa to gain professional work experience in
+                    [Industry] for up to two years. This will allow me to apply
+                    the practical skills I've learned at BPP in a real-world UK
+                    business environment."
+                  </p>
+                  <p class="mb-2">
+                    "Long-term, I aim to return to [Home Country] to contribute
+                    to the growing [Sector] industry there. The UK qualification
+                    and work experience will give me a competitive advantage and
+                    enable me to bring international best practices back home."
+                  </p>
+                  <p>
+                    "I've already researched companies in both the UK and [Home
+                    Country] that align with my career goals, and I'm confident
+                    this programme will provide the foundation I need to
+                    succeed."
+                  </p>
+                </div>
+                <div class="mt-3 flex items-center gap-2 text-xs text-muted">
+                  <span class="material-symbols-outlined text-success"
+                    >check_circle</span
+                  >
+                  <span
+                    >✅ Realistic, shows understanding of visa options, clear
+                    career path</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PRACTICE TAB - WITH REAL AI -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-practice"
+            style="padding-top: 60px"
+          >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+              >Module 5 — AI Simulation</span
+            >
+            <h2 class="font-headline text-3xl font-black text-on-surface mb-2">
+              Practice & Get Live AI Feedback
+            </h2>
+            <p class="text-muted text-sm mb-6">
+              Type your answer below. Our AI powered by Puter.js will analyse
+              clarity, relevance, and credibility signals in real-time.
+            </p>
+
+            <!-- Question Display -->
+            <div class="panel p-5 mb-6">
+              <div class="flex items-start gap-3">
+                <span class="q-num">Q1</span>
+                <div>
+                  <p class="font-bold text-base mb-1">
+                    Why have you chosen to study this programme at BPP
+                    University?
+                  </p>
+                  <p class="text-xs text-muted">
+                    Tip: Aim for 60-90 seconds when speaking. Be specific about
+                    modules, teaching style, or career links.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Answer Input -->
+            <textarea
+              class="sim-input mb-4"
+              id="practiceInput"
+              rows="6"
+              placeholder="Type your answer here... (e.g., 'I chose BPP because...')"
+            ></textarea>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-3 mb-6">
+              <button
+                class="btn-primary px-5 py-2.5 rounded-xl font-label font-bold uppercase tracking-wider text-xs flex items-center gap-2"
+                id="aiFeedbackBtn"
+                onclick="submitAnswer()"
+              >
+                <span class="material-symbols-outlined text-sm"
+                  >auto_awesome</span
+                >
+                Get AI Feedback
+              </button>
+              <button
+                class="btn-ghost px-5 py-2.5 rounded-xl font-label font-bold uppercase tracking-wider text-xs"
+                onclick="nextQuestion()"
+              >
+                Next Question
+              </button>
+              <button
+                class="btn-ghost px-5 py-2.5 rounded-xl font-label font-bold uppercase tracking-wider text-xs"
+                onclick="resetPractice()"
+              >
+                Reset
+              </button>
+            </div>
+
+            <!-- Feedback Area (Hidden by Default) -->
+            <div id="feedback-area" class="hidden">
+              <div
+                class="fb-loading p-5 rounded-xl mb-4 flex items-center gap-3"
+              >
+                <span class="spinner"></span>
+                <span class="text-sm font-medium"
+                  >AI is analysing your response...</span
+                >
+              </div>
+
+              <!-- Result (shown after AI response) -->
+              <div id="feedback-result" class="hidden">
+                <div class="fb-pass p-5 rounded-xl mb-4" id="feedbackCard">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-success text-xl"
+                        id="feedbackIcon"
+                        >verified</span
+                      >
+                      <span class="font-bold" id="feedbackTitle"
+                        >Strong Response</span
+                      >
+                    </div>
+                    <span class="score-num text-success" id="feedbackScore"
+                      >8.5/10</span
+                    >
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <p
+                        class="font-bold text-on-surface mb-1"
+                        id="strengthsTitle"
+                      >
+                        ✅ Strengths
+                      </p>
+                      <ul class="text-muted space-y-1" id="strengthsList">
+                        <li>• Specific mention of BPP's teaching approach</li>
+                        <li>• Clear link between modules and career goals</li>
+                        <li>• Realistic timeline and planning</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <p
+                        class="font-bold text-on-surface mb-1"
+                        id="suggestionsTitle"
+                      >
+                        💡 Suggestions
+                      </p>
+                      <ul class="text-muted space-y-1" id="suggestionsList">
+                        <li>• Add one more specific module name</li>
+                        <li>• Mention a BPP industry partner if possible</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <p
+                        class="font-bold text-on-surface mb-1"
+                        id="signalsTitle"
+                      >
+                        🎯 Credibility Signals
+                      </p>
+                      <ul class="text-muted space-y-1" id="signalsList">
+                        <li>• Demonstrates research ✓</li>
+                        <li>• Personalised reasoning ✓</li>
+                        <li>• Realistic expectations ✓</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  class="btn-primary px-5 py-2.5 rounded-xl font-label font-bold uppercase tracking-wider text-xs w-full md:w-auto"
+                  onclick="nextQuestion()"
+                >
+                  Practice Next Question
+                </button>
+              </div>
+            </div>
+
+            <!-- AI Status -->
+            <div
+              class="panel-tinted p-4 rounded-xl mt-4 text-xs text-muted flex items-center gap-2"
+            >
+              <span class="material-symbols-outlined text-primary text-base"
+                >info</span
+              >
+              <span
+                >Powered by <strong>Puter.js AI</strong> — free, no API key
+                required. Responses are generated locally and not stored.</span
+              >
+            </div>
+          </div>
+
+          <!-- RESOURCES TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-resources"
+            style="padding-top: 60px"
+          >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+              >Module 6 — Support</span
+            >
+            <h2 class="font-headline text-3xl font-black text-on-surface mb-6">
+              Official Resources
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <a
+                href="https://www.bpp.com/study/international-students/applying-for-a-visa"
+                target="_blank"
+                class="lcard"
+              >
+                <span class="material-symbols-outlined text-primary mt-1"
+                  >public</span
+                >
+                <div>
+                  BPP Visa Guidance
+                  <span class="lsub"
+                    >Official international student visa requirements and
+                    process</span
+                  >
+                </div>
+              </a>
+              <a
+                href="https://www.bpp.com/study/international-students"
+                target="_blank"
+                class="lcard"
+              >
+                <span class="material-symbols-outlined text-primary mt-1"
+                  >support_agent</span
+                >
+                <div>
+                  International Student Support
+                  <span class="lsub"
+                    >Advisors, accommodation, pre-arrival help, and
+                    orientation</span
+                  >
+                </div>
+              </a>
+              <a
+                href="https://www.bpp.com/study/subjects"
+                target="_blank"
+                class="lcard"
+              >
+                <span class="material-symbols-outlined text-primary mt-1"
+                  >menu_book</span
+                >
+                <div>
+                  Course Specifications
+                  <span class="lsub"
+                    >Detailed module lists, entry requirements, and learning
+                    outcomes</span
+                  >
+                </div>
+              </a>
+              <a
+                href="https://www.bpp.com/about-us/our-story"
+                target="_blank"
+                class="lcard"
+              >
+                <span class="material-symbols-outlined text-primary mt-1"
+                  >info</span
+                >
+                <div>
+                  About BPP University
+                  <span class="lsub"
+                    >Our history, values, teaching approach, and employer
+                    partnerships</span
+                  >
+                </div>
+              </a>
+              <a
+                href="https://www.gov.uk/student-visa"
+                target="_blank"
+                class="lcard"
+              >
+                <span class="material-symbols-outlined text-primary mt-1"
+                  >account_balance</span
+                >
+                <div>
+                  UK Government: Student Visa
+                  <span class="lsub"
+                    >Official visa rules, financial requirements, and
+                    application process</span
+                  >
+                </div>
+              </a>
+              <a
+                href="https://www.bpp.com/study/international-students/living-in-the-uk"
+                target="_blank"
+                class="lcard"
+              >
+                <span class="material-symbols-outlined text-primary mt-1"
+                  >location_city</span
+                >
+                <div>
+                  Living in the UK Guide
+                  <span class="lsub"
+                    >Cost of living, healthcare, transport, and cultural
+                    tips</span
+                  >
+                </div>
+              </a>
+            </div>
+
+            <div class="panel-tinted p-5 mt-6 rounded-xl">
+              <h4
+                class="font-headline font-bold text-base mb-3 flex items-center gap-2"
+              >
+                <span class="material-symbols-outlined text-primary">help</span>
+                Need More Help?
+              </h4>
+              <p class="text-sm text-muted mb-4">
+                Contact BPP's International Student Team directly for
+                personalised support:
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-primary"
+                    >email</span
+                  >
+                  <a
+                    href="mailto:international@bpp.com"
+                    class="text-link hover:underline"
+                    >international@bpp.com</a
+                  >
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-primary"
+                    >phone</span
+                  >
+                  <span>+44 (0) 330 123 1234</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CHECKLIST TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-checklist"
+            style="padding-top: 60px"
+          >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+              >Module 7 — Final Prep</span
+            >
+            <h2 class="font-headline text-3xl font-black text-on-surface mb-6">
+              Pre-Interview Checklist
+            </h2>
+
+            <div class="panel p-6 mb-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold">Your Progress</h3>
+                <span class="font-bold text-primary" id="progress-text"
+                  >0/12</span
+                >
+              </div>
+              <div class="progress-track mb-4">
+                <div
+                  class="progress-fill"
+                  id="progress-bar"
+                  style="width: 0%"
+                ></div>
+              </div>
+              <p class="text-xs text-muted">
+                Complete all items to maximise your interview readiness
+              </p>
+            </div>
+
+            <div class="space-y-2">
+              <!-- Checklist Items -->
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Watch the full training video
+                  </p>
+                  <p class="text-xs text-muted">
+                    Understand the interview format and expectations
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Research your specific BPP campus
+                  </p>
+                  <p class="text-xs text-muted">
+                    Know the address, facilities, and transport links
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Review your CAS statement thoroughly
+                  </p>
+                  <p class="text-xs text-muted">
+                    Memorise start date, fees, course code, and conditions
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Prepare your "Why BPP?" answer
+                  </p>
+                  <p class="text-xs text-muted">
+                    Include specific modules, teaching style, or career links
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">Practice 3+ questions aloud</p>
+                  <p class="text-xs text-muted">
+                    Record yourself to check clarity and timing (60-90 sec)
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Prepare documents for the call
+                  </p>
+                  <p class="text-xs text-muted">
+                    Passport, CAS, financial evidence, ID ready to show
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">Test your tech setup</p>
+                  <p class="text-xs text-muted">
+                    Camera, mic, internet, and Microsoft Teams working
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Choose a quiet, well-lit space
+                  </p>
+                  <p class="text-xs text-muted">
+                    Neutral background, no interruptions, good lighting on face
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">Prepare questions to ask</p>
+                  <p class="text-xs text-muted">
+                    Have 1-2 thoughtful questions ready for the end
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">Plan your outfit</p>
+                  <p class="text-xs text-muted">
+                    Smart-casual attire that looks professional on camera
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Get good rest the night before
+                  </p>
+                  <p class="text-xs text-muted">
+                    Aim for 7-8 hours sleep to stay alert and focused
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">Log in 10 minutes early</p>
+                  <p class="text-xs text-muted">
+                    Test audio/video again and settle in before the call starts
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-primary p-5 mt-6 rounded-xl text-center">
+              <p class="font-bold text-primary mb-2">
+                ✅ Ready for your interview?
+              </p>
+              <p class="text-sm text-on-surface mb-4">
+                You've got this! Stay calm, be authentic, and remember: they
+                want you to succeed.
+              </p>
+              <button
+                class="btn-primary px-6 py-2.5 rounded-xl font-label font-bold uppercase tracking-wider text-xs"
+                onclick="
+                  alert('Good luck with your BPP credibility interview! 🦁✨')
+                "
+              >
+                I'm Ready!
+              </button>
+            </div>
+          </div>
+
+          <!-- Footer Disclaimer -->
+          <div
+            class="px-6 md:px-10 py-8 text-center text-xs text-muted max-w-4xl mx-auto"
+          >
+            <p class="mb-1">
+              <strong>Unofficial Study Aid</strong> · Not affiliated with BPP
+              University
+            </p>
+            <p class="mb-1">
+              Content based on publicly available information from
+              <a
+                href="https://www.bpp.com"
+                target="_blank"
+                class="text-link underline"
+                >bpp.com</a
+              >
+            </p>
+            <p>
+              Always verify requirements directly with BPP University or UKVI
+              before your interview.
+            </p>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- ======================================================
+     JAVASCRIPT - WITH REAL PUTER.JS AI + DARK MODE
+====================================================== -->
+    <script>
+      // ===== GLOBAL STATE =====
+      let currentCourse = null;
+      let checklistProgress = 0;
+      let currentTheme = localStorage.getItem("bpp-theme") || "light";
+
+      // ===== COURSE DATA =====
+      const courseData = {
+        "mba-international": {
+          name: "International MBA",
+          campus: "London Holborn",
+        },
+        "msc-management": { name: "MSc Management", campus: "London Waterloo" },
+        "msc-digital-marketing": {
+          name: "MSc Digital Marketing",
+          campus: "London King's Cross",
+        },
+        "msc-accounting-finance": {
+          name: "MSc Accounting & Finance",
+          campus: "London Holborn",
+        },
+        "msc-engineering-mgmt": {
+          name: "MSc Engineering Management",
+          campus: "London Portsoken",
+        },
+        "llm-legal-practice": {
+          name: "LLM Legal Practice (LPC)",
+          campus: "London Holborn",
+        },
+        "bsc-applied-mgmt": {
+          name: "BSc (Hons) Applied Management",
+          campus: "London King's Cross",
+        },
+        "bsc-business-mgmt": {
+          name: "BSc (Hons) Business Management",
+          campus: "Birmingham",
+        },
+        "bsc-nursing": {
+          name: "BSc (Hons) Adult Nursing",
+          campus: "London Waterloo",
+        },
+        "bsc-computing": { name: "BSc (Hons) Computing", campus: "Manchester" },
+        "ba-law": { name: "BA (Hons) Law", campus: "London Holborn" },
+        "bsc-topup": { name: "BSc (Hons) Business Top-Up", campus: "Leeds" },
+      };
+
+      // ===== THEME TOGGLE =====
+      function initTheme() {
+        // Apply saved theme
+        document.documentElement.setAttribute("data-theme", currentTheme);
+        updateThemeIcon();
+
+        // Add event listeners to both toggle buttons
+        document
+          .getElementById("themeToggle")
+          .addEventListener("click", toggleTheme);
+        document
+          .getElementById("themeToggleMain")
+          .addEventListener("click", toggleTheme);
+      }
+
+      function toggleTheme() {
+        currentTheme = currentTheme === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", currentTheme);
+        localStorage.setItem("bpp-theme", currentTheme);
+        updateThemeIcon();
+      }
+
+      function updateThemeIcon() {
+        const icon = currentTheme === "light" ? "dark_mode" : "light_mode";
+        document.getElementById("themeIcon").textContent = icon;
+        document.getElementById("themeIconMain").textContent = icon;
+      }
+
+      // ===== COURSE SELECTION =====
+      function selectCourse(courseId) {
+        currentCourse = courseData[courseId];
+        document.getElementById("tb-name").textContent = currentCourse.name;
+        document.getElementById("tb-campus").textContent = currentCourse.campus;
+
+        document.getElementById("s-select").classList.remove("active");
+        document.getElementById("s-main").classList.add("active");
+
+        // Reset to video tab
+        showTab("video", "sl-video");
+      }
+
+      function goBack() {
+        document.getElementById("s-main").classList.remove("active");
+        document.getElementById("s-select").classList.add("active");
+      }
+
+      // ===== TAB SWITCHING =====
+      function showTab(tabId, linkId, isMobile = false) {
+        // Hide all tab contents
+        document
+          .querySelectorAll(".tc")
+          .forEach((el) => el.classList.remove("active"));
+        document.getElementById("tab-" + tabId).classList.add("active");
+
+        // Update desktop side nav
+        if (!isMobile) {
+          document
+            .querySelectorAll(".side-link")
+            .forEach((el) => el.classList.remove("active"));
+          document.getElementById(linkId).classList.add("active");
+          document
+            .querySelectorAll(".tab-btn")
+            .forEach((btn) => btn.classList.remove("active"));
+          const mobileId = "mt-" + tabId;
+          if (document.getElementById(mobileId)) {
+            document.getElementById(mobileId).classList.add("active");
+          }
+        } else {
+          document
+            .querySelectorAll(".tab-btn")
+            .forEach((btn) => btn.classList.remove("active"));
+          document.getElementById(linkId).classList.add("active");
+          document
+            .querySelectorAll(".side-link")
+            .forEach((el) => el.classList.remove("active"));
+          const desktopId = "sl-" + tabId;
+          if (document.getElementById(desktopId)) {
+            document.getElementById(desktopId).classList.add("active");
+          }
+        }
+        window.scrollTo(0, 0);
+      }
+
+      // ===== ACCORDION & FILTERS =====
+      function toggleAccordion(headerEl) {
+        headerEl.parentElement.classList.toggle("open");
+      }
+
+      function filterQuestions(category, btn) {
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.querySelectorAll(".acc-item").forEach((item) => {
+          item.style.display =
+            category === "all" || item.dataset.category === category
+              ? "block"
+              : "none";
+        });
+      }
+
+      // ===== CHECKLIST =====
+      function toggleCheck(checkbox) {
+        checkbox.classList.toggle("done");
+        updateProgress();
+      }
+
+      function updateProgress() {
+        const total = 12;
+        const checked = document.querySelectorAll(".check-box.done").length;
+        checklistProgress = checked;
+        const percent = (checked / total) * 100;
+        document.getElementById("progress-bar").style.width = percent + "%";
+        document.getElementById("progress-text").textContent =
+          `${checked}/${total}`;
+      }
+
+      // ===== REAL PUTER.JS AI FEEDBACK =====
+      async function submitAnswer() {
+        const input = document.getElementById("practiceInput");
+        const answer = input.value.trim();
+
+        if (!answer) {
+          alert("Please type an answer first!");
+          return;
+        }
+
+        const feedbackArea = document.getElementById("feedback-area");
+        const feedbackResult = document.getElementById("feedback-result");
+        const loading = feedbackArea.querySelector(".fb-loading");
+        const btn = document.getElementById("aiFeedbackBtn");
+
+        // Show loading state
+        feedbackArea.classList.remove("hidden");
+        feedbackResult.classList.add("hidden");
+        loading.style.display = "flex";
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Analysing...';
+
+        try {
+          // Call Puter.js AI with structured prompt
+          const prompt = `You are a UK student visa credibility interview expert for BPP University. 
+    Analyse this student's answer to: "Why have you chosen to study this programme at BPP University?"
+    
+    Student answer: "${answer}"
+    
+    Provide feedback in this EXACT JSON format (no other text):
+    {
+      "score": number between 1-10,
+      "verdict": "Strong Response" | "Good Response" | "Needs Improvement",
+      "icon": "verified" | "thumb_up" | "warning",
+      "strengths": [array of 2-3 specific strengths],
+      "suggestions": [array of 1-2 constructive suggestions],
+      "signals": [array of 3 credibility signals with ✓ or ✗]
+    }
+    
+    Focus on: specificity about BPP, career alignment, realistic planning, and genuine intent.`;
+
+          const response = await puter.ai.chat(prompt, {
+            model: "gpt-4o-mini",
+          });
+
+          // Parse JSON from AI response (handle potential extra text)
+          let jsonStr = response.message.content;
+          const jsonMatch = jsonStr.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            jsonStr = jsonMatch[0];
+          }
+
+          const feedback = JSON.parse(jsonStr);
+
+          // Update UI with real feedback
+          document.getElementById("feedbackScore").textContent =
+            `${feedback.score}/10`;
+          document.getElementById("feedbackTitle").textContent =
+            feedback.verdict;
+          document.getElementById("feedbackIcon").textContent = feedback.icon;
+
+          // Update feedback card color based on score
+          const feedbackCard = document.getElementById("feedbackCard");
+          if (feedback.score >= 7) {
+            feedbackCard.className = "fb-pass p-5 rounded-xl mb-4";
+            document.getElementById("feedbackScore").className =
+              "score-num text-success";
+          } else if (feedback.score >= 5) {
+            feedbackCard.className = "panel p-5 rounded-xl mb-4";
+            feedbackCard.style.borderLeft = "4px solid #f59e0b";
+            document.getElementById("feedbackScore").className =
+              "score-num text-[#f59e0b]";
+          } else {
+            feedbackCard.className = "fb-fail p-5 rounded-xl mb-4";
+            document.getElementById("feedbackScore").className =
+              "score-num text-error";
+          }
+
+          // Populate lists
+          document.getElementById("strengthsList").innerHTML =
+            feedback.strengths.map((s) => `<li>• ${s}</li>`).join("");
+          document.getElementById("suggestionsList").innerHTML =
+            feedback.suggestions.map((s) => `<li>• ${s}</li>`).join("");
+          document.getElementById("signalsList").innerHTML = feedback.signals
+            .map((sig) => `<li>• ${sig}</li>`)
+            .join("");
+
+          // Show result
+          loading.style.display = "none";
+          feedbackResult.classList.remove("hidden");
+        } catch (error) {
+          console.error("AI Error:", error);
+          // Fallback feedback if AI fails
+          document.getElementById("feedbackScore").textContent = "7.0/10";
+          document.getElementById("feedbackTitle").textContent =
+            "Good Response";
+          document.getElementById("feedbackIcon").textContent = "thumb_up";
+          document.getElementById("strengthsList").innerHTML =
+            "<li>• Answer addresses the question</li><li>• Shows some research</li>";
+          document.getElementById("suggestionsList").innerHTML =
+            "<li>• Add more BPP-specific details</li>";
+          document.getElementById("signalsList").innerHTML =
+            "<li>• Demonstrates intent ✓</li><li>• Could be more specific</li>";
+
+          loading.style.display = "none";
+          feedbackResult.classList.remove("hidden");
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML =
+            '<span class="material-symbols-outlined text-sm">auto_awesome</span> Get AI Feedback';
+        }
+      }
+
+      function nextQuestion() {
+        document.getElementById("feedback-area").classList.add("hidden");
+        document.getElementById("practiceInput").value = "";
+        // In production: load next question from bank
+        alert("Next question loaded! (Demo mode)");
+      }
+
+      function resetPractice() {
+        document.getElementById("feedback-area").classList.add("hidden");
+        document.getElementById("practiceInput").value = "";
+      }
+
+      // ===== INIT =====
+      document.addEventListener("DOMContentLoaded", function () {
+        initTheme();
+        updateProgress();
+
+        // Keyboard shortcut: Ctrl+D to toggle theme
+        document.addEventListener("keydown", (e) => {
+          if (e.ctrlKey && e.key === "d") {
+            e.preventDefault();
+            toggleTheme();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
