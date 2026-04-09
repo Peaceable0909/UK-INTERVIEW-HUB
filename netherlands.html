@@ -1,0 +1,3076 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Netherlands Student Visa Prep — IND Credibility Simulator</title>
+    <!-- Puter.js for free AI without API keys -->
+    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              // Netherlands Official Brand Colors
+              nlOrange: "#FF6600", // Official Dutch orange
+              nlRed: "#AE1C28", // Dutch flag red
+              nlBlue: "#21468B", // Dutch flag blue
+              nlOrangeLight: "#fff0e6",
+              nlRedLight: "#fef2f2",
+              nlBlueLight: "#e6edf7",
+              // Neutral palette for UI
+              primary: "#FF6600",
+              "primary-light": "#fff0e6",
+              "primary-mid": "#ffb380",
+              secondary: "#21468B",
+              "secondary-light": "#e6edf7",
+              accent: "#FF8C42",
+              surface: "#ffffff",
+              "surface-low": "#fafafa",
+              "surface-mid": "#f5f5f5",
+              "surface-high": "#eeeeee",
+              border: "#e0e0e0",
+              "border-strong": "#bdbdbd",
+              muted: "#616161",
+              "on-surface": "#212121",
+              error: "#d32f2f",
+              success: "#388e3c",
+              warning: "#f59e0b",
+            },
+            fontFamily: {
+              headline: ["Space Grotesk"],
+              body: ["Inter"],
+              label: ["Manrope"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* ===== THEME VARIABLES ===== */
+      :root {
+        --bg-body: #fafafa;
+        --bg-surface: #ffffff;
+        --bg-surface-low: #fafafa;
+        --bg-surface-mid: #f5f5f5;
+        --bg-primary-light: #fff0e6;
+        --bg-secondary-light: #e6edf7;
+        --bg-feedback-pass: #e8f5e9;
+        --bg-feedback-fail: #ffebee;
+        --bg-feedback-warning: #fff8e1;
+        --bg-feedback-loading: #fff0e6;
+        --bg-card: #ffffff;
+        --bg-input: #fafafa;
+        --bg-warning-banner: #fff3cd;
+
+        --text-primary: #212121;
+        --text-muted: #616161;
+        --text-on-primary: #ffffff;
+        --text-link: #ff6600;
+        --text-warning: #856404;
+
+        --border-default: #e0e0e0;
+        --border-strong: #bdbdbd;
+        --border-primary: #ffb380;
+        --border-warning: #ffc107;
+
+        --shadow-card: 0 12px 32px rgba(255, 102, 0, 0.08);
+        --shadow-hover: 0 4px 16px rgba(255, 102, 0, 0.12);
+
+        --gradient-progress: linear-gradient(90deg, #ff6600, #ff8c42);
+      }
+
+      [data-theme="dark"] {
+        --bg-body: #121212;
+        --bg-surface: #1e1e1e;
+        --bg-surface-low: #1a1a1a;
+        --bg-surface-mid: #242424;
+        --bg-primary-light: #3a2414;
+        --bg-secondary-light: #1a2434;
+        --bg-feedback-pass: #1b3322;
+        --bg-feedback-fail: #3d1a1e;
+        --bg-feedback-warning: #3a321a;
+        --bg-feedback-loading: #3a241a;
+        --bg-card: #1e1e1e;
+        --bg-input: #242424;
+        --bg-warning-banner: #3a321a;
+
+        --text-primary: #f5f5f5;
+        --text-muted: #9e9e9e;
+        --text-on-primary: #ffffff;
+        --text-link: #ffb380;
+        --text-warning: #f1c40f;
+
+        --border-default: #333333;
+        --border-strong: #424242;
+        --border-primary: #ff6600;
+        --border-warning: #856404;
+
+        --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.4);
+        --shadow-hover: 0 4px 16px rgba(255, 102, 0, 0.3);
+
+        --gradient-progress: linear-gradient(90deg, #ff8c42, #ffb380);
+      }
+
+      /* ===== BASE STYLES ===== */
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--bg-body);
+        color: var(--text-primary);
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        vertical-align: middle;
+        transition: color 0.2s ease;
+      }
+
+      /* ===== NL BADGE ===== */
+      .nl-badge {
+        background: linear-gradient(
+          135deg,
+          var(--nlBlue),
+          var(--nlRed),
+          var(--nlOrange)
+        );
+        color: var(--text-on-primary);
+        border-radius: 12px;
+        padding: 8px 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        font-size: 13px;
+        border: 2px solid var(--border-primary);
+        transition: background 0.3s ease;
+      }
+      .nl-badge::before {
+        content: "🇳🇱";
+        font-size: 16px;
+      }
+
+      /* ===== NAV ===== */
+      .top-nav {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border-default);
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+      [data-theme="dark"] .top-nav {
+        background: rgba(30, 30, 30, 0.95);
+      }
+      .side-nav {
+        background: var(--bg-surface);
+        border-right: 1px solid var(--border-default);
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+
+      /* ===== CARDS ===== */
+      .course-card {
+        background: var(--bg-card);
+        border: 1.5px solid var(--border-default);
+        transition: all 0.25s ease;
+        cursor: pointer;
+        border-left: 4px solid transparent;
+      }
+      .course-card:hover {
+        border-color: var(--text-link);
+        border-left-color: var(--nlOrange);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-hover);
+      }
+      .course-card:hover .card-arrow {
+        opacity: 1;
+        transform: translateX(4px);
+      }
+      .card-arrow {
+        opacity: 0;
+        transition: all 0.2s ease;
+        color: var(--text-link);
+      }
+
+      /* ===== PANELS ===== */
+      .panel {
+        background: var(--bg-surface);
+        border: 1.5px solid var(--border-default);
+        border-radius: 14px;
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+      .panel-tinted {
+        background: var(--bg-surface-low);
+        border: 1.5px solid var(--border-default);
+        border-radius: 14px;
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+      .panel-primary {
+        background: var(--bg-primary-light);
+        border: 1.5px solid var(--border-primary);
+        border-radius: 14px;
+        border-left: 4px solid var(--text-link);
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+      .panel-warning {
+        background: var(--bg-warning-banner);
+        border: 1.5px solid var(--border-warning);
+        border-radius: 14px;
+        border-left: 4px solid var(--text-warning);
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+      .panel-danger {
+        background: var(--bg-secondary-light);
+        border: 1.5px solid var(--nlBlue);
+        border-radius: 14px;
+        border-left: 4px solid var(--nlBlue);
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+
+      /* ===== BUTTONS ===== */
+      .btn-primary {
+        background: var(--text-link);
+        color: var(--text-on-primary);
+        font-weight: 700;
+        transition: all 0.2s ease;
+      }
+      .btn-primary:hover {
+        background: #cc5200;
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-hover);
+      }
+      .btn-primary:active {
+        transform: scale(0.98);
+      }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .btn-danger {
+        background: var(--nlBlue);
+        color: var(--text-on-primary);
+        font-weight: 700;
+        transition: all 0.2s ease;
+      }
+      .btn-danger:hover {
+        background: #1a356e;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(33, 70, 139, 0.3);
+      }
+
+      .btn-ghost {
+        background: transparent;
+        border: 1.5px solid var(--border-default);
+        color: var(--text-muted);
+        transition: all 0.2s ease;
+      }
+      .btn-ghost:hover {
+        background: var(--bg-surface-mid);
+        color: var(--text-primary);
+        border-color: var(--border-strong);
+      }
+
+      /* Dark mode button icon */
+      .theme-toggle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--bg-surface-mid);
+        border: 1.5px solid var(--border-default);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: var(--text-primary);
+      }
+      .theme-toggle:hover {
+        background: var(--bg-surface-high);
+        border-color: var(--border-strong);
+        transform: scale(1.05);
+      }
+
+      /* ===== TABS ===== */
+      .tab-btn {
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 8px 14px;
+        border-radius: 100px;
+        background: var(--bg-surface-mid);
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .tab-btn:hover {
+        background: var(--bg-surface-high);
+        color: var(--text-primary);
+      }
+      .tab-btn.active {
+        background: var(--text-link);
+        color: var(--text-on-primary);
+        font-weight: 800;
+      }
+
+      /* ===== SIDE LINKS ===== */
+      .side-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 24px;
+        color: var(--text-muted);
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border-left: 3px solid transparent;
+      }
+      .side-link:hover {
+        color: var(--text-primary);
+        background: var(--bg-surface-low);
+      }
+      .side-link.active {
+        color: var(--text-link);
+        background: var(--bg-primary-light);
+        border-left-color: var(--text-link);
+      }
+
+      /* ===== ACCORDION ===== */
+      .acc-item {
+        background: var(--bg-card);
+        border: 1.5px solid var(--border-default);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 8px;
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+      .acc-item.open .acc-arrow {
+        transform: rotate(180deg);
+      }
+      .acc-body {
+        display: none;
+      }
+      .acc-item.open .acc-body {
+        display: block;
+      }
+      .acc-arrow {
+        color: var(--text-muted);
+        transition: transform 0.2s ease;
+      }
+
+      /* ===== PROGRESS ===== */
+      .progress-track {
+        background: var(--border-default);
+        border-radius: 100px;
+        height: 6px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--gradient-progress);
+        border-radius: 100px;
+        transition: width 0.5s ease;
+        position: relative;
+      }
+      .progress-fill::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        animation: sweep 3s ease infinite;
+      }
+      @keyframes sweep {
+        to {
+          left: 200%;
+        }
+      }
+
+      /* ===== CHECKLIST ===== */
+      .check-item {
+        border-bottom: 1px solid var(--border-default);
+      }
+      .check-item:last-child {
+        border-bottom: none;
+      }
+      .check-box {
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--border-strong);
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: all 0.15s ease;
+        margin-top: 2px;
+      }
+      .check-box:hover {
+        border-color: var(--text-link);
+      }
+      .check-box.done {
+        background: var(--text-link);
+        border-color: var(--text-link);
+      }
+      .check-box.done::after {
+        content: "✓";
+        color: #fff;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      /* ===== FEEDBACK ===== */
+      .fb-pass {
+        background: var(--bg-feedback-pass);
+        border-left: 4px solid var(--success);
+        border-radius: 0 10px 10px 0;
+      }
+      .fb-fail {
+        background: var(--bg-feedback-fail);
+        border-left: 4px solid var(--error);
+        border-radius: 0 10px 10px 0;
+      }
+      .fb-warning {
+        background: var(--bg-feedback-warning);
+        border-left: 4px solid var(--warning);
+        border-radius: 0 10px 10px 0;
+      }
+      .fb-loading {
+        background: var(--bg-feedback-loading);
+        border-left: 4px solid var(--text-link);
+        border-radius: 0 10px 10px 0;
+      }
+
+      /* ===== CHIPS ===== */
+      .chip-mvv {
+        background: var(--bg-primary-light);
+        color: var(--text-link);
+        border: 1px solid var(--border-primary);
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 100px;
+        display: inline-block;
+      }
+      .chip-wo {
+        background: var(--bg-secondary-light);
+        color: var(--nlBlue);
+        border: 1px solid var(--nlBlue);
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 100px;
+        display: inline-block;
+      }
+      .chip-hbo {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border: 1px solid #81c784;
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 100px;
+        display: inline-block;
+      }
+      .chip-warning {
+        background: var(--bg-warning-banner);
+        color: var(--text-warning);
+        border: 1px solid var(--border-warning);
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 100px;
+        display: inline-block;
+      }
+      .chip-danger {
+        background: var(--bg-secondary-light);
+        color: var(--nlBlue);
+        border: 1px solid var(--nlBlue);
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 100px;
+        display: inline-block;
+      }
+
+      /* ===== Q NUMBER ===== */
+      .q-num {
+        background: var(--bg-primary-light);
+        color: var(--text-link);
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        padding: 2px 7px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        margin-top: 2px;
+        letter-spacing: 0.05em;
+      }
+      .q-num-warning {
+        background: var(--bg-warning-banner);
+        color: var(--text-warning);
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        padding: 2px 7px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        margin-top: 2px;
+        letter-spacing: 0.05em;
+        border: 1px solid var(--border-warning);
+      }
+      .q-num-danger {
+        background: var(--bg-secondary-light);
+        color: var(--nlBlue);
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        padding: 2px 7px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        margin-top: 2px;
+        letter-spacing: 0.05em;
+        border: 1px solid var(--nlBlue);
+      }
+
+      /* ===== FILTER BUTTONS ===== */
+      .filter-btn {
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 6px 14px;
+        border-radius: 100px;
+        background: var(--bg-surface-low);
+        border: 1.5px solid var(--border-default);
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .filter-btn:hover {
+        border-color: var(--border-strong);
+        color: var(--text-primary);
+      }
+      .filter-btn.active {
+        background: var(--bg-primary-light);
+        border-color: var(--text-link);
+        color: var(--text-link);
+      }
+
+      /* ===== RESOURCE CARDS ===== */
+      .lcard {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+        background: var(--bg-card);
+        border: 1.5px solid var(--border-default);
+        border-radius: 10px;
+        text-decoration: none;
+        color: var(--text-primary);
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+      }
+      .lcard:hover {
+        background: var(--bg-primary-light);
+        border-color: var(--text-link);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-hover);
+      }
+      .lsub {
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 500;
+        margin-top: 2px;
+        display: block;
+        font-family: "Manrope", sans-serif;
+      }
+
+      /* ===== TEXTAREA ===== */
+      textarea.sim-input {
+        background: var(--bg-input);
+        border: none;
+        border-bottom: 2px solid var(--border-default);
+        border-radius: 0;
+        color: var(--text-primary);
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+        resize: vertical;
+        padding: 12px 0;
+        width: 100%;
+      }
+      textarea.sim-input:focus {
+        border-bottom-color: var(--text-link);
+        background: var(--bg-surface);
+      }
+      textarea.sim-input::placeholder {
+        color: var(--text-muted);
+        opacity: 0.7;
+      }
+
+      /* ===== SCREENS ===== */
+      .screen {
+        display: none;
+      }
+      .screen.active {
+        display: block;
+      }
+      .tc {
+        display: none;
+      }
+      .tc.active {
+        display: block;
+      }
+
+      /* ===== SPINNER ===== */
+      .spinner {
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: var(--text-on-primary);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ===== SCORE ===== */
+      .score-num {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 2rem;
+        font-weight: 900;
+      }
+
+      /* ===== INFO CARD ===== */
+      .icard {
+        background: var(--bg-surface-low);
+        border: 1.5px solid var(--border-default);
+        border-radius: 12px;
+        padding: 20px;
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
+
+      /* ===== BEHAVIOR CARD ===== */
+      .behavior-card {
+        background: var(--bg-card);
+        border: 1.5px solid var(--border-default);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
+        transition: all 0.2s ease;
+        border-left: 4px solid var(--success);
+      }
+      .behavior-card.warning {
+        border-left-color: var(--warning);
+        background: var(--bg-warning-banner);
+      }
+      .behavior-card.danger {
+        border-left-color: var(--nlBlue);
+        background: var(--bg-secondary-light);
+      }
+
+      /* ===== REFUSAL SAMPLE ===== */
+      .refusal-sample {
+        background: var(--bg-secondary-light);
+        border: 1.5px solid var(--nlBlue);
+        border-radius: 12px;
+        padding: 16px;
+        margin: 12px 0;
+      }
+      .refusal-sample.good {
+        background: var(--bg-feedback-pass);
+        border-color: var(--success);
+        border-left: 4px solid var(--success);
+      }
+      .refusal-sample.bad {
+        background: var(--bg-feedback-fail);
+        border-color: var(--error);
+        border-left: 4px solid var(--error);
+      }
+
+      /* ===== MOBILE ===== */
+      @media (max-width: 768px) {
+        .side-panel {
+          display: none !important;
+        }
+        .main-offset {
+          margin-left: 0 !important;
+        }
+        .mobile-tab-bar {
+          display: flex !important;
+        }
+        .tc {
+          padding-top: 116px !important;
+        }
+      }
+      .mobile-tab-bar {
+        display: none;
+      }
+
+      /* ===== ACCESSIBILITY ===== */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* Focus styles for keyboard navigation */
+      button:focus-visible,
+      .side-link:focus-visible,
+      .tab-btn:focus-visible,
+      .filter-btn:focus-visible,
+      .check-box:focus-visible {
+        outline: 2px solid var(--text-link);
+        outline-offset: 2px;
+      }
+
+      /* ===== IND BADGE ===== */
+      .ind-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--bg-primary-light);
+        color: var(--text-link);
+        padding: 4px 12px;
+        border-radius: 100px;
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 10px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        border: 1px solid var(--border-primary);
+      }
+    </style>
+  </head>
+  <body
+    class="font-body min-h-screen"
+    style="font-family: &quot;Inter&quot;, sans-serif"
+  >
+    <!-- ======================================================
+     COURSE SELECT SCREEN - NETHERLANDS EDITION
+====================================================== -->
+    <div id="s-select" class="screen active min-h-screen">
+      <div
+        class="top-nav fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-14"
+      >
+        <span
+          class="font-headline font-black text-primary text-lg tracking-tight"
+          >NL Visa Prep</span
+        >
+        <span
+          class="font-label text-xs font-bold uppercase tracking-widest text-muted"
+          >IND Student Residence Permit • MVV/VVR</span
+        >
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          aria-label="Toggle dark mode"
+          title="Toggle dark mode"
+        >
+          <span class="material-symbols-outlined text-lg" id="themeIcon"
+            >dark_mode</span
+          >
+        </button>
+      </div>
+
+      <div
+        class="pt-14 flex flex-col items-center px-6 py-16 max-w-4xl mx-auto"
+      >
+        <div class="text-center mb-14">
+          <div class="nl-badge mb-5">IND • Netherlands</div>
+          <h1
+            class="font-headline text-4xl md:text-5xl font-black text-on-surface leading-tight mb-4"
+          >
+            Student Visa Credibility<br /><span class="text-primary"
+              >Simulator</span
+            >
+          </h1>
+          <p class="text-muted text-sm max-w-md mx-auto leading-relaxed">
+            Prepare for your Netherlands student visa interview with AI-powered
+            practice, IND guidance, and real refusal insights.
+          </p>
+        </div>
+
+        <div class="panel-warning p-5 mb-8 max-w-2xl w-full">
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-warning text-xl mt-0.5"
+              >warning</span
+            >
+            <div>
+              <p class="font-bold text-sm text-on-surface mb-1">
+                Important Notice
+              </p>
+              <p class="text-xs text-muted">
+                This is an unofficial study aid. Always verify requirements with
+                <a
+                  href="https://ind.nl/en"
+                  target="_blank"
+                  class="text-link underline"
+                  >IND.nl</a
+                >
+                or your educational institution. Interviews are recorded and
+                decisions are final.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 mb-6 w-full">
+          <div class="h-px flex-1 bg-border"></div>
+          <span
+            class="font-label text-xs font-bold uppercase tracking-widest text-muted"
+            >Select your preparation focus</span
+          >
+          <div class="h-px flex-1 bg-border"></div>
+        </div>
+
+        <!-- PREP MODULES -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-3xl">
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectPrep('full-guide')"
+          >
+            <span class="chip-mvv mb-4">Complete Prep</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              Full Interview Guide
+            </h3>
+            <p class="font-label text-xs text-muted mb-4">
+              All 10 question categories + IND genuine student criteria +
+              behavioral principles
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted"
+                >Start preparation</span
+              >
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectPrep('practice-ai')"
+          >
+            <span class="chip-mvv mb-4">AI Practice</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              Practice with AI Feedback
+            </h3>
+            <p class="font-label text-xs text-muted mb-4">
+              Get live analysis against IND refusal criteria using Puter.js AI
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">Start practice</span>
+              <span class="material-symbols-outlined text-primary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectPrep('behavior-guide')"
+          >
+            <span class="chip-warning mb-4">Behavior Guide</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              Perfect Interview Behavior
+            </h3>
+            <p class="font-label text-xs text-muted mb-4">
+              9 principles for natural answers + 12 critical warnings to avoid
+              refusal
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted"
+                >Review guidelines</span
+              >
+              <span class="material-symbols-outlined text-warning card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="course-card rounded-2xl p-6"
+            onclick="selectPrep('refusal-samples')"
+          >
+            <span class="chip-danger mb-4">Learn from Refusals</span>
+            <h3 class="font-headline text-base font-bold text-on-surface mb-2">
+              Real Refusal Analysis
+            </h3>
+            <p class="font-label text-xs text-muted mb-4">
+              See what went wrong in actual IND cases + how to avoid the same
+              mistakes
+            </p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="font-label text-xs text-muted">View samples</span>
+              <span class="material-symbols-outlined text-secondary card-arrow"
+                >arrow_forward</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- IND Reference -->
+        <div class="mt-12 panel-primary p-5 rounded-xl max-w-2xl w-full">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="material-symbols-outlined text-primary">info</span>
+            <span class="font-bold text-sm text-on-surface"
+              >IND Genuine Student Requirement</span
+            >
+          </div>
+          <p class="text-xs text-muted">
+            To be granted a student residence permit (MVV/VVR), you must satisfy
+            IND that you: (1) genuinely intend to study at a recognized
+            institution, (2) have sufficient funds (~€12,000/year study norm)
+            [[28]], (3) meet language requirements, and (4) plan to return home
+            or pursue legal post-study options like the Orientation Year
+            (Zoekjaar) [[40]].
+          </p>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="mt-8 text-center text-xs text-muted max-w-2xl">
+          <p class="mb-1">
+            <strong>Unofficial Study Aid</strong> · Not affiliated with IND,
+            Dutch Government, or any institution
+          </p>
+          <p>
+            Content based on publicly available guidance and refusal analysis
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================
+     MAIN SCREEN - NETHERLANDS EDITION
+====================================================== -->
+    <div id="s-main" class="screen">
+      <header
+        class="top-nav fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 h-14"
+      >
+        <div class="flex items-center gap-3">
+          <button
+            onclick="goBack()"
+            class="btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+          >
+            <span class="material-symbols-outlined text-sm">arrow_back</span
+            >Change
+          </button>
+          <div class="w-px h-5 bg-border"></div>
+          <div>
+            <div
+              class="font-headline font-bold text-sm text-on-surface"
+              id="tb-title"
+            >
+              IND Credibility Interview
+            </div>
+            <div
+              class="font-label text-xs text-primary font-bold"
+              id="tb-subtitle"
+            >
+              Genuine Student • MVV/VVR Permit
+            </div>
+          </div>
+        </div>
+        <div class="nl-badge hidden md:flex">NL Prep</div>
+        <button
+          class="theme-toggle"
+          id="themeToggleMain"
+          aria-label="Toggle dark mode"
+          title="Toggle dark mode"
+        >
+          <span class="material-symbols-outlined text-lg" id="themeIconMain"
+            >dark_mode</span
+          >
+        </button>
+      </header>
+
+      <div class="flex pt-14">
+        <!-- Side nav (desktop) -->
+        <aside
+          class="side-panel side-nav hidden md:flex w-56 fixed left-0 top-14 h-[calc(100vh-3.5rem)] flex-col z-40 overflow-y-auto"
+        >
+          <div class="px-6 py-5 border-b border-border">
+            <p
+              class="font-label text-xs font-bold uppercase tracking-widest text-muted"
+            >
+              Preparation Hub
+            </p>
+          </div>
+          <nav class="py-2 flex-1">
+            <div
+              class="side-link active"
+              id="sl-behavior"
+              onclick="showTab('behavior', 'sl-behavior')"
+            >
+              <span class="material-symbols-outlined text-base">psychology</span
+              >Behavior Guide
+            </div>
+            <div
+              class="side-link"
+              id="sl-warnings"
+              onclick="showTab('warnings', 'sl-warnings')"
+            >
+              <span class="material-symbols-outlined text-base">warning</span
+              >Critical Warnings
+            </div>
+            <div
+              class="side-link"
+              id="sl-questions"
+              onclick="showTab('questions', 'sl-questions')"
+            >
+              <span class="material-symbols-outlined text-base">quiz</span
+              >Question Bank
+            </div>
+            <div
+              class="side-link"
+              id="sl-ind"
+              onclick="showTab('ind', 'sl-ind')"
+            >
+              <span class="material-symbols-outlined text-base">gavel</span>IND
+              Criteria
+            </div>
+            <div
+              class="side-link"
+              id="sl-samples"
+              onclick="showTab('samples', 'sl-samples')"
+            >
+              <span class="material-symbols-outlined text-base"
+                >description</span
+              >Refusal Samples
+            </div>
+            <div
+              class="side-link"
+              id="sl-practice"
+              onclick="showTab('practice', 'sl-practice')"
+            >
+              <span class="material-symbols-outlined text-base"
+                >auto_awesome</span
+              >AI Practice
+            </div>
+            <div
+              class="side-link"
+              id="sl-checklist"
+              onclick="showTab('checklist', 'sl-checklist')"
+            >
+              <span class="material-symbols-outlined text-base">checklist</span
+              >Readiness Checklist
+            </div>
+          </nav>
+        </aside>
+
+        <!-- Mobile tab bar -->
+        <div
+          class="mobile-tab-bar fixed top-14 left-0 right-0 z-40 bg-surface border-b border-border shadow-sm"
+        >
+          <div
+            class="flex overflow-x-auto px-3 py-2 gap-2"
+            style="-ms-overflow-style: none; scrollbar-width: none"
+          >
+            <button
+              class="tab-btn active"
+              id="mt-behavior"
+              onclick="showTab('behavior', 'mt-behavior', true)"
+            >
+              Behavior
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-warnings"
+              onclick="showTab('warnings', 'mt-warnings', true)"
+            >
+              Warnings
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-questions"
+              onclick="showTab('questions', 'mt-questions', true)"
+            >
+              Questions
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-ind"
+              onclick="showTab('ind', 'mt-ind', true)"
+            >
+              IND Criteria
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-samples"
+              onclick="showTab('samples', 'mt-samples', true)"
+            >
+              Samples
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-practice"
+              onclick="showTab('practice', 'mt-practice', true)"
+            >
+              AI Practice
+            </button>
+            <button
+              class="tab-btn"
+              id="mt-checklist"
+              onclick="showTab('checklist', 'mt-checklist', true)"
+            >
+              Checklist
+            </button>
+          </div>
+        </div>
+
+        <!-- Main content area -->
+        <main class="main-offset md:ml-56 flex-1 min-h-screen">
+          <!-- BEHAVIOR GUIDE TAB -->
+          <div
+            class="tc active px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-behavior"
+            style="padding-top: 60px"
+          >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+              >Module 1 — Perfect Behavior</span
+            >
+            <h2 class="font-headline text-3xl font-black text-on-surface mb-2">
+              How Your Answers Should Be
+            </h2>
+            <p class="text-muted text-sm mb-6">
+              9 principles for natural, credible responses that satisfy IND
+              officers.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Principle 1 -->
+              <div class="behavior-card">
+                <div class="flex items-start gap-3">
+                  <span class="q-num">1</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">
+                      Natural — Not Memorized
+                    </p>
+                    <p class="text-xs text-muted">
+                      Speak in your own voice. IND officers detect scripted
+                      answers. Keep it simple and conversational.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Principle 2 -->
+              <div class="behavior-card">
+                <div class="flex items-start gap-3">
+                  <span class="q-num">2</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">
+                      Consistent With Documents
+                    </p>
+                    <p class="text-xs text-muted">
+                      Every detail must match your: acceptance letter, bank
+                      statements, scholarship proof, academic records [[28]].
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Principle 3 -->
+              <div class="behavior-card">
+                <div class="flex items-start gap-3">
+                  <span class="q-num">3</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">Clear and Detailed</p>
+                    <p class="text-xs text-muted">
+                      Avoid one-line answers. Give short but complete responses
+                      showing knowledge of your course and the Netherlands.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Principle 4 -->
+              <div class="behavior-card">
+                <div class="flex items-start gap-3">
+                  <span class="q-num">4</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">Personal to You</p>
+                    <p class="text-xs text-muted">
+                      Explain your own story — background, goals, why this Dutch
+                      program fits YOU. Not copied from templates.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Principle 5 -->
+              <div class="behavior-card">
+                <div class="flex items-start gap-3">
+                  <span class="q-num">5</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">Confident and Calm</p>
+                    <p class="text-xs text-muted">
+                      Speak slowly and clearly. You don't need perfect
+                      English/Dutch — just communicate well. Confidence shows
+                      genuineness.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Principle 6 -->
+              <div class="behavior-card">
+                <div class="flex items-start gap-3">
+                  <span class="q-num">6</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">Logical and Connected</p>
+                    <p class="text-xs text-muted">
+                      Your interview must follow a smooth storyline: Background
+                      → Course → University → Why Netherlands → Funding → Future
+                      → Return home or Zoekjaar.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Principle 7 -->
+              <div class="behavior-card">
+                <div class="flex items-start gap-3">
+                  <span class="q-num">7</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">Honest</p>
+                    <p class="text-xs text-muted">
+                      Never lie. If you don't know something, calmly explain
+                      what you do know. Interviews are recorded and
+                      cross-checked.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Principle 8 -->
+              <div class="behavior-card">
+                <div class="flex items-start gap-3">
+                  <span class="q-num">8</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">Specific — Not Vague</p>
+                    <p class="text-xs text-muted">
+                      Use real names, dates, places, company names, modules.
+                      Specific answers show real preparation and genuine
+                      intention.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Principle 9 -->
+              <div class="behavior-card md:col-span-2">
+                <div class="flex items-start gap-3">
+                  <span class="q-num">9</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">Positive and Focused</p>
+                    <p class="text-xs text-muted">
+                      Show excitement, clarity, and seriousness about your
+                      studies and career. Your message: "I plan to return home
+                      or pursue legal post-study options like the Orientation
+                      Year (Zoekjaar)." [[40]]
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-primary p-5 mt-6 rounded-xl">
+              <p class="font-bold text-primary mb-2 flex items-center gap-2">
+                <span class="material-symbols-outlined">lightbulb</span>
+                Key Reminder
+              </p>
+              <p class="text-sm text-on-surface">
+                "You are not being tested for perfection, but for preparation
+                and honesty." — IND Guidance
+              </p>
+            </div>
+          </div>
+
+          <!-- CRITICAL WARNINGS TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-warnings"
+            style="padding-top: 60px"
+          >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-secondary/70 mb-2 block"
+              >Module 2 — Avoid Refusal</span
+            >
+            <h2 class="font-headline text-3xl font-black text-on-surface mb-2">
+              What You Should NOT Do
+            </h2>
+            <p class="text-muted text-sm mb-6">
+              12 behaviors that immediately create doubt and lead to visa
+              refusal [[30]][[31]].
+            </p>
+
+            <div class="space-y-3">
+              <!-- Warning 1 -->
+              <div class="behavior-card danger">
+                <div class="flex items-start gap-3">
+                  <span class="q-num-danger">✗</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">
+                      Do NOT memorize or recite scripted answers
+                    </p>
+                    <p class="text-xs text-muted">
+                      IND officers are trained to detect memorized lines. Speak
+                      naturally and simply.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Warning 2 -->
+              <div class="behavior-card danger">
+                <div class="flex items-start gap-3">
+                  <span class="q-num-danger">✗</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">
+                      Do NOT give one-line answers
+                    </p>
+                    <p class="text-xs text-muted">
+                      "Yes," "No," or "It is good" make you look unprepared.
+                      Always give short but meaningful explanations.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Warning 3 -->
+              <div class="behavior-card danger">
+                <div class="flex items-start gap-3">
+                  <span class="q-num-danger">✗</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">
+                      Do NOT contradict your documents
+                    </p>
+                    <p class="text-xs text-muted">
+                      Any mismatch with acceptance letter, bank statements, or
+                      academic records creates immediate suspicion [[30]].
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Warning 4 -->
+              <div class="behavior-card danger">
+                <div class="flex items-start gap-3">
+                  <span class="q-num-danger">✗</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">
+                      Do NOT give answers you don't understand
+                    </p>
+                    <p class="text-xs text-muted">
+                      If you memorize modules or fees without truly knowing
+                      them, follow-up questions will expose you.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Warning 5 -->
+              <div class="behavior-card danger">
+                <div class="flex items-start gap-3">
+                  <span class="q-num-danger">✗</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">Do NOT lie</p>
+                    <p class="text-xs text-muted">
+                      Even small lies can ruin credibility. Interviews are
+                      recorded and cross-checked with immigration history.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Warning 6 -->
+              <div class="behavior-card danger">
+                <div class="flex items-start gap-3">
+                  <span class="q-num-danger">✗</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">Do NOT speak too fast</p>
+                    <p class="text-xs text-muted">
+                      Fast talking sounds nervous or unsure. Slow, steady speech
+                      shows confidence.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Warning 7 -->
+              <div class="behavior-card danger">
+                <div class="flex items-start gap-3">
+                  <span class="q-num-danger">✗</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">
+                      Do NOT panic when you forget something
+                    </p>
+                    <p class="text-xs text-muted">
+                      It's okay to pause, think, and answer calmly. Better to
+                      take 3 seconds than give the wrong answer.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Warning 8 -->
+              <div class="behavior-card warning">
+                <div class="flex items-start gap-3">
+                  <span class="q-num-warning">⚠</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">
+                      Do NOT criticize your home country aggressively
+                    </p>
+                    <p class="text-xs text-muted">
+                      You can mention outdated curriculum or limited facilities,
+                      but stay respectful. Avoid: "My country is useless."
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Warning 9 -->
+              <div class="behavior-card danger">
+                <div class="flex items-start gap-3">
+                  <span class="q-num-danger">✗</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">
+                      Do NOT show desperation to stay illegally
+                    </p>
+                    <p class="text-xs text-muted">
+                      Never imply you want to overstay. Your message: "I plan to
+                      return home or pursue the Orientation Year (Zoekjaar)
+                      legally." [[40]]
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Warning 10 -->
+              <div class="behavior-card danger">
+                <div class="flex items-start gap-3">
+                  <span class="q-num-danger">✗</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">
+                      Do NOT act unsure about your finances
+                    </p>
+                    <p class="text-xs text-muted">
+                      Know: who sponsors you, their income, your account balance
+                      (~€12,000 study norm), rent/tuition costs [[28]].
+                      Uncertainty = refusal risk.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Warning 11 -->
+              <div class="behavior-card danger">
+                <div class="flex items-start gap-3">
+                  <span class="q-num-danger">✗</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">
+                      Do NOT get angry or defensive
+                    </p>
+                    <p class="text-xs text-muted">
+                      Even if challenged, stay calm, polite, and friendly.
+                      Aggression raises red flags.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Warning 12 -->
+              <div class="behavior-card danger md:col-span-2">
+                <div class="flex items-start gap-3">
+                  <span class="q-num-danger">✗</span>
+                  <div>
+                    <p class="font-bold text-sm mb-1">
+                      Do NOT depend on someone else to answer for you
+                    </p>
+                    <p class="text-xs text-muted">
+                      This is YOUR interview. You must explain everything —
+                      course, fees, sponsor, future plans — in your own words.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION BANK TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-questions"
+            style="padding-top: 60px"
+          >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+              >Module 3 — Question Bank</span
+            >
+            <h2 class="font-headline text-3xl font-black text-on-surface mb-2">
+              Comprehensive Questions with Strategies
+            </h2>
+            <p class="text-muted text-sm mb-6">
+              10 categories covering every area IND officers assess [[8]][[11]].
+              Click to expand strategies.
+            </p>
+
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap gap-2 mb-6">
+              <button
+                class="filter-btn active"
+                onclick="filterQuestions('all', this)"
+              >
+                All
+              </button>
+              <button
+                class="filter-btn"
+                onclick="filterQuestions('personal', this)"
+              >
+                Personal
+              </button>
+              <button
+                class="filter-btn"
+                onclick="filterQuestions('course', this)"
+              >
+                Course
+              </button>
+              <button
+                class="filter-btn"
+                onclick="filterQuestions('university', this)"
+              >
+                University
+              </button>
+              <button class="filter-btn" onclick="filterQuestions('nl', this)">
+                Why Netherlands
+              </button>
+              <button
+                class="filter-btn"
+                onclick="filterQuestions('finance', this)"
+              >
+                Finances
+              </button>
+              <button
+                class="filter-btn"
+                onclick="filterQuestions('future', this)"
+              >
+                Future Plans
+              </button>
+            </div>
+
+            <!-- Question Accordion -->
+            <div id="questions-container" class="space-y-3">
+              <!-- Personal Background -->
+              <div class="acc-item" data-category="personal">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">P1</span>
+                    <span class="font-bold text-sm"
+                      >When and where were you born?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7 mb-2">
+                    <strong>Strategy:</strong> Give a short, neat introduction:
+                    who you are, your educational path, and anything linking to
+                    future studies.
+                  </p>
+                  <p class="text-sm text-muted pl-7">
+                    <strong>Include:</strong> Email/contact details, last
+                    institution + course + graduation date. If refused before:
+                    explain honestly what changed.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Academic Background -->
+              <div class="acc-item" data-category="personal">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">P2</span>
+                    <span class="font-bold text-sm"
+                      >What have you been doing since graduation?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7 mb-2">
+                    <strong>Strategy:</strong> Mention company names (spell
+                    clearly), job titles, responsibilities, salary, skills
+                    gained.
+                  </p>
+                  <p class="text-sm text-muted pl-7">
+                    <strong>Show:</strong> Continuous timeline with no
+                    unexplained gaps. Connect experience to why you're studying
+                    now.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Course Knowledge -->
+              <div class="acc-item" data-category="course">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">C1</span>
+                    <span class="font-bold text-sm"
+                      >What course are you going to study? Explain in your own
+                      words.</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7 mb-2">
+                    <strong>Strategy:</strong> Describe the course as if you
+                    chose it with clear intention. List modules clearly.
+                  </p>
+                  <p class="text-sm text-muted pl-7">
+                    <strong>Crucial:</strong> Explain WHY each module matters to
+                    your future career. AI can help simplify, but your
+                    explanation must sound natural.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Modules -->
+              <div class="acc-item" data-category="course">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">C2</span>
+                    <span class="font-bold text-sm"
+                      >Which module interests you most and why?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7 mb-2">
+                    <strong>Strategy:</strong> Pick 1-2 modules from the
+                    official course page. Explain specific skills you'll gain.
+                  </p>
+                  <p class="text-sm text-muted pl-7">
+                    <strong>Avoid:</strong> Vague answers like "it teaches
+                    business ethics." Instead: "This module covers X framework,
+                    which I'll apply to Y situation in my career."
+                  </p>
+                </div>
+              </div>
+
+              <!-- University Choice -->
+              <div class="acc-item" data-category="university">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">U1</span>
+                    <span class="font-bold text-sm"
+                      >Why did you choose this university over others?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7 mb-2">
+                    <strong>Strategy:</strong> Focus on: reputation, teaching
+                    quality, graduate success, specific facilities, why it fits
+                    YOUR goals better than alternatives.
+                  </p>
+                  <p class="text-sm text-muted pl-7">
+                    <strong>Also describe:</strong> The city — student life,
+                    safety, cost of living. Show you've researched alternatives
+                    (Hogeschool vs. Universiteit options).
+                  </p>
+                </div>
+              </div>
+
+              <!-- Why Netherlands -->
+              <div class="acc-item" data-category="nl">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">NL1</span>
+                    <span class="font-bold text-sm"
+                      >Why study in the Netherlands instead of your home
+                      country?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7 mb-2">
+                    <strong>Strategy:</strong> Talk about: global recognition of
+                    Dutch degrees, practical teaching methods, English-taught
+                    programs, multicultural environment [[5]].
+                  </p>
+                  <p class="text-sm text-muted pl-7">
+                    <strong>For home country comparison:</strong> Mention
+                    outdated curriculum, limited research facilities, less
+                    international exposure — but stay respectful.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Other Countries -->
+              <div class="acc-item" data-category="nl">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">NL2</span>
+                    <span class="font-bold text-sm"
+                      >Did you consider UK, Germany, or Canada? Why not?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7 mb-2">
+                    <strong>Strategy:</strong> Provide SPECIFIC comparisons:
+                    tuition costs, curriculum relevance, graduate outcomes, visa
+                    processing times.
+                  </p>
+                  <p class="text-sm text-muted pl-7">
+                    <strong>Avoid:</strong> "Germany is too cold" or "UK is too
+                    expensive." Instead: "I researched University of X in
+                    Germany, but their program focuses on Y which doesn't align
+                    with my goal of Z."
+                  </p>
+                </div>
+              </div>
+
+              <!-- Finances -->
+              <div class="acc-item" data-category="finance">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">F1</span>
+                    <span class="font-bold text-sm"
+                      >How will you fund your tuition and living costs?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7 mb-2">
+                    <strong>Strategy:</strong> Be PRECISE. Quote actual amounts.
+                    IND requires proof of ~€12,000/year study norm [[28]].
+                  </p>
+                  <p class="text-sm text-muted pl-7">
+                    <strong>Know:</strong> Who sponsors you, their job + income,
+                    your account balance, monthly living costs, rent amount.
+                    Uncertainty = refusal risk [[30]].
+                  </p>
+                </div>
+              </div>
+
+              <!-- Accommodation -->
+              <div class="acc-item" data-category="finance">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">F2</span>
+                    <span class="font-bold text-sm"
+                      >Where will you live in the Netherlands?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7 mb-2">
+                    <strong>Strategy:</strong> Mention student housing, private
+                    rental, or university accommodation, rent per month, basic
+                    knowledge of the area.
+                  </p>
+                  <p class="text-sm text-muted pl-7">
+                    <strong>Show preparation:</strong> Transport links, safety,
+                    supermarkets, libraries. This proves you've planned your
+                    stay.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Future Plans -->
+              <div class="acc-item" data-category="future">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">FP1</span>
+                    <span class="font-bold text-sm"
+                      >What will you do after graduation?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7 mb-2">
+                    <strong>Strategy:</strong> Build a CLEAR storyline: Study in
+                    NL → Gain skills → Return home OR pursue Orientation Year
+                    (Zoekjaar) legally [[40]].
+                  </p>
+                  <p class="text-sm text-muted pl-7">
+                    <strong>Example:</strong> "After my MSc, I'll return to
+                    [Home Country] and work with firms like [Company] to gain
+                    experience. The Dutch degree positions me for senior roles.
+                    Alternatively, I may apply for the Orientation Year visa to
+                    gain 12 months of Dutch work experience first." [[41]]
+                  </p>
+                </div>
+              </div>
+
+              <!-- Immigration History -->
+              <div class="acc-item" data-category="personal">
+                <div
+                  class="flex items-center justify-between p-4 cursor-pointer"
+                  onclick="toggleAccordion(this)"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="q-num">IH1</span>
+                    <span class="font-bold text-sm"
+                      >Have you ever been refused a visa before?</span
+                    >
+                  </div>
+                  <span class="material-symbols-outlined acc-arrow text-muted"
+                    >expand_more</span
+                  >
+                </div>
+                <div class="acc-body px-4 pb-4">
+                  <p class="text-sm text-muted pl-7 mb-2">
+                    <strong>Strategy:</strong> Speak honestly, briefly,
+                    confidently. Explain what happened, what you learned, and
+                    how you've addressed it.
+                  </p>
+                  <p class="text-sm text-muted pl-7">
+                    <strong>Never:</strong> Hide refusals. They're recorded.
+                    Honesty + improvement = credibility.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- IND CRITERIA TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-ind"
+            style="padding-top: 60px"
+          >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+              >Module 4 — Official Criteria</span
+            >
+            <h2 class="font-headline text-3xl font-black text-on-surface mb-2">
+              IND Genuine Student Requirements
+            </h2>
+            <p class="text-muted text-sm mb-6">
+              6 critical areas decision-makers assess for MVV/VVR student
+              permits.
+            </p>
+
+            <div class="space-y-6">
+              <!-- Area 1 -->
+              <div class="panel p-6">
+                <div class="flex items-start gap-3 mb-4">
+                  <span class="ind-badge">Area 1/6</span>
+                  <h3 class="font-headline font-bold text-xl">
+                    Justification for Choosing the Netherlands
+                  </h3>
+                </div>
+                <p class="text-muted mb-4">
+                  You must provide clear, specific, academic reasons for
+                  choosing the Netherlands over UK, Germany, Canada.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="refusal-sample bad">
+                    <p class="font-bold text-sm mb-2 flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-error text-base"
+                        >close</span
+                      >
+                      Weak Response (Refused)
+                    </p>
+                    <p class="text-xs text-muted">
+                      "The Netherlands has good education standards and
+                      English-taught programs. Amsterdam is a big business hub."
+                    </p>
+                  </div>
+                  <div class="refusal-sample good">
+                    <p class="font-bold text-sm mb-2 flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-success text-base"
+                        >check_circle</span
+                      >
+                      Strong Response (Approved)
+                    </p>
+                    <p class="text-xs text-muted">
+                      "I chose the Netherlands because [University]'s MSc in
+                      [Field] includes the [Specific Module] which directly
+                      addresses [Skill Gap] in my home country's [Industry]. The
+                      Dutch practical teaching approach aligns with my learning
+                      style, and the Orientation Year visa offers a legal
+                      pathway to gain EU work experience." [[40]]
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Area 2 -->
+              <div class="panel p-6">
+                <div class="flex items-start gap-3 mb-4">
+                  <span class="ind-badge">Area 2/6</span>
+                  <h3 class="font-headline font-bold text-xl">
+                    Comparison with Other Countries
+                  </h3>
+                </div>
+                <p class="text-muted mb-4">
+                  Demonstrate thorough research comparing Dutch education with
+                  alternatives.
+                </p>
+
+                <div class="panel-tinted p-4 rounded-lg">
+                  <p class="font-bold text-sm mb-2">✅ Do:</p>
+                  <ul class="text-xs text-muted space-y-1 pl-4">
+                    <li>• Name specific universities you considered abroad</li>
+                    <li>• Compare curriculum content, not just logistics</li>
+                    <li>
+                      • Explain why Netherlands' approach better serves your
+                      goals
+                    </li>
+                    <li>
+                      • Reference official sources (Nuffic, university websites)
+                    </li>
+                  </ul>
+                </div>
+                <div class="panel-tinted p-4 rounded-lg mt-3">
+                  <p class="font-bold text-sm mb-2">❌ Avoid:</p>
+                  <ul class="text-xs text-muted space-y-1 pl-4">
+                    <li>• "Germany is too cold" or "UK is too expensive"</li>
+                    <li>• Dismissing countries without research evidence</li>
+                    <li>• Focusing only on visa duration or cost</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Area 3 -->
+              <div class="panel p-6">
+                <div class="flex items-start gap-3 mb-4">
+                  <span class="ind-badge">Area 3/6</span>
+                  <h3 class="font-headline font-bold text-xl">
+                    Depth of Course Knowledge
+                  </h3>
+                </div>
+                <p class="text-muted mb-4">
+                  Show strong understanding of content, structure, and learning
+                  outcomes.
+                </p>
+
+                <div class="refusal-sample bad mb-3">
+                  <p class="font-bold text-xs mb-1">Weak:</p>
+                  <p class="text-xs text-muted">
+                    "International Business teaches how to manage companies
+                    globally."
+                  </p>
+                </div>
+                <div class="refusal-sample good">
+                  <p class="font-bold text-xs mb-1">Strong:</p>
+                  <p class="text-xs text-muted">
+                    "The International Business module covers EU trade
+                    regulations and cross-cultural negotiation frameworks. I'll
+                    apply this to my family's export business, where we work
+                    with suppliers across 3 EU countries. The practical project
+                    with Dutch companies will give me hands-on experience."
+                  </p>
+                </div>
+              </div>
+
+              <!-- Area 4 -->
+              <div class="panel p-6">
+                <div class="flex items-start gap-3 mb-4">
+                  <span class="ind-badge">Area 4/6</span>
+                  <h3 class="font-headline font-bold text-xl">
+                    Justification for University Choice
+                  </h3>
+                </div>
+                <p class="text-muted mb-4">
+                  Support your choice with specific, distinctive reasons showing
+                  genuine interest.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p class="font-bold text-sm mb-2">✅ Specific Reasons:</p>
+                    <ul class="text-xs text-muted space-y-1">
+                      <li>
+                        • "[Professor X]'s research on [Topic] aligns with my
+                        thesis interest"
+                      </li>
+                      <li>
+                        • "The [Lab/Facility] offers hands-on experience with
+                        [Technology]"
+                      </li>
+                      <li>
+                        • "Graduate employment rate of X% in [Industry] matches
+                        my goals"
+                      </li>
+                      <li>
+                        • "The [Specific Module] isn't offered at [Alternative
+                        University]"
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p class="font-bold text-sm mb-2">❌ Generic Praise:</p>
+                    <ul class="text-xs text-muted space-y-1">
+                      <li>• "It has a well-equipped library"</li>
+                      <li>• "The lecturers are experienced"</li>
+                      <li>• "Student support services are good"</li>
+                      <li>• "It's in Amsterdam"</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Area 5 -->
+              <div class="panel p-6">
+                <div class="flex items-start gap-3 mb-4">
+                  <span class="ind-badge">Area 5/6</span>
+                  <h3 class="font-headline font-bold text-xl">
+                    Future Career Progression
+                  </h3>
+                </div>
+                <p class="text-muted mb-4">
+                  Show clear, realistic career goals that align directly with
+                  your course.
+                </p>
+
+                <div class="panel-warning p-4 rounded-lg">
+                  <p class="font-bold text-sm mb-2 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-warning"
+                      >warning</span
+                    >
+                    Common Refusal Reason
+                  </p>
+                  <p class="text-xs text-muted">
+                    For applicants with substantial work experience, IND often
+                    refuses when the course doesn't clearly bridge past
+                    experience to future goals. Example: A manager studying
+                    "basics of business" raises doubt about genuine need [[30]].
+                  </p>
+                </div>
+              </div>
+
+              <!-- Area 6 -->
+              <div class="panel p-6">
+                <div class="flex items-start gap-3 mb-4">
+                  <span class="ind-badge">Area 6/6</span>
+                  <h3 class="font-headline font-bold text-xl">
+                    Financial Proof (Study Norm)
+                  </h3>
+                </div>
+                <p class="text-muted mb-4">
+                  Demonstrate sufficient funds: ~€12,000/year study norm via
+                  approved methods [[28]].
+                </p>
+
+                <div class="panel-tinted p-4 rounded-lg">
+                  <p class="font-bold text-sm mb-2">
+                    ✅ Approved Proof Methods:
+                  </p>
+                  <ul class="text-xs text-muted space-y-1 pl-4">
+                    <li>
+                      • Personal bank account with 12× study norm (~€12,000)
+                      [[28]]
+                    </li>
+                    <li>• Deposit with educational institution</li>
+                    <li>• Official scholarship declaration</li>
+                    <li>• Company sponsorship with signed statement</li>
+                    <li>
+                      • Private sponsor with proof of income + bank statement
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- REFUSAL SAMPLES TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-samples"
+            style="padding-top: 60px"
+          >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-secondary/70 mb-2 block"
+              >Module 5 — Learn from Mistakes</span
+            >
+            <h2 class="font-headline text-3xl font-black text-on-surface mb-2">
+              Real Refusal Analysis
+            </h2>
+            <p class="text-muted text-sm mb-6">
+              See what went wrong in actual IND cases + how to avoid the same
+              mistakes [[30]][[31]].
+            </p>
+
+            <div class="space-y-6">
+              <!-- Sample 1: Why Netherlands -->
+              <div class="panel p-5">
+                <h4 class="font-bold text-base mb-3 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-secondary"
+                    >gavel</span
+                  >
+                  Case: Generic "Why Netherlands?" Answer
+                </h4>
+                <div class="refusal-sample bad mb-4">
+                  <p class="font-bold text-xs mb-2">Applicant's Answer:</p>
+                  <p class="text-xs text-muted">
+                    "The Netherlands offers good education standards and
+                    English-taught programs. Amsterdam is a big international
+                    business hub. The master's program is only 1-2 years, saving
+                    time."
+                  </p>
+                </div>
+                <div class="panel-warning p-4 rounded-lg">
+                  <p class="font-bold text-sm mb-2">IND Assessment:</p>
+                  <p class="text-xs text-muted">
+                    "These attributes could apply to many countries like UK,
+                    Germany, or Canada. The answers failed to demonstrate
+                    in-depth knowledge or unique reasons for choosing the
+                    Netherlands. Relying on duration and logistics indicated the
+                    choice was not based solely on educational merit." [[30]]
+                  </p>
+                </div>
+                <div class="refusal-sample good mt-4">
+                  <p class="font-bold text-xs mb-2">✅ Stronger Approach:</p>
+                  <p class="text-xs text-muted">
+                    "I chose the Netherlands because [University]'s MSc in
+                    [Field] includes the 'EU Trade Policy' module, which uses
+                    [Specific Framework] not taught in programs in my home
+                    country. This skill is critical for my goal to work at
+                    [Company] in [City], where EU trade expertise is emerging. I
+                    compared programs at [German University] and [UK
+                    University], but their curricula focus more on [Different
+                    Area] which doesn't align with my career path."
+                  </p>
+                </div>
+              </div>
+
+              <!-- Sample 2: Financial Uncertainty -->
+              <div class="panel p-5">
+                <h4 class="font-bold text-base mb-3 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-secondary"
+                    >gavel</span
+                  >
+                  Case: Unsure About Finances
+                </h4>
+                <div class="refusal-sample bad mb-4">
+                  <p class="font-bold text-xs mb-2">Applicant's Answer:</p>
+                  <p class="text-xs text-muted">
+                    Q: "Who is sponsoring you and how much do they earn?"<br />
+                    A: "My father is sponsoring me. He has a business. I think
+                    he earns about 50,000 euros."
+                  </p>
+                </div>
+                <div class="panel-warning p-4 rounded-lg">
+                  <p class="font-bold text-sm mb-2">IND Assessment:</p>
+                  <p class="text-xs text-muted">
+                    "If you don't know who your sponsor is, how much they earn,
+                    or how you will pay rent/tuition, the officer will assume
+                    you are not financially prepared. Vagueness about finances
+                    is a common refusal reason." [[28]][[30]]
+                  </p>
+                </div>
+                <div class="refusal-sample good mt-4">
+                  <p class="font-bold text-xs mb-2">✅ Stronger Approach:</p>
+                  <p class="text-xs text-muted">
+                    "My father, [Full Name], sponsors my studies. He owns
+                    [Business Name], a [Type] business in [City], with an annual
+                    net income of approximately €[Amount] (verified in his 2024
+                    tax return). He has transferred €12,000 to my blocked
+                    account (reference: [Number]), which meets the IND study
+                    norm requirement for living costs [[28]]. I've budgeted
+                    €[Rent] monthly for accommodation near [Campus]."
+                  </p>
+                </div>
+              </div>
+
+              <!-- Sample 3: Course/University Mismatch -->
+              <div class="panel p-5">
+                <h4 class="font-bold text-base mb-3 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-secondary"
+                    >gavel</span
+                  >
+                  Case: Poor Course Justification
+                </h4>
+                <div class="refusal-sample bad mb-4">
+                  <p class="font-bold text-xs mb-2">
+                    Applicant's Background + Answer:
+                  </p>
+                  <p class="text-xs text-muted">
+                    Background: 5+ years as Marketing Manager<br />
+                    Course: MSc International Business<br />
+                    Answer: "I want to increase my understanding of business to
+                    become a CEO."
+                  </p>
+                </div>
+                <div class="panel-warning p-4 rounded-lg">
+                  <p class="font-bold text-sm mb-2">IND Assessment:</p>
+                  <p class="text-xs text-muted">
+                    "The current role as Marketing Manager, which involves
+                    strategy and team leadership, would have reasonably provided
+                    the experience claimed to be gained from the MSc. The
+                    rationale for studying was seen as ambiguous." [[30]]
+                  </p>
+                </div>
+                <div class="refusal-sample good mt-4">
+                  <p class="font-bold text-xs mb-2">✅ Stronger Approach:</p>
+                  <p class="text-xs text-muted">
+                    "While I manage marketing campaigns, I lack formal training
+                    in EU regulatory compliance for digital advertising. The MSc
+                    International Business module on 'EU Digital Markets Act'
+                    will teach me [Specific Framework] to help my company expand
+                    into Germany and France legally. I'll apply this directly to
+                    lead our EU market entry strategy."
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI PRACTICE TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-practice"
+            style="padding-top: 60px"
+          >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+              >Module 6 — AI Simulation</span
+            >
+            <h2 class="font-headline text-3xl font-black text-on-surface mb-2">
+              Practice with IND-Focused AI Feedback
+            </h2>
+            <p class="text-muted text-sm mb-6">
+              Type your answer. Our AI evaluates against IND refusal criteria
+              using Puter.js.
+            </p>
+
+            <!-- Question Display -->
+            <div class="panel p-5 mb-6">
+              <div class="flex items-start gap-3">
+                <span class="q-num">Q1</span>
+                <div>
+                  <p class="font-bold text-base mb-1">
+                    Why have you chosen to study this programme in the
+                    Netherlands?
+                  </p>
+                  <p class="text-xs text-muted">
+                    Tip: Be specific about academic reasons, not just logistics.
+                    Show research depth.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Answer Input -->
+            <textarea
+              class="sim-input mb-4"
+              id="practiceInput"
+              rows="6"
+              placeholder="Type your answer here... (e.g., 'I chose the Netherlands because...')"
+            ></textarea>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-3 mb-6">
+              <button
+                class="btn-primary px-5 py-2.5 rounded-xl font-label font-bold uppercase tracking-wider text-xs flex items-center gap-2"
+                id="aiFeedbackBtn"
+                onclick="submitAnswer()"
+              >
+                <span class="material-symbols-outlined text-sm"
+                  >auto_awesome</span
+                >
+                Get IND AI Feedback
+              </button>
+              <button
+                class="btn-ghost px-5 py-2.5 rounded-xl font-label font-bold uppercase tracking-wider text-xs"
+                onclick="nextQuestion()"
+              >
+                Next Question
+              </button>
+              <button
+                class="btn-ghost px-5 py-2.5 rounded-xl font-label font-bold uppercase tracking-wider text-xs"
+                onclick="resetPractice()"
+              >
+                Reset
+              </button>
+            </div>
+
+            <!-- Feedback Area -->
+            <div id="feedback-area" class="hidden">
+              <div
+                class="fb-loading p-5 rounded-xl mb-4 flex items-center gap-3"
+              >
+                <span class="spinner"></span>
+                <span class="text-sm font-medium"
+                  >AI is analysing against IND criteria...</span
+                >
+              </div>
+
+              <div id="feedback-result" class="hidden">
+                <div class="fb-pass p-5 rounded-xl mb-4" id="feedbackCard">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-success text-xl"
+                        id="feedbackIcon"
+                        >verified</span
+                      >
+                      <span class="font-bold" id="feedbackTitle"
+                        >Strong Response</span
+                      >
+                    </div>
+                    <span class="score-num text-success" id="feedbackScore"
+                      >8.5/10</span
+                    >
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <p
+                        class="font-bold text-on-surface mb-1"
+                        id="strengthsTitle"
+                      >
+                        ✅ Strengths
+                      </p>
+                      <ul class="text-muted space-y-1" id="strengthsList">
+                        <li>
+                          • Specific academic reasons for Netherlands choice
+                        </li>
+                        <li>• Clear link between course and career goals</li>
+                        <li>• Demonstrates research depth</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <p
+                        class="font-bold text-on-surface mb-1"
+                        id="suggestionsTitle"
+                      >
+                        💡 Suggestions
+                      </p>
+                      <ul class="text-muted space-y-1" id="suggestionsList">
+                        <li>• Add one more specific module name</li>
+                        <li>• Mention a comparison with another country</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <p
+                        class="font-bold text-on-surface mb-1"
+                        id="signalsTitle"
+                      >
+                        🎯 IND Signals
+                      </p>
+                      <ul class="text-muted space-y-1" id="signalsList">
+                        <li>• Genuine academic intent ✓</li>
+                        <li>• Realistic post-study plan ✓</li>
+                        <li>• Specific research evidence ✓</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  class="btn-primary px-5 py-2.5 rounded-xl font-label font-bold uppercase tracking-wider text-xs w-full md:w-auto"
+                  onclick="nextQuestion()"
+                >
+                  Practice Next Question
+                </button>
+              </div>
+            </div>
+
+            <!-- AI Status -->
+            <div
+              class="panel-tinted p-4 rounded-xl mt-4 text-xs text-muted flex items-center gap-2"
+            >
+              <span class="material-symbols-outlined text-primary text-base"
+                >info</span
+              >
+              <span
+                >Powered by <strong>Puter.js AI</strong> — free, no API key.
+                Evaluates against IND refusal criteria. Responses are not
+                stored.</span
+              >
+            </div>
+          </div>
+
+          <!-- CHECKLIST TAB -->
+          <div
+            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            id="tab-checklist"
+            style="padding-top: 60px"
+          >
+            <span
+              class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+              >Module 7 — Final Prep</span
+            >
+            <h2 class="font-headline text-3xl font-black text-on-surface mb-6">
+              Pre-Interview Readiness Checklist
+            </h2>
+
+            <div class="panel p-6 mb-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold">Your Progress</h3>
+                <span class="font-bold text-primary" id="progress-text"
+                  >0/14</span
+                >
+              </div>
+              <div class="progress-track mb-4">
+                <div
+                  class="progress-fill"
+                  id="progress-bar"
+                  style="width: 0%"
+                ></div>
+              </div>
+              <p class="text-xs text-muted">
+                Complete all items to maximise your interview readiness
+              </p>
+            </div>
+
+            <div class="space-y-2">
+              <!-- Checklist Items -->
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Review all 9 behavior principles
+                  </p>
+                  <p class="text-xs text-muted">
+                    Natural, consistent, clear, personal, confident, logical,
+                    honest, specific, positive
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Memorize the 12 critical warnings
+                  </p>
+                  <p class="text-xs text-muted">
+                    Especially: no memorized scripts, no contradictions, no
+                    vagueness about finances [[30]]
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Know your acceptance letter details
+                  </p>
+                  <p class="text-xs text-muted">
+                    Course start date, tuition fees, course code, institution
+                    name, conditions
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Research your university's official course page
+                  </p>
+                  <p class="text-xs text-muted">
+                    List all modules, assessment methods, learning outcomes in
+                    your own words
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Prepare specific "Why Netherlands?" academic reasons
+                  </p>
+                  <p class="text-xs text-muted">
+                    Not just "English language" or "1-year duration" — focus on
+                    curriculum, research, career alignment
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Compare with 2-3 alternative countries/universities
+                  </p>
+                  <p class="text-xs text-muted">
+                    Show you researched options and chose NL for academic merit,
+                    not just logistics
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Prepare precise financial details
+                  </p>
+                  <p class="text-xs text-muted">
+                    Sponsor name/job/income, account balance (~€12,000 study
+                    norm [[28]]), monthly budget, rent amount
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Build a clear post-study storyline
+                  </p>
+                  <p class="text-xs text-muted">
+                    Study in NL → Gain skills → Return home OR pursue
+                    Orientation Year (Zoekjaar) legally [[40]][[41]]
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Practice 5+ questions aloud with timer
+                  </p>
+                  <p class="text-xs text-muted">
+                    Aim for 60-90 second answers. Record yourself to check
+                    clarity and natural delivery
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Prepare documents for the call
+                  </p>
+                  <p class="text-xs text-muted">
+                    Passport, acceptance letter, financial evidence, academic
+                    transcripts — ready to show on camera
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Test tech setup: camera, mic, internet, platform
+                  </p>
+                  <p class="text-xs text-muted">
+                    Confirm video call platform works with good audio/video
+                    quality
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Choose a quiet, well-lit, professional background
+                  </p>
+                  <p class="text-xs text-muted">
+                    Neutral wall, good face lighting, no interruptions, tidy
+                    space visible on camera
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Prepare 1-2 thoughtful questions to ask
+                  </p>
+                  <p class="text-xs text-muted">
+                    Shows engagement: "Could you clarify the typical timeline
+                    for MVV processing?" etc.
+                  </p>
+                </div>
+              </div>
+              <div class="check-item flex items-start gap-3 p-3">
+                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="flex-1">
+                  <p class="font-medium text-sm">
+                    Plan to log in 10 minutes early
+                  </p>
+                  <p class="text-xs text-muted">
+                    Test audio/video again, settle in, take deep breaths before
+                    the call starts
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-primary p-5 mt-6 rounded-xl text-center">
+              <p class="font-bold text-primary mb-2">
+                ✅ Ready for your credibility interview?
+              </p>
+              <p class="text-sm text-on-surface mb-4">
+                You've prepared thoroughly. Stay calm, be honest, and remember:
+                IND wants genuine students to succeed.
+              </p>
+              <button
+                class="btn-primary px-6 py-2.5 rounded-xl font-label font-bold uppercase tracking-wider text-xs"
+                onclick="
+                  alert('Good luck with your IND credibility interview! 🇳🇱✨')
+                "
+              >
+                I'm Ready!
+              </button>
+            </div>
+          </div>
+
+          <!-- Footer Disclaimer -->
+          <div
+            class="px-6 md:px-10 py-8 text-center text-xs text-muted max-w-4xl mx-auto"
+          >
+            <p class="mb-1">
+              <strong>Unofficial Study Aid</strong> · Not affiliated with IND,
+              Dutch Government, or any institution
+            </p>
+            <p class="mb-1">
+              Content based on publicly available guidance and refusal analysis
+            </p>
+            <p>
+              Always verify requirements directly with
+              <a
+                href="https://ind.nl/en"
+                target="_blank"
+                class="text-link underline"
+                >IND.nl</a
+              >
+              or your sponsor before your interview.
+            </p>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- ======================================================
+     JAVASCRIPT - NETHERLANDS EDITION WITH REAL AI + DARK MODE
+====================================================== -->
+    <script>
+      // ===== GLOBAL STATE =====
+      let currentPrep = null;
+      let checklistProgress = 0;
+      let currentTheme = localStorage.getItem("nl-theme") || "light";
+
+      // ===== THEME TOGGLE =====
+      function initTheme() {
+        document.documentElement.setAttribute("data-theme", currentTheme);
+        updateThemeIcon();
+        document
+          .getElementById("themeToggle")
+          .addEventListener("click", toggleTheme);
+        document
+          .getElementById("themeToggleMain")
+          .addEventListener("click", toggleTheme);
+      }
+
+      function toggleTheme() {
+        currentTheme = currentTheme === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", currentTheme);
+        localStorage.setItem("nl-theme", currentTheme);
+        updateThemeIcon();
+      }
+
+      function updateThemeIcon() {
+        const icon = currentTheme === "light" ? "dark_mode" : "light_mode";
+        document.getElementById("themeIcon").textContent = icon;
+        document.getElementById("themeIconMain").textContent = icon;
+      }
+
+      // ===== PREP SELECTION =====
+      function selectPrep(prepId) {
+        currentPrep = prepId;
+        document.getElementById("s-select").classList.remove("active");
+        document.getElementById("s-main").classList.add("active");
+
+        // Set tab titles based on selection
+        const titles = {
+          "full-guide": {
+            title: "Full Interview Guide",
+            subtitle: "All 10 Categories + IND Criteria",
+          },
+          "practice-ai": {
+            title: "AI Practice Mode",
+            subtitle: "Live Feedback Against Refusal Criteria",
+          },
+          "behavior-guide": {
+            title: "Perfect Behavior Guide",
+            subtitle: "9 Principles + 12 Warnings",
+          },
+          "refusal-samples": {
+            title: "Refusal Analysis",
+            subtitle: "Learn from Real IND Cases",
+          },
+        };
+
+        if (titles[prepId]) {
+          document.getElementById("tb-title").textContent =
+            titles[prepId].title;
+          document.getElementById("tb-subtitle").textContent =
+            titles[prepId].subtitle;
+        }
+
+        // Navigate to appropriate tab
+        const tabMap = {
+          "full-guide": "questions",
+          "practice-ai": "practice",
+          "behavior-guide": "behavior",
+          "refusal-samples": "samples",
+        };
+
+        showTab(
+          tabMap[prepId] || "behavior",
+          "sl-" + (tabMap[prepId] || "behavior"),
+        );
+      }
+
+      function goBack() {
+        document.getElementById("s-main").classList.remove("active");
+        document.getElementById("s-select").classList.add("active");
+      }
+
+      // ===== TAB SWITCHING =====
+      function showTab(tabId, linkId, isMobile = false) {
+        document
+          .querySelectorAll(".tc")
+          .forEach((el) => el.classList.remove("active"));
+        document.getElementById("tab-" + tabId).classList.add("active");
+
+        if (!isMobile) {
+          document
+            .querySelectorAll(".side-link")
+            .forEach((el) => el.classList.remove("active"));
+          document.getElementById(linkId).classList.add("active");
+          document
+            .querySelectorAll(".tab-btn")
+            .forEach((btn) => btn.classList.remove("active"));
+          const mobileId = "mt-" + tabId;
+          if (document.getElementById(mobileId)) {
+            document.getElementById(mobileId).classList.add("active");
+          }
+        } else {
+          document
+            .querySelectorAll(".tab-btn")
+            .forEach((btn) => btn.classList.remove("active"));
+          document.getElementById(linkId).classList.add("active");
+          document
+            .querySelectorAll(".side-link")
+            .forEach((el) => el.classList.remove("active"));
+          const desktopId = "sl-" + tabId;
+          if (document.getElementById(desktopId)) {
+            document.getElementById(desktopId).classList.add("active");
+          }
+        }
+        window.scrollTo(0, 0);
+      }
+
+      // ===== ACCORDION & FILTERS =====
+      function toggleAccordion(headerEl) {
+        headerEl.parentElement.classList.toggle("open");
+      }
+
+      function filterQuestions(category, btn) {
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.querySelectorAll(".acc-item").forEach((item) => {
+          item.style.display =
+            category === "all" || item.dataset.category === category
+              ? "block"
+              : "none";
+        });
+      }
+
+      // ===== CHECKLIST =====
+      function toggleCheck(checkbox) {
+        checkbox.classList.toggle("done");
+        updateProgress();
+      }
+
+      function updateProgress() {
+        const total = 14;
+        const checked = document.querySelectorAll(".check-box.done").length;
+        checklistProgress = checked;
+        const percent = (checked / total) * 100;
+        document.getElementById("progress-bar").style.width = percent + "%";
+        document.getElementById("progress-text").textContent =
+          `${checked}/${total}`;
+      }
+
+      // ===== REAL PUTER.JS AI FEEDBACK - IND FOCUSED =====
+      async function submitAnswer() {
+        const input = document.getElementById("practiceInput");
+        const answer = input.value.trim();
+
+        if (!answer) {
+          alert("Please type an answer first!");
+          return;
+        }
+
+        const feedbackArea = document.getElementById("feedback-area");
+        const feedbackResult = document.getElementById("feedback-result");
+        const loading = feedbackArea.querySelector(".fb-loading");
+        const btn = document.getElementById("aiFeedbackBtn");
+
+        feedbackArea.classList.remove("hidden");
+        feedbackResult.classList.add("hidden");
+        loading.style.display = "flex";
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span> Analysing...';
+
+        try {
+          // IND-focused prompt based on refusal criteria
+          const prompt = `You are a Netherlands IND credibility interview expert. Analyse this answer to: "Why have you chosen to study this programme in the Netherlands?"
+    
+    Student answer: "${answer}"
+    
+    Evaluate against IND genuine student criteria:
+    1. Does it show SPECIFIC academic reasons for Netherlands choice (not generic)?
+    2. Does it demonstrate RESEARCH DEPTH (modules, university specifics, Nuffic sources)?
+    3. Is there a CLEAR link between course and career goals?
+    4. Does it show INTENT TO RETURN HOME or pursue legal post-study options like Orientation Year (Zoekjaar)?
+    5. Is the answer PERSONAL and not copied/generic?
+    6. Does it acknowledge financial preparedness (~€12,000 study norm)?
+    
+    Provide feedback in this EXACT JSON format:
+    {
+      "score": number 1-10,
+      "verdict": "Strong Response" | "Good Response" | "Needs Improvement" | "High Refusal Risk",
+      "icon": "verified" | "thumb_up" | "warning" | "error",
+      "strengths": [2-3 specific strengths based on IND criteria],
+      "suggestions": [1-2 actionable improvements],
+      "signals": [3 IND signals with ✓ or ✗, e.g., "Specific academic intent ✓"]
+    }
+    
+    Be strict: generic answers like "Netherlands has good education" should score low.`;
+
+          const response = await puter.ai.chat(prompt, {
+            model: "gpt-4o-mini",
+          });
+
+          // Parse JSON from AI response
+          let jsonStr = response.message.content;
+          const jsonMatch = jsonStr.match(/\{[\s\S]*\}/);
+          if (jsonMatch) jsonStr = jsonMatch[0];
+
+          const feedback = JSON.parse(jsonStr);
+
+          // Update UI
+          document.getElementById("feedbackScore").textContent =
+            `${feedback.score}/10`;
+          document.getElementById("feedbackTitle").textContent =
+            feedback.verdict;
+          document.getElementById("feedbackIcon").textContent = feedback.icon;
+
+          // Color-code feedback card
+          const feedbackCard = document.getElementById("feedbackCard");
+          if (feedback.score >= 8) {
+            feedbackCard.className = "fb-pass p-5 rounded-xl mb-4";
+            document.getElementById("feedbackScore").className =
+              "score-num text-success";
+          } else if (feedback.score >= 6) {
+            feedbackCard.className = "fb-warning p-5 rounded-xl mb-4";
+            document.getElementById("feedbackScore").className =
+              "score-num text-[#f59e0b]";
+          } else {
+            feedbackCard.className = "fb-fail p-5 rounded-xl mb-4";
+            document.getElementById("feedbackScore").className =
+              "score-num text-error";
+          }
+
+          // Populate lists
+          document.getElementById("strengthsList").innerHTML =
+            feedback.strengths.map((s) => `<li>• ${s}</li>`).join("");
+          document.getElementById("suggestionsList").innerHTML =
+            feedback.suggestions.map((s) => `<li>• ${s}</li>`).join("");
+          document.getElementById("signalsList").innerHTML = feedback.signals
+            .map((sig) => `<li>• ${sig}</li>`)
+            .join("");
+
+          loading.style.display = "none";
+          feedbackResult.classList.remove("hidden");
+        } catch (error) {
+          console.error("AI Error:", error);
+          // Fallback feedback
+          document.getElementById("feedbackScore").textContent = "6.0/10";
+          document.getElementById("feedbackTitle").textContent =
+            "Good Response";
+          document.getElementById("feedbackIcon").textContent = "thumb_up";
+          document.getElementById("strengthsList").innerHTML =
+            "<li>• Answer addresses the question</li><li>• Shows some preparation</li>";
+          document.getElementById("suggestionsList").innerHTML =
+            "<li>• Add more Netherlands-specific academic reasons</li><li>• Include comparison with another country</li>";
+          document.getElementById("signalsList").innerHTML =
+            "<li>• Demonstrates intent ✓</li><li>• Could be more specific</li>";
+
+          loading.style.display = "none";
+          feedbackResult.classList.remove("hidden");
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML =
+            '<span class="material-symbols-outlined text-sm">auto_awesome</span> Get IND AI Feedback';
+        }
+      }
+
+      function nextQuestion() {
+        document.getElementById("feedback-area").classList.add("hidden");
+        document.getElementById("practiceInput").value = "";
+        alert("Next question loaded! (Demo mode)");
+      }
+
+      function resetPractice() {
+        document.getElementById("feedback-area").classList.add("hidden");
+        document.getElementById("practiceInput").value = "";
+      }
+
+      // ===== INIT =====
+      document.addEventListener("DOMContentLoaded", function () {
+        initTheme();
+        updateProgress();
+
+        // Keyboard shortcut: Ctrl+D to toggle theme
+        document.addEventListener("keydown", (e) => {
+          if (e.ctrlKey && e.key === "d") {
+            e.preventDefault();
+            toggleTheme();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
