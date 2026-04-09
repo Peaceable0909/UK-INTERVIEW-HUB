@@ -1,50 +1,185 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="description" content="AI-powered UK student visa interview preparation. Practice credibility interviews for Regent College, York St John, BPP University and more." />
+    <meta name="theme-color" content="#0a1628" />
     <title>UK University Interview Prep Hub</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-      rel="stylesheet"
-    />
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://js.puter.com" />
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    
+    <!-- Puter.js -->
+    <script src="https://js.puter.com/v2/"></script>
+    
     <style>
+      /* ===== THEME VARIABLES ===== */
       :root {
-        --navy: #0a1628;
-        --navy-light: #1e3a5f;
-        --red: #dc2626;
-        --red-light: #fee2e2;
-        --white: #ffffff;
-        --cream: #f8fafc;
+        /* Dark Theme (Default) */
+        --bg-body: #0a1628;
+        --bg-surface: rgba(255, 255, 255, 0.04);
+        --bg-surface-hover: rgba(255, 255, 255, 0.08);
+        --bg-card: rgba(255, 255, 255, 0.03);
+        --bg-modal-overlay: rgba(10, 22, 40, 0.85);
+        --bg-modal: #ffffff;
+        --bg-input: rgba(255, 255, 255, 0.1);
+        --bg-feature: #f8fafc;
+        --bg-feature-hover: #f1f5f9;
+        
+        --text-primary: #ffffff;
+        --text-secondary: rgba(255, 255, 255, 0.7);
+        --text-muted: rgba(255, 255, 255, 0.5);
+        --text-navy: #0a1628;
+        --text-link: #f87171;
+        
+        --border-default: rgba(255, 255, 255, 0.1);
+        --border-focus: rgba(220, 38, 38, 0.5);
+        --border-modal: rgba(255, 255, 255, 0.1);
+        
+        --accent-red: #dc2626;
+        --accent-red-hover: #b91c1c;
+        --accent-red-light: #fee2e2;
+        --accent-navy: #0a1628;
+        --accent-navy-light: #1e3a5f;
+        --accent-blue: #3b82f6;
+        
+        --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+        --shadow-hover: 0 16px 48px rgba(220, 38, 38, 0.2);
+        --shadow-modal: 0 25px 80px rgba(0, 0, 0, 0.5);
+        --shadow-btn: 0 4px 16px rgba(220, 38, 38, 0.3);
+        --shadow-btn-hover: 0 8px 24px rgba(220, 38, 38, 0.4);
+        
+        --gradient-bg: radial-gradient(circle at 20% 80%, rgba(220, 38, 38, 0.12) 0%, transparent 50%),
+                       radial-gradient(circle at 80% 20%, rgba(30, 58, 95, 0.35) 0%, transparent 50%);
+        --gradient-card: linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, transparent 50%);
+        --gradient-red: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        --gradient-navy: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%);
+        
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 20px;
+        --radius-xl: 24px;
+        --radius-full: 100px;
+        
+        --transition-fast: 150ms ease;
+        --transition-normal: 300ms ease;
+        --transition-slow: 500ms ease;
       }
 
-      * {
+      [data-theme="light"] {
+        /* Light Theme */
+        --bg-body: #f8fafc;
+        --bg-surface: #ffffff;
+        --bg-surface-hover: #f1f5f9;
+        --bg-card: #ffffff;
+        --bg-modal-overlay: rgba(15, 23, 42, 0.6);
+        --bg-modal: #ffffff;
+        --bg-input: #f1f5f9;
+        --bg-feature: #f8fafc;
+        --bg-feature-hover: #f1f5f9;
+        
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --text-muted: #64748b;
+        --text-navy: #0a1628;
+        --text-link: #dc2626;
+        
+        --border-default: #e2e8f0;
+        --border-focus: rgba(220, 38, 38, 0.3);
+        --border-modal: #e2e8f0;
+        
+        --accent-red: #dc2626;
+        --accent-red-hover: #b91c1c;
+        --accent-red-light: #fef2f2;
+        --accent-navy: #0a1628;
+        --accent-navy-light: #1e3a5f;
+        --accent-blue: #2563eb;
+        
+        --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06);
+        --shadow-hover: 0 12px 40px rgba(220, 38, 38, 0.12);
+        --shadow-modal: 0 25px 80px rgba(0, 0, 0, 0.12);
+        --shadow-btn: 0 4px 16px rgba(220, 38, 38, 0.25);
+        --shadow-btn-hover: 0 8px 24px rgba(220, 38, 38, 0.35);
+        
+        --gradient-bg: radial-gradient(circle at 20% 80%, rgba(220, 38, 38, 0.06) 0%, transparent 50%),
+                       radial-gradient(circle at 80% 20%, rgba(30, 58, 95, 0.05) 0%, transparent 50%);
+        --gradient-card: linear-gradient(135deg, rgba(220, 38, 38, 0.04) 0%, transparent 50%);
+        --gradient-red: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        --gradient-navy: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%);
+      }
+
+      /* ===== BASE RESET ===== */
+      *, *::before, *::after {
+        box-sizing: border-box;
         margin: 0;
         padding: 0;
-        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
       }
 
       body {
-        font-family: "Inter", sans-serif;
-        background: var(--navy);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg-body);
+        color: var(--text-primary);
         min-height: 100vh;
+        line-height: 1.6;
+        transition: background-color var(--transition-normal), color var(--transition-normal);
         overflow-x: hidden;
-        color: var(--white);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
 
-      /* Animated Background */
+      /* ===== ACCESSIBILITY ===== */
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent-red);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background: var(--accent-red);
+        color: #ffffff;
+        padding: 8px 16px;
+        z-index: 10000;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 0 0 var(--radius-sm) 0;
+        transition: top var(--transition-fast);
+      }
+      .skip-link:focus {
+        top: 0;
+      }
+
+      /* ===== ANIMATED BACKGROUND ===== */
       .bg-animation {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        inset: 0;
         overflow: hidden;
         z-index: 0;
+        pointer-events: none;
       }
 
       .bg-animation::before {
@@ -52,156 +187,163 @@
         position: absolute;
         width: 150%;
         height: 150%;
-        background:
-          radial-gradient(
-            circle at 20% 80%,
-            rgba(220, 38, 38, 0.15) 0%,
-            transparent 50%
-          ),
-          radial-gradient(
-            circle at 80% 20%,
-            rgba(30, 58, 95, 0.4) 0%,
-            transparent 50%
-          ),
-          radial-gradient(
-            circle at 40% 40%,
-            rgba(220, 38, 38, 0.1) 0%,
-            transparent 40%
-          );
-        animation: bgPulse 15s ease-in-out infinite;
+        top: -25%;
+        left: -25%;
+        background: var(--gradient-bg);
+        animation: bgPulse 20s ease-in-out infinite;
+        will-change: transform;
       }
 
       @keyframes bgPulse {
-        0%,
-        100% {
-          transform: scale(1) rotate(0deg);
-        }
-        50% {
-          transform: scale(1.1) rotate(5deg);
-        }
+        0%, 100% { transform: scale(1) rotate(0deg); }
+        50% { transform: scale(1.05) rotate(2deg); }
       }
 
-      /* Floating Shapes */
       .shape {
         position: absolute;
         border-radius: 50%;
-        opacity: 0.1;
-        animation: float 20s infinite ease-in-out;
+        opacity: 0.06;
+        animation: float 25s infinite ease-in-out;
+        will-change: transform;
       }
 
-      .shape-1 {
-        width: 400px;
-        height: 400px;
-        background: var(--red);
-        top: -100px;
-        right: -100px;
-        animation-delay: 0s;
-      }
-
-      .shape-2 {
-        width: 300px;
-        height: 300px;
-        background: var(--white);
-        bottom: -50px;
-        left: -50px;
-        animation-delay: -5s;
-      }
-
-      .shape-3 {
-        width: 200px;
-        height: 200px;
-        background: var(--red);
-        top: 50%;
-        left: 30%;
-        animation-delay: -10s;
-      }
+      .shape-1 { width: 300px; height: 300px; background: var(--accent-red); top: -80px; right: -80px; }
+      .shape-2 { width: 200px; height: 200px; background: var(--accent-blue); bottom: -40px; left: -40px; animation-delay: -8s; }
+      .shape-3 { width: 150px; height: 150px; background: var(--accent-navy-light); top: 40%; left: 20%; animation-delay: -15s; }
 
       @keyframes float {
-        0%,
-        100% {
-          transform: translate(0, 0) scale(1);
-        }
-        25% {
-          transform: translate(50px, -50px) scale(1.1);
-        }
-        50% {
-          transform: translate(-30px, 30px) scale(0.9);
-        }
-        75% {
-          transform: translate(30px, 50px) scale(1.05);
-        }
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(30px, -20px) scale(1.05); }
+        66% { transform: translate(-20px, 25px) scale(0.95); }
       }
 
-      /* Header */
+      /* ===== HEADER ===== */
       .header {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         z-index: 100;
-        padding: 20px 40px;
+        padding: 16px 24px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background: linear-gradient(
-          to bottom,
-          rgba(10, 22, 40, 0.95),
-          transparent
-        );
+        background: linear-gradient(to bottom, var(--bg-body) 0%, transparent 100%);
+        border-bottom: 1px solid transparent;
+        transition: all var(--transition-normal);
+      }
+
+      .header.scrolled {
+        padding: 12px 24px;
+        background: var(--bg-surface);
+        border-bottom-color: var(--border-default);
+        box-shadow: var(--shadow-card);
+      }
+
+      [data-theme="light"] .header.scrolled {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
       }
 
       .logo-container {
         display: flex;
         align-items: center;
-        gap: 15px;
-        animation: slideInLeft 1s ease-out;
+        gap: 12px;
       }
 
       .logo {
-        width: 60px;
-        height: 60px;
-        background: var(--white);
-        border-radius: 16px;
+        width: 48px;
+        height: 48px;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-md);
         display: flex;
         align-items: center;
         justify-content: center;
         font-family: "Space Grotesk", sans-serif;
         font-weight: 900;
-        font-size: 28px;
-        color: var(--navy);
-        box-shadow: 0 10px 40px rgba(220, 38, 38, 0.3);
-        animation: logoPulse 2s ease-in-out infinite;
+        font-size: 20px;
+        color: var(--text-primary);
+        transition: all var(--transition-fast);
       }
 
-      @keyframes logoPulse {
-        0%,
-        100% {
-          transform: scale(1);
-          box-shadow: 0 10px 40px rgba(220, 38, 38, 0.3);
-        }
-        50% {
-          transform: scale(1.05);
-          box-shadow: 0 15px 50px rgba(220, 38, 38, 0.5);
-        }
+      .logo:hover {
+        transform: scale(1.05);
+        border-color: var(--accent-red);
       }
 
       .logo-text {
         font-family: "Space Grotesk", sans-serif;
         font-weight: 700;
-        font-size: 22px;
+        font-size: 18px;
         line-height: 1.2;
       }
 
       .logo-text span {
         display: block;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 500;
-        opacity: 0.8;
-        letter-spacing: 2px;
+        opacity: 0.7;
+        letter-spacing: 1.5px;
         text-transform: uppercase;
       }
 
-      /* Main Content */
+      /* Header Actions */
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-sm);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-default);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        color: var(--text-primary);
+      }
+
+      .icon-btn:hover {
+        background: var(--bg-surface-hover);
+        border-color: var(--border-focus);
+        transform: scale(1.05);
+      }
+
+      .auth-btn-header {
+        padding: 10px 20px;
+        border-radius: var(--radius-sm);
+        background: var(--gradient-red);
+        color: #ffffff;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all var(--transition-fast);
+        box-shadow: var(--shadow-btn);
+      }
+
+      .auth-btn-header:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-btn-hover);
+      }
+
+      .auth-btn-header:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* ===== MAIN CONTENT ===== */
       .main-content {
         position: relative;
         z-index: 10;
@@ -209,292 +351,470 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        padding: 120px 20px 60px;
+        padding: 140px 20px 80px;
       }
 
-      /* Hero Section */
+      /* ===== HERO SECTION ===== */
       .hero {
         text-align: center;
-        margin-bottom: 60px;
-        animation: fadeInUp 1s ease-out 0.3s both;
+        margin-bottom: 50px;
+        max-width: 700px;
+        animation: fadeInUp 0.6s ease-out;
       }
 
       .hero-badge {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: rgba(220, 38, 38, 0.2);
-        border: 1px solid rgba(220, 38, 38, 0.4);
-        padding: 10px 24px;
-        border-radius: 100px;
-        font-size: 13px;
+        background: rgba(220, 38, 38, 0.12);
+        border: 1px solid rgba(220, 38, 38, 0.25);
+        padding: 8px 20px;
+        border-radius: var(--radius-full);
+        font-size: 12px;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 1px;
-        margin-bottom: 30px;
-        animation: pulse 2s infinite;
+        margin-bottom: 24px;
+        color: var(--accent-red-light);
       }
 
-      @keyframes pulse {
-        0%,
-        100% {
-          box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
-        }
-        50% {
-          box-shadow: 0 0 0 10px rgba(220, 38, 38, 0);
-        }
+      [data-theme="light"] .hero-badge {
+        background: rgba(220, 38, 38, 0.08);
+        color: var(--accent-red);
       }
 
       .hero h1 {
         font-family: "Space Grotesk", sans-serif;
-        font-size: clamp(36px, 8vw, 72px);
+        font-size: clamp(32px, 7vw, 56px);
         font-weight: 900;
         line-height: 1.1;
-        margin-bottom: 20px;
-        background: linear-gradient(
-          135deg,
-          var(--white) 0%,
-          var(--red-light) 100%
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        margin-bottom: 16px;
+        letter-spacing: -0.02em;
       }
 
       .hero h1 span {
         display: block;
-        color: var(--red);
-        -webkit-text-fill-color: var(--red);
+        color: var(--accent-red);
       }
 
       .hero p {
-        font-size: 18px;
-        opacity: 0.8;
+        font-size: 17px;
+        color: var(--text-secondary);
         max-width: 500px;
         margin: 0 auto;
         line-height: 1.6;
       }
 
-      /* School Cards Grid */
+      /* ===== SCHOOLS GRID ===== */
       .schools-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 25px;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
         width: 100%;
         max-width: 1200px;
-        animation: fadeInUp 1s ease-out 0.6s both;
+        animation: fadeInUp 0.6s ease-out 0.2s both;
       }
 
-      /* School Card */
+      /* ===== SCHOOL CARD ===== */
       .school-card {
         position: relative;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 24px;
-        padding: 35px 30px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-xl);
+        padding: 32px 28px;
         cursor: pointer;
         overflow: hidden;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        backdrop-filter: blur(10px);
+        transition: all var(--transition-normal);
         text-decoration: none;
-        color: var(--white);
-        display: block;
+        color: var(--text-primary);
+        display: flex;
+        flex-direction: column;
+        will-change: transform;
       }
 
       .school-card::before {
         content: "";
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(
-          135deg,
-          rgba(220, 38, 38, 0.1) 0%,
-          transparent 50%
-        );
+        inset: 0;
+        background: var(--gradient-card);
         opacity: 0;
-        transition: opacity 0.4s;
+        transition: opacity var(--transition-normal);
+        pointer-events: none;
       }
 
       .school-card:hover {
-        transform: translateY(-10px) scale(1.02);
-        border-color: rgba(220, 38, 38, 0.5);
-        box-shadow:
-          0 30px 60px rgba(0, 0, 0, 0.4),
-          0 0 40px rgba(220, 38, 38, 0.2);
+        transform: translateY(-6px);
+        border-color: var(--border-focus);
+        box-shadow: var(--shadow-hover);
       }
 
       .school-card:hover::before {
         opacity: 1;
       }
 
+      .school-card:active {
+        transform: translateY(-3px) scale(0.98);
+      }
+
+      /* Card disabled state (before auth) */
+      .school-card.locked {
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: not-allowed;
+      }
+
+      .school-card.locked::after {
+        content: "🔒";
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        font-size: 18px;
+        opacity: 0.6;
+      }
+
       /* Card Icon */
       .card-icon {
-        width: 70px;
-        height: 70px;
-        background: linear-gradient(135deg, var(--red) 0%, #b91c1c 100%);
-        border-radius: 20px;
+        width: 64px;
+        height: 64px;
+        background: var(--gradient-red);
+        border-radius: var(--radius-md);
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 25px;
-        font-size: 32px;
+        margin-bottom: 20px;
+        font-size: 28px;
         position: relative;
-        overflow: hidden;
-        transition: transform 0.4s;
+        transition: transform var(--transition-normal);
       }
 
       .school-card:hover .card-icon {
-        transform: scale(1.1) rotate(-5deg);
-      }
-
-      .card-icon::after {
-        content: "";
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(
-          45deg,
-          transparent,
-          rgba(255, 255, 255, 0.3),
-          transparent
-        );
-        transform: rotate(45deg);
-        transition: all 0.6s;
-        opacity: 0;
-      }
-
-      .school-card:hover .card-icon::after {
-        animation: shine 0.6s ease-out;
-      }
-
-      @keyframes shine {
-        0% {
-          transform: translateX(-100%) translateY(-100%) rotate(45deg);
-          opacity: 0;
-        }
-        50% {
-          opacity: 1;
-        }
-        100% {
-          transform: translateX(100%) translateY(100%) rotate(45deg);
-          opacity: 0;
-        }
+        transform: scale(1.08) rotate(-3deg);
       }
 
       /* Card Content */
       .card-badge {
         display: inline-block;
-        background: rgba(220, 38, 38, 0.2);
-        color: var(--red-light);
-        padding: 6px 14px;
-        border-radius: 100px;
+        width: fit-content;
+        background: rgba(220, 38, 38, 0.12);
+        color: var(--accent-red-light);
+        padding: 5px 14px;
+        border-radius: var(--radius-full);
         font-size: 11px;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-        margin-bottom: 15px;
+        margin-bottom: 14px;
+      }
+
+      [data-theme="light"] .card-badge {
+        color: var(--accent-red);
       }
 
       .school-card h3 {
         font-family: "Space Grotesk", sans-serif;
-        font-size: 24px;
+        font-size: 22px;
         font-weight: 700;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
         line-height: 1.3;
       }
 
       .school-card p {
         font-size: 14px;
-        opacity: 0.7;
+        color: var(--text-secondary);
         line-height: 1.6;
-        margin-bottom: 25px;
+        margin-bottom: 20px;
+        flex: 1;
       }
 
-      /* Arrow */
+      /* Card Arrow */
       .card-arrow {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         font-weight: 600;
         font-size: 14px;
-        color: var(--red-light);
-        transition: all 0.3s;
+        color: var(--accent-red);
+        transition: gap var(--transition-fast);
       }
 
       .school-card:hover .card-arrow {
-        gap: 15px;
-        color: var(--white);
+        gap: 12px;
       }
 
-      /* Coming Soon Badge */
-      .coming-soon {
+      /* ===== AUTH MODAL ===== */
+      .auth-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: var(--bg-modal-overlay);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      .auth-modal.hidden {
+        display: none;
+      }
+
+      .auth-card {
+        background: var(--bg-modal);
+        border-radius: var(--radius-xl);
+        padding: 40px 32px;
+        max-width: 520px;
+        width: 100%;
+        box-shadow: var(--shadow-modal);
+        animation: slideUp 0.4s ease-out;
+        position: relative;
+        overflow: hidden;
+        color: var(--text-navy);
+      }
+
+      /* Red accent bar */
+      .auth-card::before {
+        content: '';
         position: absolute;
-        top: 20px;
-        right: 20px;
-        background: rgba(255, 255, 255, 0.1);
-        padding: 6px 12px;
-        border-radius: 100px;
-        font-size: 10px;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: var(--gradient-red);
+      }
+
+      /* Lock Icon */
+      .auth-icon-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 24px;
+      }
+
+      .auth-icon {
+        width: 72px;
+        height: 72px;
+        background: var(--gradient-red);
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-btn);
+        animation: iconPulse 2s ease-in-out infinite;
+      }
+
+      .auth-icon .material-symbols-outlined {
+        font-size: 36px;
+        color: #ffffff;
+        font-variation-settings: 'FILL' 0;
+      }
+
+      @keyframes iconPulse {
+        0%, 100% { transform: scale(1); box-shadow: var(--shadow-btn); }
+        50% { transform: scale(1.05); box-shadow: var(--shadow-btn-hover); }
+      }
+
+      /* Auth Heading */
+      .auth-card h2 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 28px;
         font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        color: var(--text-navy);
+        text-align: center;
+        margin-bottom: 12px;
+        letter-spacing: -0.5px;
       }
 
-      /* Animations */
-      @keyframes slideInLeft {
-        from {
-          opacity: 0;
-          transform: translateX(-50px);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
+      .auth-subtitle {
+        color: #475569;
+        text-align: center;
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 32px;
       }
 
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(30px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+      /* Features List */
+      .auth-features {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 32px 0;
       }
 
-      /* Responsive */
-      @media (max-width: 768px) {
-        .header {
-          padding: 15px 20px;
-        }
-
-        .logo {
-          width: 50px;
-          height: 50px;
-          font-size: 22px;
-        }
-
-        .logo-text {
-          font-size: 18px;
-        }
-
-        .schools-grid {
-          grid-template-columns: 1fr;
-          gap: 20px;
-        }
-
-        .school-card {
-          padding: 25px;
-        }
+      .feature-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 16px;
+        margin-bottom: 12px;
+        background: var(--bg-feature);
+        border-radius: var(--radius-md);
+        border-left: 4px solid var(--accent-red);
+        transition: all var(--transition-fast);
       }
 
-      /* Scroll indicator */
+      .feature-item:hover {
+        background: var(--bg-feature-hover);
+        transform: translateX(4px);
+      }
+
+      .feature-icon {
+        width: 44px;
+        height: 44px;
+        background: var(--gradient-navy);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .feature-icon .material-symbols-outlined {
+        font-size: 22px;
+        color: #ffffff;
+        font-variation-settings: 'FILL' 0;
+      }
+
+      .feature-content h4 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-navy);
+        margin-bottom: 4px;
+      }
+
+      .feature-content p {
+        font-size: 13px;
+        color: #64748b;
+        line-height: 1.5;
+        margin: 0;
+      }
+
+      /* Primary Button - Red */
+      .auth-btn-primary {
+        width: 100%;
+        padding: 16px 24px;
+        border-radius: var(--radius-md);
+        background: var(--gradient-red);
+        color: #ffffff;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all var(--transition-fast);
+        box-shadow: var(--shadow-btn);
+        margin-bottom: 12px;
+      }
+
+      .auth-btn-primary:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-btn-hover);
+      }
+
+      .auth-btn-primary:active:not(:disabled) {
+        transform: translateY(0);
+      }
+
+      .auth-btn-primary:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      .auth-btn-primary .material-symbols-outlined {
+        font-size: 20px;
+        font-variation-settings: 'FILL' 0;
+      }
+
+      /* Secondary Button - Outline */
+      .auth-btn-secondary {
+        width: 100%;
+        padding: 14px 24px;
+        border-radius: var(--radius-md);
+        background: transparent;
+        color: var(--text-navy);
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 15px;
+        border: 2px solid #e2e8f0;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        margin-bottom: 20px;
+      }
+
+      .auth-btn-secondary:hover {
+        background: var(--bg-feature);
+        border-color: var(--accent-navy);
+        color: var(--accent-navy);
+      }
+
+      /* Footer */
+      .auth-footer {
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      .auth-footer a {
+        color: var(--accent-red);
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .auth-footer a:hover {
+        text-decoration: underline;
+      }
+
+      /* Loading Spinner */
+      .auth-btn-primary .spinner {
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      /* ===== AUTH STATUS BAR ===== */
+      .auth-status {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-full);
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        color: var(--text-primary);
+        z-index: 90;
+        box-shadow: var(--shadow-card);
+        animation: slideUp var(--transition-normal);
+      }
+
+      .auth-status.hidden {
+        display: none;
+      }
+
+      .auth-status .material-symbols-outlined {
+        color: #22c55e;
+        font-size: 18px;
+        font-variation-settings: 'FILL' 0;
+      }
+
+      /* ===== SCROLL INDICATOR ===== */
       .scroll-indicator {
         position: fixed;
         bottom: 30px;
@@ -503,90 +823,347 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 10px;
-        opacity: 0.6;
+        gap: 8px;
+        opacity: 0.7;
         animation: bounce 2s infinite;
         z-index: 10;
+        pointer-events: none;
+        transition: opacity var(--transition-normal);
+      }
+
+      .scroll-indicator.hidden {
+        opacity: 0;
+        pointer-events: none;
       }
 
       @keyframes bounce {
-        0%,
-        100% {
-          transform: translateX(-50%) translateY(0);
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(-8px); }
+      }
+
+      /* ===== LOADING OVERLAY ===== */
+      .loading-overlay {
+        position: fixed;
+        inset: 0;
+        background: var(--bg-body);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 20000;
+        flex-direction: column;
+        gap: 20px;
+        transition: opacity 0.3s ease;
+      }
+
+      .loading-overlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .loading-spinner {
+        width: 48px;
+        height: 48px;
+        border: 3px solid var(--border-default);
+        border-top-color: var(--accent-red);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      .loading-text {
+        font-size: 15px;
+        color: var(--text-secondary);
+      }
+
+      /* ===== ANIMATIONS ===== */
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px) scale(0.95);
         }
-        50% {
-          transform: translateX(-50%) translateY(-10px);
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
         }
       }
 
-      /* ============================================
-   INSTRUCTIONS FOR ADDING MORE SCHOOLS:
-   ============================================
-   
-   TO ADD A NEW SCHOOL, COPY THIS TEMPLATE 
-   AND PASTE INSIDE THE schools-grid div:
-   
-   <a href="YOUR-SCHOOL-FILENAME.html" class="school-card">
-     <div class="card-icon">
-       <span class="material-symbols-outlined">school</span>
-     </div>
-     <span class="card-badge">POSTGRADUATE</span>
-     <h3>School Name</h3>
-     <p>Brief description of what students will learn.</p>
-     <span class="card-arrow">
-       Start Training
-       <span class="material-symbols-outlined">arrow_forward</span>
-     </span>
-   </a>
-   
-   ============================================
-   WHERE TO PASTE YOUR EXISTING HTML FILES:
-   ============================================
-   
-   1. Regent College London → Save as: regent.html
-   2. York St John University → Save as: yorkstjohn.html  
-   3. UKVI Interview → Save as: ukvi.html
-   4. BPP University → Save as: bpp.html
-   5. Team Academy → Save as: teamacademy.html
-   
-   Then update the href links below to match!
-   
-   ============================================ */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 768px) {
+        .header {
+          padding: 14px 16px;
+        }
+
+        .header.scrolled {
+          padding: 10px 16px;
+        }
+
+        .logo {
+          width: 42px;
+          height: 42px;
+          font-size: 18px;
+        }
+
+        .logo-text {
+          font-size: 16px;
+        }
+
+        .logo-text span {
+          font-size: 10px;
+        }
+
+        .header-actions {
+          gap: 6px;
+        }
+
+        .icon-btn {
+          width: 36px;
+          height: 36px;
+        }
+
+        .auth-btn-header {
+          padding: 8px 16px;
+          font-size: 13px;
+        }
+
+        .auth-btn-header .material-symbols-outlined {
+          display: none;
+        }
+
+        .main-content {
+          padding: 130px 16px 60px;
+        }
+
+        .hero {
+          margin-bottom: 40px;
+        }
+
+        .hero h1 {
+          font-size: clamp(28px, 8vw, 44px);
+        }
+
+        .hero p {
+          font-size: 16px;
+        }
+
+        .schools-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .school-card {
+          padding: 28px 24px;
+        }
+
+        .card-icon {
+          width: 56px;
+          height: 56px;
+          font-size: 24px;
+        }
+
+        .school-card h3 {
+          font-size: 20px;
+        }
+
+        /* Auth Modal Mobile */
+        .auth-card {
+          padding: 32px 24px;
+        }
+
+        .auth-card h2 {
+          font-size: 24px;
+        }
+
+        .auth-icon {
+          width: 64px;
+          height: 64px;
+        }
+
+        .auth-icon .material-symbols-outlined {
+          font-size: 32px;
+        }
+
+        .feature-item {
+          padding: 14px;
+        }
+
+        .auth-btn-primary,
+        .auth-btn-secondary {
+          padding: 14px 20px;
+          font-size: 15px;
+        }
+
+        .scroll-indicator {
+          bottom: 20px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero-badge {
+          padding: 6px 16px;
+          font-size: 11px;
+        }
+
+        .school-card {
+          padding: 24px 20px;
+        }
+
+        .card-badge {
+          padding: 4px 12px;
+          font-size: 10px;
+        }
+
+        .auth-card {
+          padding: 28px 20px;
+        }
+
+        .auth-btn-full {
+          padding: 12px 16px;
+          font-size: 14px;
+        }
+      }
+
+      /* Larger screens */
+      @media (min-width: 1200px) {
+        .schools-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
     </style>
   </head>
   <body>
+    <!-- Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to content</a>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Loading your prep hub...</p>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="auth-modal hidden" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle" aria-describedby="authDesc">
+      <div class="auth-card">
+        <!-- Red accent bar (via ::before) -->
+        
+        <!-- Lock Icon -->
+        <div class="auth-icon-wrapper">
+          <div class="auth-icon">
+            <span class="material-symbols-outlined">lock_open</span>
+          </div>
+        </div>
+
+        <!-- Heading -->
+        <h2 id="authTitle">Access Premium Training</h2>
+        <p class="auth-subtitle" id="authDesc">Sign in to unlock professional mock interviews and personalized AI analysis.</p>
+        
+        <!-- Features -->
+        <ul class="auth-features">
+          <li class="feature-item">
+            <div class="feature-icon">
+              <span class="material-symbols-outlined">psychology</span>
+            </div>
+            <div class="feature-content">
+              <h4>AI Feedback</h4>
+              <p>Instant analysis of your answers with improvement tips.</p>
+            </div>
+          </li>
+          
+          <li class="feature-item">
+            <div class="feature-icon">
+              <span class="material-symbols-outlined">cloud_save</span>
+            </div>
+            <div class="feature-content">
+              <h4>Save Progress</h4>
+              <p>Pick up where you left off across any device.</p>
+            </div>
+          </li>
+          
+          <li class="feature-item">
+            <div class="feature-icon">
+              <span class="material-symbols-outlined">security</span>
+            </div>
+            <div class="feature-content">
+              <h4>Privacy First</h4>
+              <p>Your data and recordings are fully encrypted and secure.</p>
+            </div>
+          </li>
+        </ul>
+
+        <!-- Primary CTA -->
+        <button class="auth-btn-primary" id="authBtn" aria-busy="false">
+          <span class="material-symbols-outlined">login</span>
+          Sign in with Puter.js
+        </button>
+
+        <!-- Secondary -->
+        <button class="auth-btn-secondary" id="maybeLaterBtn">
+          Maybe Later
+        </button>
+
+        <!-- Footer -->
+        <p class="auth-footer">
+          By continuing, you agree to Puter.js 
+          <a href="https://puter.com/terms" target="_blank" rel="noopener">Terms</a> and 
+          <a href="https://puter.com/privacy" target="_blank" rel="noopener">Privacy Policy</a>.
+        </p>
+      </div>
+    </div>
+
+    <!-- Auth Status Bar -->
+    <div class="auth-status hidden" id="authStatus" role="status" aria-live="polite">
+      <span class="material-symbols-outlined">verified</span>
+      <span>Authenticated — AI features enabled</span>
+    </div>
+
     <!-- Animated Background -->
-    <div class="bg-animation">
+    <div class="bg-animation" aria-hidden="true">
       <div class="shape shape-1"></div>
       <div class="shape shape-2"></div>
       <div class="shape shape-3"></div>
     </div>
 
     <!-- Header -->
-    <header class="header">
+    <header class="header" role="banner">
       <div class="logo-container">
-        <!-- ============================================
-         REPLACE THIS LOGO SECTION:
-         Option 1: Use text logo (current)
-         Option 2: Replace with image:
-         <img src="your-logo.png" alt="Logo" style="height: 60px;">
-         ============================================ -->
-        <div class="logo">UK</div>
+        <div class="logo" aria-label="UK Interview Prep Hub">UK</div>
         <div class="logo-text">
           Interview Prep
           <span>Visa Success Hub</span>
         </div>
       </div>
+      
+      <div class="header-actions">
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle dark/light mode" title="Toggle theme">
+          <span class="material-symbols-outlined" id="themeIcon">dark_mode</span>
+        </button>
+        <button class="auth-btn-header hidden" id="headerAuthBtn" aria-label="Sign in to access AI features">
+          <span class="material-symbols-outlined">login</span>
+          Sign In
+        </button>
+      </div>
     </header>
 
     <!-- Main Content -->
-    <main class="main-content">
-      <!-- Hero Section -->
-      <section class="hero">
+    <main class="main-content" id="main-content" role="main">
+      <!-- Hero -->
+      <section class="hero" aria-label="Welcome">
         <div class="hero-badge">
-          <span class="material-symbols-outlined" style="font-size: 18px"
-            >verified</span
-          >
+          <span class="material-symbols-outlined" style="font-size: 16px">verified</span>
           Trusted by 10,000+ Students
         </div>
         <h1>
@@ -594,33 +1171,21 @@
           <span>UK Visa Interview</span>
         </h1>
         <p>
-          AI-powered training for university credibility interviews. Practice
-          questions, get instant feedback, and secure your CAS.
+          AI-powered training for university credibility interviews. Practice questions, get instant feedback, and secure your CAS.
         </p>
       </section>
 
       <!-- Schools Grid -->
-      <!-- ============================================
-       ADD NEW SCHOOL CARDS HERE!
-       Copy template from CSS comments above
-       ============================================ -->
-      <div class="schools-grid">
+      <div class="schools-grid" role="list" aria-label="Available training programs">
+        
         <!-- Regent College London -->
-        <!-- ============================================
-         PASTE YOUR REGENT COLLEGE HTML:
-         1. Save your Regent code as: regent.html
-         2. Link it below in href="regent.html"
-         ============================================ -->
-        <a href="regent.html" class="school-card">
+        <a href="regent.html" class="school-card locked" role="listitem" data-requires-auth="true">
           <div class="card-icon">
             <span class="material-symbols-outlined">apartment</span>
           </div>
-          <span class="card-badge">LONDON CAMPUSES</span>
+          <span class="card-badge">London Campuses</span>
           <h3>Regent College London</h3>
-          <p>
-            MBA, MSc International Management, Software Engineering & more.
-            Holborn, Wembley & Southall campuses.
-          </p>
+          <p>MBA, MSc International Management, Software Engineering & more. Holborn, Wembley & Southall campuses.</p>
           <span class="card-arrow">
             Start Training
             <span class="material-symbols-outlined">arrow_forward</span>
@@ -628,21 +1193,13 @@
         </a>
 
         <!-- York St John University -->
-        <!-- ============================================
-         PASTE YOUR YORK ST JOHN HTML:
-         1. Save your YSJ code as: yorkstjohn.html
-         2. Link it below in href="yorkstjohn.html"
-         ============================================ -->
-        <a href="yorkstjohn.html" class="school-card">
+        <a href="yorkstjohn.html" class="school-card locked" role="listitem" data-requires-auth="true">
           <div class="card-icon">
             <span class="material-symbols-outlined">castle</span>
           </div>
-          <span class="card-badge">YORK & LONDON</span>
+          <span class="card-badge">York & London</span>
           <h3>York St John University</h3>
-          <p>
-            Top 10 for student satisfaction. York campus & London campus.
-            Business, Computing & Data Science.
-          </p>
+          <p>Top 10 for student satisfaction. York campus & London campus. Business, Computing & Data Science.</p>
           <span class="card-arrow">
             Start Training
             <span class="material-symbols-outlined">arrow_forward</span>
@@ -650,25 +1207,13 @@
         </a>
 
         <!-- UKVI Interview -->
-        <!-- ============================================
-         CREATE UKVI INTERVIEW HTML:
-         1. Save as: ukvi.html
-         2. Generic UKVI questions (not school-specific)
-         ============================================ -->
-        <a href="ukvi.html" class="school-card">
+        <a href="ukvi.html" class="school-card locked" role="listitem" data-requires-auth="true">
           <div class="card-icon">
             <span class="material-symbols-outlined">passport</span>
           </div>
-          <span
-            class="card-badge"
-            style="background: rgba(30, 58, 95, 0.4); color: #93c5fd"
-            >GENERAL</span
-          >
+          <span class="card-badge" style="background: rgba(59, 130, 246, 0.12); color: #93c5fd;">General</span>
           <h3>UKVI Interview Prep</h3>
-          <p>
-            Generic UK visa credibility interview training. Universal questions
-            for any UK university application.
-          </p>
+          <p>Generic UK visa credibility interview training. Universal questions for any UK university application.</p>
           <span class="card-arrow">
             Start Training
             <span class="material-symbols-outlined">arrow_forward</span>
@@ -676,98 +1221,250 @@
         </a>
 
         <!-- BPP University -->
-        <!-- ============================================
-         CREATE BPP UNIVERSITY HTML:
-         1. Save as: bpp.html
-         2. Copy your Regent/YSJ template
-         3. Change colors to BPP branding
-         4. Update course info for BPP
-         ============================================ -->
-        <a href="bpp.html" class="school-card">
-          <div
-            class="card-icon"
-            style="
-              background: linear-gradient(135deg, #1e3a5f 0%, #0a1628 100%);
-            "
-          >
+        <a href="bpp.html" class="school-card locked" role="listitem" data-requires-auth="true">
+          <div class="card-icon" style="background: var(--gradient-navy);">
             <span class="material-symbols-outlined">account_balance</span>
           </div>
-          <span
-            class="card-badge"
-            style="background: rgba(30, 58, 95, 0.4); color: #93c5fd"
-            >PROFESSIONAL</span
-          >
+          <span class="card-badge" style="background: rgba(59, 130, 246, 0.12); color: #93c5fd;">Professional</span>
           <h3>BPP University</h3>
-          <p>
-            Professional education focus. Law, Business, Nursing & Healthcare.
-            Multiple UK locations.
-          </p>
+          <p>Professional education focus. Law, Business, Nursing & Healthcare. Multiple UK locations.</p>
           <span class="card-arrow">
             Start Training
             <span class="material-symbols-outlined">arrow_forward</span>
           </span>
         </a>
 
-        <!-- netherlands -->
-        <!-- ============================================
-         CREATE Netherlands HTML:
-         1. Save as: netherlands.html
-         2. Copy your template
-         3. Update for Netherlands courses
-         ============================================ -->
-        <a href="netherlands.html" class="school-card">
-          <div
-            class="card-icon"
-            style="
-              background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
-            "
-          >
+        <!-- Netherlands -->
+        <a href="netherlands.html" class="school-card locked" role="listitem" data-requires-auth="true">
+          <div class="card-icon" style="background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);">
             <span class="material-symbols-outlined">groups</span>
           </div>
-          <span
-            class="card-badge"
-            style="background: rgba(234, 88, 12, 0.2); color: #fdba74"
-            >ENTREPRENEURSHIP</span
-          >
+          <span class="card-badge" style="background: rgba(234, 88, 12, 0.12); color: #fdba74;">Entrepreneurship</span>
           <h3>Netherlands</h3>
-          <p>
-            Entrepreneurship and business creation. Learn by doing. Build your
-            own business while you study.
-          </p>
+          <p>Entrepreneurship and business creation. Learn by doing. Build your own business while you study.</p>
           <span class="card-arrow">
             Start Training
             <span class="material-symbols-outlined">arrow_forward</span>
           </span>
         </a>
 
-        <!-- Template for NEW SCHOOL -->
-        <!-- ============================================
-         COPY THIS TEMPLATE FOR NEW SCHOOLS:
-         
-    <a href="SCHOOL-NAME.html" class="school-card">
-      <div class="card-icon" style="background: linear-gradient(135deg, #COLOR1 0%, #COLOR2 100%);">
-        <span class="material-symbols-outlined">ICON-NAME</span>
-      </div>
-      <span class="card-badge">SCHOOL TYPE</span>
-      <h3>School Name</h3>
-      <p>Description of courses and campuses.</p>
-      <span class="card-arrow">
-        Start Training
-        <span class="material-symbols-outlined">arrow_forward</span>
-      </span>
-    </a>
-    
-    ============================================ -->
+        <!-- Template for new schools (commented out) -->
+        <!--
+        <a href="new-school.html" class="school-card locked" role="listitem" data-requires-auth="true">
+          <div class="card-icon" style="background: linear-gradient(135deg, #COLOR1, #COLOR2);">
+            <span class="material-symbols-outlined">ICON_NAME</span>
+          </div>
+          <span class="card-badge">CATEGORY</span>
+          <h3>School Name</h3>
+          <p>Description of courses and campuses.</p>
+          <span class="card-arrow">
+            Start Training
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </span>
+        </a>
+        -->
       </div>
     </main>
 
     <!-- Scroll Indicator -->
-    <div class="scroll-indicator">
-      <span
-        style="font-size: 12px; text-transform: uppercase; letter-spacing: 2px"
-        >Choose Your School</span
-      >
+    <div class="scroll-indicator" id="scrollIndicator" aria-hidden="true">
+      <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;">Choose Your School</span>
       <span class="material-symbols-outlined">expand_more</span>
     </div>
+
+    <!-- JavaScript -->
+    <script>
+      // ===== GLOBAL STATE =====
+      const State = {
+        isAuthenticated: false,
+        theme: localStorage.getItem('uk-interview-theme') || 'dark',
+        authChecked: false
+      };
+
+      // ===== INITIALIZATION =====
+      document.addEventListener('DOMContentLoaded', async () => {
+        applyTheme(State.theme);
+        setupThemeToggle();
+        setupHeaderScroll();
+        setupScrollIndicator();
+        
+        // Check auth status
+        await checkAuth();
+        
+        // Setup card interactions
+        setupCardInteractions();
+        
+        // Hide loading
+        setTimeout(() => {
+          document.getElementById('loadingOverlay').classList.add('hidden');
+        }, 600);
+      });
+
+      // ===== THEME =====
+      function setupThemeToggle() {
+        const toggle = document.getElementById('themeToggle');
+        const icon = document.getElementById('themeIcon');
+        
+        updateThemeIcon(icon, State.theme);
+        
+        toggle.addEventListener('click', () => {
+          State.theme = State.theme === 'dark' ? 'light' : 'dark';
+          applyTheme(State.theme);
+          localStorage.setItem('uk-interview-theme', State.theme);
+          updateThemeIcon(icon, State.theme);
+        });
+      }
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#0a1628' : '#f8fafc';
+      }
+
+      function updateThemeIcon(icon, theme) {
+        icon.textContent = theme === 'dark' ? 'dark_mode' : 'light_mode';
+      }
+
+      // ===== AUTH =====
+      async function checkAuth() {
+        const authModal = document.getElementById('authModal');
+        const headerAuthBtn = document.getElementById('headerAuthBtn');
+        const authStatus = document.getElementById('authStatus');
+        const schoolCards = document.querySelectorAll('.school-card[data-requires-auth="true"]');
+        
+        // Check existing session
+        if (puter.authToken || localStorage.getItem('puter-authenticated') === 'true') {
+          State.isAuthenticated = true;
+          showAuthenticatedUI(authModal, headerAuthBtn, authStatus, schoolCards);
+          return;
+        }
+        
+        // Show auth modal
+        authModal.classList.remove('hidden');
+        headerAuthBtn.classList.remove('hidden');
+        
+        // Lock cards
+        lockCards(schoolCards);
+        
+        // Setup auth button
+        const authBtn = document.getElementById('authBtn');
+        const maybeLaterBtn = document.getElementById('maybeLaterBtn');
+        
+        authBtn.addEventListener('click', async () => {
+          authBtn.disabled = true;
+          authBtn.setAttribute('aria-busy', 'true');
+          authBtn.innerHTML = '<span class="spinner"></span> Connecting...';
+          
+          try {
+            await puter.auth.signIn();
+            State.isAuthenticated = true;
+            localStorage.setItem('puter-authenticated', 'true');
+            showAuthenticatedUI(authModal, headerAuthBtn, authStatus, schoolCards);
+          } catch (error) {
+            console.error('Auth error:', error);
+            alert('Could not connect to Puter.js. Please try again.');
+            authBtn.disabled = false;
+            authBtn.setAttribute('aria-busy', 'false');
+            authBtn.innerHTML = '<span class="material-symbols-outlined">login</span> Sign in with Puter.js';
+          }
+        });
+        
+        // Maybe Later - dismiss modal but keep cards locked
+        maybeLaterBtn.addEventListener('click', () => {
+          authModal.classList.add('hidden');
+          // Cards remain locked until user clicks a card (then modal reopens)
+        });
+        
+        // Close modal on backdrop click
+        authModal.addEventListener('click', (e) => {
+          if (e.target === authModal) {
+            authModal.classList.add('hidden');
+          }
+        });
+        
+        // ESC key closes modal
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !authModal.classList.contains('hidden')) {
+            authModal.classList.add('hidden');
+          }
+        });
+      }
+
+      function showAuthenticatedUI(authModal, headerAuthBtn, authStatus, schoolCards) {
+        authModal.classList.add('hidden');
+        headerAuthBtn.classList.add('hidden');
+        authStatus.classList.remove('hidden');
+        unlockCards(schoolCards);
+      }
+
+      function lockCards(cards) {
+        cards.forEach(card => {
+          card.classList.add('locked');
+          card.setAttribute('tabindex', '-1');
+        });
+      }
+
+      function unlockCards(cards) {
+        cards.forEach(card => {
+          card.classList.remove('locked');
+          card.setAttribute('tabindex', '0');
+        });
+      }
+
+      // ===== CARD INTERACTIONS =====
+      function setupCardInteractions() {
+        const schoolCards = document.querySelectorAll('.school-card[data-requires-auth="true"]');
+        const authModal = document.getElementById('authModal');
+        
+        schoolCards.forEach(card => {
+          card.addEventListener('click', (e) => {
+            if (card.classList.contains('locked')) {
+              e.preventDefault();
+              // Reopen auth modal if trying to access locked card
+              authModal.classList.remove('hidden');
+              return;
+            }
+            
+            // Subtle click animation
+            card.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+              card.style.transform = '';
+            }, 150);
+          });
+        });
+      }
+
+      // ===== HEADER SCROLL =====
+      function setupHeaderScroll() {
+        const header = document.querySelector('.header');
+        let ticking = false;
+        
+        window.addEventListener('scroll', () => {
+          if (!ticking) {
+            window.requestAnimationFrame(() => {
+              if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+              } else {
+                header.classList.remove('scrolled');
+              }
+              ticking = false;
+            });
+            ticking = true;
+          }
+        }, { passive: true });
+      }
+
+      // ===== SCROLL INDICATOR =====
+      function setupScrollIndicator() {
+        const indicator = document.getElementById('scrollIndicator');
+        
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 200) {
+            indicator.classList.add('hidden');
+          } else {
+            indicator.classList.remove('hidden');
+          }
+        }, { passive: true });
+      }
+    </script>
   </body>
 </html>
