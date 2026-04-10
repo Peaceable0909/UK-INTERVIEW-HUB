@@ -32,6 +32,7 @@ async function checkSession() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (session?.user) {
     await loadStudentProfile(session.user);
+    await checkStudentId(session.user);  // 👈 Prompt for Student ID if missing
     showAuthenticatedUI(session.user);
   } else {
     setTimeout(() => {
@@ -54,7 +55,7 @@ async function loadStudentProfile(user) {
       .insert({
         user_id: user.id,
         full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Student',
-        student_id: user.user_metadata?.student_id || 'STU-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+        student_id: user.user_metadata?.student_id || '',
         email: user.email
       })
       .select()
@@ -70,10 +71,54 @@ async function loadStudentProfile(user) {
   localStorage.setItem('student', JSON.stringify({
     id: profile.user_id,
     name: profile.full_name,
-    student_id: profile.student_id,
+    student_id: profile.student_id || '',
     email: profile.email
   }));
   return profile;
+}
+
+// ===== CHECK & PROMPT FOR STUDENT ID (for Google users) =====
+async function checkStudentId(user) {
+  const student = JSON.parse(localStorage.getItem('student'));
+  if (student && student.student_id && student.student_id !== '') {
+    return true; // already have ID
+  }
+
+  // Show modal
+  const modal = document.getElementById('studentIdModal');
+  const input = document.getElementById('studentIdInput');
+  const saveBtn = document.getElementById('saveStudentIdBtn');
+  const errorDiv = document.getElementById('studentIdError');
+  
+  modal.style.display = 'flex';
+  
+  return new Promise((resolve) => {
+    saveBtn.onclick = async () => {
+      const studentId = input.value.trim();
+      if (!studentId) {
+        errorDiv.textContent = 'Please enter a valid Student ID.';
+        return;
+      }
+      
+      // Update Supabase
+      const { error } = await supabaseClient
+        .from('student_progress')
+        .update({ student_id: studentId })
+        .eq('user_id', user.id);
+      
+      if (error) {
+        errorDiv.textContent = error.message;
+        return;
+      }
+      
+      // Update localStorage
+      const updatedStudent = { ...student, student_id: studentId };
+      localStorage.setItem('student', JSON.stringify(updatedStudent));
+      
+      modal.style.display = 'none';
+      resolve(true);
+    };
+  });
 }
 
 // ===== SHOW AUTHENTICATED UI =====
@@ -299,9 +344,13 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
   const checklistText = Object.entries(checklist).map(([item, done]) => `${done ? '✅' : '⬜'} ${item}`).join('\n');
   try {
     const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-      student_name: student.name, student_id: student.student_id, student_email: student.email,
-      university: university || 'Not selected', overall_score: score || 'Not yet scored',
-      responses: responsesText || 'No practice responses yet', checklist_status: checklistText || 'No checklist items',
+      student_name: student.name,
+      student_id: student.student_id,
+      student_email: student.email,
+      university: university || 'Not selected',
+      overall_score: score || 'Not yet scored',
+      responses: responsesText || 'No practice responses yet',
+      checklist_status: checklistText || 'No checklist items',
       message: message || 'Student clicked "I\'m Ready for Interview"'
     });
     return { success: true, result };
