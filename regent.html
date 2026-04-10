@@ -6,6 +6,10 @@
     <title>
       Regent College Interview Prep — Credibility Interview Simulator
     </title>
+    <!-- Supabase + EmailJS + App Logic -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="app.js"></script>
     <!-- FIX: Added Puter.js for free AI without API keys -->
     <script src="https://js.puter.com/v2/"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -1788,6 +1792,27 @@
               </div>
 
               <div id="chk-content" class="space-y-4 pb-10"></div>
+
+              <!-- I'm Ready! button with email logic -->
+              <div class="panel-primary p-5 mt-6 rounded-xl text-center">
+                <p class="font-bold text-primary mb-2">
+                  ✅ Ready for your interview?
+                </p>
+                <p class="text-sm text-on-surface mb-4">
+                  You've got this! Stay calm, be authentic, and remember: they
+                  want you to succeed.
+                </p>
+                <button
+                  id="regent-ready-btn"
+                  class="btn-primary px-6 py-2.5 rounded-xl font-label font-bold uppercase tracking-wider text-xs"
+                >
+                  I'm Ready!
+                </button>
+                <div
+                  id="regent-ready-status"
+                  class="mt-3 text-sm font-medium"
+                ></div>
+              </div>
             </div>
           </div>
         </main>
@@ -2666,7 +2691,7 @@
         <span class="q-num mt-0.5 flex-shrink-0">Q</span>
         <p class="font-headline font-bold text-sm text-on-surface leading-snug">${q.q}</p>
       </div>
-      <textarea class="sim-input min-h-24 block" id="ans-${q.id}" placeholder="Type your answer here..."></textarea>
+      <textarea class="sim-input min-h-24 block" id="regent-ans-${q.id}" placeholder="Type your answer here..."></textarea>
       <div class="flex items-center gap-3 mt-4 flex-wrap">
         <button class="btn-primary flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider" id="btn-${q.id}" onclick="chkAns('${q.id}')">
           <span class="material-symbols-outlined text-sm">verified</span>Check Answer
@@ -2694,7 +2719,7 @@
       }
 
       function clrAns(id) {
-        document.getElementById("ans-" + id).value = "";
+        document.getElementById("regent-ans-" + id).value = "";
         document.getElementById("fb-" + id).classList.add("hidden");
       }
 
@@ -2703,7 +2728,7 @@
       // ======================================================
       async function chkAns(id) {
         const q = PQS.find((x) => x.id === id);
-        const ans = document.getElementById("ans-" + id).value.trim();
+        const ans = document.getElementById("regent-ans-" + id).value.trim();
         if (!ans) {
           alert("Please type your answer first.");
           return;
@@ -2822,6 +2847,28 @@ Rules:
               .join("");
           }
           document.getElementById("fbb-" + id).innerHTML = h;
+
+          // ✅ AUTO-SAVE TO SUPABASE (REGENT)
+          if (typeof window.saveAIResponse === "function") {
+            try {
+              const questionId = "REGENT_" + id; // e.g., "REGENT_p1"
+              const answerText =
+                document.getElementById("regent-ans-" + id)?.value || "";
+              const score = j.score; // Uses parsed JSON 'j' from AI response
+              const feedbackText =
+                j.summary || j.good?.[0] || JSON.stringify(j);
+
+              window.saveAIResponse(
+                questionId,
+                answerText,
+                score,
+                feedbackText,
+              );
+              console.log("✅ Regent AI Saved:", questionId, "| Score:", score);
+            } catch (err) {
+              console.warn("⚠️ Regent Save Skipped:", err.message);
+            }
+          }
         } catch (e) {
           console.error("AI marking error:", e);
           fb.className =
@@ -2947,7 +2994,7 @@ Rules:
         groups.forEach((g) => {
           html += `<div class="panel p-6 shadow-sm"><div class="flex items-center gap-2 mb-4"><span class="material-symbols-outlined text-sm ${g.color}">${g.icon}</span><span class="font-label text-xs font-bold uppercase tracking-widest ${g.color}">${g.title}</span></div><div>`;
           g.items.forEach((item) => {
-            html += `<div class="check-item flex items-start gap-3 py-3" id="ci${n}"><div class="check-box" onclick="togCB(this)"></div><span class="text-on-surface text-sm leading-relaxed ct">${item}</span></div>`;
+            html += `<div class="check-item flex items-start gap-3 py-3" id="regent_chk_${n}"><div class="check-box" onclick="togCB(this)"></div><span class="text-on-surface text-sm leading-relaxed ct">${item}</span></div>`;
             n++;
           });
           html += `</div></div>`;
@@ -2980,6 +3027,95 @@ Rules:
         document.getElementById("prog-pct").textContent = pct + "%";
         document.getElementById("prog-fill").style.width = pct + "%";
       }
+
+      // ======================================================
+      // DOMContentLoaded with Checklist Auto-Save & Email Logic
+      // ======================================================
+      document.addEventListener("DOMContentLoaded", async function () {
+        // ✅ Checklist Auto-Save
+        if (typeof window.saveChecklistItem === "function") {
+          document.querySelectorAll(".check-box").forEach((cb, index) => {
+            const checkItem = cb.closest(".check-item");
+            if (checkItem && !checkItem.id)
+              checkItem.id = `regent_chk_${index}`;
+            const itemId = checkItem ? checkItem.id : `regent_chk_${index}`;
+
+            // Load saved state
+            window.loadSavedProgress?.().then((progress) => {
+              if (progress?.checklist_status?.[itemId]) {
+                cb.classList.add("done");
+                const titleSpan = checkItem?.querySelector(".ct");
+                if (titleSpan) {
+                  titleSpan.style.textDecoration = "line-through";
+                  titleSpan.style.color = "var(--text-muted)";
+                }
+                updProg();
+              }
+            });
+
+            // Save on click
+            cb.addEventListener("click", () => {
+              cb.classList.toggle("done");
+              const isChecked = cb.classList.contains("done");
+              const titleSpan = checkItem?.querySelector(".ct");
+              if (titleSpan) {
+                titleSpan.style.textDecoration = isChecked
+                  ? "line-through"
+                  : "";
+                titleSpan.style.color = isChecked ? "var(--text-muted)" : "";
+              }
+              window.saveChecklistItem?.(itemId, isChecked);
+              updProg();
+            });
+          });
+        }
+
+        // ✅ "I'm Ready" Email Button
+        const readyBtn = document.getElementById("regent-ready-btn");
+        const readyStatus = document.getElementById("regent-ready-status");
+        if (readyBtn && typeof window.sendReadyEmail === "function") {
+          readyBtn.addEventListener("click", async () => {
+            readyBtn.disabled = true;
+            readyBtn.innerHTML = '<span class="spinner"></span> Sending...';
+            const progress = await window.loadSavedProgress?.();
+            const responses = progress?.ai_scores || {};
+            const checklist = progress?.checklist_status || {};
+            const scores = Object.values(responses)
+              .map((s) => s.score)
+              .filter((n) => !isNaN(n));
+            const avg = scores.length
+              ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)
+              : "N/A";
+            const res = await window.sendReadyEmail?.(
+              responses,
+              checklist,
+              avg,
+              "Regent Student Ready",
+            );
+            if (res?.success) {
+              if (readyStatus) {
+                readyStatus.textContent =
+                  "✅ Submitted! Your advisor will contact you soon.";
+                readyStatus.className =
+                  "mt-3 text-sm font-medium text-green-600";
+              }
+              readyBtn.innerHTML =
+                '<span class="material-symbols-outlined">verified</span> Sent';
+            } else {
+              if (readyStatus) {
+                readyStatus.textContent = "⚠️ Failed to send. Try again.";
+                readyStatus.className = "mt-3 text-sm font-medium text-red-600";
+              }
+              readyBtn.disabled = false;
+              readyBtn.innerHTML = "I'm Ready!";
+            }
+          });
+        } else if (readyBtn) {
+          readyBtn.addEventListener("click", () => {
+            alert("Email service not configured. Please contact support.");
+          });
+        }
+      });
     </script>
   </body>
 </html>
