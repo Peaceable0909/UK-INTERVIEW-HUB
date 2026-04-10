@@ -6,6 +6,10 @@
     <title>
       BPP University Interview Prep — Credibility Interview Simulator
     </title>
+    <!-- Supabase + EmailJS + App Logic -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="app.js"></script>
     <!-- Puter.js for free AI without API keys -->
     <script src="https://js.puter.com/v2/"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -2036,7 +2040,7 @@
             <!-- Answer Input -->
             <textarea
               class="sim-input mb-4"
-              id="practiceInput"
+              id="bpp-answer-input"
               rows="6"
               placeholder="Type your answer here... (e.g., 'I chose BPP because...')"
             ></textarea>
@@ -2340,8 +2344,8 @@
 
             <div class="space-y-2">
               <!-- Checklist Items -->
-              <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-item flex items-start gap-3 p-3" id="bpp_chk_0">
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Watch the full training video
@@ -2351,8 +2355,8 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-item flex items-start gap-3 p-3" id="bpp_chk_1">
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Research your specific BPP campus
@@ -2362,8 +2366,8 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-item flex items-start gap-3 p-3" id="bpp_chk_2">
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Review your CAS statement thoroughly
@@ -2373,8 +2377,8 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-item flex items-start gap-3 p-3" id="bpp_chk_3">
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Prepare your "Why BPP?" answer
@@ -2384,8 +2388,8 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-item flex items-start gap-3 p-3" id="bpp_chk_4">
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">Practice 3+ questions aloud</p>
                   <p class="text-xs text-muted">
@@ -2393,8 +2397,8 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-item flex items-start gap-3 p-3" id="bpp_chk_5">
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Prepare documents for the call
@@ -2404,8 +2408,8 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-item flex items-start gap-3 p-3" id="bpp_chk_6">
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">Test your tech setup</p>
                   <p class="text-xs text-muted">
@@ -2413,8 +2417,8 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-item flex items-start gap-3 p-3" id="bpp_chk_7">
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Choose a quiet, well-lit space
@@ -2424,8 +2428,8 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-item flex items-start gap-3 p-3" id="bpp_chk_8">
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">Prepare questions to ask</p>
                   <p class="text-xs text-muted">
@@ -2433,8 +2437,8 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-item flex items-start gap-3 p-3" id="bpp_chk_9">
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">Plan your outfit</p>
                   <p class="text-xs text-muted">
@@ -2442,8 +2446,11 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div
+                class="check-item flex items-start gap-3 p-3"
+                id="bpp_chk_10"
+              >
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Get good rest the night before
@@ -2453,8 +2460,11 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div
+                class="check-item flex items-start gap-3 p-3"
+                id="bpp_chk_11"
+              >
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">Log in 10 minutes early</p>
                   <p class="text-xs text-muted">
@@ -2473,13 +2483,12 @@
                 want you to succeed.
               </p>
               <button
+                id="bpp-ready-btn"
                 class="btn-primary px-6 py-2.5 rounded-xl font-label font-bold uppercase tracking-wider text-xs"
-                onclick="
-                  alert('Good luck with your BPP credibility interview! 🦁✨')
-                "
               >
                 I'm Ready!
               </button>
+              <div id="bpp-ready-status" class="mt-3 text-sm font-medium"></div>
             </div>
           </div>
 
@@ -2510,7 +2519,7 @@
     </div>
 
     <!-- ======================================================
-     JAVASCRIPT - WITH REAL PUTER.JS AI + DARK MODE
+     JAVASCRIPT - WITH REAL PUTER.JS AI + DARK MODE + SUPABASE/EMAILJS
 ====================================================== -->
     <script>
       // ===== GLOBAL STATE =====
@@ -2560,11 +2569,8 @@
 
       // ===== THEME TOGGLE =====
       function initTheme() {
-        // Apply saved theme
         document.documentElement.setAttribute("data-theme", currentTheme);
         updateThemeIcon();
-
-        // Add event listeners to both toggle buttons
         document
           .getElementById("themeToggle")
           .addEventListener("click", toggleTheme);
@@ -2591,11 +2597,8 @@
         currentCourse = courseData[courseId];
         document.getElementById("tb-name").textContent = currentCourse.name;
         document.getElementById("tb-campus").textContent = currentCourse.campus;
-
         document.getElementById("s-select").classList.remove("active");
         document.getElementById("s-main").classList.add("active");
-
-        // Reset to video tab
         showTab("video", "sl-video");
       }
 
@@ -2606,13 +2609,10 @@
 
       // ===== TAB SWITCHING =====
       function showTab(tabId, linkId, isMobile = false) {
-        // Hide all tab contents
         document
           .querySelectorAll(".tc")
           .forEach((el) => el.classList.remove("active"));
         document.getElementById("tab-" + tabId).classList.add("active");
-
-        // Update desktop side nav
         if (!isMobile) {
           document
             .querySelectorAll(".side-link")
@@ -2660,11 +2660,6 @@
       }
 
       // ===== CHECKLIST =====
-      function toggleCheck(checkbox) {
-        checkbox.classList.toggle("done");
-        updateProgress();
-      }
-
       function updateProgress() {
         const total = 12;
         const checked = document.querySelectorAll(".check-box.done").length;
@@ -2677,28 +2672,22 @@
 
       // ===== REAL PUTER.JS AI FEEDBACK =====
       async function submitAnswer() {
-        const input = document.getElementById("practiceInput");
+        const input = document.getElementById("bpp-answer-input");
         const answer = input.value.trim();
-
         if (!answer) {
           alert("Please type an answer first!");
           return;
         }
-
         const feedbackArea = document.getElementById("feedback-area");
         const feedbackResult = document.getElementById("feedback-result");
         const loading = feedbackArea.querySelector(".fb-loading");
         const btn = document.getElementById("aiFeedbackBtn");
-
-        // Show loading state
         feedbackArea.classList.remove("hidden");
         feedbackResult.classList.add("hidden");
         loading.style.display = "flex";
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Analysing...';
-
         try {
-          // Call Puter.js AI with structured prompt
           const prompt = `You are a UK student visa credibility interview expert for BPP University. 
     Analyse this student's answer to: "Why have you chosen to study this programme at BPP University?"
     
@@ -2715,28 +2704,18 @@
     }
     
     Focus on: specificity about BPP, career alignment, realistic planning, and genuine intent.`;
-
           const response = await puter.ai.chat(prompt, {
             model: "gpt-4o-mini",
           });
-
-          // Parse JSON from AI response (handle potential extra text)
           let jsonStr = response.message.content;
           const jsonMatch = jsonStr.match(/\{[\s\S]*\}/);
-          if (jsonMatch) {
-            jsonStr = jsonMatch[0];
-          }
-
+          if (jsonMatch) jsonStr = jsonMatch[0];
           const feedback = JSON.parse(jsonStr);
-
-          // Update UI with real feedback
           document.getElementById("feedbackScore").textContent =
             `${feedback.score}/10`;
           document.getElementById("feedbackTitle").textContent =
             feedback.verdict;
           document.getElementById("feedbackIcon").textContent = feedback.icon;
-
-          // Update feedback card color based on score
           const feedbackCard = document.getElementById("feedbackCard");
           if (feedback.score >= 7) {
             feedbackCard.className = "fb-pass p-5 rounded-xl mb-4";
@@ -2752,8 +2731,6 @@
             document.getElementById("feedbackScore").className =
               "score-num text-error";
           }
-
-          // Populate lists
           document.getElementById("strengthsList").innerHTML =
             feedback.strengths.map((s) => `<li>• ${s}</li>`).join("");
           document.getElementById("suggestionsList").innerHTML =
@@ -2762,12 +2739,31 @@
             .map((sig) => `<li>• ${sig}</li>`)
             .join("");
 
-          // Show result
+          // ✅ AUTO-SAVE TO SUPABASE (BPP)
+          if (typeof window.saveAIResponse === "function") {
+            try {
+              const questionId = "BPP_Q1";
+              const answerText =
+                document.getElementById("bpp-answer-input")?.value || "";
+              const score = feedback.score;
+              const feedbackText =
+                feedback.strengths?.[0] || JSON.stringify(feedback);
+              window.saveAIResponse(
+                questionId,
+                answerText,
+                score,
+                feedbackText,
+              );
+              console.log("✅ BPP AI Saved:", questionId, "| Score:", score);
+            } catch (err) {
+              console.warn("⚠️ BPP Save Skipped:", err.message);
+            }
+          }
+
           loading.style.display = "none";
           feedbackResult.classList.remove("hidden");
         } catch (error) {
           console.error("AI Error:", error);
-          // Fallback feedback if AI fails
           document.getElementById("feedbackScore").textContent = "7.0/10";
           document.getElementById("feedbackTitle").textContent =
             "Good Response";
@@ -2778,7 +2774,6 @@
             "<li>• Add more BPP-specific details</li>";
           document.getElementById("signalsList").innerHTML =
             "<li>• Demonstrates intent ✓</li><li>• Could be more specific</li>";
-
           loading.style.display = "none";
           feedbackResult.classList.remove("hidden");
         } finally {
@@ -2790,18 +2785,17 @@
 
       function nextQuestion() {
         document.getElementById("feedback-area").classList.add("hidden");
-        document.getElementById("practiceInput").value = "";
-        // In production: load next question from bank
+        document.getElementById("bpp-answer-input").value = "";
         alert("Next question loaded! (Demo mode)");
       }
 
       function resetPractice() {
         document.getElementById("feedback-area").classList.add("hidden");
-        document.getElementById("practiceInput").value = "";
+        document.getElementById("bpp-answer-input").value = "";
       }
 
-      // ===== INIT =====
-      document.addEventListener("DOMContentLoaded", function () {
+      // ===== FINAL DOMContentLoaded WITH CHECKLIST AUTO-SAVE & EMAIL LOGIC =====
+      document.addEventListener("DOMContentLoaded", async function () {
         initTheme();
         updateProgress();
 
@@ -2812,6 +2806,87 @@
             toggleTheme();
           }
         });
+
+        // ✅ Checklist Auto-Save (using window.saveChecklistItem from app.js)
+        if (typeof window.saveChecklistItem === "function") {
+          document.querySelectorAll(".check-box").forEach((cb, index) => {
+            const checkItem = cb.closest(".check-item");
+            if (checkItem && !checkItem.id) checkItem.id = `bpp_chk_${index}`;
+            const itemId = checkItem ? checkItem.id : `bpp_chk_${index}`;
+            // Load saved state
+            window.loadSavedProgress?.().then((progress) => {
+              if (progress?.checklist_status?.[itemId]) {
+                cb.classList.add("done");
+                const titleP = checkItem?.querySelector(
+                  ".flex-1 p:first-child",
+                );
+                if (titleP) {
+                  titleP.style.textDecoration = "line-through";
+                  titleP.style.color = "var(--text-muted)";
+                }
+                updateProgress();
+              }
+            });
+            // Save on click
+            cb.addEventListener("click", () => {
+              cb.classList.toggle("done");
+              const isChecked = cb.classList.contains("done");
+              const titleP = checkItem?.querySelector(".flex-1 p:first-child");
+              if (titleP) {
+                titleP.style.textDecoration = isChecked ? "line-through" : "";
+                titleP.style.color = isChecked ? "var(--text-muted)" : "";
+              }
+              window.saveChecklistItem?.(itemId, isChecked);
+              updateProgress();
+            });
+          });
+        }
+
+        // ✅ "I'm Ready" Email Button
+        const readyBtn = document.getElementById("bpp-ready-btn");
+        const readyStatus = document.getElementById("bpp-ready-status");
+        if (readyBtn && typeof window.sendReadyEmail === "function") {
+          readyBtn.addEventListener("click", async () => {
+            readyBtn.disabled = true;
+            readyBtn.innerHTML = '<span class="spinner"></span> Sending...';
+            const progress = await window.loadSavedProgress?.();
+            const responses = progress?.ai_scores || {};
+            const checklist = progress?.checklist_status || {};
+            const scores = Object.values(responses)
+              .map((s) => s.score)
+              .filter((n) => !isNaN(n));
+            const avg = scores.length
+              ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)
+              : "N/A";
+            const res = await window.sendReadyEmail?.(
+              responses,
+              checklist,
+              avg,
+              "BPP Student Ready",
+            );
+            if (res?.success) {
+              if (readyStatus) {
+                readyStatus.textContent =
+                  "✅ Submitted! Your advisor will contact you soon.";
+                readyStatus.className =
+                  "mt-3 text-sm font-medium text-green-600";
+              }
+              readyBtn.innerHTML =
+                '<span class="material-symbols-outlined">verified</span> Sent';
+            } else {
+              if (readyStatus) {
+                readyStatus.textContent = "⚠️ Failed to send. Try again.";
+                readyStatus.className = "mt-3 text-sm font-medium text-red-600";
+              }
+              readyBtn.disabled = false;
+              readyBtn.innerHTML = "I'm Ready!";
+            }
+          });
+        } else if (readyBtn) {
+          readyBtn.addEventListener("click", () => {
+            alert("Email service not configured. Please contact support.");
+          });
+        }
       });
     </script>
   </body>
