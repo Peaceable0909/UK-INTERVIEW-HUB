@@ -1496,6 +1496,20 @@
       </div>
     </div>
 
+    <!-- 📝 Student ID Collection Modal (for Google users) -->
+    <div id="studentIdModal" class="login-modal" style="display: none;">
+      <div class="modal-content" style="max-width: 400px;">
+        <h3 class="modal-title">✏️ Complete Your Profile</h3>
+        <p style="text-align: center; margin-bottom: 1rem;">Please enter your Student ID to continue.</p>
+        <div class="form-group">
+          <label for="studentIdInput" class="form-label">Student ID</label>
+          <input type="text" id="studentIdInput" class="form-input" placeholder="e.g. STU12345" />
+        </div>
+        <button id="saveStudentIdBtn" class="btn btn-primary" style="width: 100%;">Save & Continue</button>
+        <p id="studentIdError" class="form-error" style="margin-top: 0.5rem;"></p>
+      </div>
+    </div>
+
     <!-- Supabase & EmailJS Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script
