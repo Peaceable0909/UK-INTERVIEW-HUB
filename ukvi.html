@@ -6,6 +6,10 @@
     <title>UKVI Credibility Interview Prep — Genuine Student Simulator</title>
     <!-- Puter.js for free AI without API keys -->
     <script src="https://js.puter.com/v2/"></script>
+    <!-- Supabase + EmailJS + App Logic -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="app.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
@@ -2417,7 +2421,7 @@
             <!-- Answer Input -->
             <textarea
               class="sim-input mb-4"
-              id="practiceInput"
+              id="ukvi-answer-input"
               rows="6"
               placeholder="Type your answer here... (e.g., 'I chose the UK because...')"
             ></textarea>
@@ -2576,7 +2580,10 @@
 
             <div class="space-y-2">
               <!-- Checklist Items -->
-              <div class="check-item flex items-start gap-3 p-3">
+              <div
+                id="ukvi_chk_0"
+                class="check-item flex items-start gap-3 p-3"
+              >
                 <div class="check-box" onclick="toggleCheck(this)"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
@@ -2588,7 +2595,10 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
+              <div
+                id="ukvi_chk_1"
+                class="check-item flex items-start gap-3 p-3"
+              >
                 <div class="check-box" onclick="toggleCheck(this)"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
@@ -2600,7 +2610,10 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
+              <div
+                id="ukvi_chk_2"
+                class="check-item flex items-start gap-3 p-3"
+              >
                 <div class="check-box" onclick="toggleCheck(this)"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
@@ -2612,7 +2625,10 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
+              <div
+                id="ukvi_chk_3"
+                class="check-item flex items-start gap-3 p-3"
+              >
                 <div class="check-box" onclick="toggleCheck(this)"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
@@ -2624,7 +2640,10 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
+              <div
+                id="ukvi_chk_4"
+                class="check-item flex items-start gap-3 p-3"
+              >
                 <div class="check-box" onclick="toggleCheck(this)"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
@@ -2636,7 +2655,10 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
+              <div
+                id="ukvi_chk_5"
+                class="check-item flex items-start gap-3 p-3"
+              >
                 <div class="check-box" onclick="toggleCheck(this)"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
@@ -2648,7 +2670,10 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
+              <div
+                id="ukvi_chk_6"
+                class="check-item flex items-start gap-3 p-3"
+              >
                 <div class="check-box" onclick="toggleCheck(this)"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
@@ -2660,7 +2685,10 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
+              <div
+                id="ukvi_chk_7"
+                class="check-item flex items-start gap-3 p-3"
+              >
                 <div class="check-box" onclick="toggleCheck(this)"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
@@ -2672,7 +2700,10 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
+              <div
+                id="ukvi_chk_8"
+                class="check-item flex items-start gap-3 p-3"
+              >
                 <div class="check-box" onclick="toggleCheck(this)"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
@@ -2684,7 +2715,10 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
+              <div
+                id="ukvi_chk_9"
+                class="check-item flex items-start gap-3 p-3"
+              >
                 <div class="check-box" onclick="toggleCheck(this)"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
@@ -2696,7 +2730,10 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
+              <div
+                id="ukvi_chk_10"
+                class="check-item flex items-start gap-3 p-3"
+              >
                 <div class="check-box" onclick="toggleCheck(this)"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
@@ -2708,7 +2745,10 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
+              <div
+                id="ukvi_chk_11"
+                class="check-item flex items-start gap-3 p-3"
+              >
                 <div class="check-box" onclick="toggleCheck(this)"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
@@ -2720,7 +2760,10 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
+              <div
+                id="ukvi_chk_12"
+                class="check-item flex items-start gap-3 p-3"
+              >
                 <div class="check-box" onclick="toggleCheck(this)"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
@@ -2732,7 +2775,10 @@
                   </p>
                 </div>
               </div>
-              <div class="check-item flex items-start gap-3 p-3">
+              <div
+                id="ukvi_chk_13"
+                class="check-item flex items-start gap-3 p-3"
+              >
                 <div class="check-box" onclick="toggleCheck(this)"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
@@ -2754,14 +2800,20 @@
                 You've prepared thoroughly. Stay calm, be honest, and remember:
                 they want genuine students to succeed.
               </p>
-              <button
-                class="btn-primary px-6 py-2.5 rounded-xl font-label font-bold uppercase tracking-wider text-xs"
-                onclick="
-                  alert('Good luck with your UKVI credibility interview! 🇬🇧✨')
-                "
-              >
-                I'm Ready!
-              </button>
+              <!-- ✅ READY BUTTON + EMAIL -->
+              <div class="mt-6 text-center">
+                <button
+                  id="ukvi-ready-btn"
+                  class="px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 mx-auto bg-primary text-white hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span class="material-symbols-outlined">check_circle</span>
+                  I'm Ready for Interview
+                </button>
+                <div
+                  id="ukvi-ready-status"
+                  class="mt-3 text-sm font-medium text-muted"
+                ></div>
+              </div>
             </div>
           </div>
 
@@ -2934,23 +2986,101 @@
       // ===== CHECKLIST =====
       function toggleCheck(checkbox) {
         checkbox.classList.toggle("done");
+        const textSpan = checkbox
+          .closest(".check-item")
+          ?.querySelector("p.font-medium");
+        const isChecked = checkbox.classList.contains("done");
+        if (textSpan) {
+          textSpan.style.textDecoration = isChecked ? "line-through" : "";
+          textSpan.style.color = isChecked ? "#94a3b8" : "";
+        }
         updateProgress();
+        // Save to Supabase via itemId on parent
+        const itemId = checkbox.closest("[id]")?.id;
+        if (itemId) window.saveChecklistItem?.(itemId, isChecked);
       }
 
       function updateProgress() {
         const total = 14;
         const checked = document.querySelectorAll(".check-box.done").length;
-        checklistProgress = checked;
         const percent = (checked / total) * 100;
-        document.getElementById("progress-bar").style.width = percent + "%";
-        document.getElementById("progress-text").textContent =
-          `${checked}/${total}`;
+        const bar = document.getElementById("progress-bar");
+        const txt = document.getElementById("progress-text");
+        if (bar) bar.style.width = percent + "%";
+        if (txt) txt.textContent = `${checked}/${total}`;
       }
 
-      // ===== REAL PUTER.JS AI FEEDBACK - UKVI FOCUSED =====
+      // ===== INIT =====
+      document.addEventListener("DOMContentLoaded", function () {
+        initTheme();
+        updateProgress();
+
+        // Restore saved checklist state from Supabase
+        window.loadSavedProgress?.().then((progress) => {
+          if (!progress?.checklist_status) return;
+          document.querySelectorAll(".check-item[id]").forEach((item) => {
+            if (progress.checklist_status[item.id]) {
+              const box = item.querySelector(".check-box");
+              const textSpan = item.querySelector("p.font-medium");
+              if (box) box.classList.add("done");
+              if (textSpan) {
+                textSpan.style.textDecoration = "line-through";
+                textSpan.style.color = "#94a3b8";
+              }
+            }
+          });
+          updateProgress();
+        });
+
+        // Keyboard shortcut: Ctrl+D to toggle theme
+        document.addEventListener("keydown", (e) => {
+          if (e.ctrlKey && e.key === "d") {
+            e.preventDefault();
+            toggleTheme();
+          }
+        });
+
+        // ===== I'M READY EMAIL BUTTON =====
+        const readyBtn = document.getElementById("ukvi-ready-btn");
+        const readyStatus = document.getElementById("ukvi-ready-status");
+        readyBtn?.addEventListener("click", async () => {
+          readyBtn.disabled = true;
+          readyBtn.innerHTML =
+            '<span class="material-symbols-outlined animate-spin">progress_activity</span> Sending...';
+          const progress = await window.loadSavedProgress?.();
+          const responses = progress?.ai_scores || {};
+          const checklist = progress?.checklist_status || {};
+          const scores = Object.values(responses)
+            .map((s) => s.score)
+            .filter((n) => !isNaN(n));
+          const avg = scores.length
+            ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)
+            : "N/A";
+          const res = await window.sendReadyEmail?.(
+            responses,
+            checklist,
+            avg,
+            "UKVI Student Ready",
+          );
+          if (res?.success) {
+            readyStatus.textContent =
+              "✅ Submitted! Your advisor will contact you soon.";
+            readyStatus.className = "mt-3 text-sm font-medium text-green-600";
+            readyBtn.innerHTML =
+              '<span class="material-symbols-outlined">verified</span> Sent';
+            readyBtn.disabled = true;
+          } else {
+            readyStatus.textContent = "⚠️ Failed to send. Try again.";
+            readyStatus.className = "mt-3 text-sm font-medium text-red-600";
+            readyBtn.disabled = false;
+            readyBtn.innerHTML =
+              '<span class="material-symbols-outlined">check_circle</span> I\'m Ready for Interview';
+          }
+        });
+      });
       async function submitAnswer() {
-        const input = document.getElementById("practiceInput");
-        const answer = input.value.trim();
+        const input = document.getElementById("ukvi-answer-input");
+        const answer = input ? input.value.trim() : "";
 
         if (!answer) {
           alert("Please type an answer first!");
@@ -2958,102 +3088,76 @@
         }
 
         const feedbackArea = document.getElementById("feedback-area");
-        const feedbackResult = document.getElementById("feedback-result");
-        const loading = feedbackArea.querySelector(".fb-loading");
+        const feedbackResult = document.getElementById("fb-result");
+        const loading = document.getElementById("fb-loading");
         const btn = document.getElementById("aiFeedbackBtn");
+        const card = document.getElementById("fb-card");
 
         feedbackArea.classList.remove("hidden");
         feedbackResult.classList.add("hidden");
         loading.style.display = "flex";
         btn.disabled = true;
-        btn.innerHTML = '<span class="spinner"></span> Analysing...';
+        btn.innerHTML =
+          '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Analysing...';
 
         try {
-          // UKVI-focused prompt based on ST 5.1 refusal criteria
-          const prompt = `You are a UKVI credibility interview expert. Analyse this answer to: "Why have you chosen to study this programme in the UK?"
-    
-    Student answer: "${answer}"
-    
-    Evaluate against paragraph ST 5.1 Genuine Student Requirement criteria:
-    1. Does it show SPECIFIC academic reasons for UK choice (not generic)?
-    2. Does it demonstrate RESEARCH DEPTH (modules, university specifics)?
-    3. Is there a CLEAR link between course and career goals?
-    4. Does it show INTENT TO RETURN HOME after studies?
-    5. Is the answer PERSONAL and not copied/generic?
-    
-    Provide feedback in this EXACT JSON format:
-    {
-      "score": number 1-10,
-      "verdict": "Strong Response" | "Good Response" | "Needs Improvement" | "High Refusal Risk",
-      "icon": "verified" | "thumb_up" | "warning" | "error",
-      "strengths": [2-3 specific strengths based on ST 5.1],
-      "suggestions": [1-2 actionable improvements],
-      "signals": [3 ST 5.1 signals with ✓ or ✗, e.g., "Specific academic intent ✓"]
-    }
-    
-    Be strict: generic answers like "UK has good education" should score low.`;
+          const prompt = `You are a UKVI credibility interview expert. Analyse this answer against ST 5.1 criteria.
+Question: "Why have you chosen to study this programme in the UK?"
+Student answer: "${answer}"
+Return ONLY JSON: {"score": number 1-10, "verdict": string, "strengths": ["str1"], "suggestions": ["sug1"], "signals": ["sig1 ✓"]}`;
 
           const response = await puter.ai.chat(prompt, {
             model: "gpt-4o-mini",
           });
 
-          // Parse JSON from AI response
-          let jsonStr = response.message.content;
-          const jsonMatch = jsonStr.match(/\{[\s\S]*\}/);
-          if (jsonMatch) jsonStr = jsonMatch[0];
+          // Robust parse: handle all Puter response shapes
+          let txt =
+            response?.message?.content || response?.content || response || "";
+          if (typeof txt !== "string") txt = JSON.stringify(txt);
+          const match = txt.match(/\{[\s\S]*\}/);
+          const fb = match
+            ? JSON.parse(match[0])
+            : {
+                score: 5,
+                verdict: "Analysis Error",
+                strengths: [],
+                suggestions: [],
+                signals: [],
+              };
 
-          const feedback = JSON.parse(jsonStr);
+          // Update score + verdict
+          document.getElementById("fb-score").textContent = fb.score + "/10";
+          document.getElementById("fb-title").textContent = fb.verdict;
 
-          // Update UI
-          document.getElementById("feedbackScore").textContent =
-            `${feedback.score}/10`;
-          document.getElementById("feedbackTitle").textContent =
-            feedback.verdict;
-          document.getElementById("feedbackIcon").textContent = feedback.icon;
+          // Color-code card
+          if (fb.score >= 8) card.className = "p-5 rounded-xl mb-4 fb-pass";
+          else if (fb.score >= 6)
+            card.className = "p-5 rounded-xl mb-4 fb-warning";
+          else card.className = "p-5 rounded-xl mb-4 fb-fail";
 
-          // Color-code feedback card
-          const feedbackCard = document.getElementById("feedbackCard");
-          if (feedback.score >= 8) {
-            feedbackCard.className = "fb-pass p-5 rounded-xl mb-4";
-            document.getElementById("feedbackScore").className =
-              "score-num text-success";
-          } else if (feedback.score >= 6) {
-            feedbackCard.className = "fb-warning p-5 rounded-xl mb-4";
-            document.getElementById("feedbackScore").className =
-              "score-num text-[#f59e0b]";
-          } else {
-            feedbackCard.className = "fb-fail p-5 rounded-xl mb-4";
-            document.getElementById("feedbackScore").className =
-              "score-num text-error";
-          }
+          // Populate content
+          document.getElementById("fb-content").innerHTML = `
+            <div><strong>✅ Strengths</strong><ul class="list-disc pl-5 mt-1 space-y-1">${fb.strengths?.map((s) => `<li>${s}</li>`).join("") || "<li>None detected</li>"}</ul></div>
+            <div><strong>💡 Suggestions</strong><ul class="list-disc pl-5 mt-1 space-y-1">${fb.suggestions?.map((s) => `<li>${s}</li>`).join("") || "<li>None</li>"}</ul></div>
+            <div><strong>🎯 ST 5.1 Signals</strong><ul class="list-disc pl-5 mt-1 space-y-1">${fb.signals?.map((s) => `<li>${s}</li>`).join("") || "<li>None</li>"}</ul></div>
+          `;
 
-          // Populate lists
-          document.getElementById("strengthsList").innerHTML =
-            feedback.strengths.map((s) => `<li>• ${s}</li>`).join("");
-          document.getElementById("suggestionsList").innerHTML =
-            feedback.suggestions.map((s) => `<li>• ${s}</li>`).join("");
-          document.getElementById("signalsList").innerHTML = feedback.signals
-            .map((sig) => `<li>• ${sig}</li>`)
-            .join("");
+          // Auto-save to Supabase
+          window.saveAIResponse?.(
+            "UKVI_Q1",
+            answer,
+            fb.score,
+            JSON.stringify(fb),
+          );
 
           loading.style.display = "none";
           feedbackResult.classList.remove("hidden");
         } catch (error) {
           console.error("AI Error:", error);
-          // Fallback feedback
-          document.getElementById("feedbackScore").textContent = "6.0/10";
-          document.getElementById("feedbackTitle").textContent =
-            "Good Response";
-          document.getElementById("feedbackIcon").textContent = "thumb_up";
-          document.getElementById("strengthsList").innerHTML =
-            "<li>• Answer addresses the question</li><li>• Shows some preparation</li>";
-          document.getElementById("suggestionsList").innerHTML =
-            "<li>• Add more UK-specific academic reasons</li><li>• Include comparison with another country</li>";
-          document.getElementById("signalsList").innerHTML =
-            "<li>• Demonstrates intent ✓</li><li>• Could be more specific</li>";
-
           loading.style.display = "none";
           feedbackResult.classList.remove("hidden");
+          document.getElementById("fb-content").innerHTML =
+            '<p class="text-red-600">AI service temporarily unavailable. Please try again.</p>';
         } finally {
           btn.disabled = false;
           btn.innerHTML =
@@ -3063,28 +3167,14 @@
 
       function nextQuestion() {
         document.getElementById("feedback-area").classList.add("hidden");
-        document.getElementById("practiceInput").value = "";
+        document.getElementById("ukvi-answer-input").value = "";
         alert("Next question loaded! (Demo mode)");
       }
 
       function resetPractice() {
         document.getElementById("feedback-area").classList.add("hidden");
-        document.getElementById("practiceInput").value = "";
+        document.getElementById("ukvi-answer-input").value = "";
       }
-
-      // ===== INIT =====
-      document.addEventListener("DOMContentLoaded", function () {
-        initTheme();
-        updateProgress();
-
-        // Keyboard shortcut: Ctrl+D to toggle theme
-        document.addEventListener("keydown", (e) => {
-          if (e.ctrlKey && e.key === "d") {
-            e.preventDefault();
-            toggleTheme();
-          }
-        });
-      });
     </script>
   </body>
 </html>
