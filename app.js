@@ -181,13 +181,16 @@ function setupGoogleSignIn() {
   });
 }
 
-// ===== EMAIL SIGNUP (with Name + Student ID) =====
+// ===== EMAIL SIGNUP (with Name + Student ID) - FIXED with loading state =====
 function setupEmailSignup() {
   if (!signupForm) return;
   
   signupForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (authError) authError.textContent = '';
+    
+    const submitBtn = signupForm.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
     
     const name = document.getElementById('signupName')?.value.trim();
     const student_id = document.getElementById('signupStudentId')?.value.trim();
@@ -199,63 +202,84 @@ function setupEmailSignup() {
       return;
     }
     
-    // 1. Create auth user
-    const { data: authData, error: authErrorObj } = await supabase.auth.signUp({
-      email, password,
-      options: { 
-        data: { 
-          full_name: name, 
-          student_id: student_id 
-        } 
-      }
-    });
+    // Disable button and show loading
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border:2px solid var(--gray-300);border-top-color:var(--navy);border-radius:50%;animation:spin 1s linear infinite;display:inline-block;"></span> Creating...';
     
-    if (authErrorObj) {
-      if (authError) authError.textContent = authErrorObj.message;
-      return;
-    }
-    
-    // 2. Save to student_progress table
-    if (authData?.user) {
-      const { error: dbError } = await supabase
-        .from('student_progress')
-        .insert({
-          user_id: authData.user.id,
-          full_name: name,
-          student_id: student_id,
-          email: email
-        });
+    try {
+      // 1. Create auth user
+      const { data: authData, error: authErrorObj } = await supabase.auth.signUp({
+        email, password,
+        options: { 
+          data: { 
+            full_name: name, 
+            student_id: student_id 
+          } 
+        }
+      });
       
-      if (dbError) {
-        if (authError) authError.textContent = dbError.message;
+      if (authErrorObj) {
+        console.error('❌ Signup failed:', {
+          message: authErrorObj.message,
+          code: authErrorObj.code,
+          status: authErrorObj.status
+        });
+        if (authError) authError.textContent = authErrorObj.message;
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
         return;
       }
       
-      // 3. Save to localStorage & show success
-      localStorage.setItem('student', JSON.stringify({ 
-        id: authData.user.id, 
-        name, 
-        student_id, 
-        email 
-      }));
-      
-      // Show success overlay
-      if (signupForm) signupForm.style.display = 'none';
-      if (studentNameDisplay) studentNameDisplay.textContent = name.split(' ')[0];
-      if (authSuccess) authSuccess.style.display = 'flex';
-      
-      setTimeout(() => {
-        if (authSuccess) authSuccess.style.display = 'none';
-        if (loginModal) loginModal.style.display = 'none';
+      // 2. Save to student_progress table
+      if (authData?.user) {
+        const { error: dbError } = await supabase
+          .from('student_progress')
+          .insert({
+            user_id: authData.user.id,
+            full_name: name,
+            student_id: student_id,
+            email: email
+          });
         
-        // Update header UI
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (userMenu) userMenu.style.display = 'flex';
-        if (userNameDisplay) userNameDisplay.textContent = name.split(' ')[0];
-        if (userAvatar) {
-          userAvatar.textContent = name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+        if (dbError) {
+          console.error('❌ DB insert failed:', dbError);
+          if (authError) authError.textContent = dbError.message;
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnText;
+          return;
         }
-      }, 1500);
+        
+        // 3. Save to localStorage & show success
+        localStorage.setItem('student', JSON.stringify({ 
+          id: authData.user.id, 
+          name, 
+          student_id, 
+          email 
+        }));
+        
+        // Show success overlay
+        if (signupForm) signupForm.style.display = 'none';
+        if (studentNameDisplay) studentNameDisplay.textContent = name.split(' ')[0];
+        if (authSuccess) authSuccess.style.display = 'flex';
+        
+        setTimeout(() => {
+          if (authSuccess) authSuccess.style.display = 'none';
+          if (loginModal) loginModal.style.display = 'none';
+          
+          // Update header UI
+          if (loginBtn) loginBtn.style.display = 'none';
+          if (userMenu) userMenu.style.display = 'flex';
+          if (userNameDisplay) userNameDisplay.textContent = name.split(' ')[0];
+          if (userAvatar) {
+            userAvatar.textContent = name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+          }
+        }, 1500);
+      }
+    } catch (err) {
+      console.error('❌ Unexpected error during signup:', err);
+      if (authError) authError.textContent = err.message || 'An unexpected error occurred.';
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
     }
   });
 }
