@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Netherlands Student Visa Prep — IND Credibility Simulator</title>
+    <!-- Supabase + EmailJS + App Logic -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="app.js"></script>
     <!-- Puter.js for free AI without API keys -->
     <script src="https://js.puter.com/v2/"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -2398,10 +2402,10 @@
               </div>
             </div>
 
-            <!-- Answer Input -->
+            <!-- Answer Input - FIXED ID -->
             <textarea
               class="sim-input mb-4"
-              id="practiceInput"
+              id="nl-answer-input"
               rows="6"
               placeholder="Type your answer here... (e.g., 'I chose the Netherlands because...')"
             ></textarea>
@@ -2741,13 +2745,12 @@
                 IND wants genuine students to succeed.
               </p>
               <button
+                id="nl-ready-btn"
                 class="btn-primary px-6 py-2.5 rounded-xl font-label font-bold uppercase tracking-wider text-xs"
-                onclick="
-                  alert('Good luck with your IND credibility interview! 🇳🇱✨')
-                "
               >
                 I'm Ready!
               </button>
+              <div id="nl-ready-status" class="mt-3 text-sm font-medium"></div>
             </div>
           </div>
 
@@ -2934,7 +2937,7 @@
 
       // ===== REAL PUTER.JS AI FEEDBACK - IND FOCUSED =====
       async function submitAnswer() {
-        const input = document.getElementById("practiceInput");
+        const input = document.getElementById("nl-answer-input");
         const answer = input.value.trim();
 
         if (!answer) {
@@ -3022,6 +3025,28 @@
             .map((sig) => `<li>• ${sig}</li>`)
             .join("");
 
+          // ✅ AUTO-SAVE TO SUPABASE (NETHERLANDS)
+          if (typeof window.saveAIResponse === "function") {
+            try {
+              const questionId = "NL_Q1"; // Change if you have multiple questions
+              const answerText =
+                document.getElementById("nl-answer-input")?.value || "";
+              const score = feedback.score;
+              const feedbackText =
+                feedback.strengths?.[0] || JSON.stringify(feedback);
+
+              window.saveAIResponse(
+                questionId,
+                answerText,
+                score,
+                feedbackText,
+              );
+              console.log("✅ NL AI Saved:", questionId, "| Score:", score);
+            } catch (err) {
+              console.warn("⚠️ NL Save Skipped:", err.message);
+            }
+          }
+
           loading.style.display = "none";
           feedbackResult.classList.remove("hidden");
         } catch (error) {
@@ -3049,17 +3074,17 @@
 
       function nextQuestion() {
         document.getElementById("feedback-area").classList.add("hidden");
-        document.getElementById("practiceInput").value = "";
+        document.getElementById("nl-answer-input").value = "";
         alert("Next question loaded! (Demo mode)");
       }
 
       function resetPractice() {
         document.getElementById("feedback-area").classList.add("hidden");
-        document.getElementById("practiceInput").value = "";
+        document.getElementById("nl-answer-input").value = "";
       }
 
-      // ===== INIT =====
-      document.addEventListener("DOMContentLoaded", function () {
+      // ===== FINAL DOMContentLoaded WITH CHECKLIST AUTO-SAVE & EMAIL LOGIC =====
+      document.addEventListener("DOMContentLoaded", async function () {
         initTheme();
         updateProgress();
 
@@ -3070,6 +3095,89 @@
             toggleTheme();
           }
         });
+
+        // ✅ Checklist Auto-Save
+        if (typeof window.saveChecklistItem === "function") {
+          document.querySelectorAll(".check-box").forEach((cb, index) => {
+            const checkItem = cb.closest(".check-item");
+            if (checkItem && !checkItem.id) checkItem.id = `nl_chk_${index}`;
+            const itemId = checkItem ? checkItem.id : `nl_chk_${index}`;
+
+            // Load saved state
+            window.loadSavedProgress?.().then((progress) => {
+              if (progress?.checklist_status?.[itemId]) {
+                cb.classList.add("done");
+                const titleSpan = checkItem?.querySelector(".font-medium");
+                if (titleSpan) {
+                  titleSpan.style.textDecoration = "line-through";
+                  titleSpan.style.color = "var(--text-muted)";
+                }
+                updateProgress();
+              }
+            });
+
+            // Save on click
+            cb.addEventListener("click", () => {
+              cb.classList.toggle("done");
+              const isChecked = cb.classList.contains("done");
+              const titleSpan = checkItem?.querySelector(".font-medium");
+              if (titleSpan) {
+                titleSpan.style.textDecoration = isChecked
+                  ? "line-through"
+                  : "";
+                titleSpan.style.color = isChecked ? "var(--text-muted)" : "";
+              }
+              window.saveChecklistItem?.(itemId, isChecked);
+              updateProgress();
+            });
+          });
+        }
+
+        // ✅ "I'm Ready" Email Button
+        const readyBtn = document.getElementById("nl-ready-btn");
+        const readyStatus = document.getElementById("nl-ready-status");
+        if (readyBtn && typeof window.sendReadyEmail === "function") {
+          readyBtn.addEventListener("click", async () => {
+            readyBtn.disabled = true;
+            readyBtn.innerHTML = '<span class="spinner"></span> Sending...';
+            const progress = await window.loadSavedProgress?.();
+            const responses = progress?.ai_scores || {};
+            const checklist = progress?.checklist_status || {};
+            const scores = Object.values(responses)
+              .map((s) => s.score)
+              .filter((n) => !isNaN(n));
+            const avg = scores.length
+              ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)
+              : "N/A";
+            const res = await window.sendReadyEmail?.(
+              responses,
+              checklist,
+              avg,
+              "Netherlands Student Ready",
+            );
+            if (res?.success) {
+              if (readyStatus) {
+                readyStatus.textContent =
+                  "✅ Submitted! Your advisor will contact you soon.";
+                readyStatus.className =
+                  "mt-3 text-sm font-medium text-green-600";
+              }
+              readyBtn.innerHTML =
+                '<span class="material-symbols-outlined">verified</span> Sent';
+            } else {
+              if (readyStatus) {
+                readyStatus.textContent = "⚠️ Failed to send. Try again.";
+                readyStatus.className = "mt-3 text-sm font-medium text-red-600";
+              }
+              readyBtn.disabled = false;
+              readyBtn.innerHTML = "I'm Ready!";
+            }
+          });
+        } else if (readyBtn) {
+          readyBtn.addEventListener("click", () => {
+            alert("Email service not configured. Please contact support.");
+          });
+        }
       });
     </script>
   </body>
