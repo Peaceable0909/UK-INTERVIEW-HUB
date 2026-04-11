@@ -2520,75 +2520,45 @@
     </div>
 
     <!-- ======================================================
-     JAVASCRIPT - WITH FIXED MARKING & IMPROVED AI PROMPT
+     JAVASCRIPT - WITH FIXED MARKING, IMPROVED AI PROMPT & RESTORE
 ====================================================== -->
     <script>
       // ===== GLOBAL STATE =====
       let currentCourse = null;
       let checklistProgress = 0;
       let currentTheme = localStorage.getItem("bpp-theme") || "light";
-      // Track which questions have been counted (for AI marking)
-      let questionStatus = {};
+      let questionStatus = {};       // tracks which questions have been counted
+      let passN = 0, failN = 0, totN = 0;  // practice tab counters
 
       // ===== COURSE DATA =====
       const courseData = {
-        "mba-international": {
-          name: "International MBA",
-          campus: "London Holborn",
-        },
+        "mba-international": { name: "International MBA", campus: "London Holborn" },
         "msc-management": { name: "MSc Management", campus: "London Waterloo" },
-        "msc-digital-marketing": {
-          name: "MSc Digital Marketing",
-          campus: "London King's Cross",
-        },
-        "msc-accounting-finance": {
-          name: "MSc Accounting & Finance",
-          campus: "London Holborn",
-        },
-        "msc-engineering-mgmt": {
-          name: "MSc Engineering Management",
-          campus: "London Portsoken",
-        },
-        "llm-legal-practice": {
-          name: "LLM Legal Practice (LPC)",
-          campus: "London Holborn",
-        },
-        "bsc-applied-mgmt": {
-          name: "BSc (Hons) Applied Management",
-          campus: "London King's Cross",
-        },
-        "bsc-business-mgmt": {
-          name: "BSc (Hons) Business Management",
-          campus: "Birmingham",
-        },
-        "bsc-nursing": {
-          name: "BSc (Hons) Adult Nursing",
-          campus: "London Waterloo",
-        },
+        "msc-digital-marketing": { name: "MSc Digital Marketing", campus: "London King's Cross" },
+        "msc-accounting-finance": { name: "MSc Accounting & Finance", campus: "London Holborn" },
+        "msc-engineering-mgmt": { name: "MSc Engineering Management", campus: "London Portsoken" },
+        "llm-legal-practice": { name: "LLM Legal Practice (LPC)", campus: "London Holborn" },
+        "bsc-applied-mgmt": { name: "BSc (Hons) Applied Management", campus: "London King's Cross" },
+        "bsc-business-mgmt": { name: "BSc (Hons) Business Management", campus: "Birmingham" },
+        "bsc-nursing": { name: "BSc (Hons) Adult Nursing", campus: "London Waterloo" },
         "bsc-computing": { name: "BSc (Hons) Computing", campus: "Manchester" },
         "ba-law": { name: "BA (Hons) Law", campus: "London Holborn" },
-        "bsc-topup": { name: "BSc (Hons) Business Top-Up", campus: "Leeds" },
+        "bsc-topup": { name: "BSc (Hons) Business Top-Up", campus: "Leeds" }
       };
 
       // ===== THEME TOGGLE =====
       function initTheme() {
         document.documentElement.setAttribute("data-theme", currentTheme);
         updateThemeIcon();
-        document
-          .getElementById("themeToggle")
-          .addEventListener("click", toggleTheme);
-        document
-          .getElementById("themeToggleMain")
-          .addEventListener("click", toggleTheme);
+        document.getElementById("themeToggle").addEventListener("click", toggleTheme);
+        document.getElementById("themeToggleMain").addEventListener("click", toggleTheme);
       }
-
       function toggleTheme() {
         currentTheme = currentTheme === "light" ? "dark" : "light";
         document.documentElement.setAttribute("data-theme", currentTheme);
         localStorage.setItem("bpp-theme", currentTheme);
         updateThemeIcon();
       }
-
       function updateThemeIcon() {
         const icon = currentTheme === "light" ? "dark_mode" : "light_mode";
         document.getElementById("themeIcon").textContent = icon;
@@ -2598,12 +2568,14 @@
       // ===== COURSE SELECTION =====
       function selectCourse(courseId) {
         currentCourse = courseData[courseId];
+        localStorage.setItem('last_course', courseId); // save for auto-reload
         document.getElementById("tb-name").textContent = currentCourse.name;
         document.getElementById("tb-campus").textContent = currentCourse.campus;
         document.getElementById("s-select").classList.remove("active");
         document.getElementById("s-main").classList.add("active");
-        // Reset question status for new course
-        questionStatus = {};
+        // Reset counters and question status
+        passN = 0; failN = 0; totN = 0; questionStatus = {};
+        updScore(); // update practice tab counters
         showTab("video", "sl-video");
       }
 
@@ -2614,34 +2586,20 @@
 
       // ===== TAB SWITCHING =====
       function showTab(tabId, linkId, isMobile = false) {
-        document
-          .querySelectorAll(".tc")
-          .forEach((el) => el.classList.remove("active"));
+        document.querySelectorAll(".tc").forEach(el => el.classList.remove("active"));
         document.getElementById("tab-" + tabId).classList.add("active");
         if (!isMobile) {
-          document
-            .querySelectorAll(".side-link")
-            .forEach((el) => el.classList.remove("active"));
+          document.querySelectorAll(".side-link").forEach(el => el.classList.remove("active"));
           document.getElementById(linkId).classList.add("active");
-          document
-            .querySelectorAll(".tab-btn")
-            .forEach((btn) => btn.classList.remove("active"));
+          document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
           const mobileId = "mt-" + tabId;
-          if (document.getElementById(mobileId)) {
-            document.getElementById(mobileId).classList.add("active");
-          }
+          if (document.getElementById(mobileId)) document.getElementById(mobileId).classList.add("active");
         } else {
-          document
-            .querySelectorAll(".tab-btn")
-            .forEach((btn) => btn.classList.remove("active"));
+          document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
           document.getElementById(linkId).classList.add("active");
-          document
-            .querySelectorAll(".side-link")
-            .forEach((el) => el.classList.remove("active"));
+          document.querySelectorAll(".side-link").forEach(el => el.classList.remove("active"));
           const desktopId = "sl-" + tabId;
-          if (document.getElementById(desktopId)) {
-            document.getElementById(desktopId).classList.add("active");
-          }
+          if (document.getElementById(desktopId)) document.getElementById(desktopId).classList.add("active");
         }
         window.scrollTo(0, 0);
       }
@@ -2650,17 +2608,11 @@
       function toggleAccordion(headerEl) {
         headerEl.parentElement.classList.toggle("open");
       }
-
       function filterQuestions(category, btn) {
-        document
-          .querySelectorAll(".filter-btn")
-          .forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-        document.querySelectorAll(".acc-item").forEach((item) => {
-          item.style.display =
-            category === "all" || item.dataset.category === category
-              ? "block"
-              : "none";
+        document.querySelectorAll(".acc-item").forEach(item => {
+          item.style.display = (category === "all" || item.dataset.category === category) ? "block" : "none";
         });
       }
 
@@ -2671,8 +2623,63 @@
         checklistProgress = checked;
         const percent = (checked / total) * 100;
         document.getElementById("progress-bar").style.width = percent + "%";
-        document.getElementById("progress-text").textContent =
-          `${checked}/${total}`;
+        document.getElementById("progress-text").textContent = `${checked}/${total}`;
+      }
+
+      // Restore checklist from Supabase
+      async function restoreChecklist() {
+        if (typeof window.saveChecklistItem !== "function") return;
+        const progress = await window.loadSavedProgress();
+        if (!progress?.checklist_status) return;
+        document.querySelectorAll(".check-box").forEach((cb, index) => {
+          const checkItem = cb.closest(".check-item");
+          const itemId = checkItem ? checkItem.id : `bpp_chk_${index}`;
+          if (progress.checklist_status[itemId]) {
+            cb.classList.add("done");
+            const titleP = checkItem?.querySelector(".flex-1 p:first-child");
+            if (titleP) {
+              titleP.style.textDecoration = "line-through";
+              titleP.style.color = "var(--text-muted)";
+            }
+          }
+        });
+        updateProgress();
+      }
+
+      // Restore AI scores and update practice tab counters
+      async function restoreAIScores() {
+        const progress = await window.loadSavedProgress();
+        if (!progress?.ai_scores) return;
+        const scores = progress.ai_scores;
+        let newPass = 0, newFail = 0;
+        const newStatus = {};
+        for (const [qId, data] of Object.entries(scores)) {
+          const score = data.score;
+          if (typeof score === 'number') {
+            if (score >= 7) newPass++;
+            else newFail++;
+            newStatus[qId] = true;
+          }
+        }
+        passN = newPass;
+        failN = newFail;
+        totN = newPass + newFail;
+        questionStatus = newStatus;
+        updScore();
+      }
+
+      // Update practice tab counters (UI)
+      function updScore() {
+        document.getElementById("sc-p").textContent = passN;
+        document.getElementById("sc-f").textContent = failN;
+        document.getElementById("sc-t").textContent = totN;
+        const pct = totN ? Math.round((passN / totN) * 100) : 0;
+        let msg = "Answer questions to track your readiness.";
+        if (totN > 0 && pct === 100) msg = "Perfect score! You are ready for the interview.";
+        else if (pct >= 70) msg = `${pct}% pass rate — review the questions you missed.`;
+        else if (pct >= 40) msg = `${pct}% pass rate — keep practising the weaker areas.`;
+        else if (totN > 0) msg = `${pct}% pass rate — read the hints and try again.`;
+        document.getElementById("sc-msg").textContent = msg;
       }
 
       // ===== REAL PUTER.JS AI FEEDBACK (IMPROVED PROMPT) =====
@@ -2693,7 +2700,6 @@
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Analysing...';
         try {
-          // IMPROVED PROMPT – no grammar penalty, reward personal language
           const prompt = `You are a helpful UK student visa credibility interview coach. The student is applying to study at BPP University.
 
 Question: "Why have you chosen to study this programme at BPP University?"
@@ -2719,60 +2725,42 @@ Provide feedback in this EXACT JSON format (no other text):
 }
 
 Focus on: specificity about BPP, career alignment, realistic planning, and genuine intent.`;
-          const response = await puter.ai.chat(prompt, {
-            model: "gpt-4o-mini",
-          });
+          const response = await puter.ai.chat(prompt, { model: "gpt-4o-mini" });
           let jsonStr = response.message.content;
           const jsonMatch = jsonStr.match(/\{[\s\S]*\}/);
           if (jsonMatch) jsonStr = jsonMatch[0];
           const feedback = JSON.parse(jsonStr);
-          document.getElementById("feedbackScore").textContent =
-            `${feedback.score}/10`;
-          document.getElementById("feedbackTitle").textContent =
-            feedback.verdict;
+          document.getElementById("feedbackScore").textContent = `${feedback.score}/10`;
+          document.getElementById("feedbackTitle").textContent = feedback.verdict;
           document.getElementById("feedbackIcon").textContent = feedback.icon;
           const feedbackCard = document.getElementById("feedbackCard");
           if (feedback.score >= 7) {
             feedbackCard.className = "fb-pass p-5 rounded-xl mb-4";
-            document.getElementById("feedbackScore").className =
-              "score-num text-success";
+            document.getElementById("feedbackScore").className = "score-num text-success";
           } else if (feedback.score >= 5) {
             feedbackCard.className = "panel p-5 rounded-xl mb-4";
             feedbackCard.style.borderLeft = "4px solid #f59e0b";
-            document.getElementById("feedbackScore").className =
-              "score-num text-[#f59e0b]";
+            document.getElementById("feedbackScore").className = "score-num text-[#f59e0b]";
           } else {
             feedbackCard.className = "fb-fail p-5 rounded-xl mb-4";
-            document.getElementById("feedbackScore").className =
-              "score-num text-error";
+            document.getElementById("feedbackScore").className = "score-num text-error";
           }
-          document.getElementById("strengthsList").innerHTML =
-            feedback.strengths.map((s) => `<li>• ${s}</li>`).join("");
-          document.getElementById("suggestionsList").innerHTML =
-            feedback.suggestions.map((s) => `<li>• ${s}</li>`).join("");
-          document.getElementById("signalsList").innerHTML = feedback.signals
-            .map((sig) => `<li>• ${sig}</li>`)
-            .join("");
+          document.getElementById("strengthsList").innerHTML = feedback.strengths.map(s => `<li>• ${s}</li>`).join("");
+          document.getElementById("suggestionsList").innerHTML = feedback.suggestions.map(s => `<li>• ${s}</li>`).join("");
+          document.getElementById("signalsList").innerHTML = feedback.signals.map(sig => `<li>• ${sig}</li>`).join("");
 
-          // ✅ AUTO-SAVE TO SUPABASE (BPP)
+          // Save to Supabase
           if (typeof window.saveAIResponse === "function") {
             try {
               const questionId = "BPP_Q1";
-              const answerText =
-                document.getElementById("bpp-answer-input")?.value || "";
+              const answerText = document.getElementById("bpp-answer-input")?.value || "";
               const score = feedback.score;
-              const feedbackText =
-                feedback.strengths?.[0] || JSON.stringify(feedback);
-              window.saveAIResponse(
-                questionId,
-                answerText,
-                score,
-                feedbackText,
-              );
+              const feedbackText = feedback.strengths?.[0] || JSON.stringify(feedback);
+              window.saveAIResponse(questionId, answerText, score, feedbackText);
               console.log("✅ BPP AI Saved:", questionId, "| Score:", score);
-            } catch (err) {
-              console.warn("⚠️ BPP Save Skipped:", err.message);
-            }
+              // After saving, update the counters (in case this is a new question)
+              await restoreAIScores();
+            } catch (err) { console.warn("⚠️ BPP Save Skipped:", err.message); }
           }
 
           loading.style.display = "none";
@@ -2780,21 +2768,16 @@ Focus on: specificity about BPP, career alignment, realistic planning, and genui
         } catch (error) {
           console.error("AI Error:", error);
           document.getElementById("feedbackScore").textContent = "7.0/10";
-          document.getElementById("feedbackTitle").textContent =
-            "Good Response";
+          document.getElementById("feedbackTitle").textContent = "Good Response";
           document.getElementById("feedbackIcon").textContent = "thumb_up";
-          document.getElementById("strengthsList").innerHTML =
-            "<li>• Answer addresses the question</li><li>• Shows some research</li>";
-          document.getElementById("suggestionsList").innerHTML =
-            "<li>• Add more BPP-specific details</li>";
-          document.getElementById("signalsList").innerHTML =
-            "<li>• Demonstrates intent ✓</li><li>• Could be more specific</li>";
+          document.getElementById("strengthsList").innerHTML = "<li>• Answer addresses the question</li><li>• Shows some research</li>";
+          document.getElementById("suggestionsList").innerHTML = "<li>• Add more BPP-specific details</li>";
+          document.getElementById("signalsList").innerHTML = "<li>• Demonstrates intent ✓</li><li>• Could be more specific</li>";
           loading.style.display = "none";
           feedbackResult.classList.remove("hidden");
         } finally {
           btn.disabled = false;
-          btn.innerHTML =
-            '<span class="material-symbols-outlined text-sm">auto_awesome</span> Get AI Feedback';
+          btn.innerHTML = '<span class="material-symbols-outlined text-sm">auto_awesome</span> Get AI Feedback';
         }
       }
 
@@ -2809,32 +2792,31 @@ Focus on: specificity about BPP, career alignment, realistic planning, and genui
         document.getElementById("bpp-answer-input").value = "";
       }
 
-      // ===== FINAL DOMContentLoaded WITH CHECKLIST AUTO-SAVE & EMAIL LOGIC =====
+      // ===== INIT =====
       document.addEventListener("DOMContentLoaded", async function () {
         initTheme();
         updateProgress();
-
-        // Keyboard shortcut: Ctrl+D to toggle theme
+        // Keyboard shortcut
         document.addEventListener("keydown", (e) => {
-          if (e.ctrlKey && e.key === "d") {
-            e.preventDefault();
-            toggleTheme();
-          }
+          if (e.ctrlKey && e.key === "d") { e.preventDefault(); toggleTheme(); }
         });
-
-        // ✅ Checklist Auto-Save (using window.saveChecklistItem from app.js)
+        // Auto-select last course if any
+        const lastCourse = localStorage.getItem('last_course');
+        if (lastCourse && !currentCourse) selectCourse(lastCourse);
+        // Restore checklist and AI scores
+        await restoreChecklist();
+        await restoreAIScores();
+        // Setup checklist auto-save
         if (typeof window.saveChecklistItem === "function") {
           document.querySelectorAll(".check-box").forEach((cb, index) => {
             const checkItem = cb.closest(".check-item");
             if (checkItem && !checkItem.id) checkItem.id = `bpp_chk_${index}`;
             const itemId = checkItem ? checkItem.id : `bpp_chk_${index}`;
-            // Load saved state
+            // Load saved state (already done above, but ensure visual sync)
             window.loadSavedProgress?.().then((progress) => {
               if (progress?.checklist_status?.[itemId]) {
                 cb.classList.add("done");
-                const titleP = checkItem?.querySelector(
-                  ".flex-1 p:first-child",
-                );
+                const titleP = checkItem?.querySelector(".flex-1 p:first-child");
                 if (titleP) {
                   titleP.style.textDecoration = "line-through";
                   titleP.style.color = "var(--text-muted)";
@@ -2842,7 +2824,6 @@ Focus on: specificity about BPP, career alignment, realistic planning, and genui
                 updateProgress();
               }
             });
-            // Save on click
             cb.addEventListener("click", () => {
               cb.classList.toggle("done");
               const isChecked = cb.classList.contains("done");
@@ -2856,8 +2837,7 @@ Focus on: specificity about BPP, career alignment, realistic planning, and genui
             });
           });
         }
-
-        // ✅ "I'm Ready" Email Button
+        // Ready button email
         const readyBtn = document.getElementById("bpp-ready-btn");
         const readyStatus = document.getElementById("bpp-ready-status");
         if (readyBtn && typeof window.sendReadyEmail === "function") {
@@ -2867,27 +2847,15 @@ Focus on: specificity about BPP, career alignment, realistic planning, and genui
             const progress = await window.loadSavedProgress?.();
             const responses = progress?.ai_scores || {};
             const checklist = progress?.checklist_status || {};
-            const scores = Object.values(responses)
-              .map((s) => s.score)
-              .filter((n) => !isNaN(n));
-            const avg = scores.length
-              ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)
-              : "N/A";
-            const res = await window.sendReadyEmail?.(
-              responses,
-              checklist,
-              avg,
-              "BPP Student Ready",
-            );
+            const scores = Object.values(responses).map(s => s.score).filter(n => !isNaN(n));
+            const avg = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1) : "N/A";
+            const res = await window.sendReadyEmail?.(responses, checklist, avg, "BPP Student Ready");
             if (res?.success) {
               if (readyStatus) {
-                readyStatus.textContent =
-                  "✅ Submitted! Your advisor will contact you soon.";
-                readyStatus.className =
-                  "mt-3 text-sm font-medium text-green-600";
+                readyStatus.textContent = "✅ Submitted! Your advisor will contact you soon.";
+                readyStatus.className = "mt-3 text-sm font-medium text-green-600";
               }
-              readyBtn.innerHTML =
-                '<span class="material-symbols-outlined">verified</span> Sent';
+              readyBtn.innerHTML = '<span class="material-symbols-outlined">verified</span> Sent';
             } else {
               if (readyStatus) {
                 readyStatus.textContent = "⚠️ Failed to send. Try again.";
@@ -2898,9 +2866,7 @@ Focus on: specificity about BPP, career alignment, realistic planning, and genui
             }
           });
         } else if (readyBtn) {
-          readyBtn.addEventListener("click", () => {
-            alert("Email service not configured. Please contact support.");
-          });
+          readyBtn.addEventListener("click", () => alert("Email service not configured."));
         }
       });
     </script>
