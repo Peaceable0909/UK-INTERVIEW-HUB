@@ -131,26 +131,26 @@
   </style>
 </head>
 <body class="bg-background text-on-surface">
-  <!-- TopAppBar -->
-  <header class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl flex justify-between items-center px-6 py-4 max-w-full border-b border-surface-container">
-    <div class="flex items-center gap-2">
-      <span class="material-symbols-outlined text-primary text-3xl animate-rotate-slow">school</span>
-      <span class="text-xl font-extrabold text-primary font-headline tracking-tight">Hub</span>
-    </div>
-    <div class="auth-actions">
-      <div class="user-menu hidden" id="userMenu">
-        <div class="flex items-center gap-3">
-          <div class="user-avatar w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-sm font-bold" id="userAvatar">JS</div>
-          <span class="text-sm font-medium text-on-surface" id="userNameDisplay">John</span>
-          <a href="dashboard.html" class="text-sm text-primary hover:text-secondary transition">Dashboard</a>
-          <button class="bg-primary text-on-primary px-4 py-1.5 rounded-xl text-sm font-bold transition-all hover:bg-primary/90" id="logoutBtn">Sign Out</button>
-        </div>
+ <!-- TopAppBar (fixed header) -->
+<header class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl flex justify-between items-center px-6 py-3 max-w-full border-b border-surface-container">
+  <div class="flex items-center gap-2">
+    <span class="material-symbols-outlined text-primary text-3xl animate-rotate-slow">school</span>
+    <span class="text-xl font-extrabold text-primary font-headline tracking-tight">Hub</span>
+  </div>
+  <div class="auth-actions">
+    <div class="user-menu hidden" id="userMenu">
+      <div class="flex items-center gap-3">
+        <div class="user-avatar w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-sm font-bold" id="userAvatar">JS</div>
+        <span class="text-sm font-medium text-on-surface" id="userNameDisplay">John</span>
+        <a href="dashboard.html" class="text-sm text-primary hover:text-secondary transition">Dashboard</a>
+        <button class="bg-primary text-on-primary px-4 py-1.5 rounded-xl text-sm font-bold transition-all hover:bg-primary/90" id="logoutBtn">Sign Out</button>
       </div>
-      <button id="loginBtn" class="bg-primary text-on-primary px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 hover:bg-primary/90 hover:scale-105 active:scale-95 shadow-lg shadow-primary/10">
-        Student Login
-      </button>
     </div>
-  </header>
+    <button id="loginBtn" class="bg-primary text-on-primary px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 hover:bg-primary/90 hover:scale-105 active:scale-95 shadow-lg shadow-primary/10">
+      Student Login
+    </button>
+  </div>
+</header>
 
   <main class="pt-24 pb-12 px-6 overflow-x-hidden">
     <!-- Hero Section -->
