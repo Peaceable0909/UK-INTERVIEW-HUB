@@ -2754,9 +2754,9 @@ Focus on: specificity about BPP, career alignment, realistic planning, and genui
             try {
               const questionId = "BPP_Q1";
               const answerText = document.getElementById("bpp-answer-input")?.value || "";
-              const score = feedback.score;
+              const score = typeof feedback.score === "number" && feedback.score > 10 ? Math.round((feedback.score/10)*10)/10 : feedback.score;
               const feedbackText = feedback.strengths?.[0] || JSON.stringify(feedback);
-              window.saveAIResponse(questionId, answerText, score, feedbackText);
+              const saveResult = await window.saveAIResponse(questionId, answerText, score, feedbackText);
               console.log("✅ BPP AI Saved:", questionId, "| Score:", score);
               // After saving, update the counters (in case this is a new question)
               await restoreAIScores();
