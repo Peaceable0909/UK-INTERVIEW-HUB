@@ -2403,7 +2403,7 @@
               </div>
             </div>
 
-            <!-- Answer Input - FIXED ID -->
+            <!-- Answer Input -->
             <textarea
               class="sim-input mb-4"
               id="nl-answer-input"
@@ -2782,7 +2782,7 @@
     </div>
 
     <!-- ======================================================
-     JAVASCRIPT - NETHERLANDS EDITION WITH REAL AI + DARK MODE
+     JAVASCRIPT - NETHERLANDS EDITION WITH IMPROVED AI PROMPT
 ====================================================== -->
     <script>
       // ===== GLOBAL STATE =====
@@ -2821,45 +2821,20 @@
         document.getElementById("s-select").classList.remove("active");
         document.getElementById("s-main").classList.add("active");
 
-        // Set tab titles based on selection
         const titles = {
-          "full-guide": {
-            title: "Full Interview Guide",
-            subtitle: "All 10 Categories + IND Criteria",
-          },
-          "practice-ai": {
-            title: "AI Practice Mode",
-            subtitle: "Live Feedback Against Refusal Criteria",
-          },
-          "behavior-guide": {
-            title: "Perfect Behavior Guide",
-            subtitle: "9 Principles + 12 Warnings",
-          },
-          "refusal-samples": {
-            title: "Refusal Analysis",
-            subtitle: "Learn from Real IND Cases",
-          },
+          "full-guide": { title: "Full Interview Guide", subtitle: "All 10 Categories + IND Criteria" },
+          "practice-ai": { title: "AI Practice Mode", subtitle: "Live Feedback Against Refusal Criteria" },
+          "behavior-guide": { title: "Perfect Behavior Guide", subtitle: "9 Principles + 12 Warnings" },
+          "refusal-samples": { title: "Refusal Analysis", subtitle: "Learn from Real IND Cases" },
         };
 
         if (titles[prepId]) {
-          document.getElementById("tb-title").textContent =
-            titles[prepId].title;
-          document.getElementById("tb-subtitle").textContent =
-            titles[prepId].subtitle;
+          document.getElementById("tb-title").textContent = titles[prepId].title;
+          document.getElementById("tb-subtitle").textContent = titles[prepId].subtitle;
         }
 
-        // Navigate to appropriate tab
-        const tabMap = {
-          "full-guide": "questions",
-          "practice-ai": "practice",
-          "behavior-guide": "behavior",
-          "refusal-samples": "samples",
-        };
-
-        showTab(
-          tabMap[prepId] || "behavior",
-          "sl-" + (tabMap[prepId] || "behavior"),
-        );
+        const tabMap = { "full-guide": "questions", "practice-ai": "practice", "behavior-guide": "behavior", "refusal-samples": "samples" };
+        showTab(tabMap[prepId] || "behavior", "sl-" + (tabMap[prepId] || "behavior"));
       }
 
       function goBack() {
@@ -2867,60 +2842,38 @@
         document.getElementById("s-select").classList.add("active");
       }
 
-      // ===== TAB SWITCHING =====
       function showTab(tabId, linkId, isMobile = false) {
-        document
-          .querySelectorAll(".tc")
-          .forEach((el) => el.classList.remove("active"));
+        document.querySelectorAll(".tc").forEach((el) => el.classList.remove("active"));
         document.getElementById("tab-" + tabId).classList.add("active");
 
         if (!isMobile) {
-          document
-            .querySelectorAll(".side-link")
-            .forEach((el) => el.classList.remove("active"));
+          document.querySelectorAll(".side-link").forEach((el) => el.classList.remove("active"));
           document.getElementById(linkId).classList.add("active");
-          document
-            .querySelectorAll(".tab-btn")
-            .forEach((btn) => btn.classList.remove("active"));
+          document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
           const mobileId = "mt-" + tabId;
-          if (document.getElementById(mobileId)) {
-            document.getElementById(mobileId).classList.add("active");
-          }
+          if (document.getElementById(mobileId)) document.getElementById(mobileId).classList.add("active");
         } else {
-          document
-            .querySelectorAll(".tab-btn")
-            .forEach((btn) => btn.classList.remove("active"));
+          document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
           document.getElementById(linkId).classList.add("active");
-          document
-            .querySelectorAll(".side-link")
-            .forEach((el) => el.classList.remove("active"));
+          document.querySelectorAll(".side-link").forEach((el) => el.classList.remove("active"));
           const desktopId = "sl-" + tabId;
-          if (document.getElementById(desktopId)) {
-            document.getElementById(desktopId).classList.add("active");
-          }
+          if (document.getElementById(desktopId)) document.getElementById(desktopId).classList.add("active");
         }
         window.scrollTo(0, 0);
       }
 
-      // ===== ACCORDION & FILTERS =====
       function toggleAccordion(headerEl) {
         headerEl.parentElement.classList.toggle("open");
       }
 
       function filterQuestions(category, btn) {
-        document
-          .querySelectorAll(".filter-btn")
-          .forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
         document.querySelectorAll(".acc-item").forEach((item) => {
-          item.style.display =
-            category === "all" || item.dataset.category === category
-              ? "block"
-              : "none";
+          item.style.display = category === "all" || item.dataset.category === category ? "block" : "none";
         });
       }
 
-      // ===== CHECKLIST =====
       function toggleCheck(checkbox) {
         checkbox.classList.toggle("done");
         updateProgress();
@@ -2929,14 +2882,12 @@
       function updateProgress() {
         const total = 14;
         const checked = document.querySelectorAll(".check-box.done").length;
-        checklistProgress = checked;
         const percent = (checked / total) * 100;
         document.getElementById("progress-bar").style.width = percent + "%";
-        document.getElementById("progress-text").textContent =
-          `${checked}/${total}`;
+        document.getElementById("progress-text").textContent = `${checked}/${total}`;
       }
 
-      // ===== REAL PUTER.JS AI FEEDBACK - IND FOCUSED =====
+      // ===== IMPROVED AI PROMPT (no grammar penalty, rewards personal language) =====
       async function submitAnswer() {
         const input = document.getElementById("nl-answer-input");
         const answer = input.value.trim();
@@ -2958,90 +2909,67 @@
         btn.innerHTML = '<span class="spinner"></span> Analysing...';
 
         try {
-          // IND-focused prompt based on refusal criteria
-          const prompt = `You are a Netherlands IND credibility interview expert. Analyse this answer to: "Why have you chosen to study this programme in the Netherlands?"
-    
-    Student answer: "${answer}"
-    
-    Evaluate against IND genuine student criteria:
-    1. Does it show SPECIFIC academic reasons for Netherlands choice (not generic)?
-    2. Does it demonstrate RESEARCH DEPTH (modules, university specifics, Nuffic sources)?
-    3. Is there a CLEAR link between course and career goals?
-    4. Does it show INTENT TO RETURN HOME or pursue legal post-study options like Orientation Year (Zoekjaar)?
-    5. Is the answer PERSONAL and not copied/generic?
-    6. Does it acknowledge financial preparedness (~€12,000 study norm)?
-    
-    Provide feedback in this EXACT JSON format:
-    {
-      "score": number 1-10,
-      "verdict": "Strong Response" | "Good Response" | "Needs Improvement" | "High Refusal Risk",
-      "icon": "verified" | "thumb_up" | "warning" | "error",
-      "strengths": [2-3 specific strengths based on IND criteria],
-      "suggestions": [1-2 actionable improvements],
-      "signals": [3 IND signals with ✓ or ✗, e.g., "Specific academic intent ✓"]
-    }
-    
-    Be strict: generic answers like "Netherlands has good education" should score low.`;
+          // IMPROVED PROMPT: no grammar penalty, reward personal language
+          const prompt = `You are a helpful Netherlands IND credibility interview coach. The student is applying for a Dutch student visa.
 
-          const response = await puter.ai.chat(prompt, {
-            model: "gpt-4o-mini",
-          });
+Question: "Why have you chosen to study this programme in the Netherlands?"
 
-          // Parse JSON from AI response
+Student answer: "${answer}"
+
+IMPORTANT RULES:
+- Do NOT penalize punctuation, capitalization, or minor grammar errors.
+- Do NOT penalize spelling mistakes unless they make the answer unclear.
+- Value personal language like "I", "my", "me" – this shows genuine response.
+- Focus on whether the student demonstrates understanding of their course, university, and genuine intent to return home or use legal post-study options.
+- Reward specific details (module names, university specifics, company names, research depth).
+
+Provide feedback in this EXACT JSON format (no other text):
+{
+  "score": number between 1-10,
+  "verdict": "Strong Response" | "Good Response" | "Needs Improvement",
+  "icon": "verified" | "thumb_up" | "warning",
+  "strengths": [array of 2-3 specific strengths],
+  "suggestions": [array of 1-2 constructive suggestions],
+  "signals": [array of 3 credibility signals with ✓ or ✗]
+}
+
+Focus on: genuine intent, research depth, career alignment, and return plan.`;
+
+          const response = await puter.ai.chat(prompt, { model: "gpt-4o-mini" });
           let jsonStr = response.message.content;
           const jsonMatch = jsonStr.match(/\{[\s\S]*\}/);
           if (jsonMatch) jsonStr = jsonMatch[0];
-
           const feedback = JSON.parse(jsonStr);
 
           // Update UI
-          document.getElementById("feedbackScore").textContent =
-            `${feedback.score}/10`;
-          document.getElementById("feedbackTitle").textContent =
-            feedback.verdict;
+          document.getElementById("feedbackScore").textContent = `${feedback.score}/10`;
+          document.getElementById("feedbackTitle").textContent = feedback.verdict;
           document.getElementById("feedbackIcon").textContent = feedback.icon;
 
-          // Color-code feedback card
           const feedbackCard = document.getElementById("feedbackCard");
           if (feedback.score >= 8) {
             feedbackCard.className = "fb-pass p-5 rounded-xl mb-4";
-            document.getElementById("feedbackScore").className =
-              "score-num text-success";
+            document.getElementById("feedbackScore").className = "score-num text-success";
           } else if (feedback.score >= 6) {
             feedbackCard.className = "fb-warning p-5 rounded-xl mb-4";
-            document.getElementById("feedbackScore").className =
-              "score-num text-[#f59e0b]";
+            document.getElementById("feedbackScore").className = "score-num text-[#f59e0b]";
           } else {
             feedbackCard.className = "fb-fail p-5 rounded-xl mb-4";
-            document.getElementById("feedbackScore").className =
-              "score-num text-error";
+            document.getElementById("feedbackScore").className = "score-num text-error";
           }
 
-          // Populate lists
-          document.getElementById("strengthsList").innerHTML =
-            feedback.strengths.map((s) => `<li>• ${s}</li>`).join("");
-          document.getElementById("suggestionsList").innerHTML =
-            feedback.suggestions.map((s) => `<li>• ${s}</li>`).join("");
-          document.getElementById("signalsList").innerHTML = feedback.signals
-            .map((sig) => `<li>• ${sig}</li>`)
-            .join("");
+          document.getElementById("strengthsList").innerHTML = feedback.strengths.map(s => `<li>• ${s}</li>`).join("");
+          document.getElementById("suggestionsList").innerHTML = feedback.suggestions.map(s => `<li>• ${s}</li>`).join("");
+          document.getElementById("signalsList").innerHTML = feedback.signals.map(sig => `<li>• ${sig}</li>`).join("");
 
-          // ✅ AUTO-SAVE TO SUPABASE (NETHERLANDS)
+          // Auto-save to Supabase
           if (typeof window.saveAIResponse === "function") {
             try {
-              const questionId = "NL_Q1"; // Change if you have multiple questions
-              const answerText =
-                document.getElementById("nl-answer-input")?.value || "";
+              const questionId = "NL_Q1";
+              const answerText = document.getElementById("nl-answer-input")?.value || "";
               const score = feedback.score;
-              const feedbackText =
-                feedback.strengths?.[0] || JSON.stringify(feedback);
-
-              window.saveAIResponse(
-                questionId,
-                answerText,
-                score,
-                feedbackText,
-              );
+              const feedbackText = feedback.strengths?.[0] || JSON.stringify(feedback);
+              window.saveAIResponse(questionId, answerText, score, feedbackText);
               console.log("✅ NL AI Saved:", questionId, "| Score:", score);
             } catch (err) {
               console.warn("⚠️ NL Save Skipped:", err.message);
@@ -3052,24 +2980,17 @@
           feedbackResult.classList.remove("hidden");
         } catch (error) {
           console.error("AI Error:", error);
-          // Fallback feedback
           document.getElementById("feedbackScore").textContent = "6.0/10";
-          document.getElementById("feedbackTitle").textContent =
-            "Good Response";
+          document.getElementById("feedbackTitle").textContent = "Good Response";
           document.getElementById("feedbackIcon").textContent = "thumb_up";
-          document.getElementById("strengthsList").innerHTML =
-            "<li>• Answer addresses the question</li><li>• Shows some preparation</li>";
-          document.getElementById("suggestionsList").innerHTML =
-            "<li>• Add more Netherlands-specific academic reasons</li><li>• Include comparison with another country</li>";
-          document.getElementById("signalsList").innerHTML =
-            "<li>• Demonstrates intent ✓</li><li>• Could be more specific</li>";
-
+          document.getElementById("strengthsList").innerHTML = "<li>• Answer addresses the question</li><li>• Shows some preparation</li>";
+          document.getElementById("suggestionsList").innerHTML = "<li>• Add more Netherlands-specific academic reasons</li><li>• Include comparison with another country</li>";
+          document.getElementById("signalsList").innerHTML = "<li>• Demonstrates intent ✓</li><li>• Could be more specific</li>";
           loading.style.display = "none";
           feedbackResult.classList.remove("hidden");
         } finally {
           btn.disabled = false;
-          btn.innerHTML =
-            '<span class="material-symbols-outlined text-sm">auto_awesome</span> Get IND AI Feedback';
+          btn.innerHTML = '<span class="material-symbols-outlined text-sm">auto_awesome</span> Get IND AI Feedback';
         }
       }
 
@@ -3084,12 +3005,11 @@
         document.getElementById("nl-answer-input").value = "";
       }
 
-      // ===== FINAL DOMContentLoaded WITH CHECKLIST AUTO-SAVE & EMAIL LOGIC =====
+      // ===== INIT =====
       document.addEventListener("DOMContentLoaded", async function () {
         initTheme();
         updateProgress();
 
-        // Keyboard shortcut: Ctrl+D to toggle theme
         document.addEventListener("keydown", (e) => {
           if (e.ctrlKey && e.key === "d") {
             e.preventDefault();
@@ -3097,14 +3017,13 @@
           }
         });
 
-        // ✅ Checklist Auto-Save
+        // Checklist Auto-Save
         if (typeof window.saveChecklistItem === "function") {
           document.querySelectorAll(".check-box").forEach((cb, index) => {
             const checkItem = cb.closest(".check-item");
             if (checkItem && !checkItem.id) checkItem.id = `nl_chk_${index}`;
             const itemId = checkItem ? checkItem.id : `nl_chk_${index}`;
 
-            // Load saved state
             window.loadSavedProgress?.().then((progress) => {
               if (progress?.checklist_status?.[itemId]) {
                 cb.classList.add("done");
@@ -3117,15 +3036,12 @@
               }
             });
 
-            // Save on click
             cb.addEventListener("click", () => {
               cb.classList.toggle("done");
               const isChecked = cb.classList.contains("done");
               const titleSpan = checkItem?.querySelector(".font-medium");
               if (titleSpan) {
-                titleSpan.style.textDecoration = isChecked
-                  ? "line-through"
-                  : "";
+                titleSpan.style.textDecoration = isChecked ? "line-through" : "";
                 titleSpan.style.color = isChecked ? "var(--text-muted)" : "";
               }
               window.saveChecklistItem?.(itemId, isChecked);
@@ -3134,7 +3050,7 @@
           });
         }
 
-        // ✅ "I'm Ready" Email Button
+        // "I'm Ready" Email Button
         const readyBtn = document.getElementById("nl-ready-btn");
         const readyStatus = document.getElementById("nl-ready-status");
         if (readyBtn && typeof window.sendReadyEmail === "function") {
@@ -3144,27 +3060,15 @@
             const progress = await window.loadSavedProgress?.();
             const responses = progress?.ai_scores || {};
             const checklist = progress?.checklist_status || {};
-            const scores = Object.values(responses)
-              .map((s) => s.score)
-              .filter((n) => !isNaN(n));
-            const avg = scores.length
-              ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)
-              : "N/A";
-            const res = await window.sendReadyEmail?.(
-              responses,
-              checklist,
-              avg,
-              "Netherlands Student Ready",
-            );
+            const scores = Object.values(responses).map(s => s.score).filter(n => !isNaN(n));
+            const avg = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1) : "N/A";
+            const res = await window.sendReadyEmail?.(responses, checklist, avg, "Netherlands Student Ready");
             if (res?.success) {
               if (readyStatus) {
-                readyStatus.textContent =
-                  "✅ Submitted! Your advisor will contact you soon.";
-                readyStatus.className =
-                  "mt-3 text-sm font-medium text-green-600";
+                readyStatus.textContent = "✅ Submitted! Your advisor will contact you soon.";
+                readyStatus.className = "mt-3 text-sm font-medium text-green-600";
               }
-              readyBtn.innerHTML =
-                '<span class="material-symbols-outlined">verified</span> Sent';
+              readyBtn.innerHTML = '<span class="material-symbols-outlined">verified</span> Sent';
             } else {
               if (readyStatus) {
                 readyStatus.textContent = "⚠️ Failed to send. Try again.";
