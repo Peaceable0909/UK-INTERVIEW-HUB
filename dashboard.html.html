@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="/UK-INTERVIEW-HUB/">
+  <title>Student Dashboard – Interview Prep Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fb;
+    }
+    .card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      padding: 1.5rem;
+      transition: all 0.2s;
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #1e3a8a;
+    }
+    .badge-pass {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border-radius: 9999px;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-fail {
+      background: #ffebee;
+      color: #c62828;
+      border-radius: 9999px;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .response-item {
+      border-left: 3px solid #e2e8f0;
+      transition: all 0.2s;
+    }
+    .response-item:hover {
+      border-left-color: #3b82f6;
+      background: #f8fafc;
+    }
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .checklist-item:last-child {
+      border-bottom: none;
+    }
+    .checklist-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #cbd5e1;
+    }
+    .checklist-dot.completed {
+      background: #10b981;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Header with logout and back to hub -->
+  <header class="bg-white shadow-sm sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="text-gray-600 hover:text-gray-900 transition">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <h1 class="text-xl font-bold text-gray-900">My Progress Dashboard</h1>
+      </div>
+      <button id="logoutBtn" class="text-sm text-red-600 hover:text-red-800 font-medium flex items-center gap-1">
+        <span class="material-symbols-outlined text-base">logout</span>
+        Sign Out
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Loading state -->
+    <div id="loadingState" class="flex justify-center items-center py-20">
+      <div class="spinner border-4 border-gray-200 border-t-blue-600 rounded-full w-12 h-12 animate-spin"></div>
+      <span class="ml-3 text-gray-600">Loading your progress...</span>
+    </div>
+
+    <!-- Dashboard content (hidden initially) -->
+    <div id="dashboardContent" class="hidden space-y-8">
+      <!-- Student Info Card -->
+      <div class="card">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900" id="studentName">Student Name</h2>
+            <p class="text-gray-500" id="studentEmail">email@example.com</p>
+            <p class="text-sm text-gray-400 mt-1">Student ID: <span id="studentId">—</span></p>
+          </div>
+          <div class="flex gap-3">
+            <button id="emailReportBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition">
+              <span class="material-symbols-outlined text-base">email</span>
+              Email Full Report
+            </button>
+            <button id="downloadJsonBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition">
+              <span class="material-symbols-outlined text-base">download</span>
+              Download JSON
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="card text-center">
+          <span class="material-symbols-outlined text-4xl text-blue-600">quiz</span>
+          <p class="stat-number" id="totalResponses">0</p>
+          <p class="text-gray-500 text-sm">AI Responses</p>
+        </div>
+        <div class="card text-center">
+          <span class="material-symbols-outlined text-4xl text-green-600">trending_up</span>
+          <p class="stat-number" id="avgScore">0</p>
+          <p class="text-gray-500 text-sm">Average Score (/10)</p>
+        </div>
+        <div class="card text-center">
+          <span class="material-symbols-outlined text-4xl text-yellow-600">checklist</span>
+          <p class="stat-number" id="checklistDone">0</p>
+          <p class="text-gray-500 text-sm">Checklist Items Done</p>
+        </div>
+        <div class="card text-center">
+          <span class="material-symbols-outlined text-4xl text-purple-600">verified</span>
+          <p class="stat-number" id="passRate">0%</p>
+          <p class="text-gray-500 text-sm">Pass Rate (score ≥7)</p>
+        </div>
+      </div>
+
+      <!-- Checklist Summary (by category inferred from keys) -->
+      <div class="card">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="material-symbols-outlined text-gray-700">checklist</span>
+          <h3 class="text-lg font-semibold">Checklist Items</h3>
+          <span class="text-sm text-gray-400 ml-auto" id="checklistSubtitle">0 items</span>
+        </div>
+        <div id="checklistList" class="max-h-80 overflow-y-auto">
+          <!-- Dynamically filled -->
+        </div>
+      </div>
+
+      <!-- AI Responses Table -->
+      <div class="card">
+        <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-gray-700">chat</span>
+            <h3 class="text-lg font-semibold">Your Practice Responses</h3>
+          </div>
+          <div class="flex gap-2">
+            <input type="text" id="searchInput" placeholder="Search by question..." class="border rounded-lg px-3 py-1 text-sm w-48">
+            <select id="filterScore" class="border rounded-lg px-2 py-1 text-sm">
+              <option value="all">All scores</option>
+              <option value="pass">Pass (≥7)</option>
+              <option value="fail">Needs work (<7)</option>
+            </select>
+          </div>
+        </div>
+        <div id="responsesList" class="space-y-3 max-h-96 overflow-y-auto">
+          <!-- Dynamically filled -->
+        </div>
+        <p id="noResponsesMsg" class="text-gray-400 text-center py-8 hidden">No practice responses yet. Start practicing on any university page!</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Supabase + EmailJS + app.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    // Helper: spin animation style
+    const style = document.createElement('style');
+    style.textContent = `
+      .spinner { border: 4px solid #f3f4f6; border-top-color: #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .animate-spin { animation: spin 1s linear infinite; }
+    `;
+    document.head.appendChild(style);
+
+    // DOM elements
+    const loadingDiv = document.getElementById('loadingState');
+    const dashboardDiv = document.getElementById('dashboardContent');
+    const studentNameSpan = document.getElementById('studentName');
+    const studentEmailSpan = document.getElementById('studentEmail');
+    const studentIdSpan = document.getElementById('studentId');
+    const totalResponsesSpan = document.getElementById('totalResponses');
+    const avgScoreSpan = document.getElementById('avgScore');
+    const checklistDoneSpan = document.getElementById('checklistDone');
+    const passRateSpan = document.getElementById('passRate');
+    const checklistListDiv = document.getElementById('checklistList');
+    const responsesListDiv = document.getElementById('responsesList');
+    const noResponsesMsg = document.getElementById('noResponsesMsg');
+    const searchInput = document.getElementById('searchInput');
+    const filterScoreSelect = document.getElementById('filterScore');
+    const emailReportBtn = document.getElementById('emailReportBtn');
+    const downloadJsonBtn = document.getElementById('downloadJsonBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const checklistSubtitle = document.getElementById('checklistSubtitle');
+
+    let currentProgress = null;
+    let currentStudent = null;
+
+    // Helper to check authentication
+    function checkAuth() {
+      const student = window.getCurrentStudent();
+      if (!student) {
+        window.location.href = 'index.html';
+        return null;
+      }
+      return student;
+    }
+
+    // Helper to convert checklist keys into readable names
+    function formatChecklistKey(key) {
+      // e.g., "bpp_chk_0" -> "BPP: Watch training video"
+      const parts = key.split('_');
+      const uni = parts[0]?.toUpperCase() || '';
+      const index = parts[2] || '';
+      // We'll map some common patterns; otherwise show raw key
+      const knownPatterns = {
+        'Watch the full training video': 'Watch the full training video',
+        'Research your specific BPP campus': 'Research your specific BPP campus',
+        'Review your CAS statement thoroughly': 'Review your CAS statement thoroughly',
+        'Prepare your "Why BPP?" answer': 'Prepare your "Why BPP?" answer',
+        'Practice 3+ questions aloud': 'Practice 3+ questions aloud',
+        'Prepare documents for the call': 'Prepare documents for the call',
+        'Test your tech setup': 'Test your tech setup',
+        'Choose a quiet, well-lit space': 'Choose a quiet, well-lit space',
+        'Prepare questions to ask': 'Prepare questions to ask',
+        'Plan your outfit': 'Plan your outfit',
+        'Get good rest the night before': 'Get good rest the night before',
+        'Log in 10 minutes early': 'Log in 10 minutes early',
+      };
+      // Try to extract from known descriptions if stored; else show key
+      return knownPatterns[key] || key;
+    }
+
+    // Render checklist summary
+    function renderChecklist(checklistStatus) {
+      if (!checklistStatus || Object.keys(checklistStatus).length === 0) {
+        checklistListDiv.innerHTML = '<div class="text-gray-400 text-sm py-4">No checklist items saved yet.</div>';
+        checklistSubtitle.textContent = '0 items';
+        return;
+      }
+      const items = Object.entries(checklistStatus);
+      const doneCount = items.filter(([, done]) => done === true).length;
+      checklistDoneSpan.textContent = doneCount;
+      checklistSubtitle.textContent = `${doneCount} of ${items.length} items`;
+      
+      const html = items.map(([key, done]) => `
+        <div class="checklist-item">
+          <div class="checklist-dot ${done ? 'completed' : ''}"></div>
+          <span class="text-sm ${done ? 'text-gray-700 line-through' : 'text-gray-800'}">${formatChecklistKey(key)}</span>
+          <span class="ml-auto text-xs ${done ? 'text-green-600' : 'text-gray-400'}">${done ? '✓ Completed' : 'Pending'}</span>
+        </div>
+      `).join('');
+      checklistListDiv.innerHTML = html;
+    }
+
+    // Render AI responses with filtering
+    function renderResponses(responses, searchTerm = '', scoreFilter = 'all') {
+      if (!responses || Object.keys(responses).length === 0) {
+        responsesListDiv.innerHTML = '';
+        noResponsesMsg.classList.remove('hidden');
+        totalResponsesSpan.textContent = '0';
+        avgScoreSpan.textContent = '0';
+        passRateSpan.textContent = '0%';
+        return;
+      }
+      noResponsesMsg.classList.add('hidden');
+      
+      let entries = Object.entries(responses);
+      // Apply search filter
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+        entries = entries.filter(([qId, data]) => qId.toLowerCase().includes(term) || (data.answer && data.answer.toLowerCase().includes(term)));
+      }
+      
+      // Build array for stats
+      let scores = [];
+      let passCount = 0;
+      const displayEntries = [];
+      for (const [qId, data] of entries) {
+        const score = data.score;
+        if (typeof score === 'number') {
+          scores.push(score);
+          if (score >= 7) passCount++;
+        }
+        // Apply score filter
+        if (scoreFilter === 'pass' && score < 7) continue;
+        if (scoreFilter === 'fail' && score >= 7) continue;
+        displayEntries.push([qId, data]);
+      }
+      
+      const total = scores.length;
+      const avg = total ? (scores.reduce((a,b)=>a+b,0)/total).toFixed(1) : '0';
+      const passRate = total ? Math.round((passCount/total)*100) : 0;
+      totalResponsesSpan.textContent = total;
+      avgScoreSpan.textContent = avg;
+      passRateSpan.textContent = `${passRate}%`;
+      
+      if (displayEntries.length === 0) {
+        responsesListDiv.innerHTML = '<div class="text-gray-400 text-sm py-4 text-center">No responses match your filters.</div>';
+        return;
+      }
+      
+      const html = displayEntries.map(([qId, data]) => {
+        const score = data.score ?? '—';
+        const scoreNum = typeof score === 'number' ? score : 0;
+        const pass = scoreNum >= 7;
+        const answerPreview = data.answer ? (data.answer.length > 120 ? data.answer.substring(0, 120) + '…' : data.answer) : 'No answer saved';
+        const feedback = data.feedback || (data.summary || '');
+        return `
+          <div class="response-item border-l-4 border-gray-200 p-4 rounded-r-lg bg-white shadow-sm">
+            <div class="flex justify-between items-start flex-wrap gap-2">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-xs font-mono text-gray-400">${qId}</span>
+                  <span class="${pass ? 'badge-pass' : 'badge-fail'}">${pass ? 'Pass' : 'Needs Work'}</span>
+                  <span class="text-sm font-bold">Score: ${score}/10</span>
+                </div>
+                <p class="text-gray-800 text-sm"><strong>Your answer:</strong> ${escapeHtml(answerPreview)}</p>
+                ${feedback ? `<p class="text-gray-500 text-xs mt-1"><strong>Feedback:</strong> ${escapeHtml(feedback.substring(0, 150))}${feedback.length > 150 ? '…' : ''}</p>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      responsesListDiv.innerHTML = html;
+    }
+    
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
+
+    // Load all data from Supabase via app.js globals
+    async function loadDashboard() {
+      const student = checkAuth();
+      if (!student) return;
+      currentStudent = student;
+      studentNameSpan.textContent = student.name || 'Student';
+      studentEmailSpan.textContent = student.email || '';
+      studentIdSpan.textContent = student.student_id || 'Not set';
+      
+      const progress = await window.loadSavedProgress();
+      if (!progress) {
+        console.warn('No progress data found');
+        currentProgress = { checklist_status: {}, ai_scores: {} };
+      } else {
+        currentProgress = progress;
+      }
+      
+      // Extract checklist and AI scores
+      const checklist = currentProgress.checklist_status || {};
+      const aiScores = currentProgress.ai_scores || {};
+      
+      renderChecklist(checklist);
+      renderResponses(aiScores, searchInput.value, filterScoreSelect.value);
+      
+      loadingDiv.classList.add('hidden');
+      dashboardDiv.classList.remove('hidden');
+    }
+    
+    // Email full report using existing sendReadyEmail function but enhanced
+    async function sendFullReport() {
+      const student = currentStudent;
+      if (!student) return;
+      const progress = currentProgress || {};
+      const responses = progress.ai_scores || {};
+      const checklist = progress.checklist_status || {};
+      const scores = Object.values(responses).map(s => s.score).filter(n => typeof n === 'number');
+      const avg = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1) : 'N/A';
+      const passCount = scores.filter(s => s >= 7).length;
+      const passRate = scores.length ? Math.round((passCount/scores.length)*100) : 0;
+      
+      // Format a detailed message
+      const message = `Student: ${student.name} (ID: ${student.student_id || 'N/A'})
+Email: ${student.email}
+Date: ${new Date().toLocaleString()}
+Total responses: ${scores.length}
+Average score: ${avg}/10
+Pass rate: ${passRate}%
+Checklist completed: ${Object.values(checklist).filter(v=>v===true).length}/${Object.keys(checklist).length} items
+
+This is a full progress report requested from the dashboard.`;
+      
+      const result = await window.sendReadyEmail(responses, checklist, avg, message);
+      if (result?.success) {
+        alert('✅ Report sent successfully! The advisor will review your progress.');
+      } else {
+        alert('❌ Failed to send email. Please try again later.');
+      }
+    }
+    
+    // Download JSON of all progress
+    function downloadJSON() {
+      const student = currentStudent;
+      const data = {
+        student: student,
+        progress: currentProgress,
+        exportedAt: new Date().toISOString()
+      };
+      const jsonStr = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonStr], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `interview_progress_${student.student_id || 'student'}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+    
+    // Event listeners
+    searchInput.addEventListener('input', () => {
+      if (currentProgress) {
+        renderResponses(currentProgress.ai_scores || {}, searchInput.value, filterScoreSelect.value);
+      }
+    });
+    filterScoreSelect.addEventListener('change', () => {
+      if (currentProgress) {
+        renderResponses(currentProgress.ai_scores || {}, searchInput.value, filterScoreSelect.value);
+      }
+    });
+    emailReportBtn.addEventListener('click', sendFullReport);
+    downloadJsonBtn.addEventListener('click', downloadJSON);
+    logoutBtn.addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      localStorage.removeItem('student');
+      localStorage.removeItem('selected_university');
+      window.location.href = 'index.html';
+    });
+    
+    // Initial load
+    loadDashboard();
+  </script>
+</body>
+</html>
