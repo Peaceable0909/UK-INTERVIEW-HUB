@@ -2389,11 +2389,10 @@
             <!-- Question Display -->
             <div class="panel p-5 mb-6">
               <div class="flex items-start gap-3">
-                <span class="q-num">Q1</span>
+                <span class="q-num" id="nl-question-num">Q1</span>
                 <div>
-                  <p class="font-bold text-base mb-1">
-                    Why have you chosen to study this programme in the
-                    Netherlands?
+                  <p class="font-bold text-base mb-1" id="nl-question-text">
+                    Why have you chosen to study this programme in the Netherlands?
                   </p>
                   <p class="text-xs text-muted">
                     Tip: Be specific about academic reasons, not just logistics.
@@ -2912,7 +2911,7 @@
           // IMPROVED PROMPT: no grammar penalty, reward personal language
           const prompt = `You are a helpful Netherlands IND credibility interview coach. The student is applying for a Dutch student visa.
 
-Question: "Why have you chosen to study this programme in the Netherlands?"
+Question: "${document.getElementById('nl-question-text')?.textContent || 'Why have you chosen to study this programme in the Netherlands?'}"
 
 Student answer: "${answer}"
 
@@ -2965,11 +2964,11 @@ Focus on: genuine intent, research depth, career alignment, and return plan.`;
           // Auto-save to Supabase
           if (typeof window.saveAIResponse === "function") {
             try {
-              const questionId = "NL_Q1";
+              const questionId = window._currentNLQuestionId || "NL_Q1";
               const answerText = document.getElementById("nl-answer-input")?.value || "";
               const score = feedback.score;
               const feedbackText = feedback.strengths?.[0] || JSON.stringify(feedback);
-              window.saveAIResponse(questionId, answerText, score, feedbackText);
+              const saveResult = await window.saveAIResponse(questionId, answerText, score, feedbackText);
               console.log("✅ NL AI Saved:", questionId, "| Score:", score);
             } catch (err) {
               console.warn("⚠️ NL Save Skipped:", err.message);
@@ -2994,10 +2993,31 @@ Focus on: genuine intent, research depth, career alignment, and return plan.`;
         }
       }
 
-      function nextQuestion() {
-        document.getElementById("feedback-area").classList.add("hidden");
+      const NL_QUESTIONS = [
+        { id: "NL_Q1", text: "Why have you chosen to study this programme in the Netherlands?", tip: "Be specific about the university, course content, and why the Netherlands." },
+        { id: "NL_Q2", text: "Why did you choose this specific Dutch university over others?", tip: "Name specific reasons: programme reputation, language of instruction, ranking, location." },
+        { id: "NL_Q3", text: "What are your plans after completing your studies?", tip: "Describe a clear career plan. Show whether you will use the orientation year visa or return home." },
+        { id: "NL_Q4", text: "How will you fund your tuition fees and living costs in the Netherlands?", tip: "Name your funding source and show you understand the total costs involved." },
+        { id: "NL_Q5", text: "What is the language of instruction for your course and how proficient are you?", tip: "State the language clearly. If English, mention your English qualification score." },
+        { id: "NL_Q6", text: "What is the exact name of your course and how long is it?", tip: "State the full course title and duration precisely." },
+        { id: "NL_Q7", text: "Do you have any family or connections in the Netherlands?", tip: "Answer honestly. Connections are not automatically a problem but must be explained." },
+        { id: "NL_Q8", text: "What ties do you have to your home country?", tip: "Mention family, property, job offers, or business interests that confirm your intent to return or stay legally." },
+      ];
+      let currentNLIndex = 0;
+
+      function loadNLQuestion(index) {
+        const q = NL_QUESTIONS[index];
+        document.getElementById("nl-question-text").textContent = q.text;
+        document.getElementById("nl-question-tip").textContent = "Tip: " + q.tip;
+        document.getElementById("nl-question-num").textContent = "Q" + (index + 1);
         document.getElementById("nl-answer-input").value = "";
-        alert("Next question loaded! (Demo mode)");
+        document.getElementById("feedback-area").classList.add("hidden");
+        window._currentNLQuestionId = q.id;
+      }
+
+      function nextQuestion() {
+        currentNLIndex = (currentNLIndex + 1) % NL_QUESTIONS.length;
+        loadNLQuestion(currentNLIndex);
       }
 
       function resetPractice() {
@@ -3009,6 +3029,7 @@ Focus on: genuine intent, research depth, career alignment, and return plan.`;
       document.addEventListener("DOMContentLoaded", async function () {
         initTheme();
         updateProgress();
+        loadNLQuestion(0);
 
         document.addEventListener("keydown", (e) => {
           if (e.ctrlKey && e.key === "d") {
@@ -3044,7 +3065,7 @@ Focus on: genuine intent, research depth, career alignment, and return plan.`;
                 titleSpan.style.textDecoration = isChecked ? "line-through" : "";
                 titleSpan.style.color = isChecked ? "var(--text-muted)" : "";
               }
-              window.saveChecklistItem?.(itemId, isChecked);
+              await window.saveChecklistItem?.(itemId, isChecked);
               updateProgress();
             });
           });
@@ -3080,7 +3101,7 @@ Focus on: genuine intent, research depth, career alignment, and return plan.`;
           });
         } else if (readyBtn) {
           readyBtn.addEventListener("click", () => {
-            alert("Email service not configured. Please contact support.");
+            alert("Please make sure you are logged in and try again.");
           });
         }
       });
