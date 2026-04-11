@@ -1,1592 +1,483 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <base href="/UK-INTERVIEW-HUB/" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <title>UK University Interview Prep Hub</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <style>
-      /* ===== CSS VARIABLES & RESET ===== */
-      :root {
-        --navy: #1e3a8a;
-        --navy-dark: #172554;
-        --navy-light: #3b82f6;
-        --red: #dc2626;
-        --red-bright: #ef4444;
-        --red-light: #f87171;
-        --white: #ffffff;
-        --gray-50: #f9fafb;
-        --gray-100: #f3f4f6;
-        --gray-200: #e5e7eb;
-        --gray-300: #d1d5db;
-        --gray-700: #374151;
-        --gray-900: #111827;
-        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-        --shadow:
-          0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        --shadow-lg:
-          0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        --shadow-xl:
-          0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-        --radius: 16px;
-        --radius-lg: 24px;
-        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      html {
-        scroll-behavior: smooth;
-        -webkit-text-size-adjust: 100%;
-      }
-
-      body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-          Cantarell, sans-serif;
-        background: linear-gradient(
-          135deg,
-          var(--gray-50) 0%,
-          var(--white) 100%
-        );
-        color: var(--gray-900);
-        line-height: 1.6;
-        overflow-x: hidden;
-        min-height: 100vh;
-      }
-
-      /* ===== ANIMATIONS ===== */
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      @keyframes float {
-        0%,
-        100% {
-          transform: translateY(0);
-        }
-        50% {
-          transform: translateY(-10px);
-        }
-      }
-
-      @keyframes pulse-red {
-        0%,
-        100% {
-          box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
-        }
-        50% {
-          box-shadow: 0 0 0 12px rgba(220, 38, 38, 0);
-        }
-      }
-
-      @keyframes gradient-shift {
-        0% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        100% {
-          background-position: 0% 50%;
-        }
-      }
-
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      .animate-fade-in {
-        animation: fadeIn 0.6s ease-out forwards;
-      }
-
-      .animate-float {
-        animation: float 3s ease-in-out infinite;
-      }
-
-      .animate-pulse-red {
-        animation: pulse-red 2s infinite;
-      }
-
-      .animate-gradient {
-        background: linear-gradient(
-          -45deg,
-          var(--navy),
-          var(--red),
-          var(--navy-light),
-          var(--red-bright)
-        );
-        background-size: 400% 400%;
-        animation: gradient-shift 8s ease infinite;
-      }
-
-      /* ===== UTILITIES ===== */
-      .container {
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-      }
-
-      .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-      }
-
-      .skip-link {
-        position: absolute;
-        top: -40px;
-        left: 0;
-        background: var(--navy);
-        color: var(--white);
-        padding: 0.5rem 1rem;
-        z-index: 100;
-        transition: var(--transition);
-      }
-
-      .skip-link:focus {
-        top: 0;
-      }
-
-      /* ===== HEADER ===== */
-      header {
-        background: var(--white);
-        box-shadow: var(--shadow);
-        position: sticky;
-        top: 0;
-        z-index: 50;
-        padding: 1rem 0;
-      }
-
-      .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-      }
-
-      .logo {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        text-decoration: none;
-        color: var(--navy);
-        font-weight: 700;
-        font-size: 1.25rem;
-      }
-
-      .logo-icon {
-        width: 36px;
-        height: 36px;
-        background: linear-gradient(135deg, var(--navy), var(--red));
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--white);
-        font-size: 1.1rem;
-      }
-
-      .auth-actions {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-      }
-
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 0.75rem 1.5rem;
-        border-radius: 9999px;
-        font-weight: 600;
-        font-size: 0.95rem;
-        text-decoration: none;
-        cursor: pointer;
-        transition: var(--transition);
-        border: none;
-        white-space: nowrap;
-      }
-
-      .btn-primary {
-        background: linear-gradient(135deg, var(--navy), var(--navy-dark));
-        color: var(--white);
-        box-shadow: var(--shadow);
-      }
-
-      .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-lg);
-        background: linear-gradient(135deg, var(--navy-dark), #0f172a);
-      }
-
-      .btn-outline {
-        background: transparent;
-        border: 2px solid var(--navy);
-        color: var(--navy);
-      }
-
-      .btn-outline:hover {
-        background: var(--navy);
-        color: var(--white);
-      }
-
-      .btn-red {
-        background: linear-gradient(135deg, var(--red), var(--red-bright));
-        color: var(--white);
-        box-shadow: 0 4px 14px rgba(220, 38, 38, 0.4);
-      }
-
-      .btn-red:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6);
-      }
-
-      .btn:active {
-        transform: translateY(0);
-      }
-
-      .btn:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
-      }
-
-      .user-menu {
-        display: none;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.5rem 1rem;
-        background: var(--gray-100);
-        border-radius: 9999px;
-        font-weight: 500;
-      }
-
-      .user-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--navy), var(--red));
-        color: var(--white);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        font-size: 0.9rem;
-      }
-
-      /* ===== HERO SECTION ===== */
-      .hero {
-        padding: 3rem 0 2rem;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .hero::before {
-        content: "";
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(
-          circle,
-          rgba(30, 58, 138, 0.08) 0%,
-          transparent 70%
-        );
-        z-index: -1;
-      }
-
-      .hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        background: rgba(220, 38, 38, 0.1);
-        color: var(--red);
-        border-radius: 9999px;
-        font-size: 0.875rem;
-        font-weight: 600;
-        margin-bottom: 1.5rem;
-        animation: fadeIn 0.8s ease-out;
-      }
-
-      .hero-title {
-        font-size: clamp(1.75rem, 5vw, 2.5rem);
-        font-weight: 800;
-        color: var(--navy);
-        margin-bottom: 1rem;
-        line-height: 1.2;
-        animation: fadeIn 0.9s ease-out;
-      }
-
-      .hero-subtitle {
-        font-size: clamp(1rem, 2.5vw, 1.25rem);
-        color: var(--gray-700);
-        max-width: 600px;
-        margin: 0 auto 2rem;
-        animation: fadeIn 1s ease-out;
-      }
-
-      .hero-cta {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1rem;
-        animation: fadeIn 1.1s ease-out;
-      }
-
-      .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-        margin-top: 3rem;
-        animation: fadeIn 1.2s ease-out;
-      }
-
-      .feature-card {
-        background: var(--white);
-        padding: 1.5rem;
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        text-align: center;
-        transition: var(--transition);
-        border: 1px solid var(--gray-200);
-      }
-
-      .feature-card:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--navy-light);
-      }
-
-      .feature-icon {
-        width: 48px;
-        height: 48px;
-        margin: 0 auto 1rem;
-        background: linear-gradient(
-          135deg,
-          rgba(30, 58, 138, 0.1),
-          rgba(220, 38, 38, 0.1)
-        );
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--navy);
-        font-size: 1.25rem;
-      }
-
-      .feature-title {
-        font-weight: 600;
-        color: var(--navy);
-        margin-bottom: 0.5rem;
-      }
-
-      .feature-desc {
-        font-size: 0.9rem;
-        color: var(--gray-700);
-      }
-
-      /* ===== UNIVERSITIES GRID ===== */
-      .universities-section {
-        padding: 2rem 0 4rem;
-      }
-
-      .section-header {
-        text-align: center;
-        margin-bottom: 2.5rem;
-      }
-
-      .section-title {
-        font-size: clamp(1.5rem, 4vw, 2rem);
-        font-weight: 700;
-        color: var(--navy);
-        margin-bottom: 0.75rem;
-      }
-
-      .section-subtitle {
-        color: var(--gray-700);
-        max-width: 600px;
-        margin: 0 auto;
-      }
-
-      .universities-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.5rem;
-      }
-
-      .uni-card {
-        background: var(--white);
-        border-radius: var(--radius-lg);
-        overflow: hidden;
-        box-shadow: var(--shadow);
-        transition: var(--transition-slow);
-        border: 1px solid var(--gray-200);
-        display: flex;
-        flex-direction: column;
-        position: relative;
-      }
-
-      .uni-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, var(--navy), var(--red));
-        opacity: 0;
-        transition: var(--transition);
-      }
-
-      .uni-card:hover {
-        transform: translateY(-6px);
-        box-shadow: var(--shadow-xl);
-        border-color: var(--navy-light);
-      }
-
-      .uni-card:hover::before {
-        opacity: 1;
-      }
-
-      .uni-badge {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        padding: 0.35rem 0.85rem;
-        background: var(--red);
-        color: var(--white);
-        border-radius: 9999px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        z-index: 2;
-      }
-
-      .uni-content {
-        padding: 1.75rem;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .uni-icon {
-        width: 56px;
-        height: 56px;
-        background: linear-gradient(135deg, var(--navy), var(--navy-light));
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--white);
-        font-size: 1.5rem;
-        margin-bottom: 1.25rem;
-        flex-shrink: 0;
-      }
-
-      .uni-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--navy);
-        margin-bottom: 0.5rem;
-      }
-
-      .uni-desc {
-        color: var(--gray-700);
-        font-size: 0.95rem;
-        margin-bottom: 1.5rem;
-        flex: 1;
-      }
-
-      .uni-meta {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--gray-700);
-        font-size: 0.9rem;
-        margin-bottom: 1.25rem;
-        flex-wrap: wrap;
-      }
-
-      .uni-meta i {
-        color: var(--navy-light);
-        font-size: 0.85rem;
-      }
-
-      .start-training {
-        width: 100%;
-        justify-content: center;
-        padding: 0.875rem;
-        font-weight: 600;
-        background: linear-gradient(135deg, var(--navy), var(--navy-dark));
-        color: var(--white);
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: var(--transition);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        text-decoration: none;
-        margin-top: auto;
-      }
-
-      .start-training:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(30, 58, 138, 0.3);
-        background: linear-gradient(135deg, var(--navy-dark), #0f172a);
-      }
-
-      .start-training i {
-        transition: var(--transition);
-      }
-
-      .start-training:hover i {
-        transform: translateX(4px);
-      }
-
-      /* ===== LOGIN MODAL ===== */
-      .login-modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        z-index: 9999;
-        align-items: center;
-        justify-content: center;
-        padding: 1rem;
-        animation: fadeIn 0.3s ease-out;
-      }
-
-      .modal-content {
-        background: var(--white);
-        border-radius: var(--radius-lg);
-        padding: 2rem;
-        max-width: 440px;
-        width: 100%;
-        box-shadow: var(--shadow-xl);
-        position: relative;
-        animation: fadeIn 0.4s ease-out;
-      }
-
-      .modal-close {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        color: var(--gray-500);
-        cursor: pointer;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: var(--transition);
-      }
-
-      .modal-close:hover {
-        background: var(--gray-100);
-        color: var(--gray-900);
-      }
-
-      .modal-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--navy);
-        margin-bottom: 1.5rem;
-        text-align: center;
-      }
-
-      .form-group {
-        margin-bottom: 1.25rem;
-      }
-
-      .form-label {
-        display: block;
-        font-weight: 500;
-        color: var(--gray-700);
-        margin-bottom: 0.5rem;
-        font-size: 0.95rem;
-      }
-
-      .form-input {
-        width: 100%;
-        padding: 0.875rem 1rem;
-        border: 2px solid var(--gray-200);
-        border-radius: 12px;
-        font-size: 1rem;
-        transition: var(--transition);
-        background: var(--white);
-      }
-
-      .form-input:focus {
-        outline: none;
-        border-color: var(--navy-light);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-      }
-
-      .form-input::placeholder {
-        color: var(--gray-400);
-      }
-
-      .form-toggle {
-        text-align: center;
-        margin: 1rem 0;
-        color: var(--gray-600);
-        font-size: 0.95rem;
-      }
-
-      .form-toggle-btn {
-        background: none;
-        border: none;
-        color: var(--red);
-        font-weight: 600;
-        cursor: pointer;
-        padding: 0;
-        font-size: 0.95rem;
-      }
-
-      .form-toggle-btn:hover {
-        text-decoration: underline;
-      }
-
-      .form-error {
-        color: var(--red);
-        font-size: 0.9rem;
-        text-align: center;
-        margin: 0.75rem 0;
-        min-height: 1.25rem;
-      }
-
-      .modal-footer {
-        text-align: center;
-        margin-top: 1.5rem;
-        font-size: 0.85rem;
-        color: var(--gray-500);
-      }
-
-      .modal-footer a {
-        color: var(--navy);
-        text-decoration: none;
-        font-weight: 500;
-      }
-
-      .modal-footer a:hover {
-        text-decoration: underline;
-      }
-
-      /* ===== AUTH SUCCESS OVERLAY ===== */
-      .auth-success {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: var(--white);
-        z-index: 9998;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 2rem;
-        animation: fadeIn 0.4s ease-out;
-      }
-
-      .success-icon {
-        width: 80px;
-        height: 80px;
-        background: linear-gradient(135deg, var(--red), var(--red-bright));
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--white);
-        font-size: 2.5rem;
-        margin: 0 auto 1.5rem;
-        animation: float 2s ease-in-out infinite;
-      }
-
-      .success-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--navy);
-        margin-bottom: 0.5rem;
-      }
-
-      .success-text {
-        color: var(--gray-700);
-        margin-bottom: 2rem;
-        max-width: 400px;
-      }
-
-      .spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid var(--gray-200);
-        border-top-color: var(--navy);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 0 auto;
-      }
-
-      /* ===== FOOTER ===== */
-      footer {
-        background: var(--navy);
-        color: var(--white);
-        padding: 2.5rem 0 1.5rem;
-        margin-top: 2rem;
-      }
-
-      .footer-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 1rem;
-      }
-
-      .footer-logo {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-weight: 700;
-        font-size: 1.1rem;
-        color: var(--white);
-        text-decoration: none;
-      }
-
-      .footer-text {
-        color: rgba(255, 255, 255, 0.85);
-        font-size: 0.95rem;
-        max-width: 500px;
-      }
-
-      .footer-links {
-        display: flex;
-        gap: 1.5rem;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin-top: 0.5rem;
-      }
-
-      .footer-links a {
-        color: rgba(255, 255, 255, 0.9);
-        text-decoration: none;
-        font-size: 0.9rem;
-        transition: var(--transition);
-      }
-
-      .footer-links a:hover {
-        color: var(--red-light);
-      }
-
-      .copyright {
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 0.85rem;
-        margin-top: 1rem;
-        padding-top: 1rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.15);
-        width: 100%;
-        text-align: center;
-      }
-
-      /* ===== MOBILE OPTIMIZATIONS ===== */
-      @media (max-width: 640px) {
-        .container {
-          padding: 0 1rem;
-        }
-
-        .header-content {
-          padding: 0 0.5rem;
-        }
-
-        .logo {
-          font-size: 1.1rem;
-        }
-
-        .logo-icon {
-          width: 32px;
-          height: 32px;
-          font-size: 1rem;
-        }
-
-        .btn {
-          padding: 0.65rem 1.25rem;
-          font-size: 0.9rem;
-        }
-
-        .hero {
-          padding: 2rem 0 1.5rem;
-        }
-
-        .hero-title {
-          font-size: 1.75rem;
-        }
-
-        .hero-subtitle {
-          font-size: 1rem;
-        }
-
-        .features-grid {
-          grid-template-columns: 1fr;
-          gap: 1rem;
-        }
-
-        .feature-card {
-          padding: 1.25rem;
-        }
-
-        .uni-card {
-          border-radius: var(--radius);
-        }
-
-        .uni-content {
-          padding: 1.5rem;
-        }
-
-        .uni-icon {
-          width: 48px;
-          height: 48px;
-          font-size: 1.25rem;
-        }
-
-        .modal-content {
-          padding: 1.5rem;
-          margin: 1rem;
-        }
-
-        .modal-title {
-          font-size: 1.35rem;
-        }
-
-        .form-input {
-          padding: 0.75rem 0.875rem;
-        }
-
-        .auth-success {
-          padding: 1.5rem;
-        }
-
-        .success-icon {
-          width: 64px;
-          height: 64px;
-          font-size: 2rem;
-        }
-      }
-
-      /* ===== ACCESSIBILITY ===== */
-      @media (prefers-reduced-motion: reduce) {
-        *,
-        *::before,
-        *::after {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
-        }
-      }
-
-      /* ===== LOADING STATE ===== */
-      .loading {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 200px;
-        color: var(--gray-700);
-        font-weight: 500;
-      }
-
-      .loading-spinner {
-        width: 24px;
-        height: 24px;
-        border: 3px solid var(--gray-200);
-        border-top-color: var(--navy);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin-right: 0.75rem;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Skip Link for Accessibility -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-
-    <!-- Header -->
-    <header>
-      <div class="container header-content">
-        <a href="#" class="logo">
-          <div class="logo-icon">
-            <i class="fas fa-graduation-cap"></i>
-          </div>
-          UK Interview Prep Hub
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <base href="/UK-INTERVIEW-HUB/">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>The Academic Curator | UK University Interview Prep Hub</title>
+  <!-- Google Fonts: Manrope & Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+  <!-- Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-on-surface": "#eff1f3",
+            "on-tertiary-container": "#fe6d9d",
+            "on-primary-fixed-variant": "#2d476f",
+            "error": "#ba1a1a",
+            "surface-container-lowest": "#ffffff",
+            "on-error": "#ffffff",
+            "surface-variant": "#e0e3e5",
+            "inverse-surface": "#2d3133",
+            "on-primary": "#ffffff",
+            "on-error-container": "#93000a",
+            "secondary-fixed": "#6ffbbe",
+            "secondary": "#006c49",
+            "outline": "#74777f",
+            "surface": "#f7f9fb",
+            "primary-container": "#1a365d",
+            "background": "#f7f9fb",
+            "tertiary-fixed": "#ffd9e1",
+            "secondary-fixed-dim": "#4edea3",
+            "surface-container-highest": "#e0e3e5",
+            "on-primary-container": "#86a0cd",
+            "on-secondary-fixed-variant": "#005236",
+            "tertiary": "#480020",
+            "surface-tint": "#455f88",
+            "on-primary-fixed": "#001b3c",
+            "on-tertiary-fixed": "#3f001b",
+            "surface-container": "#eceef0",
+            "on-secondary": "#ffffff",
+            "on-tertiary-fixed-variant": "#8b0e45",
+            "surface-bright": "#f7f9fb",
+            "on-secondary-container": "#00714d",
+            "inverse-primary": "#adc7f7",
+            "error-container": "#ffdad6",
+            "surface-container-low": "#f2f4f6",
+            "primary-fixed": "#d6e3ff",
+            "on-surface-variant": "#43474e",
+            "surface-dim": "#d8dadc",
+            "tertiary-fixed-dim": "#ffb1c5",
+            "primary": "#002045",
+            "on-tertiary": "#ffffff",
+            "on-surface": "#191c1e",
+            "outline-variant": "#c4c6cf",
+            "surface-container-high": "#e6e8ea",
+            "on-background": "#191c1e",
+            "secondary-container": "#6cf8bb",
+            "primary-fixed-dim": "#adc7f7",
+            "on-secondary-fixed": "#002113",
+            "tertiary-container": "#6f0035"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        },
+      },
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+    h1, h2, h3, .font-headline { font-family: 'Manrope', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .glass-nav { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+    .tonal-transition { transition: background-color 0.3s ease; }
+  </style>
+</head>
+<body class="bg-background text-on-surface">
+
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl flex justify-between items-center px-8 py-4 max-w-full">
+  <div class="flex items-center gap-2">
+    <span class="material-symbols-outlined text-[#002045] dark:text-blue-400">school</span>
+    <span class="text-xl font-extrabold text-[#002045] dark:text-blue-200 font-headline tracking-tight">The Academic Curator</span>
+  </div>
+  <div class="flex items-center gap-3">
+    <div class="user-menu hidden items-center gap-3" id="userMenu">
+      <div class="user-avatar w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold" id="userAvatar">JS</div>
+      <span class="text-sm font-medium text-on-surface" id="userNameDisplay">John</span>
+      <a href="dashboard.html" class="text-sm font-medium text-on-surface-variant hover:text-primary transition">Dashboard</a>
+      <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-sm font-semibold transition-transform active:scale-95" id="logoutBtn">
+        Sign Out
+      </button>
+    </div>
+    <button class="bg-primary text-on-primary px-5 py-2 rounded-xl text-sm font-semibold transition-transform active:scale-95" id="loginBtn">
+      Student Login
+    </button>
+  </div>
+</header>
+
+<main class="pt-24 pb-12 px-6">
+  <!-- Hero Section -->
+  <section class="mb-16">
+    <div class="flex flex-col gap-6 text-center">
+      <div class="inline-flex items-center self-center gap-2 px-3 py-1 bg-secondary-container/30 text-on-secondary-container rounded-full text-[10px] font-bold tracking-widest uppercase font-label">
+        <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+        Trusted by 10,000+ Students
+      </div>
+      <h1 class="text-4xl md:text-5xl font-extrabold text-primary leading-tight tracking-tight px-2">
+        Master Your UK University Interview
+      </h1>
+      <p class="text-on-surface-variant text-lg leading-relaxed px-4 font-body">
+        AI-powered training for credibility interviews. Practice questions, get instant feedback, and secure your CAS with confidence.
+      </p>
+      <div class="flex flex-col gap-4 mt-4 px-4">
+        <button id="getStartedBtn" class="bg-primary text-on-primary py-4 rounded-xl font-bold text-lg shadow-lg shadow-primary/10">
+          Get Started Free
+        </button>
+        <a href="#universities" class="bg-surface-container-high/50 backdrop-blur-md text-primary py-4 rounded-xl font-bold text-lg border border-outline-variant/15 text-center">
+          Explore Universities
         </a>
-        <div class="auth-actions">
-          <div class="user-menu" id="userMenu" style="display: none">
-            <div class="user-avatar" id="userAvatar">JS</div>
-            <span id="userNameDisplay">John</span>
-            <a href="dashboard.html" class="text-sm font-medium text-gray-700 hover:text-gray-900 transition">Dashboard</a>
-            <button
-              class="btn btn-outline"
-              id="logoutBtn"
-              style="padding: 0.4rem 0.875rem; font-size: 0.85rem"
-            >
-              <i class="fas fa-sign-out-alt"></i>
-            </button>
-          </div>
-          <button class="btn btn-primary" id="loginBtn">
-            <i class="fas fa-user"></i> Sign In
-          </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid (Asymmetric Bento Style) -->
+  <section class="mb-20">
+    <div class="grid grid-cols-2 gap-4">
+      <div class="col-span-2 bg-primary-container text-white p-8 rounded-xl relative overflow-hidden">
+        <div class="relative z-10">
+          <span class="material-symbols-outlined text-secondary-fixed mb-4 text-4xl">neurology</span>
+          <h3 class="text-2xl font-bold mb-2 font-headline">AI Feedback</h3>
+          <p class="text-on-primary-container text-sm opacity-90">Instant analysis and personalized tips to improve your interview confidence.</p>
+        </div>
+        <div class="absolute -right-4 -bottom-4 opacity-10">
+          <span class="material-symbols-outlined text-9xl">psychology</span>
         </div>
       </div>
-    </header>
-
-    <!-- Main Content -->
-    <main id="main-content">
-      <!-- Hero Section -->
-      <section class="hero">
-        <div class="container">
-          <div class="hero-badge animate-fade-in">
-            <i class="fas fa-shield-alt"></i>
-            Trusted by 10,000+ Students
-          </div>
-          <h1 class="hero-title animate-fade-in">
-            Master Your UK Visa Interview
-          </h1>
-          <p class="hero-subtitle animate-fade-in">
-            AI-powered training for university credibility interviews. Practice
-            questions, get instant feedback, and secure your CAS with
-            confidence.
-          </p>
-          <div class="hero-cta animate-fade-in">
-            <button class="btn btn-red" id="getStartedBtn">
-              <i class="fas fa-rocket"></i> Get Started Free
-            </button>
-            <a href="#universities" class="btn btn-outline">
-              <i class="fas fa-search"></i> Explore Universities
-            </a>
-          </div>
-
-          <!-- Feature Cards -->
-          <div class="features-grid">
-            <div
-              class="feature-card animate-fade-in"
-              style="animation-delay: 0.1s"
-            >
-              <div class="feature-icon">
-                <i class="fas fa-brain"></i>
-              </div>
-              <h3 class="feature-title">AI Feedback</h3>
-              <p class="feature-desc">
-                Instant analysis of your answers with personalized improvement
-                tips.
-              </p>
-            </div>
-            <div
-              class="feature-card animate-fade-in"
-              style="animation-delay: 0.2s"
-            >
-              <div class="feature-icon">
-                <i class="fas fa-cloud-save"></i>
-              </div>
-              <h3 class="feature-title">Save Progress</h3>
-              <p class="feature-desc">
-                Pick up where you left off across any device, anytime.
-              </p>
-            </div>
-            <div
-              class="feature-card animate-fade-in"
-              style="animation-delay: 0.3s"
-            >
-              <div class="feature-icon">
-                <i class="fas fa-lock"></i>
-              </div>
-              <h3 class="feature-title">Privacy First</h3>
-              <p class="feature-desc">
-                Your data and practice sessions are fully encrypted and secure.
-              </p>
-            </div>
-          </div>
+      <div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm flex flex-col justify-between h-48">
+        <span class="material-symbols-outlined text-secondary text-3xl">update</span>
+        <div>
+          <h3 class="font-bold font-headline text-primary">Save Progress</h3>
+          <p class="text-xs text-on-surface-variant mt-1">Pick up where you left off at any time.</p>
         </div>
-      </section>
-
-      <!-- Universities Section -->
-      <section id="universities" class="universities-section">
-        <div class="container">
-          <div class="section-header">
-            <h2 class="section-title">Choose Your University</h2>
-            <p class="section-subtitle">
-              Select your institution to access personalized interview
-              preparation materials, practice questions, and AI marking.
-            </p>
-          </div>
-
-          <div class="universities-grid">
-            <!-- Regent College London -->
-            <article
-              class="uni-card animate-fade-in"
-              style="animation-delay: 0.1s"
-            >
-              <div class="uni-badge">London</div>
-              <div class="uni-content">
-                <div class="uni-icon">
-                  <i class="fas fa-building-columns"></i>
-                </div>
-                <h3 class="uni-title">Regent College London</h3>
-                <p class="uni-desc">
-                  MBA, MSc International Management, Software Engineering &amp;
-                  more. Holborn, Wembley &amp; Southall campuses.
-                </p>
-                <div class="uni-meta">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <span>Multiple London Campuses</span>
-                </div>
-                <a
-                  href="regent.html"
-                  class="start-training"
-                  data-university="regent"
-                >
-                  Start Training <i class="fas fa-arrow-right"></i>
-                </a>
-              </div>
-            </article>
-
-            <!-- York St John University -->
-            <article
-              class="uni-card animate-fade-in"
-              style="animation-delay: 0.2s"
-            >
-              <div class="uni-badge">York &amp; London</div>
-              <div class="uni-content">
-                <div class="uni-icon">
-                  <i class="fas fa-castle"></i>
-                </div>
-                <h3 class="uni-title">York St John University</h3>
-                <p class="uni-desc">
-                  Top 10 for student satisfaction. York campus &amp; London
-                  campus. Business, Computing &amp; Data Science.
-                </p>
-                <div class="uni-meta">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <span>York &amp; London Campuses</span>
-                </div>
-                <a
-                  href="yorkstjohn.html"
-                  class="start-training"
-                  data-university="yorkstjohn"
-                >
-                  Start Training <i class="fas fa-arrow-right"></i>
-                </a>
-              </div>
-            </article>
-
-            <!-- UKVI Generic -->
-            <article
-              class="uni-card animate-fade-in"
-              style="animation-delay: 0.3s"
-            >
-              <div class="uni-badge">Universal</div>
-              <div class="uni-content">
-                <div class="uni-icon">
-                  <i class="fas fa-passport"></i>
-                </div>
-                <h3 class="uni-title">UKVI Interview Prep</h3>
-                <p class="uni-desc">
-                  Generic UK visa credibility interview training. Universal
-                  questions for any UK university application.
-                </p>
-                <div class="uni-meta">
-                  <i class="fas fa-globe"></i>
-                  <span>All UK Universities</span>
-                </div>
-                <a
-                  href="ukvi.html"
-                  class="start-training"
-                  data-university="ukvi"
-                >
-                  Start Training <i class="fas fa-arrow-right"></i>
-                </a>
-              </div>
-            </article>
-
-            <!-- BPP University -->
-            <article
-              class="uni-card animate-fade-in"
-              style="animation-delay: 0.4s"
-            >
-              <div class="uni-badge">Professional</div>
-              <div class="uni-content">
-                <div class="uni-icon">
-                  <i class="fas fa-briefcase"></i>
-                </div>
-                <h3 class="uni-title">BPP University</h3>
-                <p class="uni-desc">
-                  Professional education focus. Law, Business, Nursing &amp;
-                  Healthcare. Multiple UK locations.
-                </p>
-                <div class="uni-meta">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <span>Multiple UK Locations</span>
-                </div>
-                <a href="bpp.html" class="start-training" data-university="bpp">
-                  Start Training <i class="fas fa-arrow-right"></i>
-                </a>
-              </div>
-            </article>
-
-            <!-- Netherlands -->
-            <article
-              class="uni-card animate-fade-in"
-              style="animation-delay: 0.5s"
-            >
-              <div class="uni-badge">Entrepreneurship</div>
-              <div class="uni-content">
-                <div class="uni-icon">
-                  <i class="fas fa-users"></i>
-                </div>
-                <h3 class="uni-title">Netherlands</h3>
-                <p class="uni-desc">
-                  Entrepreneurship and business creation. Learn by doing. Build
-                  your own business while you study.
-                </p>
-                <div class="uni-meta">
-                  <i class="fas fa-flag"></i>
-                  <span>Amsterdam &amp; Rotterdam</span>
-                </div>
-                <a
-                  href="netherlands.html"
-                  class="start-training"
-                  data-university="netherlands"
-                >
-                  Start Training <i class="fas fa-arrow-right"></i>
-                </a>
-              </div>
-            </article>
-
-            <!-- Coming Soon Card -->
-            <article
-              class="uni-card animate-fade-in"
-              style="animation-delay: 0.6s; opacity: 0.7"
-            >
-              <div
-                class="uni-content"
-                style="
-                  justify-content: center;
-                  align-items: center;
-                  text-align: center;
-                "
-              >
-                <div
-                  class="uni-icon"
-                  style="
-                    background: linear-gradient(
-                      135deg,
-                      var(--gray-300),
-                      var(--gray-400)
-                    );
-                  "
-                >
-                  <i class="fas fa-plus"></i>
-                </div>
-                <h3 class="uni-title" style="color: var(--gray-700)">
-                  More Coming Soon
-                </h3>
-                <p class="uni-desc" style="color: var(--gray-600)">
-                  We're adding more universities every week. Check back soon!
-                </p>
-                <button
-                  class="btn btn-outline"
-                  style="margin-top: 1rem; width: auto"
-                  disabled
-                >
-                  Notify Me <i class="fas fa-bell"></i>
-                </button>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-      <div class="container footer-content">
-        <a href="#" class="footer-logo">
-          <i class="fas fa-graduation-cap"></i>
-          UK Interview Prep Hub
-        </a>
-        <p class="footer-text">
-          Unofficial study aid. Always verify requirements directly with your
-          university or UKVI before your interview.
-        </p>
-        <div class="footer-links">
-          <a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
-          <a href="#"><i class="fas fa-file-contract"></i> Terms of Use</a>
-          <a href="#"><i class="fas fa-question-circle"></i> Help Center</a>
-        </div>
-        <p class="copyright">
-          &copy; 2026 UK Interview Prep Hub. All rights reserved.
-        </p>
       </div>
-    </footer>
-
-    <!-- 🔐 Student Login Modal -->
-    <div id="loginModal" class="login-modal">
-      <div class="modal-content">
-        <button class="modal-close" id="modalClose" aria-label="Close modal">
-          <i class="fas fa-times"></i>
-        </button>
-
-        <h3 class="modal-title">🎓 Student Login</h3>
-        <p
-          style="
-            text-align: center;
-            color: var(--gray-700);
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-          "
-        >
-          Sign in to save progress, track scores, and get ready for your
-          interview.
-        </p>
-
-        <!-- 🔵 Google Sign-In (Primary) -->
-        <button
-          id="googleSignInBtn"
-          class="btn"
-          style="
-            width: 100%;
-            background: white;
-            color: #333;
-            border: 2px solid var(--gray-200);
-            padding: 1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-          "
-        >
-          <i
-            class="fab fa-google"
-            style="color: #db4437; font-size: 1.2rem"
-          ></i>
-          Continue with Google
-        </button>
-
-        <!-- OR Divider -->
-        <div
-          style="
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin: 1.25rem 0;
-            color: var(--gray-400);
-            font-size: 0.9rem;
-          "
-        >
-          <div style="flex: 1; height: 1px; background: var(--gray-200)"></div>
-          <span>or</span>
-          <div style="flex: 1; height: 1px; background: var(--gray-200)"></div>
-        </div>
-
-        <!-- ✉️ Email/Password Tabs -->
-        <div
-          style="
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.25rem;
-            background: var(--gray-100);
-            padding: 0.25rem;
-            border-radius: 12px;
-          "
-        >
-          <button
-            type="button"
-            id="tabLogin"
-            class="btn"
-            style="
-              flex: 1;
-              padding: 0.5rem;
-              font-size: 0.9rem;
-              background: var(--white);
-              color: var(--navy);
-              border: none;
-              border-radius: 10px;
-              font-weight: 600;
-              box-shadow: var(--shadow-sm);
-            "
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            id="tabSignup"
-            class="btn"
-            style="
-              flex: 1;
-              padding: 0.5rem;
-              font-size: 0.9rem;
-              background: transparent;
-              color: var(--gray-600);
-              border: none;
-              border-radius: 10px;
-              font-weight: 500;
-            "
-          >
-            Create Account
-          </button>
-        </div>
-
-        <!-- Login Form -->
-        <form id="loginForm">
-          <div class="form-group">
-            <label for="loginEmail" class="form-label">Email Address</label>
-            <input
-              type="email"
-              id="loginEmail"
-              class="form-input"
-              placeholder="your@email.com"
-              required
-              autocomplete="email"
-            />
-          </div>
-          <div class="form-group">
-            <label for="loginPassword" class="form-label">Password</label>
-            <input
-              type="password"
-              id="loginPassword"
-              class="form-input"
-              placeholder="••••••••"
-              required
-              autocomplete="current-password"
-            />
-          </div>
-          <button type="submit" class="btn btn-primary" style="width: 100%">
-            <i class="fas fa-sign-in-alt"></i> Sign In
-          </button>
-        </form>
-
-        <!-- Signup Form -->
-        <form id="signupForm" style="display: none">
-          <div class="form-group">
-            <label for="signupName" class="form-label">Full Name</label>
-            <input
-              type="text"
-              id="signupName"
-              class="form-input"
-              placeholder="John Doe"
-              required
-              autocomplete="name"
-            />
-          </div>
-          <div class="form-group">
-            <label for="signupStudentId" class="form-label">Student ID</label>
-            <input
-              type="text"
-              id="signupStudentId"
-              class="form-input"
-              placeholder="STU123456"
-              required
-              autocomplete="off"
-            />
-          </div>
-          <div class="form-group">
-            <label for="signupEmail" class="form-label">Email Address</label>
-            <input
-              type="email"
-              id="signupEmail"
-              class="form-input"
-              placeholder="your@email.com"
-              required
-              autocomplete="email"
-            />
-          </div>
-          <div class="form-group">
-            <label for="signupPassword" class="form-label"
-              >Password (min 6 characters)</label
-            >
-            <input
-              type="password"
-              id="signupPassword"
-              class="form-input"
-              placeholder="••••••••"
-              required
-              minlength="6"
-              autocomplete="new-password"
-            />
-          </div>
-          <button type="submit" class="btn btn-red" style="width: 100%">
-            <i class="fas fa-user-plus"></i> Create Account
-          </button>
-        </form>
-
-        <p
-          id="authError"
-          class="form-error"
-          style="margin-top: 1rem; text-align: center"
-        ></p>
-
-        <div
-          class="modal-footer"
-          style="
-            text-align: center;
-            margin-top: 1.5rem;
-            font-size: 0.85rem;
-            color: var(--gray-500);
-          "
-        >
-          By continuing, you agree to our
-          <a href="#" style="color: var(--navy)">Terms</a> and
-          <a href="#" style="color: var(--navy)">Privacy Policy</a>.
+      <div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm flex flex-col justify-between h-48">
+        <span class="material-symbols-outlined text-secondary text-3xl">encrypted</span>
+        <div>
+          <h3 class="font-bold font-headline text-primary">Privacy First</h3>
+          <p class="text-xs text-on-surface-variant mt-1">Fully encrypted practice sessions.</p>
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- ✅ Authenticated State Overlay -->
-    <div id="authSuccess" class="auth-success">
+  <!-- University Selection Grid -->
+  <section id="universities" class="mb-12">
+    <div class="flex flex-col gap-4 mb-8">
+      <h2 class="text-2xl font-extrabold text-primary font-headline">Choose Your Pathway</h2>
+      <div class="h-1 w-12 bg-secondary rounded-full"></div>
+    </div>
+    <div class="flex flex-col gap-8">
+      <!-- Regent College London -->
+      <div class="bg-surface-container-lowest rounded-xl overflow-hidden group shadow-sm">
+        <div class="h-40 bg-slate-200 relative overflow-hidden">
+          <img alt="Regent College London campus" class="w-full h-full object-cover grayscale opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdw_Pt626QMWJJMs_k4cCh52uf4D9hnzws134A4hrpI3SpaY2iwrxl_0F3MfAwcONfV8MyZOe3dmkhRm_EeAfONdJsD7uVBffroV2t7FFJZMVb4yBDi6yxaNy1MPO3ytPHX4uI7xHPZ8XkXXyxC-g5hPqHiZFkKimVSu2MkzGQRIe2dT4myTlBWRiqVHLkCth9dSnMaeKYiKLLX4ZFon_djMAYvOfyb6hxnBZoz-sONIHbBOy_qHByPENBu6xqlb4UOM-YzPmWh0VD"/>
+          <div class="absolute top-4 left-4">
+            <span class="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter">London</span>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="material-symbols-outlined text-primary text-3xl">account_balance</span>
+            <h3 class="font-bold text-xl text-primary font-headline">Regent College London</h3>
+          </div>
+          <p class="text-sm text-on-surface-variant mb-6 leading-relaxed">Specialized interview training for all Regent London campuses, focusing on academic commitment.</p>
+          <a href="regent.html" class="start-training block w-full bg-primary text-on-primary py-3 rounded-xl font-bold flex items-center justify-center gap-2" data-university="regent">
+            Start Training <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- York St John University -->
+      <div class="bg-surface-container-lowest rounded-xl overflow-hidden group shadow-sm">
+        <div class="h-40 bg-slate-200 relative overflow-hidden">
+          <img alt="York St John University campus" class="w-full h-full object-cover grayscale opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDboAbOYjDwdpIhjnTuAkT49M43NjcfTKAnszUSR8yDjBu-dB0OLdKWkY-ddXPPJCZkq8TWuRdmTeYT-YITudl5ZZ2bwEyO7QQlYOVSOGS-Rqv9douBJlOJJIZN1OGBs1xy9uztqeE3CMmw5mrsIdhefLwJ7TTXMe3Evr2csCwv1ZEvuF_i5bv6ONGmr2Qtm_auNhOxDFlkaHQxo6cz9ngF5mzUopv185IpJxC3ZuMP5uH4JDDrte3QyUzveEsuA_b5x83raEy1pEfU"/>
+          <div class="absolute top-4 left-4">
+            <span class="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter">York &amp; London</span>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="material-symbols-outlined text-primary text-3xl">history_edu</span>
+            <h3 class="font-bold text-xl text-primary font-headline">York St John University</h3>
+          </div>
+          <p class="text-sm text-on-surface-variant mb-6 leading-relaxed">Comprehensive prep for York and London locations with historical context modules.</p>
+          <a href="yorkstjohn.html" class="start-training block w-full bg-primary text-on-primary py-3 rounded-xl font-bold flex items-center justify-center gap-2" data-university="yorkstjohn">
+            Start Training <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- BPP University -->
+      <div class="bg-surface-container-lowest rounded-xl overflow-hidden group shadow-sm">
+        <div class="h-40 bg-slate-200 relative overflow-hidden">
+          <img alt="BPP University building" class="w-full h-full object-cover grayscale opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhdw4xfs0lLnh_0OLqfJvpFYQnzebBq4Bkno0FmBJp1cyLASMZbEIwMOSr1H_j1rFV6ayy1qsVoBgA6lskqlK-4WxQwJf1p3uNRFadhgVDwzs55tEWHCS_JeIDf39Y_V78AUN2_O7uAPip0lSz4Lnt-1YOa3iNChY-CUO5Rn3juHqYEyhO-L0_lHUq6rvwGc8EHr4uqcchKtARHqcCN4wDf5FYlH_ZzIDNvHPCsadQjBvo_yGM1EO6xwdrydhpvdeZfzDr1FM_TGET"/>
+          <div class="absolute top-4 left-4">
+            <span class="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter">Professional</span>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="material-symbols-outlined text-primary text-3xl">gavel</span>
+            <h3 class="font-bold text-xl text-primary font-headline">BPP University</h3>
+          </div>
+          <p class="text-sm text-on-surface-variant mb-6 leading-relaxed">Focused training for Law, Business, and Health professionals heading to BPP.</p>
+          <a href="bpp.html" class="start-training block w-full bg-primary text-on-primary py-3 rounded-xl font-bold flex items-center justify-center gap-2" data-university="bpp">
+            Start Training <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- UKVI Universal -->
+      <div class="bg-surface-container-low rounded-xl p-8 border border-dashed border-outline-variant/30 text-center flex flex-col items-center">
+        <span class="material-symbols-outlined text-5xl text-on-surface-variant mb-4">public</span>
+        <h3 class="font-bold text-xl text-primary font-headline mb-2">UKVI Interview Prep</h3>
+        <p class="text-sm text-on-surface-variant mb-6">Universal credibility prep for all UK Visas and Immigration requirements.</p>
+        <a href="ukvi.html" class="start-training w-full bg-secondary text-on-primary py-3 rounded-xl font-bold text-center" data-university="ukvi">
+          Start Universal Prep
+        </a>
+      </div>
+
+      <!-- Netherlands -->
+      <div class="bg-surface-container-lowest rounded-xl overflow-hidden group shadow-sm">
+        <div class="h-40 bg-slate-200 relative overflow-hidden">
+          <img alt="Netherlands city view" class="w-full h-full object-cover grayscale opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOOrMp3Wl8kdhk5sMp-eaWqYoUGD4BZkMU9zWXVNSXXaKT_CxOT5y_jagvOWlMUifJ01Q904teBi1Wbyp7F9-BIaf0IYxZbAWZfu7SejBfZSD6rbncLosuGy_XxYWpZUjZwnDMZCfFf1AtPS2_nY9l1EDbTwV0iMOKTt_uhmbs-T2e2awlowp9_g5l_e93SSyRpN0RRD8fjWMt8y7LyoGmPvCu6UPgXmYv7jPg18Vp-P89eqy3meuJmMXDUOIKYJTdBIgNKvtvCqqp"/>
+          <div class="absolute top-4 left-4">
+            <span class="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter">Entrepreneurship</span>
+          </div>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="material-symbols-outlined text-primary text-3xl">lightbulb</span>
+            <h3 class="font-bold text-xl text-primary font-headline">Netherlands</h3>
+          </div>
+          <p class="text-sm text-on-surface-variant mb-6 leading-relaxed">Special prep for Dutch university intakes focusing on innovation and startup culture.</p>
+          <a href="netherlands.html" class="start-training block w-full bg-primary text-on-primary py-3 rounded-xl font-bold flex items-center justify-center gap-2" data-university="netherlands">
+            Start Training <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- More Coming Soon -->
+      <div class="bg-surface-container-highest/30 rounded-xl p-8 flex flex-col items-center justify-center text-center opacity-70 border-2 border-dashed border-outline-variant/20">
+        <span class="material-symbols-outlined text-4xl text-on-surface-variant mb-2">more_horiz</span>
+        <h3 class="font-bold text-lg text-primary font-headline">More Coming Soon</h3>
+        <p class="text-xs text-on-surface-variant mt-1">Expanding to 50+ UK institutions this academic year.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="mt-20 py-12 px-6 bg-primary rounded-3xl text-center text-white relative overflow-hidden">
+    <div class="relative z-10">
+      <h2 class="text-3xl font-extrabold mb-4 font-headline">Ready to Ace Your Interview?</h2>
+      <p class="text-on-primary-container text-sm mb-8 opacity-90 leading-relaxed">Join thousands of successful students who secured their dream spot in the UK.</p>
+      <button id="getStartedBtn2" class="bg-secondary text-white px-10 py-4 rounded-xl font-bold text-lg">
+        Get Started Free
+      </button>
+    </div>
+    <div class="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
+    <div class="absolute bottom-0 left-0 w-32 h-32 bg-secondary/10 rounded-full blur-3xl -ml-10 -mb-10"></div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="w-full py-12 px-8 bg-[#f7f9fb] dark:bg-slate-950 grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t border-slate-200/15 dark:border-slate-800/15">
+  <div class="flex flex-col gap-4">
+    <div class="font-['Manrope'] font-black uppercase text-xs text-[#002045] dark:text-blue-400 tracking-widest">ASCEND PREP SYSTEM</div>
+    <p class="text-slate-500 dark:text-slate-400 font-['Inter'] text-sm tracking-wide">© 2024 Ascend Prep System. All Rights Reserved.</p>
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <a class="text-slate-500 dark:text-slate-400 hover:text-[#002045] dark:hover:text-white transition-opacity font-['Inter'] text-sm tracking-wide" href="#">Privacy Policy</a>
+    <a class="text-slate-500 dark:text-slate-400 hover:text-[#002045] dark:hover:text-white transition-opacity font-['Inter'] text-sm tracking-wide" href="#">Terms of Service</a>
+    <a class="text-slate-500 dark:text-slate-400 hover:text-[#002045] dark:hover:text-white transition-opacity font-['Inter'] text-sm tracking-wide" href="#">University Partnerships</a>
+    <a class="text-slate-500 dark:text-slate-400 hover:text-[#002045] dark:hover:text-white transition-opacity font-['Inter'] text-sm tracking-wide" href="#">Contact Support</a>
+  </div>
+</footer>
+
+<!-- BottomNavBar (Mobile Shell Priority) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-20 glass-nav bg-white/80 border-t border-outline-variant/10 flex justify-around items-center px-4 z-50">
+  <a href="#" class="flex flex-col items-center gap-1 text-primary">
+    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+    <span class="text-[10px] font-bold font-label uppercase tracking-tighter">Home</span>
+  </a>
+  <a href="#universities" class="flex flex-col items-center gap-1 text-on-surface-variant">
+    <span class="material-symbols-outlined">explore</span>
+    <span class="text-[10px] font-bold font-label uppercase tracking-tighter">Explore</span>
+  </a>
+  <a href="dashboard.html" class="flex flex-col items-center gap-1 text-on-surface-variant">
+    <span class="material-symbols-outlined">history</span>
+    <span class="text-[10px] font-bold font-label uppercase tracking-tighter">History</span>
+  </a>
+  <button id="mobileLoginBtn" class="flex flex-col items-center gap-1 text-on-surface-variant">
+    <span class="material-symbols-outlined">person</span>
+    <span class="text-[10px] font-bold font-label uppercase tracking-tighter">Profile</span>
+  </button>
+</nav>
+<div class="h-24 md:hidden"></div>
+
+<!-- 🔐 Login Modal -->
+<div id="loginModal" class="login-modal fixed inset-0 z-[9999] hidden items-center justify-center bg-black/60 p-4">
+  <div class="bg-white rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
+    <button id="modalClose" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+    <h3 class="text-2xl font-bold text-primary mb-2 text-center">🎓 Student Login</h3>
+    <p class="text-center text-gray-500 text-sm mb-6">Sign in to save progress, track scores, and get ready for your interview.</p>
+
+    <!-- Google Sign-In -->
+    <button id="googleSignInBtn" class="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 rounded-xl py-3 font-semibold text-gray-700 hover:bg-gray-50 transition mb-4">
+      <i class="fab fa-google text-red-500 text-lg"></i>
+      Continue with Google
+    </button>
+
+    <div class="flex items-center gap-3 text-gray-400 text-sm my-4">
+      <div class="flex-1 h-px bg-gray-200"></div>
+      <span>or</span>
+      <div class="flex-1 h-px bg-gray-200"></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex gap-2 bg-gray-100 p-1 rounded-xl mb-5">
+      <button id="tabLogin" class="flex-1 py-2 text-sm font-semibold rounded-lg bg-white text-primary shadow-sm">Sign In</button>
+      <button id="tabSignup" class="flex-1 py-2 text-sm font-semibold rounded-lg text-gray-600">Create Account</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="loginForm" class="space-y-4">
       <div>
-        <div class="success-icon">
-          <i class="fas fa-check"></i>
-        </div>
-        <h3 class="success-title">
-          Welcome, <span id="studentNameDisplay"></span>!
-        </h3>
-        <p class="success-text">
-          Your progress is saved. Continue your interview preparation anytime,
-          anywhere.
-        </p>
-        <div class="spinner"></div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+        <input type="email" id="loginEmail" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary/30 focus:border-primary" placeholder="your@email.com" required autocomplete="email">
       </div>
-    </div>
-
-    <!-- 📝 Student ID Collection Modal (for Google users) -->
-    <div id="studentIdModal" class="login-modal" style="display: none;">
-      <div class="modal-content" style="max-width: 400px;">
-        <h3 class="modal-title">✏️ Complete Your Profile</h3>
-        <p style="text-align: center; margin-bottom: 1rem;">Please enter your Student ID to continue.</p>
-        <div class="form-group">
-          <label for="studentIdInput" class="form-label">Student ID</label>
-          <input type="text" id="studentIdInput" class="form-input" placeholder="e.g. STU12345" />
-        </div>
-        <button id="saveStudentIdBtn" class="btn btn-primary" style="width: 100%;">Save & Continue</button>
-        <p id="studentIdError" class="form-error" style="margin-top: 0.5rem;"></p>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+        <input type="password" id="loginPassword" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary/30 focus:border-primary" placeholder="••••••••" required autocomplete="current-password">
       </div>
+      <button type="submit" class="w-full bg-primary text-white py-3 rounded-xl font-bold">Sign In</button>
+    </form>
+
+    <!-- Signup Form (hidden initially) -->
+    <form id="signupForm" class="space-y-4 hidden">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+        <input type="text" id="signupName" class="w-full border border-gray-300 rounded-xl px-4 py-2.5" placeholder="John Doe" required autocomplete="name">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Student ID</label>
+        <input type="text" id="signupStudentId" class="w-full border border-gray-300 rounded-xl px-4 py-2.5" placeholder="STU123456" required autocomplete="off">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+        <input type="email" id="signupEmail" class="w-full border border-gray-300 rounded-xl px-4 py-2.5" placeholder="your@email.com" required autocomplete="email">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Password (min 6 characters)</label>
+        <input type="password" id="signupPassword" class="w-full border border-gray-300 rounded-xl px-4 py-2.5" placeholder="••••••••" required minlength="6" autocomplete="new-password">
+      </div>
+      <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-xl font-bold">Create Account</button>
+    </form>
+
+    <p id="authError" class="text-red-500 text-sm text-center mt-4 min-h-[1.5rem]"></p>
+    <p class="text-center text-xs text-gray-400 mt-4">By continuing, you agree to our <a href="#" class="text-primary">Terms</a> and <a href="#" class="text-primary">Privacy Policy</a>.</p>
+  </div>
+</div>
+
+<!-- Auth Success Overlay -->
+<div id="authSuccess" class="fixed inset-0 z-[9998] hidden bg-white items-center justify-center text-center p-6 flex-col">
+  <div class="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center text-white text-4xl animate-float mb-4">
+    <i class="fas fa-check"></i>
+  </div>
+  <h3 class="text-2xl font-bold text-primary">Welcome, <span id="studentNameDisplay"></span>!</h3>
+  <p class="text-gray-600 mt-2 max-w-xs">Your progress is saved. Continue your interview preparation anytime, anywhere.</p>
+  <div class="spinner w-10 h-10 border-4 border-gray-200 border-t-primary rounded-full animate-spin mt-6"></div>
+</div>
+
+<!-- Student ID Collection Modal (for Google users) -->
+<div id="studentIdModal" class="login-modal fixed inset-0 z-[9999] hidden items-center justify-center bg-black/60 p-4">
+  <div class="bg-white rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
+    <h3 class="text-2xl font-bold text-primary mb-2 text-center">✏️ Complete Your Profile</h3>
+    <p class="text-center text-gray-500 text-sm mb-6">Please enter your Student ID to continue.</p>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Student ID</label>
+      <input type="text" id="studentIdInput" class="w-full border border-gray-300 rounded-xl px-4 py-2.5" placeholder="e.g. STU12345">
     </div>
+    <button id="saveStudentIdBtn" class="w-full bg-primary text-white py-3 rounded-xl font-bold">Save & Continue</button>
+    <p id="studentIdError" class="text-red-500 text-sm text-center mt-3"></p>
+  </div>
+</div>
 
-    <!-- Supabase & EmailJS Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
-    ></script>
+<!-- Font Awesome (for Google icon) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- App Logic -->
-    <script src="app.js"></script>
+<!-- Supabase & EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="app.js"></script>
 
-    <!-- Page Interaction Scripts -->
-    <script>
-      // Smooth scroll for anchor links
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute("href"));
-          if (target) {
-            target.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        });
-      });
+<script>
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
 
-      // Get Started button scrolls to universities
-      document
-        .getElementById("getStartedBtn")
-        ?.addEventListener("click", (e) => {
-          e.preventDefault();
-          document
-            .getElementById("universities")
-            .scrollIntoView({ behavior: "smooth" });
-        });
+  // Get Started buttons
+  const gs1 = document.getElementById('getStartedBtn');
+  const gs2 = document.getElementById('getStartedBtn2');
+  const scrollToUniversities = () => document.getElementById('universities').scrollIntoView({ behavior: 'smooth' });
+  if (gs1) gs1.addEventListener('click', scrollToUniversities);
+  if (gs2) gs2.addEventListener('click', scrollToUniversities);
 
-      // Login button shows modal
-      document.getElementById("loginBtn")?.addEventListener("click", () => {
-        document.getElementById("loginModal").style.display = "flex";
-      });
+  // Login modal triggers
+  const loginBtn = document.getElementById('loginBtn');
+  const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+  const loginModal = document.getElementById('loginModal');
+  const modalClose = document.getElementById('modalClose');
 
-      // Modal close button
-      document.getElementById("modalClose")?.addEventListener("click", () => {
-        document.getElementById("loginModal").style.display = "none";
-      });
+  function showLoginModal() { if (loginModal) loginModal.style.display = 'flex'; }
+  function hideLoginModal() { if (loginModal) loginModal.style.display = 'none'; }
 
-      // Close modal when clicking outside
-      document.getElementById("loginModal")?.addEventListener("click", (e) => {
-        if (e.target === document.getElementById("loginModal")) {
-          document.getElementById("loginModal").style.display = "none";
-        }
-      });
+  if (loginBtn) loginBtn.addEventListener('click', showLoginModal);
+  if (mobileLoginBtn) mobileLoginBtn.addEventListener('click', showLoginModal);
+  if (modalClose) modalClose.addEventListener('click', hideLoginModal);
+  if (loginModal) loginModal.addEventListener('click', (e) => { if (e.target === loginModal) hideLoginModal(); });
 
-      // Pass university choice to next page
-      document.querySelectorAll(".start-training").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          const uni = btn.getAttribute("data-university");
-          if (localStorage.getItem("student") && uni) {
-            localStorage.setItem("selected_university", uni);
-          }
-        });
-      });
-
-      // Add hover effect enhancement for cards on mobile
-      if ("ontouchstart" in window) {
-        document.querySelectorAll(".uni-card").forEach((card) => {
-          card.addEventListener("touchstart", function () {
-            this.style.transform = "translateY(-4px)";
-            this.style.boxShadow = "var(--shadow-lg)";
-          });
-          card.addEventListener("touchend", function () {
-            this.style.transform = "";
-            this.style.boxShadow = "var(--shadow)";
-          });
-        });
+  // University tracking (already handled by app.js, but ensure data-university is used)
+  document.querySelectorAll('.start-training').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const uni = btn.getAttribute('data-university');
+      if (localStorage.getItem('student') && uni) {
+        localStorage.setItem('selected_university', uni);
       }
+    });
+  });
 
-      // ✅ Diagnostic: Test if JavaScript is running
-      console.log("✅ index.html script loaded");
-    </script>
-  </body>
+  // Add hover effect for cards on mobile
+  if ('ontouchstart' in window) {
+    document.querySelectorAll('.uni-card, .bg-surface-container-lowest.rounded-xl').forEach(card => {
+      card.addEventListener('touchstart', function() { this.style.transform = 'translateY(-2px)'; });
+      card.addEventListener('touchend', function() { this.style.transform = ''; });
+    });
+  }
+
+  console.log('✅ index.html (new design) loaded');
+</script>
+
+<style>
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .animate-float { animation: float 2s ease-in-out infinite; }
+  .spinner { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</body>
 </html>
