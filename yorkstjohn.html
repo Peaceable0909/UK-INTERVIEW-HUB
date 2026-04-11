@@ -1855,7 +1855,7 @@
     </div>
 
     <!-- ======================================================
-     JAVASCRIPT
+     JAVASCRIPT - FIXED MARKING & IMPROVED AI PROMPT
 ====================================================== -->
     <script>
       const COURSES = {
@@ -2523,7 +2523,11 @@
           num: "K",
           title: "Common Mistakes to Avoid",
           sub: "Red Flags",
-          content: `<table class="w-full text-xs mt-2"><tr class="border-b border-border"><th class="text-left py-2 text-primary">Area</th><th class="text-left py-2 text-error">Mistake</th><th class="text-left py-2 text-success">Improvement</th></table><tr class="border-b border-border"><td class="py-2">Why YSJ</td><td class="py-2 text-muted">Generic answers like "friendly staff"</td><td class="py-2">Specific facts: rankings, course structure, teaching reputation</td></tr><tr class="border-b border-border"><td class="py-2">Why this course</td><td class="py-2 text-muted">Not knowing modules</td><td class="py-2">Show understanding of content and career fit</td></tr><tr class="border-b border-border"><td class="py-2">Future plans</td><td class="py-2 text-muted">Vague answers, no company names</td><td class="py-2">Exact job titles and companies</td></tr><tr><td class="py-2">Study gap</td><td class="py-2 text-muted">Not explaining the gap</td><td class="py-2">Be honest, show how experience led to this decision</td></tr></table>`,
+          content: `<table class="w-full text-xs mt-2"><tr class="border-b border-border"><th class="text-left py-2 text-primary">Area</th><th class="text-left py-2 text-error">Mistake</th><th class="text-left py-2 text-success">Improvement</th><tr><tr class="border-b border-border"><td class="py-2">Why YSJ</td><td class="py-2 text-muted">Generic answers like "friendly staff"</td><td class="py-2">Specific facts: rankings, course structure, teaching reputation</td></tr>
+              <tr class="border-b border-border"><td class="py-2">Why this course</td><td class="py-2 text-muted">Not knowing modules</td><td class="py-2">Show understanding of content and career fit</td></tr>
+              <tr class="border-b border-border"><td class="py-2">Future plans</td><td class="py-2 text-muted">Vague answers, no company names</td><td class="py-2">Exact job titles and companies</td></tr>
+              <tr class="border-b border-border"><td class="py-2">Study gap</td><td class="py-2 text-muted">Not explaining the gap</td><td class="py-2">Be honest, show how experience led to this decision</td></tr>
+            </table>`,
         },
       ];
       const ALL_QUESTIONS = [
@@ -2754,15 +2758,20 @@
         passN = 0,
         failN = 0,
         totN = 0;
+      // ✅ Track which questions have been counted
+      let questionStatus = {};
+
       function selectCourse(id) {
         course = COURSES[id];
         document.getElementById("s-select").classList.remove("active");
         document.getElementById("s-main").classList.add("active");
         document.getElementById("tb-name").textContent = course.name;
         document.getElementById("tb-campus").textContent = course.campus;
+        // Reset scores and question status for new course
         passN = 0;
         failN = 0;
         totN = 0;
+        questionStatus = {};
         updScore();
         document.getElementById("vid-notes").innerHTML = course.videoNotes
           .map(
@@ -2925,7 +2934,7 @@ ${cat.qs
         document.getElementById("fb-" + id).classList.add("hidden");
       }
       // ======================================================
-      // FIXED: Using Puter.js for FREE AI - no API key needed!
+      // IMPROVED AI PROMPT & FIXED MARKING (count once per question)
       // ======================================================
       async function chkAns(id) {
         const q = PQS.find((x) => x.id === id);
@@ -2945,34 +2954,30 @@ ${cat.qs
         document.getElementById("fbhd-" + id).textContent =
           "Marking your answer...";
         document.getElementById("fbb-" + id).innerHTML = "";
-        const prompt = `You are a strict UKVI Pre-CAS credibility interviewer for York St John University.
-The student is applying to study "${course.name}" at YSJ ${course.campus}, located at ${course.address}.
-Evaluate the student's answer based ONLY on:
-- Relevance to the course and YSJ specifically
-- Clear knowledge of course content and modules
-- Clear reason for choosing YSJ over other universities (must name specific unis)
-- Genuine study intent (not immigration intent)
-- Clear career plans with specific companies and return to home country
-- Financial preparedness (tuition fees, living costs)
-- Clarity, structure, and confidence
+        const prompt = `You are a helpful UKVI Pre-CAS credibility interview coach. The student is applying to study "${course.name}" at YSJ ${course.campus}, located at ${course.address}.
+
 Question: "${q.q}"
+
 What a strong answer MUST include: ${q.cr}
+
 Student answer: "${ans}"
-Be strict. Do not be nice if the answer is weak. Look for specific details, not generic statements.
+
+IMPORTANT RULES:
+- Do NOT penalize punctuation, capitalization, or minor grammar errors.
+- Do NOT penalize spelling mistakes unless they make the answer unclear.
+- Value personal language like "I", "my", "me" – this shows genuine response.
+- Focus on whether the student demonstrates understanding of YSJ, their course, and genuine intent to return home.
+- Reward specific details (module names, company names, location, figures).
+
 Return ONLY valid JSON in this exact format:
 {"pass":true,"score":80,"summary":"One clear sentence verdict specific to the answer.","good":["specific strength based on answer"],"improve":["specific weakness and how to fix it"]}
-Rules:
-- Make feedback specific to THIS answer (no generic advice)
-- Mention YSJ, course name, or specific modules if missing or weak
-- Score must reflect quality (0-100)
-- Output ONLY JSON, no markdown, no extra text`;
+
+Score should reflect quality (0-100). A score >= 70 is considered a pass.`;
         try {
-          // Use Puter.js - completely free, no API key required!
           const response = await puter.ai.chat(prompt, {
-            model: "gpt-4o-mini", // Fast and cost-effective
+            model: "gpt-4o-mini",
             stream: false,
           });
-          // Parse response - Puter returns the message content directly
           let raw = "";
           if (typeof response === "string") {
             raw = response;
@@ -2983,23 +2988,24 @@ Rules:
           } else {
             throw new Error("Unexpected response format");
           }
-
-          // Extract JSON from response
-          raw = raw
-            .replace(/```json|```/g, "")
-            .replace(/\n/g, " ")
-            .trim();
+          raw = raw.replace(/```json|```/g, "").replace(/\n/g, " ").trim();
           const match = raw.match(/\{.*\}/);
           if (!match) throw new Error("Invalid JSON response from AI");
           const j = JSON.parse(match[0]);
           if (typeof j.pass !== "boolean")
             throw new Error("Invalid response structure");
 
-          // Update scores
-          if (j.pass) passN++;
-          else failN++;
-          totN++;
-          updScore();
+          // ✅ FIX: Count each question only once
+          if (!questionStatus[id]) {
+            questionStatus[id] = true;
+            if (j.pass) {
+              passN++;
+            } else {
+              failN++;
+            }
+            totN++;
+            updScore();
+          }
 
           // Display feedback
           fb.className =
@@ -3035,21 +3041,14 @@ Rules:
           }
           document.getElementById("fbb-" + id).innerHTML = h;
 
-          // ✅ AUTO-SAVE TO SUPABASE (FIXED - ONLY THIS BLOCK, NO DUPLICATE)
+          // ✅ AUTO-SAVE TO SUPABASE (YSJ)
           if (typeof window.saveAIResponse === "function") {
             try {
               const questionId = id;
-              const answerText =
-                document.getElementById("ans-" + id)?.value || "";
+              const answerText = document.getElementById("ans-" + id)?.value || "";
               const score = j.score;
-              const feedbackText =
-                j.summary || j.good?.[0] || JSON.stringify(j);
-              window.saveAIResponse(
-                questionId,
-                answerText,
-                score,
-                feedbackText,
-              );
+              const feedbackText = j.summary || j.good?.[0] || JSON.stringify(j);
+              window.saveAIResponse(questionId, answerText, score, feedbackText);
               console.log("✅ YSJ Saved:", questionId, "| Score:", score);
             } catch (err) {
               console.warn("⚠️ YSJ Save Skipped:", err.message);
@@ -3266,16 +3265,14 @@ Rules:
           btn.innerHTML = '<span class="spinner"></span> Sending...';
 
           const progress = await window.loadSavedProgress?.();
-          const responses = progress?.practice_responses || {};
+          const responses = progress?.ai_scores || {};
           const checklist = progress?.checklist_status || {};
-          const scores = progress?.ai_scores || {};
-
-          const scoreValues = Object.values(scores)
+          const scores = Object.values(responses)
             .map((s) => s.score)
             .filter((n) => !isNaN(n));
-          const avgScore = scoreValues.length
+          const avgScore = scores.length
             ? (
-                scoreValues.reduce((a, b) => a + b, 0) / scoreValues.length
+                scores.reduce((a, b) => a + b, 0) / scores.length
               ).toFixed(1)
             : "N/A";
 
