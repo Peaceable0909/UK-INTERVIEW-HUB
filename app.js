@@ -88,7 +88,10 @@ async function checkStudentId(user) {
   const input = document.getElementById('studentIdInput');
   const saveBtn = document.getElementById('saveStudentIdBtn');
   const errorDiv = document.getElementById('studentIdError');
-  
+
+  // Modal doesn't exist on sub-pages (regent, bpp, etc.) — skip silently
+  if (!modal || !input || !saveBtn) return true;
+
   modal.style.display = 'flex';
   
   return new Promise((resolve) => {
