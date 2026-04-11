@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="app.js"></script>
-    <!-- FIX: Added Puter.js for free AI without API keys -->
+    <!-- Puter.js for free AI -->
     <script src="https://js.puter.com/v2/"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
@@ -1821,7 +1821,7 @@
     </div>
 
     <!-- ======================================================
-     JAVASCRIPT
+     JAVASCRIPT - FIXED MARKING & IMPROVED AI PROMPT
 ====================================================== -->
     <script>
       const COURSES = {
@@ -2539,6 +2539,8 @@
         passN = 0,
         failN = 0,
         totN = 0;
+      // Track which questions have been marked (to avoid counting multiple attempts)
+      let questionStatus = {};
 
       function selectCourse(id) {
         course = COURSES[id];
@@ -2546,9 +2548,11 @@
         document.getElementById("s-main").classList.add("active");
         document.getElementById("tb-name").textContent = course.name;
         document.getElementById("tb-campus").textContent = course.campus;
+        // Reset all counts and status when new course is selected
         passN = 0;
         failN = 0;
         totN = 0;
+        questionStatus = {};
         updScore();
 
         document.getElementById("vid-notes").innerHTML = course.videoNotes
@@ -2725,7 +2729,7 @@
       }
 
       // ======================================================
-      // FIXED: Using Puter.js for FREE AI - no API key needed!
+      // IMPROVED AI MARKING - Focus on content, not grammar
       // ======================================================
       async function chkAns(id) {
         const q = PQS.find((x) => x.id === id);
@@ -2748,43 +2752,34 @@
           "Marking your answer...";
         document.getElementById("fbb-" + id).innerHTML = "";
 
-        const prompt = `You are a strict UK student visa credibility interviewer.
-
-The student is applying to study "${course.name}" at Regent College London, campus: "${course.campus}".
-
-Evaluate the student's answer based ONLY on:
-- Relevance to the course
-- Clear knowledge of the course content
-- Clear reason for choosing Regent College London specifically
-- Genuine study intent (not immigration intent)
-- Clarity, structure, and confidence
+        // IMPROVED PROMPT: focus on content, personalization, understanding
+        const prompt = `You are a helpful UK student visa credibility interview coach. The student is applying to study "${course.name}" at Regent College London, campus: "${course.campus}".
 
 Question: "${q.q}"
 
-What a strong answer MUST include: ${q.cr}
-
 Student answer: "${ans}"
 
-Be strict. Do not be nice if the answer is weak.
+What a strong answer MUST include: ${q.cr}
+
+IMPORTANT RULES:
+- Do NOT penalize punctuation, capitalization, or minor grammar errors.
+- Do NOT penalize spelling mistakes unless they make the answer unclear.
+- Value personal language like "I", "my", "me" – this shows genuine response.
+- Focus on whether the student demonstrates understanding of their course, university, and career plans.
+- Reward specific details (module names, company names, locations, figures).
+- Reward logical connection between the course and the student's background/goals.
 
 Return ONLY valid JSON in this exact format:
-{"pass":true,"score":80,"summary":"One clear sentence verdict specific to the answer.","good":["specific strength based on answer"],"improve":["specific weakness and how to fix it"]}
+{"pass":true,"score":80,"summary":"One sentence verdict specific to the answer.","good":["specific strength based on answer"],"improve":["specific weakness and how to fix it"]}
 
-Rules:
-- Make feedback specific to THIS answer (no generic advice)
-- Mention the course or school if missing or weak
-- Score must reflect quality (0-100)
-- Output ONLY JSON, no markdown, no extra text`;
+Score should reflect quality (0-100). A score >= 70 is considered a pass.`;
 
         try {
-          // FIX: Use Puter.js - completely free, no API key required!
-          // Users just need to sign in with a free Puter account when prompted
           const response = await puter.ai.chat(prompt, {
-            model: "gpt-4o-mini", // Fast and cost-effective
+            model: "gpt-4o-mini",
             stream: false,
           });
 
-          // Parse response - Puter returns the message content directly
           let raw = "";
           if (typeof response === "string") {
             raw = response;
@@ -2796,11 +2791,7 @@ Rules:
             throw new Error("Unexpected response format");
           }
 
-          // Extract JSON from response
-          raw = raw
-            .replace(/```json|```/g, "")
-            .replace(/\n/g, " ")
-            .trim();
+          raw = raw.replace(/```json|```/g, "").replace(/\n/g, " ").trim();
           const match = raw.match(/\{.*\}/);
           if (!match) throw new Error("Invalid JSON response from AI");
 
@@ -2808,11 +2799,17 @@ Rules:
           if (typeof j.pass !== "boolean")
             throw new Error("Invalid response structure");
 
-          // Update scores
-          if (j.pass) passN++;
-          else failN++;
-          totN++;
-          updScore();
+          // FIXED: Count question only once
+          if (!questionStatus[id]) {
+            questionStatus[id] = true;
+            if (j.pass) {
+              passN++;
+            } else {
+              failN++;
+            }
+            totN++;
+            updScore();
+          }
 
           // Display feedback
           fb.className =
@@ -2849,22 +2846,14 @@ Rules:
           }
           document.getElementById("fbb-" + id).innerHTML = h;
 
-          // ✅ AUTO-SAVE TO SUPABASE (REGENT)
+          // Auto-save to Supabase
           if (typeof window.saveAIResponse === "function") {
             try {
-              const questionId = "REGENT_" + id; // e.g., "REGENT_p1"
-              const answerText =
-                document.getElementById("regent-ans-" + id)?.value || "";
-              const score = j.score; // Uses parsed JSON 'j' from AI response
-              const feedbackText =
-                j.summary || j.good?.[0] || JSON.stringify(j);
-
-              window.saveAIResponse(
-                questionId,
-                answerText,
-                score,
-                feedbackText,
-              );
+              const questionId = "REGENT_" + id;
+              const answerText = document.getElementById("regent-ans-" + id)?.value || "";
+              const score = j.score;
+              const feedbackText = j.summary || j.good?.[0] || JSON.stringify(j);
+              window.saveAIResponse(questionId, answerText, score, feedbackText);
               console.log("✅ Regent AI Saved:", questionId, "| Score:", score);
             } catch (err) {
               console.warn("⚠️ Regent Save Skipped:", err.message);
