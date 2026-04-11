@@ -2520,13 +2520,15 @@
     </div>
 
     <!-- ======================================================
-     JAVASCRIPT - WITH REAL PUTER.JS AI + DARK MODE + SUPABASE/EMAILJS
+     JAVASCRIPT - WITH FIXED MARKING & IMPROVED AI PROMPT
 ====================================================== -->
     <script>
       // ===== GLOBAL STATE =====
       let currentCourse = null;
       let checklistProgress = 0;
       let currentTheme = localStorage.getItem("bpp-theme") || "light";
+      // Track which questions have been counted (for AI marking)
+      let questionStatus = {};
 
       // ===== COURSE DATA =====
       const courseData = {
@@ -2600,6 +2602,8 @@
         document.getElementById("tb-campus").textContent = currentCourse.campus;
         document.getElementById("s-select").classList.remove("active");
         document.getElementById("s-main").classList.add("active");
+        // Reset question status for new course
+        questionStatus = {};
         showTab("video", "sl-video");
       }
 
@@ -2671,7 +2675,7 @@
           `${checked}/${total}`;
       }
 
-      // ===== REAL PUTER.JS AI FEEDBACK =====
+      // ===== REAL PUTER.JS AI FEEDBACK (IMPROVED PROMPT) =====
       async function submitAnswer() {
         const input = document.getElementById("bpp-answer-input");
         const answer = input.value.trim();
@@ -2689,22 +2693,32 @@
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Analysing...';
         try {
-          const prompt = `You are a UK student visa credibility interview expert for BPP University. 
-    Analyse this student's answer to: "Why have you chosen to study this programme at BPP University?"
-    
-    Student answer: "${answer}"
-    
-    Provide feedback in this EXACT JSON format (no other text):
-    {
-      "score": number between 1-10,
-      "verdict": "Strong Response" | "Good Response" | "Needs Improvement",
-      "icon": "verified" | "thumb_up" | "warning",
-      "strengths": [array of 2-3 specific strengths],
-      "suggestions": [array of 1-2 constructive suggestions],
-      "signals": [array of 3 credibility signals with ✓ or ✗]
-    }
-    
-    Focus on: specificity about BPP, career alignment, realistic planning, and genuine intent.`;
+          // IMPROVED PROMPT – no grammar penalty, reward personal language
+          const prompt = `You are a helpful UK student visa credibility interview coach. The student is applying to study at BPP University.
+
+Question: "Why have you chosen to study this programme at BPP University?"
+
+Student answer: "${answer}"
+
+IMPORTANT RULES:
+- Do NOT penalize punctuation, capitalization, or minor grammar errors.
+- Do NOT penalize spelling mistakes unless they make the answer unclear.
+- Value personal language like "I", "my", "me" – this shows genuine response.
+- Focus on whether the student demonstrates understanding of BPP, their course, career plans.
+- Reward specific details (module names, teaching approach, industry links, campus location).
+- Reward logical connection between the course and the student's background/goals.
+
+Provide feedback in this EXACT JSON format (no other text):
+{
+  "score": number between 1-10,
+  "verdict": "Strong Response" | "Good Response" | "Needs Improvement",
+  "icon": "verified" | "thumb_up" | "warning",
+  "strengths": [array of 2-3 specific strengths],
+  "suggestions": [array of 1-2 constructive suggestions],
+  "signals": [array of 3 credibility signals with ✓ or ✗]
+}
+
+Focus on: specificity about BPP, career alignment, realistic planning, and genuine intent.`;
           const response = await puter.ai.chat(prompt, {
             model: "gpt-4o-mini",
           });
