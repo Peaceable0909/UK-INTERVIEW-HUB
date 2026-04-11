@@ -81,10 +81,9 @@ async function loadStudentProfile(user) {
 async function checkStudentId(user) {
   const student = JSON.parse(localStorage.getItem('student'));
   if (student && student.student_id && student.student_id !== '') {
-    return true; // already have ID
+    return true;
   }
 
-  // Show modal
   const modal = document.getElementById('studentIdModal');
   const input = document.getElementById('studentIdInput');
   const saveBtn = document.getElementById('saveStudentIdBtn');
@@ -100,7 +99,6 @@ async function checkStudentId(user) {
         return;
       }
       
-      // Update Supabase
       const { error } = await supabaseClient
         .from('student_progress')
         .update({ student_id: studentId })
@@ -111,7 +109,6 @@ async function checkStudentId(user) {
         return;
       }
       
-      // Update localStorage
       const updatedStudent = { ...student, student_id: studentId };
       localStorage.setItem('student', JSON.stringify(updatedStudent));
       
@@ -370,16 +367,24 @@ window.saveChecklistItem = async (itemId, checked) => {
     await supabaseClient.from('student_progress').update({ checklist_status: updated, updated_at: new Date().toISOString() }).eq('user_id', student.id);
   } catch (err) { console.error('saveChecklistItem error:', err); }
 };
+
+// ✅ MODIFIED: store answer inside ai_scores as well for easier dashboard access
 window.saveAIResponse = async (questionId, answerText, score, feedback) => {
   const student = window.getCurrentStudent();
   if (!student?.id) return;
   try {
     const { data: current } = await supabaseClient.from('student_progress').select('ai_scores, practice_responses').eq('user_id', student.id).single();
-    const scores = { ...(current?.ai_scores || {}), [questionId]: { score, feedback, date: new Date().toISOString() } };
+    // Store answer inside ai_scores (so dashboard can show answer without merging)
+    const scores = { ...(current?.ai_scores || {}), [questionId]: { score, feedback, answer: answerText, date: new Date().toISOString() } };
     const responses = { ...(current?.practice_responses || {}), [questionId]: { answer: answerText, date: new Date().toISOString() } };
-    await supabaseClient.from('student_progress').update({ ai_scores: scores, practice_responses: responses, updated_at: new Date().toISOString() }).eq('user_id', student.id);
+    await supabaseClient.from('student_progress').update({ 
+      ai_scores: scores, 
+      practice_responses: responses, 
+      updated_at: new Date().toISOString() 
+    }).eq('user_id', student.id);
   } catch (err) { console.error('saveAIResponse error:', err); }
 };
+
 window.loadSavedProgress = async () => {
   const student = window.getCurrentStudent();
   if (!student?.id) return null;
