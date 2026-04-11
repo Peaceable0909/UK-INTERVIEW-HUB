@@ -207,6 +207,10 @@
             </button>
           </div>
         </div>
+        <div id="searchBox" style="display:none;" class="mb-3">
+          <input type="text" placeholder="Search by question, university, or keyword..." 
+            class="w-full px-4 py-2.5 rounded-xl border border-outline/30 bg-surface-container-lowest text-sm font-body text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30">
+        </div>
         <div id="responsesContainer" class="space-y-4">
           <!-- dynamically filled -->
         </div>
@@ -240,10 +244,62 @@
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="app.js"></script>
 
+  <!-- Toast notification -->
+  <div id="toast" style="display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:10px 20px;border-radius:999px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.2);transition:opacity 0.3s;"></div>
+
   <script>
-    // Helper: format checklist key to readable string
+    // ===== TOAST =====
+    function showToast(msg, type = 'success') {
+      const t = document.getElementById('toast');
+      t.textContent = (type === 'success' ? '✅ ' : '❌ ') + msg;
+      t.style.background = type === 'success' ? '#003a1f' : '#5c0000';
+      t.style.display = 'block';
+      t.style.opacity = '1';
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.style.display = 'none', 300); }, 3000);
+    }
+
+    // ===== QUESTION LABEL MAP =====
+    const QUESTION_LABELS = {
+      'UKVI_Q1': 'Why study in the UK?',
+      'UKVI_Q2': 'Why this specific university?',
+      'UKVI_Q3': 'Plans after your studies?',
+      'UKVI_Q4': 'How will you fund your studies?',
+      'UKVI_Q5': 'Your academic background',
+      'UKVI_Q6': 'Course name and duration',
+      'UKVI_Q7': 'Why study this subject?',
+      'UKVI_Q8': 'Ties to your home country?',
+      'NL_Q1': 'Why study in the Netherlands?',
+      'NL_Q2': 'Why this Dutch university?',
+      'NL_Q3': 'Plans after your studies?',
+      'NL_Q4': 'How will you fund your studies?',
+      'NL_Q5': 'Language of instruction?',
+      'NL_Q6': 'Course name and duration',
+      'NL_Q7': 'Connections in the Netherlands?',
+      'NL_Q8': 'Ties to your home country?',
+      'BPP_Q1': 'Why study at BPP University?',
+    };
+
+    function getQuestionLabel(qId, data) {
+      // Prefer stored questionText, then map, then formatted ID
+      if (data?.questionText && !data.questionText.match(/^(REGENT|YSJ|UKVI|BPP|NL)_/)) return data.questionText;
+      if (QUESTION_LABELS[qId]) return QUESTION_LABELS[qId];
+      let label = qId.replace(/^(REGENT|YSJ|UKVI|BPP|NL)_/, '').replace(/_/g, ' ');
+      label = label.charAt(0).toUpperCase() + label.slice(1).toLowerCase();
+      return label;
+    }
+
+    function getCategoryFromId(qId) {
+      if (qId.startsWith('REGENT')) return 'Regent College';
+      if (qId.startsWith('YSJ')) return 'York St John';
+      if (qId.startsWith('BPP')) return 'BPP University';
+      if (qId.startsWith('NL')) return 'Netherlands';
+      if (qId.startsWith('UKVI')) return 'UKVI';
+      return 'Practice';
+    }
+
+    // ===== CHECKLIST KEY FORMATTER =====
     function formatChecklistKey(key) {
-      // Try to extract a meaningful description
       const knownPatterns = {
         'Watch the full training video': 'Watch the full training video',
         'Research your specific BPP campus': 'Research your specific BPP campus',
@@ -257,21 +313,31 @@
         'Plan your outfit': 'Plan your outfit',
         'Get good rest the night before': 'Get good rest the night before',
         'Log in 10 minutes early': 'Log in 10 minutes early',
-        'Know the exact name of your course and duration': 'Know the exact name of your course',
+        'Know the exact name of your course and duration': 'Know your course name and duration',
         'Know your campus name, full street address, and postcode': 'Know your campus address',
-        'Name at least 2-3 modules and explain why each interests you': 'Name modules & explain interest',
+        'Name at least 2-3 modules and explain why each interests you': 'Name modules and explain interest',
         'Know how your course is assessed — the specific methods': 'Know assessment methods',
         'Compared YSJ with 2 other named UK universities with specific reasons': 'Compare YSJ with other unis',
-        'Know YSJ rankings: top 10 student satisfaction, Gold teaching excellence': 'Know YSJ rankings'
+        'Know YSJ rankings: top 10 student satisfaction, Gold teaching excellence': 'Know YSJ rankings',
       };
       if (knownPatterns[key]) return knownPatterns[key];
-      // Remove prefixes like "bpp_chk_", "regent_chk_", "ysj_chk_", "nl_chk_", "ukvi_chk_"
       let cleaned = key.replace(/^(bpp|regent|ysj|nl|ukvi)_chk_\d+_?/, '');
       cleaned = cleaned.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
       return cleaned || key;
     }
 
-    // Render checklist
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+    }
+
+    // ===== STATE =====
+    let allAiScores = {};
+    let searchQuery = '';
+    let filterCategory = 'all';
+    let searchVisible = false;
+
+    // ===== RENDER CHECKLIST =====
     function renderChecklist(checklistStatus) {
       const container = document.getElementById('checklistContainer');
       const summarySpan = document.getElementById('checklistSummary');
@@ -286,8 +352,7 @@
       const percent = total ? Math.round((doneCount / total) * 100) : 0;
       document.getElementById('checklistPercent').innerHTML = `${percent}<span class="text-sm font-body text-primary/60">%</span>`;
       summarySpan.textContent = `${doneCount}/${total} COMPLETED`;
-
-      const html = items.map(([key, done]) => `
+      container.innerHTML = items.map(([key, done]) => `
         <div class="flex items-center justify-between group">
           <div class="flex items-center gap-3">
             <div class="w-2 h-2 rounded-full ${done ? 'bg-secondary' : 'bg-slate-300'}"></div>
@@ -296,169 +361,234 @@
           <span class="font-label text-[10px] font-bold ${done ? 'text-secondary' : 'text-slate-400'}">${done ? 'DONE' : 'PENDING'}</span>
         </div>
       `).join('');
-      container.innerHTML = html;
     }
 
-    // Render practice responses
-    function renderResponses(aiScores) {
+    // ===== RENDER RESPONSES =====
+    function renderResponses(aiScores, query = '', category = 'all') {
       const container = document.getElementById('responsesContainer');
       const noMsg = document.getElementById('noResponsesMsg');
+
       if (!aiScores || Object.keys(aiScores).length === 0) {
         container.innerHTML = '';
+        noMsg.textContent = 'No practice responses yet. Start practising on any university page!';
         noMsg.classList.remove('hidden');
         return;
       }
+
+      let entries = Object.entries(aiScores);
+
+      // Filter by category
+      if (category !== 'all') {
+        entries = entries.filter(([qId]) => getCategoryFromId(qId).toLowerCase().includes(category.toLowerCase()));
+      }
+
+      // Filter by search
+      if (query.trim()) {
+        const q = query.toLowerCase();
+        entries = entries.filter(([qId, data]) => {
+          const label = getQuestionLabel(qId, data).toLowerCase();
+          const answer = (data.answer || '').toLowerCase();
+          const cat = getCategoryFromId(qId).toLowerCase();
+          return label.includes(q) || answer.includes(q) || cat.includes(q);
+        });
+      }
+
+      if (entries.length === 0) {
+        container.innerHTML = '';
+        noMsg.textContent = 'No responses match your search.';
+        noMsg.classList.remove('hidden');
+        return;
+      }
+
       noMsg.classList.add('hidden');
-      const entries = Object.entries(aiScores);
-      // Sort by date descending (if date exists, otherwise by key)
+
       entries.sort((a, b) => {
         const dateA = a[1]?.date ? new Date(a[1].date) : 0;
         const dateB = b[1]?.date ? new Date(b[1].date) : 0;
         return dateB - dateA;
       });
 
-      const html = entries.map(([qId, data]) => {
-        const score = data.score ?? 0;
+      container.innerHTML = entries.map(([qId, data]) => {
+        const score = typeof data.score === 'number' ? data.score : 0;
         const pass = score >= 7;
-        const answerPreview = data.answer ? (data.answer.length > 100 ? data.answer.substring(0, 100) + '…' : data.answer) : 'No answer saved';
-        const feedback = data.feedback || (data.summary || 'No feedback available');
-        // Determine category hint (first part of qId)
-        let category = 'General';
-        if (qId.includes('REGENT')) category = 'Regent';
-        else if (qId.includes('BPP')) category = 'BPP';
-        else if (qId.includes('YSJ')) category = 'YSJ';
-        else if (qId.includes('NL')) category = 'Netherlands';
-        else if (qId.includes('UKVI')) category = 'UKVI';
-        else if (qId.includes('p')) category = 'Practice';
+        const label = getQuestionLabel(qId, data);
+        const category = getCategoryFromId(qId);
+        const answerPreview = data.answer ? (data.answer.length > 120 ? data.answer.substring(0, 120) + '…' : data.answer) : 'No answer saved';
+        const feedback = data.feedback || data.summary || 'No feedback available';
+        const dateStr = data.date ? new Date(data.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+
         return `
           <div class="bg-surface-container-lowest rounded-[1.5rem] p-5 editorial-shadow border border-white/40">
-            <div class="flex justify-between items-start mb-4">
-              <div>
-                <span class="font-label text-[10px] uppercase font-bold text-on-surface-variant/60 tracking-wider">${escapeHtml(qId)} • ${category}</span>
-                <h4 class="font-headline font-bold text-primary mt-1">${escapeHtml(qId.length > 40 ? qId.substring(0,40)+'…' : qId)}</h4>
-              </div>
-              <div class="text-right">
-                <p class="font-headline font-bold ${pass ? 'text-secondary' : 'text-tertiary'} text-lg">${score}/10</p>
-                <span class="font-label text-[10px] font-bold ${pass ? 'text-on-secondary' : 'text-on-tertiary'} px-2 py-0.5 ${pass ? 'bg-secondary' : 'bg-tertiary'} rounded-sm uppercase">${pass ? 'Pass' : 'Needs Work'}</span>
-              </div>
-            </div>
-            <div class="space-y-3 pt-3">
-              <details class="group">
-                <summary class="list-none flex items-center justify-between cursor-pointer font-label text-[10px] font-bold text-primary uppercase tracking-widest">
-                  Review Analysis
-                  <span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
-                </summary>
-                <div class="mt-4 space-y-4 font-body text-sm">
-                  <div class="p-4 bg-surface-container-low rounded-xl">
-                    <p class="font-label text-[10px] font-bold text-on-surface-variant uppercase mb-2">Your Answer</p>
-                    <p class="text-on-surface leading-relaxed italic">${escapeHtml(answerPreview)}</p>
-                  </div>
-                  <div class="p-4 ${pass ? 'bg-secondary/5 border-l-4 border-secondary' : 'bg-tertiary/5 border-l-4 border-tertiary'} rounded-xl">
-                    <p class="font-label text-[10px] font-bold ${pass ? 'text-secondary' : 'text-tertiary'} uppercase mb-2">AI Feedback</p>
-                    <p class="text-on-surface leading-relaxed">${escapeHtml(feedback.length > 200 ? feedback.substring(0,200)+'…' : feedback)}</p>
-                  </div>
+            <div class="flex justify-between items-start mb-3">
+              <div class="flex-1 pr-3">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="font-label text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm bg-primary/10 text-primary">${escapeHtml(category)}</span>
+                  ${dateStr ? `<span class="font-label text-[9px] text-slate-400">${escapeHtml(dateStr)}</span>` : ''}
                 </div>
-              </details>
+                <h4 class="font-headline font-bold text-sm text-primary leading-snug">${escapeHtml(label)}</h4>
+              </div>
+              <div class="text-right flex-shrink-0">
+                <p class="font-headline font-bold ${pass ? 'text-secondary' : 'text-tertiary'} text-lg">${score.toFixed(1)}/10</p>
+                <span class="font-label text-[9px] font-bold text-white px-2 py-0.5 ${pass ? 'bg-secondary' : 'bg-tertiary'} rounded-sm uppercase">${pass ? 'Pass' : 'Needs Work'}</span>
+              </div>
             </div>
+            <details class="group mt-3">
+              <summary class="list-none flex items-center justify-between cursor-pointer font-label text-[10px] font-bold text-primary uppercase tracking-widest">
+                Review
+                <span class="material-symbols-outlined transition-transform group-open:rotate-180 text-base">expand_more</span>
+              </summary>
+              <div class="mt-3 space-y-3 font-body text-sm">
+                <div class="p-3 bg-surface-container-low rounded-xl">
+                  <p class="font-label text-[9px] font-bold text-on-surface-variant uppercase mb-1">Your Answer</p>
+                  <p class="text-on-surface leading-relaxed italic text-xs">${escapeHtml(answerPreview)}</p>
+                </div>
+                <div class="p-3 ${pass ? 'bg-secondary/5 border-l-4 border-secondary' : 'bg-tertiary/5 border-l-4 border-tertiary'} rounded-xl">
+                  <p class="font-label text-[9px] font-bold ${pass ? 'text-secondary' : 'text-tertiary'} uppercase mb-1">AI Feedback</p>
+                  <p class="text-on-surface leading-relaxed text-xs">${escapeHtml(feedback.length > 250 ? feedback.substring(0,250)+'…' : feedback)}</p>
+                </div>
+                <button onclick="deleteResponse('${escapeHtml(qId)}')" class="flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors mt-1">
+                  <span class="material-symbols-outlined text-sm">delete</span> Remove this response
+                </button>
+              </div>
+            </details>
           </div>
         `;
       }).join('');
-      container.innerHTML = html;
     }
 
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
+    // ===== DELETE RESPONSE =====
+    async function deleteResponse(qId) {
+      if (!confirm('Remove this response from your record?')) return;
+      const student = window.getCurrentStudent();
+      if (!student?.id) return;
+
+      const progress = await window.loadSavedProgress();
+      const scores = progress?.ai_scores || {};
+      const responses = progress?.practice_responses || {};
+      delete scores[qId];
+      delete responses[qId];
+      delete allAiScores[qId];
+
+      const { createClient } = supabase;
+      const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+      const supabaseClient = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      window._supabaseClient = supabaseClient;
+
+      const { error } = await supabaseClient
+        .from('student_progress')
+        .update({ ai_scores: scores, practice_responses: responses, updated_at: new Date().toISOString() })
+        .eq('user_id', student.id);
+
+      if (error) { showToast('Could not remove response', 'error'); return; }
+      showToast('Response removed');
+      renderResponses(allAiScores, searchQuery, filterCategory);
+      updateStats(allAiScores);
+    }
+
+    // ===== UPDATE STATS =====
+    function updateStats(aiScores) {
+      const responsesList = Object.values(aiScores);
+      const total = responsesList.length;
+      let totalScore = 0, passCount = 0;
+      responsesList.forEach(r => {
+        const sc = r.score;
+        if (typeof sc === 'number') { totalScore += sc; if (sc >= 7) passCount++; }
+      });
+      const avg = total ? (totalScore / total).toFixed(1) : '0';
+      const passRate = total ? Math.round((passCount / total) * 100) : 0;
+      document.getElementById('totalResponses').textContent = total;
+      document.getElementById('avgScore').innerHTML = `${avg}<span class="text-sm font-body text-secondary/60">/10</span>`;
+      document.getElementById('passRate').innerHTML = `${passRate}<span class="text-sm font-body text-secondary/60">%</span>`;
+    }
+
+    // ===== SEARCH & FILTER =====
+    function setupSearchFilter() {
+      const searchBtn = document.getElementById('searchBtn');
+      const filterBtn = document.getElementById('filterBtn');
+      const searchBox = document.getElementById('searchBox');
+
+      searchBtn.addEventListener('click', () => {
+        searchVisible = !searchVisible;
+        searchBox.style.display = searchVisible ? 'block' : 'none';
+        if (searchVisible) searchBox.querySelector('input').focus();
+      });
+
+      searchBox.querySelector('input').addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        renderResponses(allAiScores, searchQuery, filterCategory);
+      });
+
+      const categories = ['all', 'Regent', 'YSJ', 'BPP', 'UKVI', 'Netherlands'];
+      let catIndex = 0;
+      filterBtn.addEventListener('click', () => {
+        catIndex = (catIndex + 1) % categories.length;
+        filterCategory = categories[catIndex];
+        filterBtn.title = 'Filter: ' + (filterCategory === 'all' ? 'All' : filterCategory);
+        filterBtn.querySelector('span').textContent = filterCategory === 'all' ? 'tune' : 'filter_alt';
+        renderResponses(allAiScores, searchQuery, filterCategory);
       });
     }
 
-    // Main load function
+    // ===== LOAD DASHBOARD =====
     async function loadDashboard() {
       const student = window.getCurrentStudent();
-      if (!student) {
-        window.location.href = 'index.html';
-        return;
-      }
-      // Update profile
+      if (!student) { window.location.href = 'index.html'; return; }
+
       document.getElementById('studentName').textContent = student.name || 'Student';
       document.getElementById('studentEmail').textContent = student.email || '';
       document.getElementById('studentId').textContent = `ID: ${student.student_id || '—'}`;
-      const initials = (student.name || 'S').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+      const initials = (student.name || 'S').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
       document.getElementById('avatarInitials').textContent = initials;
 
       const progress = await window.loadSavedProgress();
       const checklist = progress?.checklist_status || {};
-      const aiScores = progress?.ai_scores || {};
+      allAiScores = progress?.ai_scores || {};
 
-      // Stats
-      const responsesList = Object.values(aiScores);
-      const total = responsesList.length;
-      let totalScore = 0;
-      let passCount = 0;
-      responsesList.forEach(r => {
-        const sc = r.score;
-        if (typeof sc === 'number') {
-          totalScore += sc;
-          if (sc >= 7) passCount++;
-        }
-      });
-      const avg = total ? (totalScore / total).toFixed(1) : '0';
-      const passRate = total ? Math.round((passCount/total)*100) : 0;
-      document.getElementById('totalResponses').textContent = total;
-      document.getElementById('avgScore').innerHTML = `${avg}<span class="text-sm font-body text-secondary/60">/10</span>`;
-      document.getElementById('passRate').innerHTML = `${passRate}<span class="text-sm font-body text-secondary/60">%</span>`;
-
-      // Checklist percent
+      updateStats(allAiScores);
       const checklistEntries = Object.values(checklist);
-      const doneCount = checklistEntries.filter(v=>v===true).length;
-      const checklistPercent = checklistEntries.length ? Math.round((doneCount/checklistEntries.length)*100) : 0;
+      const doneCount = checklistEntries.filter(v => v === true).length;
+      const checklistPercent = checklistEntries.length ? Math.round((doneCount / checklistEntries.length) * 100) : 0;
       document.getElementById('checklistPercent').innerHTML = `${checklistPercent}<span class="text-sm font-body text-primary/60">%</span>`;
 
       renderChecklist(checklist);
-      renderResponses(aiScores);
+      renderResponses(allAiScores);
 
-      // Show dashboard
       document.getElementById('loadingState').classList.add('hidden');
       document.getElementById('dashboardContent').classList.remove('hidden');
     }
 
-    // Email report
+    // ===== EMAIL REPORT =====
     async function sendReport() {
       const student = window.getCurrentStudent();
       if (!student) return;
+      const btn = document.getElementById('emailReportBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">progress_activity</span> Sending...';
       const progress = await window.loadSavedProgress();
       const responses = progress?.ai_scores || {};
       const checklist = progress?.checklist_status || {};
-      const scores = Object.values(responses).map(s=>s.score).filter(n=>typeof n==='number');
-      const avg = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1) : 'N/A';
+      const scores = Object.values(responses).map(s => s.score).filter(n => typeof n === 'number');
+      const avg = scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : 'N/A';
       const message = `Student: ${student.name} (ID: ${student.student_id || 'N/A'})
 Email: ${student.email}
 Date: ${new Date().toLocaleString()}
 Total responses: ${scores.length}
 Average score: ${avg}/10
-Checklist completed: ${Object.values(checklist).filter(v=>v===true).length}/${Object.keys(checklist).length} items
-
-Full report from Dashboard.`;
+Checklist: ${Object.values(checklist).filter(v=>v===true).length}/${Object.keys(checklist).length} done`;
       const result = await window.sendReadyEmail(responses, checklist, avg, message);
-      if (result?.success) alert('✅ Report sent successfully!');
-      else alert('❌ Failed to send email. Please try again.');
+      btn.disabled = false;
+      btn.innerHTML = '<span class="material-symbols-outlined text-sm">mail</span> Email Report';
+      if (result?.success) showToast('Report sent to your tutor');
+      else showToast('Failed to send report', 'error');
     }
 
-    // Export JSON
+    // ===== EXPORT JSON =====
     async function exportJson() {
       const student = window.getCurrentStudent();
       const progress = await window.loadSavedProgress();
-      const data = {
-        student: student,
-        progress: progress,
-        exportedAt: new Date().toISOString()
-      };
-      const jsonStr = JSON.stringify(data, null, 2);
-      const blob = new Blob([jsonStr], {type: 'application/json'});
+      const data = { student, progress, exportedAt: new Date().toISOString() };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -467,25 +597,35 @@ Full report from Dashboard.`;
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      showToast('Data exported');
     }
 
-    // Logout
+    // ===== LOGOUT =====
     async function logout() {
-      await supabase.auth.signOut();
+      const { createClient } = supabase;
+      const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+      const supabaseClient = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      await supabaseClient.auth.signOut();
       localStorage.removeItem('student');
       localStorage.removeItem('selected_university');
       window.location.href = 'index.html';
     }
 
-    // Event listeners
+    // ===== INIT =====
     document.getElementById('logoutBtn').addEventListener('click', logout);
     document.getElementById('emailReportBtn').addEventListener('click', sendReport);
     document.getElementById('exportJsonBtn').addEventListener('click', exportJson);
-    // Simple search/filter could be added but keeping design
-    document.getElementById('searchBtn').addEventListener('click', () => alert('Search feature coming soon!'));
-    document.getElementById('filterBtn').addEventListener('click', () => alert('Filter feature coming soon!'));
+    setupSearchFilter();
 
-    loadDashboard();
+    async function init() {
+      let attempts = 0;
+      while (!window.getCurrentStudent() && attempts < 20) {
+        await new Promise(r => setTimeout(r, 150));
+        attempts++;
+      }
+      loadDashboard();
+    }
+    init();
   </script>
 </body>
-</html>
