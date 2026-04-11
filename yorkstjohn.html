@@ -1999,11 +1999,13 @@
           document.getElementById("fbb-"+id).innerHTML=h;
           if(typeof window.saveAIResponse==="function"){
             try{
-              const questionId=id;
+              const questionId="YSJ_"+id;
               const answerText=document.getElementById("ans-"+id)?.value||"";
-              const score=j.score;
+              const score=Math.round((j.score/10)*10)/10; // normalise 0-100 to 0-10
               const feedbackText=j.summary||j.good?.[0]||JSON.stringify(j);
-              window.saveAIResponse(questionId,answerText,score,feedbackText);
+              const qTextEl=document.querySelector("#pc-"+id+" p.font-headline");
+              const qText=qTextEl?qTextEl.textContent.trim():q.q||"";
+              const saveResult = await window.saveAIResponse(questionId,answerText,score,feedbackText,qText);
               console.log("✅ YSJ Saved:",questionId,"| Score:",score);
             }catch(err){ console.warn("⚠️ YSJ Save Skipped:",err.message); }
           }
@@ -2117,7 +2119,7 @@
                 titleSpan.style.textDecoration=isChecked?"line-through":"";
                 titleSpan.style.color=isChecked?"var(--text-muted)":"";
               }
-              window.saveChecklistItem?.(itemId,isChecked);
+              await window.saveChecklistItem?.(itemId,isChecked);
               updProg();
             });
           });
@@ -2143,7 +2145,7 @@
               readyBtn.innerHTML='<span class="material-symbols-outlined">check_circle</span> I\'m Ready for Interview';
             }
           });
-        }else if(readyBtn){ readyBtn.addEventListener("click",()=>alert("Email service not configured.")); }
+        }else if(readyBtn){ readyBtn.addEventListener("click",()=>{ if(typeof window.sendReadyEmail==="function"){ readyBtn.click(); } else { alert("Please make sure you are logged in and try again."); } }); }
         await restoreChecklist();
         await restoreAIScores();
       });
