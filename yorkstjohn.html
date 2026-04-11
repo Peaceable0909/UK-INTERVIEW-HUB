@@ -2111,7 +2111,7 @@
                 updProg();
               }
             });
-            cb.addEventListener("click",()=>{
+            cb.addEventListener("click", async ()=>{
               cb.classList.toggle("done");
               const isChecked=cb.classList.contains("done");
               const titleSpan=checkItem?.querySelector(".ct");
