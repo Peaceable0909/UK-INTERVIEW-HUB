@@ -1855,1449 +1855,298 @@
     </div>
 
     <!-- ======================================================
-     JAVASCRIPT - FIXED MARKING & IMPROVED AI PROMPT
+     JAVASCRIPT - FIXED MARKING & IMPROVED AI PROMPT + RESTORE
 ====================================================== -->
     <script>
       const COURSES = {
-        "ba-business": {
-          name: "BA (Hons) Business Management",
-          campus: "York Campus",
-          city: "York",
-          address: "Lord Mayor's Walk, York, YO31 7EX",
-          campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/",
-          specUrl:
-            "https://www.yorksj.ac.uk/study/courses/undergraduate/business-management/",
-          videoNotes: [
-            "Your campus address: Lord Mayor's Walk, York, YO31 7EX",
-            "Why you chose Business Management at YSJ specifically",
-            "Your key modules and how the course is assessed",
-            "The names of 2 other UK universities you compared and why you chose YSJ",
-            "Placement or internship opportunities available",
-            "Jobs and companies you will target after graduation",
-            "Your expected salary in GBP",
-            "Your accommodation plan and weekly cost",
-            "Your visa working hours limit (20 hours per week during term time)",
-          ],
-          assessment:
-            "Coursework, group projects, presentations, and written exams. May include placement year option.",
-          modules: [
-            {
-              name: "Principles of Management",
-              why: "Builds foundational understanding of organisational structure and management theory.",
-            },
-            {
-              name: "Marketing Fundamentals",
-              why: "Covers customer behaviour, branding, and market research techniques.",
-            },
-            {
-              name: "Business Finance",
-              why: "Teaches financial statements, budgeting, and business performance analysis.",
-            },
-            {
-              name: "Human Resource Management",
-              why: "Develops skills in recruitment, training, and employee relations.",
-            },
-            {
-              name: "Strategic Management",
-              why: "Focuses on long-term business planning and competitive positioning.",
-            },
-            {
-              name: "Operations Management",
-              why: "Covers supply chain, logistics, and process improvement.",
-            },
-          ],
-          roles: [
-            "Business Analyst",
-            "Marketing Executive",
-            "HR Coordinator",
-            "Operations Manager",
-          ],
-          companies: [
-            "Nestlé",
-            "Aviva",
-            "Santander",
-            "Yorkshire Bank",
-            "Local SMEs in Yorkshire",
-          ],
-          salary: "£22,000 – £30,000",
-          tuition: "£11,800 per year",
-          livingCost: "£1,171 per month (UKVI requirement for York)",
-          accommodation: "£129-£222 per week",
-        },
-        "ba-marketing": {
-          name: "BA (Hons) Marketing",
-          campus: "York Campus",
-          city: "York",
-          address: "Lord Mayor's Walk, York, YO31 7EX",
-          campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/",
-          specUrl:
-            "https://www.yorksj.ac.uk/study/courses/undergraduate/marketing/",
-          videoNotes: [
-            "Your campus address: Lord Mayor's Walk, York, YO31 7EX",
-            "Why you chose Marketing at YSJ specifically",
-            "Your key modules including digital and traditional marketing",
-            "Two other universities you compared and why YSJ won",
-            "Practical projects and real client work opportunities",
-            "Career roles in marketing agencies or in-house teams",
-            "Expected starting salary range",
-            "Accommodation costs and location",
-            "Visa responsibilities and working rights",
-          ],
-          assessment:
-            "Coursework, live client projects, presentations, and digital portfolio development.",
-          modules: [
-            {
-              name: "Consumer Behaviour",
-              why: "Understanding how and why consumers make purchasing decisions.",
-            },
-            {
-              name: "Digital Marketing",
-              why: "Social media marketing, SEO, content strategy, and analytics.",
-            },
-            {
-              name: "Brand Management",
-              why: "Building and maintaining strong brand identities and equity.",
-            },
-            {
-              name: "Market Research",
-              why: "Techniques for gathering and analysing market data.",
-            },
-            {
-              name: "Advertising and PR",
-              why: "Creating campaigns and managing public relations.",
-            },
-            {
-              name: "Marketing Strategy",
-              why: "Developing comprehensive marketing plans and budgets.",
-            },
-          ],
-          roles: [
-            "Marketing Executive",
-            "Digital Marketing Specialist",
-            "Brand Manager",
-            "Social Media Manager",
-          ],
-          companies: [
-            "Yorkshire Tea",
-            "ASOS",
-            "John Lewis",
-            "Local marketing agencies",
-          ],
-          salary: "£20,000 – £28,000",
-          tuition: "£11,800 per year",
-          livingCost: "£1,171 per month",
-          accommodation: "£129-£222 per week",
-        },
-        "ba-computing": {
-          name: "BSc (Hons) Computer Science",
-          campus: "York Campus",
-          city: "York",
-          address: "Lord Mayor's Walk, York, YO31 7EX",
-          campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/",
-          specUrl:
-            "https://www.yorksj.ac.uk/study/courses/undergraduate/computer-science/",
-          videoNotes: [
-            "Your campus address: Lord Mayor's Walk, York, YO31 7EX",
-            "Why Computer Science at YSJ specifically",
-            "Key technical modules and programming languages",
-            "Creative Centre facilities for computing students",
-            "Two other universities compared and why YSJ",
-            "Software development and IT career paths",
-            "Expected graduate salary",
-            "Accommodation plan",
-            "Visa work restrictions",
-          ],
-          assessment:
-            "Programming assignments, software projects, exams, and final year dissertation.",
-          modules: [
-            {
-              name: "Programming Fundamentals",
-              why: "Core concepts in Python, Java, and software development.",
-            },
-            {
-              name: "Database Systems",
-              why: "Design and management of SQL and NoSQL databases.",
-            },
-            {
-              name: "Web Development",
-              why: "Front-end and back-end web technologies and frameworks.",
-            },
-            {
-              name: "Software Engineering",
-              why: "Agile methodologies, version control, and team development.",
-            },
-            {
-              name: "Artificial Intelligence",
-              why: "Machine learning basics and AI applications.",
-            },
-            {
-              name: "Cybersecurity",
-              why: "Network security, encryption, and threat prevention.",
-            },
-          ],
-          roles: [
-            "Software Developer",
-            "Web Developer",
-            "Database Administrator",
-            "IT Consultant",
-          ],
-          companies: [
-            "Sage",
-            "BT",
-            "IBM",
-            "Local tech startups",
-            "Government Digital Service",
-          ],
-          salary: "£25,000 – £35,000",
-          tuition: "£11,800 per year",
-          livingCost: "£1,171 per month",
-          accommodation: "£129-£222 per week",
-        },
-        "msc-intbusiness": {
-          name: "MSc International Business",
-          campus: "York Campus",
-          city: "York",
-          address: "Lord Mayor's Walk, York, YO31 7EX",
-          campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/",
-          specUrl:
-            "https://www.yorksj.ac.uk/study/courses/postgraduate/international-business/",
-          videoNotes: [
-            "Your campus address: Lord Mayor's Walk, York, YO31 7EX",
-            "Why MSc International Business at YSJ specifically",
-            "CMI-accredited leadership content",
-            "Modules like Global Strategic Management and Business Analytics",
-            "Two other universities compared (e.g., Northumbria, Sheffield Hallam)",
-            "How this builds on your previous degree",
-            "International business development career goals",
-            "Accommodation at The Grange or Limes Court",
-            "Visa working hours (20 hours term time)",
-          ],
-          assessment:
-            "Essays, case studies, group projects, presentations, and dissertation.",
-          modules: [
-            {
-              name: "Global Strategic Management",
-              why: "International business strategy and competitive advantage.",
-            },
-            {
-              name: "Business Analytics",
-              why: "Data-driven decision making and analytical tools.",
-            },
-            {
-              name: "International Marketing",
-              why: "Marketing across different cultures and markets.",
-            },
-            {
-              name: "Leadership and Professional Development",
-              why: "CMI-accredited leadership skills for managers.",
-            },
-            {
-              name: "International Finance",
-              why: "Global financial markets and international investment.",
-            },
-            {
-              name: "Research Methods",
-              why: "Preparation for dissertation and research projects.",
-            },
-          ],
-          roles: [
-            "International Business Analyst",
-            "Global Operations Manager",
-            "Business Development Executive",
-            "Export Manager",
-          ],
-          companies: [
-            "Unilever",
-            "Shell",
-            "Standard Chartered",
-            "British American Tobacco",
-            "DHL",
-          ],
-          salary: "£28,000 – £40,000",
-          tuition: "£11,800 total",
-          livingCost: "£1,171 per month",
-          accommodation: "£129-£177 per week",
-        },
-        "msc-datasci": {
-          name: "MSc Data Science",
-          campus: "York Campus",
-          city: "York",
-          address: "Lord Mayor's Walk, York, YO31 7EX",
-          campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/",
-          specUrl:
-            "https://www.yorksj.ac.uk/study/courses/postgraduate/data-science/",
-          videoNotes: [
-            "Your campus address: Lord Mayor's Walk, York, YO31 7EX",
-            "Why Data Science at YSJ specifically",
-            "Technical modules: machine learning, big data, statistical analysis",
-            "Programming languages: Python, R, SQL",
-            "Two other universities compared and why YSJ",
-            "Data analyst/scientist career goals",
-            "Expected salary range",
-            "Accommodation plan and costs",
-            "Visa responsibilities",
-          ],
-          assessment:
-            "Programming assignments, data projects, statistical reports, and dissertation.",
-          modules: [
-            {
-              name: "Machine Learning",
-              why: "Algorithms and techniques for predictive modelling.",
-            },
-            {
-              name: "Big Data Technologies",
-              why: "Hadoop, Spark, and cloud-based data processing.",
-            },
-            {
-              name: "Statistical Analysis",
-              why: "Advanced statistics for data interpretation.",
-            },
-            {
-              name: "Data Visualisation",
-              why: "Tools like Tableau and Power BI for presenting insights.",
-            },
-            {
-              name: "Database Management",
-              why: "SQL and NoSQL database design and optimisation.",
-            },
-            {
-              name: "Research Methods",
-              why: "Data collection, analysis, and dissertation preparation.",
-            },
-          ],
-          roles: [
-            "Data Scientist",
-            "Data Analyst",
-            "Business Intelligence Developer",
-            "Machine Learning Engineer",
-          ],
-          companies: [
-            "Google",
-            "Amazon",
-            "IBM",
-            "SAS",
-            "Local data consultancies",
-          ],
-          salary: "£30,000 – £45,000",
-          tuition: "£11,800 total",
-          livingCost: "£1,171 per month",
-          accommodation: "£129-£177 per week",
-        },
-        "msc-computing": {
-          name: "MSc Computing",
-          campus: "York Campus",
-          city: "York",
-          address: "Lord Mayor's Walk, York, YO31 7EX",
-          campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/",
-          specUrl:
-            "https://www.yorksj.ac.uk/study/courses/postgraduate/computing/",
-          videoNotes: [
-            "Your campus address: Lord Mayor's Walk, York, YO31 7EX",
-            "Why MSc Computing at YSJ specifically",
-            "Advanced programming and software engineering modules",
-            "Creative Centre facilities",
-            "Two other universities compared",
-            "Software engineering or IT management career path",
-            "Expected salary",
-            "Accommodation details",
-            "Visa work limits",
-          ],
-          assessment:
-            "Software development projects, technical reports, presentations, and dissertation.",
-          modules: [
-            {
-              name: "Advanced Programming",
-              why: "Advanced concepts in multiple programming languages.",
-            },
-            {
-              name: "Software Engineering",
-              why: "Systematic approaches to software development lifecycle.",
-            },
-            {
-              name: "Cloud Computing",
-              why: "AWS, Azure, and cloud architecture principles.",
-            },
-            {
-              name: "Database Systems",
-              why: "Advanced database design and management.",
-            },
-            {
-              name: "Cybersecurity",
-              why: "Advanced security protocols and ethical hacking.",
-            },
-            {
-              name: "Research Methods",
-              why: "Academic research and dissertation preparation.",
-            },
-          ],
-          roles: [
-            "Software Engineer",
-            "Systems Architect",
-            "DevOps Engineer",
-            "IT Project Manager",
-          ],
-          companies: [
-            "Microsoft",
-            "Amazon",
-            "Capgemini",
-            "Accenture",
-            "Government IT services",
-          ],
-          salary: "£30,000 – £45,000",
-          tuition: "£11,800 total",
-          livingCost: "£1,171 per month",
-          accommodation: "£129-£177 per week",
-        },
-        "mba-london": {
-          name: "MBA (Master of Business Administration)",
-          campus: "London Campus",
-          city: "London",
-          address:
-            "6th Floor, Export Building, 1 Clove Crescent, East India, London E14 2BA",
-          campusUrl: "https://www.yorksj.ac.uk/london-campus/",
-          specUrl:
-            "https://www.yorksj.ac.uk/study/courses/postgraduate/mba-master-of-business-administration/",
-          videoNotes: [
-            "Your campus address: 6th Floor Export Building, 1 Clove Crescent, London E14 2BA",
-            "Why MBA at YSJ London specifically",
-            "Strategic leadership and management modules",
-            "London location advantages for networking",
-            "Two other London business schools compared",
-            "Senior management or entrepreneurship goals",
-            "Expected salary post-MBA",
-            "Private accommodation in London (no uni halls)",
-            "Visa working hours and responsibilities",
-          ],
-          assessment:
-            "Case studies, business simulations, group projects, presentations, and dissertation.",
-          modules: [
-            {
-              name: "Strategic Leadership",
-              why: "Leadership theories and strategic decision making at executive level.",
-            },
-            {
-              name: "Financial Management",
-              why: "Corporate finance, investment decisions, and risk management.",
-            },
-            {
-              name: "Marketing Strategy",
-              why: "Strategic marketing planning and brand management.",
-            },
-            {
-              name: "Operations Management",
-              why: "Supply chain and operational excellence in global contexts.",
-            },
-            {
-              name: "Entrepreneurship and Innovation",
-              why: "Starting and scaling new business ventures.",
-            },
-            {
-              name: "Research Methods",
-              why: "Business research and dissertation/project preparation.",
-            },
-          ],
-          roles: [
-            "Management Consultant",
-            "Business Development Director",
-            "Operations Manager",
-            "Entrepreneur",
-          ],
-          companies: [
-            "Deloitte",
-            "KPMG",
-            "Barclays",
-            "HSBC",
-            "Tech startups in East London",
-          ],
-          salary: "£45,000 – £70,000",
-          tuition: "£14,000 total",
-          livingCost: "£1,529 per month (UKVI London requirement)",
-          accommodation: "£800-£1,500 per month (private rental)",
-        },
-        "msc-intbusiness-london": {
-          name: "MSc International Business (London)",
-          campus: "London Campus",
-          city: "London",
-          address:
-            "6th Floor, Export Building, 1 Clove Crescent, East India, London E14 2BA",
-          campusUrl: "https://www.yorksj.ac.uk/london-campus/",
-          specUrl:
-            "https://www.yorksj.ac.uk/study/courses/postgraduate/international-business-london/",
-          videoNotes: [
-            "Your campus address: 6th Floor Export Building, 1 Clove Crescent, London E14 2BA",
-            "Why MSc International Business at YSJ London",
-            "Global business modules with London industry access",
-            "East India DLR location",
-            "Two other London universities compared",
-            "International business career in London then home",
-            "Expected salary range",
-            "Private accommodation research (SpareRoom, etc.)",
-            "Visa rules",
-          ],
-          assessment:
-            "Essays, case studies, group projects, presentations, and dissertation.",
-          modules: [
-            {
-              name: "Global Business Strategy",
-              why: "Strategic management in multinational corporations.",
-            },
-            {
-              name: "International Marketing",
-              why: "Marketing strategies for global markets.",
-            },
-            {
-              name: "Cross-Cultural Management",
-              why: "Managing diverse teams across cultures.",
-            },
-            {
-              name: "International Finance",
-              why: "Global financial management and currency risk.",
-            },
-            {
-              name: "Business Analytics",
-              why: "Data analysis for international business decisions.",
-            },
-            {
-              name: "Research Methods",
-              why: "Dissertation preparation and research skills.",
-            },
-          ],
-          roles: [
-            "International Business Consultant",
-            "Global Marketing Manager",
-            "Import/Export Manager",
-            "Trade Analyst",
-          ],
-          companies: [
-            "Unilever",
-            "Procter & Gamble",
-            "DHL",
-            "FedEx",
-            "Canary Wharf financial firms",
-          ],
-          salary: "£32,000 – £45,000",
-          tuition: "£14,000 total",
-          livingCost: "£1,529 per month",
-          accommodation: "£800-£1,500 per month",
-        },
-        "msc-datasci-london": {
-          name: "MSc Data Science (London)",
-          campus: "London Campus",
-          city: "London",
-          address:
-            "6th Floor, Export Building, 1 Clove Crescent, East India, London E14 2BA",
-          campusUrl: "https://www.yorksj.ac.uk/london-campus/",
-          specUrl:
-            "https://www.yorksj.ac.uk/study/courses/postgraduate/data-science-london/",
-          videoNotes: [
-            "Your campus address: 6th Floor Export Building, 1 Clove Crescent, London E14 2BA",
-            "Why Data Science at YSJ London specifically",
-            "Technical modules with London tech scene access",
-            "Programming: Python, R, machine learning",
-            "Two other London universities compared",
-            "Data scientist career in UK then return home",
-            "Expected salary",
-            "Private accommodation in East London",
-            "Visa work restrictions",
-          ],
-          assessment:
-            "Programming assignments, data projects, machine learning models, and dissertation.",
-          modules: [
-            {
-              name: "Machine Learning",
-              why: "Predictive modelling and algorithm development.",
-            },
-            {
-              name: "Big Data Analytics",
-              why: "Processing large datasets with Spark and Hadoop.",
-            },
-            {
-              name: "Deep Learning",
-              why: "Neural networks and AI applications.",
-            },
-            {
-              name: "Data Engineering",
-              why: "Building data pipelines and infrastructure.",
-            },
-            {
-              name: "Statistical Modelling",
-              why: "Advanced statistical techniques for data science.",
-            },
-            {
-              name: "Research Methods",
-              why: "Research design and dissertation preparation.",
-            },
-          ],
-          roles: [
-            "Data Scientist",
-            "Machine Learning Engineer",
-            "AI Specialist",
-            "Data Engineer",
-          ],
-          companies: [
-            "DeepMind",
-            "Google",
-            "Facebook",
-            "London fintech startups",
-            "The Guardian",
-          ],
-          salary: "£40,000 – £60,000",
-          tuition: "£14,000 total",
-          livingCost: "£1,529 per month",
-          accommodation: "£800-£1,500 per month",
-        },
+        "ba-business": { name: "BA (Hons) Business Management", campus: "York Campus", city: "York", address: "Lord Mayor's Walk, York, YO31 7EX", campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/", specUrl: "https://www.yorksj.ac.uk/study/courses/undergraduate/business-management/", videoNotes: ["Your campus address: Lord Mayor's Walk, York, YO31 7EX", "Why you chose Business Management at YSJ specifically", "Your key modules and how the course is assessed", "The names of 2 other UK universities you compared and why you chose YSJ", "Placement or internship opportunities available", "Jobs and companies you will target after graduation", "Your expected salary in GBP", "Your accommodation plan and weekly cost", "Your visa working hours limit (20 hours per week during term time)"], assessment: "Coursework, group projects, presentations, and written exams. May include placement year option.", modules: [{ name: "Principles of Management", why: "Builds foundational understanding of organisational structure and management theory." }, { name: "Marketing Fundamentals", why: "Covers customer behaviour, branding, and market research techniques." }, { name: "Business Finance", why: "Teaches financial statements, budgeting, and business performance analysis." }, { name: "Human Resource Management", why: "Develops skills in recruitment, training, and employee relations." }, { name: "Strategic Management", why: "Focuses on long-term business planning and competitive positioning." }, { name: "Operations Management", why: "Covers supply chain, logistics, and process improvement." }], roles: ["Business Analyst", "Marketing Executive", "HR Coordinator", "Operations Manager"], companies: ["Nestlé", "Aviva", "Santander", "Yorkshire Bank", "Local SMEs in Yorkshire"], salary: "£22,000 – £30,000", tuition: "£11,800 per year", livingCost: "£1,171 per month (UKVI requirement for York)", accommodation: "£129-£222 per week" },
+        "ba-marketing": { name: "BA (Hons) Marketing", campus: "York Campus", city: "York", address: "Lord Mayor's Walk, York, YO31 7EX", campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/", specUrl: "https://www.yorksj.ac.uk/study/courses/undergraduate/marketing/", videoNotes: ["Your campus address: Lord Mayor's Walk, York, YO31 7EX", "Why you chose Marketing at YSJ specifically", "Your key modules including digital and traditional marketing", "Two other universities you compared and why YSJ won", "Practical projects and real client work opportunities", "Career roles in marketing agencies or in-house teams", "Expected starting salary range", "Accommodation costs and location", "Visa responsibilities and working rights"], assessment: "Coursework, live client projects, presentations, and digital portfolio development.", modules: [{ name: "Consumer Behaviour", why: "Understanding how and why consumers make purchasing decisions." }, { name: "Digital Marketing", why: "Social media marketing, SEO, content strategy, and analytics." }, { name: "Brand Management", why: "Building and maintaining strong brand identities and equity." }, { name: "Market Research", why: "Techniques for gathering and analysing market data." }, { name: "Advertising and PR", why: "Creating campaigns and managing public relations." }, { name: "Marketing Strategy", why: "Developing comprehensive marketing plans and budgets." }], roles: ["Marketing Executive", "Digital Marketing Specialist", "Brand Manager", "Social Media Manager"], companies: ["Yorkshire Tea", "ASOS", "John Lewis", "Local marketing agencies"], salary: "£20,000 – £28,000", tuition: "£11,800 per year", livingCost: "£1,171 per month", accommodation: "£129-£222 per week" },
+        "ba-computing": { name: "BSc (Hons) Computer Science", campus: "York Campus", city: "York", address: "Lord Mayor's Walk, York, YO31 7EX", campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/", specUrl: "https://www.yorksj.ac.uk/study/courses/undergraduate/computer-science/", videoNotes: ["Your campus address: Lord Mayor's Walk, York, YO31 7EX", "Why Computer Science at YSJ specifically", "Key technical modules and programming languages", "Creative Centre facilities for computing students", "Two other universities compared and why YSJ", "Software development and IT career paths", "Expected graduate salary", "Accommodation plan", "Visa work restrictions"], assessment: "Programming assignments, software projects, exams, and final year dissertation.", modules: [{ name: "Programming Fundamentals", why: "Core concepts in Python, Java, and software development." }, { name: "Database Systems", why: "Design and management of SQL and NoSQL databases." }, { name: "Web Development", why: "Front-end and back-end web technologies and frameworks." }, { name: "Software Engineering", why: "Agile methodologies, version control, and team development." }, { name: "Artificial Intelligence", why: "Machine learning basics and AI applications." }, { name: "Cybersecurity", why: "Network security, encryption, and threat prevention." }], roles: ["Software Developer", "Web Developer", "Database Administrator", "IT Consultant"], companies: ["Sage", "BT", "IBM", "Local tech startups", "Government Digital Service"], salary: "£25,000 – £35,000", tuition: "£11,800 per year", livingCost: "£1,171 per month", accommodation: "£129-£222 per week" },
+        "msc-intbusiness": { name: "MSc International Business", campus: "York Campus", city: "York", address: "Lord Mayor's Walk, York, YO31 7EX", campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/", specUrl: "https://www.yorksj.ac.uk/study/courses/postgraduate/international-business/", videoNotes: ["Your campus address: Lord Mayor's Walk, York, YO31 7EX", "Why MSc International Business at YSJ specifically", "CMI-accredited leadership content", "Modules like Global Strategic Management and Business Analytics", "Two other universities compared (e.g., Northumbria, Sheffield Hallam)", "How this builds on your previous degree", "International business development career goals", "Accommodation at The Grange or Limes Court", "Visa working hours (20 hours term time)"], assessment: "Essays, case studies, group projects, presentations, and dissertation.", modules: [{ name: "Global Strategic Management", why: "International business strategy and competitive advantage." }, { name: "Business Analytics", why: "Data-driven decision making and analytical tools." }, { name: "International Marketing", why: "Marketing across different cultures and markets." }, { name: "Leadership and Professional Development", why: "CMI-accredited leadership skills for managers." }, { name: "International Finance", why: "Global financial markets and international investment." }, { name: "Research Methods", why: "Preparation for dissertation and research projects." }], roles: ["International Business Analyst", "Global Operations Manager", "Business Development Executive", "Export Manager"], companies: ["Unilever", "Shell", "Standard Chartered", "British American Tobacco", "DHL"], salary: "£28,000 – £40,000", tuition: "£11,800 total", livingCost: "£1,171 per month", accommodation: "£129-£177 per week" },
+        "msc-datasci": { name: "MSc Data Science", campus: "York Campus", city: "York", address: "Lord Mayor's Walk, York, YO31 7EX", campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/", specUrl: "https://www.yorksj.ac.uk/study/courses/postgraduate/data-science/", videoNotes: ["Your campus address: Lord Mayor's Walk, York, YO31 7EX", "Why Data Science at YSJ specifically", "Technical modules: machine learning, big data, statistical analysis", "Programming languages: Python, R, SQL", "Two other universities compared and why YSJ", "Data analyst/scientist career goals", "Expected salary range", "Accommodation plan and costs", "Visa responsibilities"], assessment: "Programming assignments, data projects, statistical reports, and dissertation.", modules: [{ name: "Machine Learning", why: "Algorithms and techniques for predictive modelling." }, { name: "Big Data Technologies", why: "Hadoop, Spark, and cloud-based data processing." }, { name: "Statistical Analysis", why: "Advanced statistics for data interpretation." }, { name: "Data Visualisation", why: "Tools like Tableau and Power BI for presenting insights." }, { name: "Database Management", why: "SQL and NoSQL database design and optimisation." }, { name: "Research Methods", why: "Data collection, analysis, and dissertation preparation." }], roles: ["Data Scientist", "Data Analyst", "Business Intelligence Developer", "Machine Learning Engineer"], companies: ["Google", "Amazon", "IBM", "SAS", "Local data consultancies"], salary: "£30,000 – £45,000", tuition: "£11,800 total", livingCost: "£1,171 per month", accommodation: "£129-£177 per week" },
+        "msc-computing": { name: "MSc Computing", campus: "York Campus", city: "York", address: "Lord Mayor's Walk, York, YO31 7EX", campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/", specUrl: "https://www.yorksj.ac.uk/study/courses/postgraduate/computing/", videoNotes: ["Your campus address: Lord Mayor's Walk, York, YO31 7EX", "Why MSc Computing at YSJ specifically", "Advanced programming and software engineering modules", "Creative Centre facilities", "Two other universities compared", "Software engineering or IT management career path", "Expected salary", "Accommodation details", "Visa work limits"], assessment: "Software development projects, technical reports, presentations, and dissertation.", modules: [{ name: "Advanced Programming", why: "Advanced concepts in multiple programming languages." }, { name: "Software Engineering", why: "Systematic approaches to software development lifecycle." }, { name: "Cloud Computing", why: "AWS, Azure, and cloud architecture principles." }, { name: "Database Systems", why: "Advanced database design and management." }, { name: "Cybersecurity", why: "Advanced security protocols and ethical hacking." }, { name: "Research Methods", why: "Academic research and dissertation preparation." }], roles: ["Software Engineer", "Systems Architect", "DevOps Engineer", "IT Project Manager"], companies: ["Microsoft", "Amazon", "Capgemini", "Accenture", "Government IT services"], salary: "£30,000 – £45,000", tuition: "£11,800 total", livingCost: "£1,171 per month", accommodation: "£129-£177 per week" },
+        "mba-london": { name: "MBA (Master of Business Administration)", campus: "London Campus", city: "London", address: "6th Floor, Export Building, 1 Clove Crescent, East India, London E14 2BA", campusUrl: "https://www.yorksj.ac.uk/london-campus/", specUrl: "https://www.yorksj.ac.uk/study/courses/postgraduate/mba-master-of-business-administration/", videoNotes: ["Your campus address: 6th Floor Export Building, 1 Clove Crescent, London E14 2BA", "Why MBA at YSJ London specifically", "Strategic leadership and management modules", "London location advantages for networking", "Two other London business schools compared", "Senior management or entrepreneurship goals", "Expected salary post-MBA", "Private accommodation in London (no uni halls)", "Visa working hours and responsibilities"], assessment: "Case studies, business simulations, group projects, presentations, and dissertation.", modules: [{ name: "Strategic Leadership", why: "Leadership theories and strategic decision making at executive level." }, { name: "Financial Management", why: "Corporate finance, investment decisions, and risk management." }, { name: "Marketing Strategy", why: "Strategic marketing planning and brand management." }, { name: "Operations Management", why: "Supply chain and operational excellence in global contexts." }, { name: "Entrepreneurship and Innovation", why: "Starting and scaling new business ventures." }, { name: "Research Methods", why: "Business research and dissertation/project preparation." }], roles: ["Management Consultant", "Business Development Director", "Operations Manager", "Entrepreneur"], companies: ["Deloitte", "KPMG", "Barclays", "HSBC", "Tech startups in East London"], salary: "£45,000 – £70,000", tuition: "£14,000 total", livingCost: "£1,529 per month (UKVI London requirement)", accommodation: "£800-£1,500 per month (private rental)" },
+        "msc-intbusiness-london": { name: "MSc International Business (London)", campus: "London Campus", city: "London", address: "6th Floor, Export Building, 1 Clove Crescent, East India, London E14 2BA", campusUrl: "https://www.yorksj.ac.uk/london-campus/", specUrl: "https://www.yorksj.ac.uk/study/courses/postgraduate/international-business-london/", videoNotes: ["Your campus address: 6th Floor Export Building, 1 Clove Crescent, London E14 2BA", "Why MSc International Business at YSJ London", "Global business modules with London industry access", "East India DLR location", "Two other London universities compared", "International business career in London then home", "Expected salary range", "Private accommodation research (SpareRoom, etc.)", "Visa rules"], assessment: "Essays, case studies, group projects, presentations, and dissertation.", modules: [{ name: "Global Business Strategy", why: "Strategic management in multinational corporations." }, { name: "International Marketing", why: "Marketing strategies for global markets." }, { name: "Cross-Cultural Management", why: "Managing diverse teams across cultures." }, { name: "International Finance", why: "Global financial management and currency risk." }, { name: "Business Analytics", why: "Data analysis for international business decisions." }, { name: "Research Methods", why: "Dissertation preparation and research skills." }], roles: ["International Business Consultant", "Global Marketing Manager", "Import/Export Manager", "Trade Analyst"], companies: ["Unilever", "Procter & Gamble", "DHL", "FedEx", "Canary Wharf financial firms"], salary: "£32,000 – £45,000", tuition: "£14,000 total", livingCost: "£1,529 per month", accommodation: "£800-£1,500 per month" },
+        "msc-datasci-london": { name: "MSc Data Science (London)", campus: "London Campus", city: "London", address: "6th Floor, Export Building, 1 Clove Crescent, East India, London E14 2BA", campusUrl: "https://www.yorksj.ac.uk/london-campus/", specUrl: "https://www.yorksj.ac.uk/study/courses/postgraduate/data-science-london/", videoNotes: ["Your campus address: 6th Floor Export Building, 1 Clove Crescent, London E14 2BA", "Why Data Science at YSJ London specifically", "Technical modules with London tech scene access", "Programming: Python, R, machine learning", "Two other London universities compared", "Data scientist career in UK then return home", "Expected salary", "Private accommodation in East London", "Visa work restrictions"], assessment: "Programming assignments, data projects, machine learning models, and dissertation.", modules: [{ name: "Machine Learning", why: "Predictive modelling and algorithm development." }, { name: "Big Data Analytics", why: "Processing large datasets with Spark and Hadoop." }, { name: "Deep Learning", why: "Neural networks and AI applications." }, { name: "Data Engineering", why: "Building data pipelines and infrastructure." }, { name: "Statistical Modelling", why: "Advanced statistical techniques for data science." }, { name: "Research Methods", why: "Research design and dissertation preparation." }], roles: ["Data Scientist", "Machine Learning Engineer", "AI Specialist", "Data Engineer"], companies: ["DeepMind", "Google", "Facebook", "London fintech startups", "The Guardian"], salary: "£40,000 – £60,000", tuition: "£14,000 total", livingCost: "£1,529 per month", accommodation: "£800-£1,500 per month" }
       };
       const GUIDE_SECTIONS = [
-        {
-          id: "ga1",
-          num: "A",
-          title: "Your Campus and Address",
-          sub: "Location Intelligence",
-          content: `<p>YSJ expects you to know exactly which campus your course is taught at and the full address including postcode. York Campus is at Lord Mayor's Walk, York YO31 7EX. London Campus is at 6th Floor Export Building, 1 Clove Crescent, London E14 2BA. Learn the full street address and postcode, not just the city name.</p>`,
-        },
-        {
-          id: "ga2",
-          num: "B",
-          title: "Why You Chose York St John University",
-          sub: "Institutional Choice",
-          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Ranked in the top 10 UK universities for student satisfaction (PTES 2025).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>11-acre city centre campus in historic York, close to York Minster and city walls.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>£100 million invested in facilities including Creative Centre and Foss Building.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Gold-rated teaching excellence.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Strong employability support with career-focused courses.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Smaller cohort sizes for personalised feedback.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>CMI-accredited leadership content in many business courses.</span></li></ul>`,
-        },
-        {
-          id: "ga3",
-          num: "C",
-          title: "Why This Course Specifically",
-          sub: "Course Motivation",
-          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Clear academic progression from your previous study or work.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Specific modules that fill gaps in your current knowledge.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Logical connection to your career goals.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Comparison with similar courses at other universities.</span></li></ul>`,
-        },
-        {
-          id: "ga4",
-          num: "D",
-          title: "Your Accommodation Details",
-          sub: "Living Arrangements",
-          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>For York: Specific hall name (The Grange, Limes Court, etc.) and weekly cost (£129-£222).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>For London: Private accommodation area and monthly cost (£800-£1,500).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Distance from campus and transport options.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Why you chose that option — budget, facilities, location.</span></li></ul>`,
-        },
-        {
-          id: "ga5",
-          num: "E",
-          title: "Modules in Your Course",
-          sub: "Academic Content",
-          content: `<p>You must name at least 2-3 modules, explain why they interest you, and connect them to your background or career goals. Also compare your course at YSJ with at least two similar courses at other UK universities, and explain why you still chose YSJ. Download the course specification from the YSJ website.</p>`,
-        },
-        {
-          id: "ga6",
-          num: "F",
-          title: "How Your Course Is Assessed",
-          sub: "Assessment Methods",
-          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Written assignments and coursework</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Group projects and presentations</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Written exams</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Case studies and business simulations</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>A final dissertation or research project</span></li></ul>`,
-        },
-        {
-          id: "ga7",
-          num: "G",
-          title: "Your Future Plans After Graduation",
-          sub: "Career Trajectory",
-          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Clear return plan</strong> to your home country.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Specific job titles</strong> you will apply for.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Actual companies</strong> — name real organisations in your sector.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Expected salary range</strong> in your home currency.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>How the course will help you qualify for these roles.</span></li></ul>`,
-        },
-        {
-          id: "ga8",
-          num: "H",
-          title: "Your Financial Preparation",
-          sub: "Financial Credibility",
-          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>The exact tuition fee for your course (£11,800 for York, £14,000 for London).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>How much you have already paid (deposit).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>UKVI minimum living cost requirements (£1,171/month York, £1,529/month London).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Who is funding you — yourself, parents, sponsor — and their income.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Evidence available: bank statements, employment letters.</span></li></ul>`,
-        },
-        {
-          id: "ga9",
-          num: "I",
-          title: "Visa Rules and Responsibilities",
-          sub: "Compliance",
-          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Maximum of <strong class="text-primary">20 hours per week during term time</strong>.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Full-time work allowed during official university holidays.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Cannot claim public funds.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Must attend all scheduled classes.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Must notify the university if you change your address.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Dependent or work restrictions if applicable.</span></li></ul>`,
-        },
-        {
-          id: "ga10",
-          num: "J",
-          title: "What You Have Been Doing Since Your Last Qualification",
-          sub: "Personal History",
-          content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Work experience or employment since your last degree.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Internships or voluntary work.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Skills you have been developing.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Training or short courses you have completed.</span></li></ul><p class="mt-2">Be honest and show how your experience led you to resume studies now. Avoid unexplained gaps.</p>`,
-        },
-        {
-          id: "ga11",
-          num: "K",
-          title: "Common Mistakes to Avoid",
-          sub: "Red Flags",
-          content: `<table class="w-full text-xs mt-2"><tr class="border-b border-border"><th class="text-left py-2 text-primary">Area</th><th class="text-left py-2 text-error">Mistake</th><th class="text-left py-2 text-success">Improvement</th><tr><tr class="border-b border-border"><td class="py-2">Why YSJ</td><td class="py-2 text-muted">Generic answers like "friendly staff"</td><td class="py-2">Specific facts: rankings, course structure, teaching reputation</td></tr>
-              <tr class="border-b border-border"><td class="py-2">Why this course</td><td class="py-2 text-muted">Not knowing modules</td><td class="py-2">Show understanding of content and career fit</td></tr>
-              <tr class="border-b border-border"><td class="py-2">Future plans</td><td class="py-2 text-muted">Vague answers, no company names</td><td class="py-2">Exact job titles and companies</td></tr>
-              <tr class="border-b border-border"><td class="py-2">Study gap</td><td class="py-2 text-muted">Not explaining the gap</td><td class="py-2">Be honest, show how experience led to this decision</td></tr>
-            </table>`,
-        },
+        { id: "ga1", num: "A", title: "Your Campus and Address", sub: "Location Intelligence", content: `<p>YSJ expects you to know exactly which campus your course is taught at and the full address including postcode. York Campus is at Lord Mayor's Walk, York YO31 7EX. London Campus is at 6th Floor Export Building, 1 Clove Crescent, London E14 2BA. Learn the full street address and postcode, not just the city name.</p>` },
+        { id: "ga2", num: "B", title: "Why You Chose York St John University", sub: "Institutional Choice", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Ranked in the top 10 UK universities for student satisfaction (PTES 2025).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>11-acre city centre campus in historic York, close to York Minster and city walls.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>£100 million invested in facilities including Creative Centre and Foss Building.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Gold-rated teaching excellence.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Strong employability support with career-focused courses.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Smaller cohort sizes for personalised feedback.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>CMI-accredited leadership content in many business courses.</span></li></ul>` },
+        { id: "ga3", num: "C", title: "Why This Course Specifically", sub: "Course Motivation", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Clear academic progression from your previous study or work.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Specific modules that fill gaps in your current knowledge.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Logical connection to your career goals.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Comparison with similar courses at other universities.</span></li></ul>` },
+        { id: "ga4", num: "D", title: "Your Accommodation Details", sub: "Living Arrangements", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>For York: Specific hall name (The Grange, Limes Court, etc.) and weekly cost (£129-£222).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>For London: Private accommodation area and monthly cost (£800-£1,500).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Distance from campus and transport options.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Why you chose that option — budget, facilities, location.</span></li></ul>` },
+        { id: "ga5", num: "E", title: "Modules in Your Course", sub: "Academic Content", content: `<p>You must name at least 2-3 modules, explain why they interest you, and connect them to your background or career goals. Also compare your course at YSJ with at least two similar courses at other UK universities, and explain why you still chose YSJ. Download the course specification from the YSJ website.</p>` },
+        { id: "ga6", num: "F", title: "How Your Course Is Assessed", sub: "Assessment Methods", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Written assignments and coursework</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Group projects and presentations</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Written exams</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Case studies and business simulations</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>A final dissertation or research project</span></li></ul>` },
+        { id: "ga7", num: "G", title: "Your Future Plans After Graduation", sub: "Career Trajectory", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Clear return plan</strong> to your home country.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Specific job titles</strong> you will apply for.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Actual companies</strong> — name real organisations in your sector.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Expected salary range</strong> in your home currency.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>How the course will help you qualify for these roles.</span></li></ul>` },
+        { id: "ga8", num: "H", title: "Your Financial Preparation", sub: "Financial Credibility", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>The exact tuition fee for your course (£11,800 for York, £14,000 for London).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>How much you have already paid (deposit).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>UKVI minimum living cost requirements (£1,171/month York, £1,529/month London).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Who is funding you — yourself, parents, sponsor — and their income.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Evidence available: bank statements, employment letters.</span></li></ul>` },
+        { id: "ga9", num: "I", title: "Visa Rules and Responsibilities", sub: "Compliance", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Maximum of <strong class="text-primary">20 hours per week during term time</strong>.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Full-time work allowed during official university holidays.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Cannot claim public funds.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Must attend all scheduled classes.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Must notify the university if you change your address.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Dependent or work restrictions if applicable.</span></li></ul>` },
+        { id: "ga10", num: "J", title: "What You Have Been Doing Since Your Last Qualification", sub: "Personal History", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Work experience or employment since your last degree.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Internships or voluntary work.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Skills you have been developing.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Training or short courses you have completed.</span></li></ul><p class="mt-2">Be honest and show how your experience led you to resume studies now. Avoid unexplained gaps.</p>` },
+        { id: "ga11", num: "K", title: "Common Mistakes to Avoid", sub: "Red Flags", content: `<table class="w-full text-xs mt-2"><tr class="border-b border-border"><th class="text-left py-2 text-primary">Area</th><th class="text-left py-2 text-error">Mistake</th><th class="text-left py-2 text-success">Improvement</th><tr><tr class="border-b border-border"><td class="py-2">Why YSJ</td><td class="py-2 text-muted">Generic answers like "friendly staff"</td><td class="py-2">Specific facts: rankings, course structure, teaching reputation</td></tr><tr class="border-b border-border"><td class="py-2">Why this course</td><td class="py-2 text-muted">Not knowing modules</td><td class="py-2">Show understanding of content and career fit</td></tr><tr class="border-b border-border"><td class="py-2">Future plans</td><td class="py-2 text-muted">Vague answers, no company names</td><td class="py-2">Exact job titles and companies</td></tr><tr class="border-b border-border"><td class="py-2">Study gap</td><td class="py-2 text-muted">Not explaining the gap</td><td class="py-2">Be honest, show how experience led to this decision</td></tr></table>` }
       ];
       const ALL_QUESTIONS = [
-        {
-          cat: "Studying in the UK",
-          color: "text-primary",
-          bg: "bg-primary-light",
-          border: "border-primary-mid",
-          qs: [
-            "Why did you choose to study in the UK instead of your home country?",
-            "Did you consider studying in other countries (USA, Canada, Australia)?",
-            "What are the advantages of the UK education system?",
-            "What do you know about UK university rankings and reputation?",
-          ],
-        },
-        {
-          cat: "Why York St John University",
-          color: "text-secondary",
-          bg: "bg-secondary-light",
-          border: "border-blue-200",
-          qs: [
-            "Why did you choose York St John University?",
-            "Did you apply to other universities? Which ones?",
-            "Why did you finally select YSJ over the others?",
-            "What do you know about YSJ's rankings and reputation?",
-          ],
-        },
-        {
-          cat: "Course Details",
-          color: "text-accent",
-          bg: "bg-cyan-50",
-          border: "border-cyan-200",
-          qs: [
-            "What is the name and duration of your course?",
-            "What are the core and optional modules?",
-            "Are there any placement or internship opportunities?",
-            "How does this course relate to your previous studies or work?",
-          ],
-        },
-        {
-          cat: "Future Career Plans",
-          color: "text-primary",
-          bg: "bg-primary-light",
-          border: "border-primary-mid",
-          qs: [
-            "What are your short-term and long-term career goals?",
-            "What job roles would you like to work for?",
-            "Which companies will you apply to?",
-            "What is your expected salary range after graduation?",
-          ],
-        },
-        {
-          cat: "Living in the UK",
-          color: "text-secondary",
-          bg: "bg-secondary-light",
-          border: "border-blue-200",
-          qs: [
-            "Where will you live — on campus or off campus?",
-            "What accommodation options have you researched?",
-            "What is the average cost of living in York or London?",
-            "What are the transport options?",
-          ],
-        },
-        {
-          cat: "Student Life",
-          color: "text-accent",
-          bg: "bg-cyan-50",
-          border: "border-cyan-200",
-          qs: [
-            "What are your expectations of student life in the UK?",
-            "What do you know about life in York/London?",
-            "Are you interested in clubs, societies, or travelling?",
-          ],
-        },
-        {
-          cat: "Finance",
-          color: "text-primary",
-          bg: "bg-primary-light",
-          border: "border-primary-mid",
-          qs: [
-            "What is your total tuition fee and how much have you paid?",
-            "Who is supporting you financially?",
-            "What is your estimate for living costs?",
-            "What evidence of funds can you provide?",
-          ],
-        },
-        {
-          cat: "Student Visa Knowledge",
-          color: "text-secondary",
-          bg: "bg-secondary-light",
-          border: "border-blue-200",
-          qs: [
-            "What are your working rights as a student visa holder?",
-            "How many hours can you work per week?",
-            "What are your obligations while on a student visa?",
-          ],
-        },
+        { cat: "Studying in the UK", color: "text-primary", bg: "bg-primary-light", border: "border-primary-mid", qs: ["Why did you choose to study in the UK instead of your home country?", "Did you consider studying in other countries (USA, Canada, Australia)?", "What are the advantages of the UK education system?", "What do you know about UK university rankings and reputation?"] },
+        { cat: "Why York St John University", color: "text-secondary", bg: "bg-secondary-light", border: "border-blue-200", qs: ["Why did you choose York St John University?", "Did you apply to other universities? Which ones?", "Why did you finally select YSJ over the others?", "What do you know about YSJ's rankings and reputation?"] },
+        { cat: "Course Details", color: "text-accent", bg: "bg-cyan-50", border: "border-cyan-200", qs: ["What is the name and duration of your course?", "What are the core and optional modules?", "Are there any placement or internship opportunities?", "How does this course relate to your previous studies or work?"] },
+        { cat: "Future Career Plans", color: "text-primary", bg: "bg-primary-light", border: "border-primary-mid", qs: ["What are your short-term and long-term career goals?", "What job roles would you like to work for?", "Which companies will you apply to?", "What is your expected salary range after graduation?"] },
+        { cat: "Living in the UK", color: "text-secondary", bg: "bg-secondary-light", border: "border-blue-200", qs: ["Where will you live — on campus or off campus?", "What accommodation options have you researched?", "What is the average cost of living in York or London?", "What are the transport options?"] },
+        { cat: "Student Life", color: "text-accent", bg: "bg-cyan-50", border: "border-cyan-200", qs: ["What are your expectations of student life in the UK?", "What do you know about life in York/London?", "Are you interested in clubs, societies, or travelling?"] },
+        { cat: "Finance", color: "text-primary", bg: "bg-primary-light", border: "border-primary-mid", qs: ["What is your total tuition fee and how much have you paid?", "Who is supporting you financially?", "What is your estimate for living costs?", "What evidence of funds can you provide?"] },
+        { cat: "Student Visa Knowledge", color: "text-secondary", bg: "bg-secondary-light", border: "border-blue-200", qs: ["What are your working rights as a student visa holder?", "How many hours can you work per week?", "What are your obligations while on a student visa?"] }
       ];
       const PQS = [
-        {
-          id: "p1",
-          cat: "ysj",
-          q: "Why did you choose York St John University specifically?",
-          hint: "Compare with 2 other universities by name. Mention specific facts: top 10 for student satisfaction, smaller cohort sizes, CMI accreditation, facilities, or location.",
-          cr: 'Must name 2 other UK universities compared and give at least 2 specific, researched reasons for choosing YSJ (not generic like "friendly staff").',
-        },
-        {
-          id: "p2",
-          cat: "course",
-          q: "What modules will you study and why do they interest you?",
-          hint: "Name 2-3 specific modules from your course. Connect each to your previous study/work and career goals.",
-          cr: "Must name at least 2-3 correct modules and explain personal interest in at least one, linking to career goals.",
-        },
-        {
-          id: "p3",
-          cat: "course",
-          q: "How does this course relate to your previous studies or work experience?",
-          hint: "Show clear academic progression or career development. Explain the gap this course fills in your knowledge.",
-          cr: "Must demonstrate logical progression from previous degree/work and explain specific skills/knowledge gaps this course addresses.",
-        },
-        {
-          id: "p4",
-          cat: "ysj",
-          q: "Did you apply to other universities? Why did you reject them?",
-          hint: "Name 2-3 other universities. Give specific reasons why YSJ was better (course content, location, ranking, facilities).",
-          cr: 'Must name specific universities and give course-specific reasons for rejection (e.g., "Sheffield Hallam didn\'t have the leadership modules").',
-        },
-        {
-          id: "p5",
-          cat: "living",
-          q: "Where will you stay in the UK and what are the costs?",
-          hint: "York: Name specific hall and weekly cost (£129-£222). London: Name area and monthly cost (£800-£1,500). Include distance from campus.",
-          cr: "Must give specific accommodation name/area, exact cost, and distance from campus. Must know London has no university accommodation.",
-        },
-        {
-          id: "p6",
-          cat: "finance",
-          q: "How much is your tuition fee and how much have you paid?",
-          hint: "York: £11,800. London: £14,000. State deposit paid and remaining balance.",
-          cr: "Must state exact tuition fee, amount already paid, and remaining balance.",
-        },
-        {
-          id: "p7",
-          cat: "finance",
-          q: "Who is sponsoring you and what is their occupation/income?",
-          hint: "State relationship clearly. Give occupation and approximate annual income. Mention evidence available.",
-          cr: "Must state relationship, occupation, and approximate income. Must mention documentary evidence available.",
-        },
-        {
-          id: "p8",
-          cat: "finance",
-          q: "What are your living costs and how will you fund them?",
-          hint: "York: £1,171/month. London: £1,529/month (UKVI requirements). Break down by rent, food, transport.",
-          cr: "Must state UKVI minimum living cost figure for the location and show awareness of monthly budgeting.",
-        },
-        {
-          id: "p9",
-          cat: "career",
-          q: "What are your career plans after graduation?",
-          hint: "Give specific job title, 2-3 company names, and expected salary in home currency. Emphasize returning home.",
-          cr: "Must give specific job title, name actual companies, expected salary, and confirm intention to return to home country.",
-        },
-        {
-          id: "p10",
-          cat: "career",
-          q: "How will this course help you achieve your career goals?",
-          hint: "Connect specific modules to job requirements. Explain how YSJ qualification is valued in your home country.",
-          cr: "Must link at least 2 specific course elements to job requirements and explain value of UK/YSJ qualification at home.",
-        },
-        {
-          id: "p11",
-          cat: "living",
-          q: "What do you know about life in York/London?",
-          hint: "Mention specific attractions (York Minster, museums) for York or business opportunities for London. Show research.",
-          cr: "Must demonstrate specific knowledge of the city beyond generic statements.",
-        },
-        {
-          id: "p12",
-          cat: "visa",
-          q: "What are your working rights and visa responsibilities?",
-          hint: "20 hours/week term time, full-time holidays. Cannot claim public funds. Must attend all classes. Report address changes.",
-          cr: "Must state 20 hours correctly, mention class attendance requirement, and address reporting obligation.",
-        },
-        {
-          id: "p13",
-          cat: "ysj",
-          q: "What do you know about YSJ's rankings and reputation?",
-          hint: "Top 10 for student satisfaction (PTES 2025), Gold teaching excellence, £100m facilities investment.",
-          cr: "Must mention at least one specific ranking or award (e.g., top 10 student satisfaction, Gold TEF).",
-        },
-        {
-          id: "p14",
-          cat: "course",
-          q: "How is your course assessed?",
-          hint: "Coursework, exams, presentations, group projects, dissertation. Know the specific methods for your course.",
-          cr: "Must describe at least 2 assessment methods specific to the course.",
-        },
-        {
-          id: "p15",
-          cat: "living",
-          q: "What accommodation options have you researched?",
-          hint: "York: University halls (The Grange, Limes Court). London: Private rental through SpareRoom, Rightmove, etc.",
-          cr: "Must show specific research: named halls for York or named areas/websites for London.",
-        },
-        {
-          id: "p16",
-          cat: "finance",
-          q: "How will you cover unexpected expenses?",
-          hint: "Mention contingency fund, parental support, or savings buffer. Show financial planning beyond minimum requirements.",
-          cr: "Must demonstrate awareness of need for emergency funds and explain backup plan.",
-        },
-        {
-          id: "p17",
-          cat: "ysj",
-          q: "Why study in York/London specifically?",
-          hint: "York: Historic city, student-friendly, lower cost than London. London: Business hub, networking, industry access.",
-          cr: "Must give location-specific reasons connected to study or career goals.",
-        },
-        {
-          id: "p18",
-          cat: "living",
-          q: "What are the transport options from your accommodation?",
-          hint: "York: Walking (under 1 mile) or buses. London: DLR (East India), Tube, buses. Know your route to campus.",
-          cr: "Must know specific transport links and approximate journey time.",
-        },
+        { id: "p1", cat: "ysj", q: "Why did you choose York St John University specifically?", hint: "Compare with 2 other universities by name. Mention specific facts: top 10 for student satisfaction, smaller cohort sizes, CMI accreditation, facilities, or location.", cr: 'Must name 2 other UK universities compared and give at least 2 specific, researched reasons for choosing YSJ (not generic like "friendly staff").' },
+        { id: "p2", cat: "course", q: "What modules will you study and why do they interest you?", hint: "Name 2-3 specific modules from your course. Connect each to your previous study/work and career goals.", cr: "Must name at least 2-3 correct modules and explain personal interest in at least one, linking to career goals." },
+        { id: "p3", cat: "course", q: "How does this course relate to your previous studies or work experience?", hint: "Show clear academic progression or career development. Explain the gap this course fills in your knowledge.", cr: "Must demonstrate logical progression from previous degree/work and explain specific skills/knowledge gaps this course addresses." },
+        { id: "p4", cat: "ysj", q: "Did you apply to other universities? Why did you reject them?", hint: "Name 2-3 other universities. Give specific reasons why YSJ was better (course content, location, ranking, facilities).", cr: 'Must name specific universities and give course-specific reasons for rejection (e.g., "Sheffield Hallam didn\'t have the leadership modules").' },
+        { id: "p5", cat: "living", q: "Where will you stay in the UK and what are the costs?", hint: "York: Name specific hall and weekly cost (£129-£222). London: Name area and monthly cost (£800-£1,500). Include distance from campus.", cr: "Must give specific accommodation name/area, exact cost, and distance from campus. Must know London has no university accommodation." },
+        { id: "p6", cat: "finance", q: "How much is your tuition fee and how much have you paid?", hint: "York: £11,800. London: £14,000. State deposit paid and remaining balance.", cr: "Must state exact tuition fee, amount already paid, and remaining balance." },
+        { id: "p7", cat: "finance", q: "Who is sponsoring you and what is their occupation/income?", hint: "State relationship clearly. Give occupation and approximate annual income. Mention evidence available.", cr: "Must state relationship, occupation, and approximate income. Must mention documentary evidence available." },
+        { id: "p8", cat: "finance", q: "What are your living costs and how will you fund them?", hint: "York: £1,171/month. London: £1,529/month (UKVI requirements). Break down by rent, food, transport.", cr: "Must state UKVI minimum living cost figure for the location and show awareness of monthly budgeting." },
+        { id: "p9", cat: "career", q: "What are your career plans after graduation?", hint: "Give specific job title, 2-3 company names, and expected salary in home currency. Emphasize returning home.", cr: "Must give specific job title, name actual companies, expected salary, and confirm intention to return to home country." },
+        { id: "p10", cat: "career", q: "How will this course help you achieve your career goals?", hint: "Connect specific modules to job requirements. Explain how YSJ qualification is valued in your home country.", cr: "Must link at least 2 specific course elements to job requirements and explain value of UK/YSJ qualification at home." },
+        { id: "p11", cat: "living", q: "What do you know about life in York/London?", hint: "Mention specific attractions (York Minster, museums) for York or business opportunities for London. Show research.", cr: "Must demonstrate specific knowledge of the city beyond generic statements." },
+        { id: "p12", cat: "visa", q: "What are your working rights and visa responsibilities?", hint: "20 hours/week term time, full-time holidays. Cannot claim public funds. Must attend all classes. Report address changes.", cr: "Must state 20 hours correctly, mention class attendance requirement, and address reporting obligation." },
+        { id: "p13", cat: "ysj", q: "What do you know about YSJ's rankings and reputation?", hint: "Top 10 for student satisfaction (PTES 2025), Gold teaching excellence, £100m facilities investment.", cr: "Must mention at least one specific ranking or award (e.g., top 10 student satisfaction, Gold TEF)." },
+        { id: "p14", cat: "course", q: "How is your course assessed?", hint: "Coursework, exams, presentations, group projects, dissertation. Know the specific methods for your course.", cr: "Must describe at least 2 assessment methods specific to the course." },
+        { id: "p15", cat: "living", q: "What accommodation options have you researched?", hint: "York: University halls (The Grange, Limes Court). London: Private rental through SpareRoom, Rightmove, etc.", cr: "Must show specific research: named halls for York or named areas/websites for London." },
+        { id: "p16", cat: "finance", q: "How will you cover unexpected expenses?", hint: "Mention contingency fund, parental support, or savings buffer. Show financial planning beyond minimum requirements.", cr: "Must demonstrate awareness of need for emergency funds and explain backup plan." },
+        { id: "p17", cat: "ysj", q: "Why study in York/London specifically?", hint: "York: Historic city, student-friendly, lower cost than London. London: Business hub, networking, industry access.", cr: "Must give location-specific reasons connected to study or career goals." },
+        { id: "p18", cat: "living", q: "What are the transport options from your accommodation?", hint: "York: Walking (under 1 mile) or buses. London: DLR (East India), Tube, buses. Know your route to campus.", cr: "Must know specific transport links and approximate journey time." }
       ];
-      let course = null,
-        passN = 0,
-        failN = 0,
-        totN = 0;
-      // ✅ Track which questions have been counted
+      let course = null, passN = 0, failN = 0, totN = 0;
       let questionStatus = {};
 
       function selectCourse(id) {
         course = COURSES[id];
+        localStorage.setItem('last_course', id); // save for auto-reload
         document.getElementById("s-select").classList.remove("active");
         document.getElementById("s-main").classList.add("active");
         document.getElementById("tb-name").textContent = course.name;
         document.getElementById("tb-campus").textContent = course.campus;
-        // Reset scores and question status for new course
-        passN = 0;
-        failN = 0;
-        totN = 0;
-        questionStatus = {};
+        passN = 0; failN = 0; totN = 0; questionStatus = {};
         updScore();
-        document.getElementById("vid-notes").innerHTML = course.videoNotes
-          .map(
-            (n) => `
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-primary text-sm mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>
-<span>${n}</span>
-</div>
-`,
-          )
-          .join("");
+        document.getElementById("vid-notes").innerHTML = course.videoNotes.map(n => `<div class="flex items-start gap-2"><span class="material-symbols-outlined text-primary text-sm mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span>${n}</span></div>`).join("");
         buildGuide();
         buildKnow();
         buildQuestions();
         buildPractice();
         buildChecklist();
         showTab("video", "sl-video");
+        // restore saved data after building
+        setTimeout(() => { restoreChecklist(); restoreAIScores(); }, 500);
       }
-      function goBack() {
-        document.getElementById("s-main").classList.remove("active");
-        document.getElementById("s-select").classList.add("active");
-      }
+      function goBack() { document.getElementById("s-main").classList.remove("active"); document.getElementById("s-select").classList.add("active"); }
       function showTab(name, btnId, isMobile) {
-        document
-          .querySelectorAll(".tc")
-          .forEach((t) => t.classList.remove("active"));
-        document
-          .querySelectorAll(".side-link")
-          .forEach((b) => b.classList.remove("active"));
-        document
-          .querySelectorAll(".tab-btn")
-          .forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".tc").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".side-link").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
         document.getElementById("tab-" + name).classList.add("active");
         const side = document.getElementById("sl-" + name);
         const mob = document.getElementById("mt-" + name);
         if (side) side.classList.add("active");
         if (mob) mob.classList.add("active");
       }
-      function togAcc(id) {
-        document.getElementById(id).classList.toggle("open");
-      }
-      function buildGuide() {
-        document.getElementById("guide-sections").innerHTML =
-          GUIDE_SECTIONS.map(
-            (s) => `
-<div class="acc-item" id="${s.id}">
-<button class="w-full flex items-center justify-between p-5 text-left" onclick="togAcc('${s.id}')">
-<div class="flex items-center gap-3">
-<div class="w-9 h-9 rounded-xl bg-primary-light flex items-center justify-center flex-shrink-0">
-<span class="font-headline font-black text-xs text-primary">${s.num}</span>
-</div>
-<div>
-<h3 class="font-headline font-bold text-sm text-on-surface">${s.title}</h3>
-<p class="font-label text-xs text-muted uppercase tracking-wider mt-0.5">${s.sub}</p>
-</div>
-</div>
-<span class="material-symbols-outlined text-primary acc-arrow transition-transform duration-300 flex-shrink-0">expand_more</span>
-</button>
-<div class="acc-body px-5 pb-5 pt-0">
-<div class="border-t border-border pt-4 text-muted text-sm leading-relaxed space-y-3">${s.content}</div>
-</div>
-</div>
-`,
-          ).join("");
-      }
+      function togAcc(id) { document.getElementById(id).classList.toggle("open"); }
+      function buildGuide() { document.getElementById("guide-sections").innerHTML = GUIDE_SECTIONS.map(s => `<div class="acc-item" id="${s.id}"><button class="w-full flex items-center justify-between p-5 text-left" onclick="togAcc('${s.id}')"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-xl bg-primary-light flex items-center justify-center flex-shrink-0"><span class="font-headline font-black text-xs text-primary">${s.num}</span></div><div><h3 class="font-headline font-bold text-sm text-on-surface">${s.title}</h3><p class="font-label text-xs text-muted uppercase tracking-wider mt-0.5">${s.sub}</p></div></div><span class="material-symbols-outlined text-primary acc-arrow transition-transform duration-300 flex-shrink-0">expand_more</span></button><div class="acc-body px-5 pb-5 pt-0"><div class="border-t border-border pt-4 text-muted text-sm leading-relaxed space-y-3">${s.content}</div></div></div>`).join(""); }
       function buildKnow() {
         const c = course;
-        document.getElementById("know-cards").innerHTML = `
-<div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-primary text-base">location_on</span><span class="font-label text-xs font-bold uppercase tracking-widest text-primary">Your Campus</span></div><p class="font-headline font-bold text-sm text-on-surface mb-1">${c.campus}</p><p class="text-muted text-xs leading-relaxed mb-3">${c.address}</p><a href="${c.campusUrl}" target="_blank" class="font-label text-xs font-bold text-primary">View campus →</a></div>
-<div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-secondary text-base">quiz</span><span class="font-label text-xs font-bold uppercase tracking-widest text-secondary">Assessment</span></div><p class="text-muted text-xs leading-relaxed">${c.assessment}</p></div>
-<div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-accent text-base">work</span><span class="font-label text-xs font-bold uppercase tracking-widest text-accent">Target Roles</span></div><p class="text-muted text-xs leading-relaxed">${c.roles.join(" · ")}</p></div>
-<div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-primary text-base">business</span><span class="font-label text-xs font-bold uppercase tracking-widest text-primary">Target Companies</span></div><p class="text-muted text-xs leading-relaxed">${c.companies.join(" · ")}</p></div>
-<div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-secondary text-base">currency_pound</span><span class="font-label text-xs font-bold uppercase tracking-widest text-secondary">First Salary</span></div><p class="font-headline font-black text-primary text-lg">${c.salary}</p></div>
-<div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-accent text-base">home</span><span class="font-label text-xs font-bold uppercase tracking-widest text-accent">Monthly Living</span></div><p class="font-headline font-black text-accent text-lg">${c.livingCost}</p><p class="text-muted text-xs mt-1">${c.accommodation}</p></div>
-`;
-        document.getElementById("mod-list").innerHTML = c.modules
-          .map(
-            (m, i) => `
-<div class="mod-item">
-<span class="mod-num">M${String(i + 1).padStart(2, "0")}</span>
-<div><p class="font-headline font-bold text-sm text-on-surface mb-1">${m.name}</p><p class="text-muted text-xs leading-relaxed">${m.why}</p></div>
-</div>
-`,
-          )
-          .join("");
-        document.getElementById("course-spec-link").innerHTML = `
-<a href="${c.specUrl}" target="_blank" class="lcard"><span class="material-symbols-outlined text-primary text-xl">open_in_new</span><div><strong>Download Your Course Specification</strong><span class="lsub">YSJ Official Course Page</span></div></a>`;
+        document.getElementById("know-cards").innerHTML = `<div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-primary text-base">location_on</span><span class="font-label text-xs font-bold uppercase tracking-widest text-primary">Your Campus</span></div><p class="font-headline font-bold text-sm text-on-surface mb-1">${c.campus}</p><p class="text-muted text-xs leading-relaxed mb-3">${c.address}</p><a href="${c.campusUrl}" target="_blank" class="font-label text-xs font-bold text-primary">View campus →</a></div><div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-secondary text-base">quiz</span><span class="font-label text-xs font-bold uppercase tracking-widest text-secondary">Assessment</span></div><p class="text-muted text-xs leading-relaxed">${c.assessment}</p></div><div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-accent text-base">work</span><span class="font-label text-xs font-bold uppercase tracking-widest text-accent">Target Roles</span></div><p class="text-muted text-xs leading-relaxed">${c.roles.join(" · ")}</p></div><div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-primary text-base">business</span><span class="font-label text-xs font-bold uppercase tracking-widest text-primary">Target Companies</span></div><p class="text-muted text-xs leading-relaxed">${c.companies.join(" · ")}</p></div><div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-secondary text-base">currency_pound</span><span class="font-label text-xs font-bold uppercase tracking-widest text-secondary">First Salary</span></div><p class="font-headline font-black text-primary text-lg">${c.salary}</p></div><div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-accent text-base">home</span><span class="font-label text-xs font-bold uppercase tracking-widest text-accent">Monthly Living</span></div><p class="font-headline font-black text-accent text-lg">${c.livingCost}</p><p class="text-muted text-xs mt-1">${c.accommodation}</p></div>`;
+        document.getElementById("mod-list").innerHTML = c.modules.map((m,i)=>`<div class="mod-item"><span class="mod-num">M${String(i+1).padStart(2,"0")}</span><div><p class="font-headline font-bold text-sm text-on-surface mb-1">${m.name}</p><p class="text-muted text-xs leading-relaxed">${m.why}</p></div></div>`).join("");
+        document.getElementById("course-spec-link").innerHTML = `<a href="${c.specUrl}" target="_blank" class="lcard"><span class="material-symbols-outlined text-primary text-xl">open_in_new</span><div><strong>Download Your Course Specification</strong><span class="lsub">YSJ Official Course Page</span></div></a>`;
       }
-      function buildQuestions() {
-        document.getElementById("all-questions-list").innerHTML =
-          ALL_QUESTIONS.map(
-            (cat, ci) => `
-<div class="mb-8">
-<div class="flex items-center gap-3 mb-4">
-<span class="font-label text-xs font-bold uppercase tracking-widest ${cat.color}">${ci + 1}. ${cat.cat}</span>
-<span class="font-label text-xs font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full ${cat.bg} border ${cat.border} ${cat.color}">${cat.qs.length} questions</span>
-</div>
-<div class="space-y-2">
-${cat.qs
-  .map(
-    (q, qi) => `
-<div class="panel px-5 py-3.5 flex items-start gap-3">
-<span class="q-num mt-0.5 flex-shrink-0">Q${qi + 1}</span>
-<p class="text-on-surface text-sm leading-relaxed">${q}</p>
-</div>
-`,
-  )
-  .join("")}
-</div>
-</div>
-`,
-          ).join("");
-      }
-      function buildPractice() {
-        renderPQs(PQS);
-      }
-      function filtQ(cat, btn) {
-        document
-          .querySelectorAll(".filter-btn")
-          .forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        renderPQs(cat === "all" ? PQS : PQS.filter((q) => q.cat === cat));
-      }
-      function renderPQs(qs) {
-        document.getElementById("pqs").innerHTML = qs
-          .map(
-            (q) => `
-<div class="panel p-6 shadow-sm" id="pc-${q.id}">
-<div class="flex items-start gap-3 mb-4">
-<span class="q-num mt-0.5 flex-shrink-0">Q</span>
-<p class="font-headline font-bold text-sm text-on-surface leading-snug">${q.q}</p>
-</div>
-<textarea class="sim-input min-h-24 block" id="ans-${q.id}" placeholder="Type your answer here..."></textarea>
-<div class="flex items-center gap-3 mt-4 flex-wrap">
-<button class="btn-primary flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider" id="btn-${q.id}" onclick="chkAns('${q.id}')">
-<span class="material-symbols-outlined text-sm">verified</span>Check Answer
-</button>
-<button class="btn-ghost flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider" onclick="togHint('${q.id}')">
-<span class="material-symbols-outlined text-sm">lightbulb</span>Hint
-</button>
-<button class="btn-ghost flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider ml-auto" onclick="clrAns('${q.id}')">
-<span class="material-symbols-outlined text-sm">refresh</span>Clear
-</button>
-</div>
-<div id="hint-${q.id}" class="hidden mt-3 bg-secondary-light border border-blue-200 rounded-xl px-4 py-3 text-sm text-secondary leading-relaxed">${q.hint}</div>
-<div id="fb-${q.id}" class="hidden mt-4 rounded-r-xl p-5 text-sm leading-relaxed">
-<div class="font-headline font-bold text-sm mb-2" id="fbhd-${q.id}"></div>
-<div id="fbb-${q.id}"></div>
-</div>
-</div>
-`,
-          )
-          .join("");
-      }
-      function togHint(id) {
-        document.getElementById("hint-" + id).classList.toggle("hidden");
-      }
-      function clrAns(id) {
-        document.getElementById("ans-" + id).value = "";
-        document.getElementById("fb-" + id).classList.add("hidden");
-      }
-      // ======================================================
-      // IMPROVED AI PROMPT & FIXED MARKING (count once per question)
-      // ======================================================
+      function buildQuestions() { document.getElementById("all-questions-list").innerHTML = ALL_QUESTIONS.map((cat,ci)=>`<div class="mb-8"><div class="flex items-center gap-3 mb-4"><span class="font-label text-xs font-bold uppercase tracking-widest ${cat.color}">${ci+1}. ${cat.cat}</span><span class="font-label text-xs font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full ${cat.bg} border ${cat.border} ${cat.color}">${cat.qs.length} questions</span></div><div class="space-y-2">${cat.qs.map((q,qi)=>`<div class="panel px-5 py-3.5 flex items-start gap-3"><span class="q-num mt-0.5 flex-shrink-0">Q${qi+1}</span><p class="text-on-surface text-sm leading-relaxed">${q}</p></div>`).join("")}</div></div>`).join(""); }
+      function buildPractice() { renderPQs(PQS); }
+      function filtQ(cat, btn) { document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); renderPQs(cat==="all"?PQS:PQS.filter(q=>q.cat===cat)); }
+      function renderPQs(qs) { document.getElementById("pqs").innerHTML = qs.map(q=>`<div class="panel p-6 shadow-sm" id="pc-${q.id}"><div class="flex items-start gap-3 mb-4"><span class="q-num mt-0.5 flex-shrink-0">Q</span><p class="font-headline font-bold text-sm text-on-surface leading-snug">${q.q}</p></div><textarea class="sim-input min-h-24 block" id="ans-${q.id}" placeholder="Type your answer here..."></textarea><div class="flex items-center gap-3 mt-4 flex-wrap"><button class="btn-primary flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider" id="btn-${q.id}" onclick="chkAns('${q.id}')"><span class="material-symbols-outlined text-sm">verified</span>Check Answer</button><button class="btn-ghost flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider" onclick="togHint('${q.id}')"><span class="material-symbols-outlined text-sm">lightbulb</span>Hint</button><button class="btn-ghost flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider ml-auto" onclick="clrAns('${q.id}')"><span class="material-symbols-outlined text-sm">refresh</span>Clear</button></div><div id="hint-${q.id}" class="hidden mt-3 bg-secondary-light border border-blue-200 rounded-xl px-4 py-3 text-sm text-secondary leading-relaxed">${q.hint}</div><div id="fb-${q.id}" class="hidden mt-4 rounded-r-xl p-5 text-sm leading-relaxed"><div class="font-headline font-bold text-sm mb-2" id="fbhd-${q.id}"></div><div id="fbb-${q.id}"></div></div></div>`).join(""); }
+      function togHint(id) { document.getElementById("hint-"+id).classList.toggle("hidden"); }
+      function clrAns(id) { document.getElementById("ans-"+id).value = ""; document.getElementById("fb-"+id).classList.add("hidden"); }
+
       async function chkAns(id) {
-        const q = PQS.find((x) => x.id === id);
-        const ans = document.getElementById("ans-" + id).value.trim();
-        if (!ans) {
-          alert("Please type your answer first.");
-          return;
-        }
-        const btn = document.getElementById("btn-" + id);
-        btn.disabled = true;
-        btn.innerHTML =
-          '<span class="spinner"></span><span class="ml-2">Marking...</span>';
-        const fb = document.getElementById("fb-" + id);
-        fb.className =
-          "mt-4 rounded-r-xl p-5 text-sm leading-relaxed fb-loading";
+        const q = PQS.find(x=>x.id===id);
+        const ans = document.getElementById("ans-"+id).value.trim();
+        if(!ans){ alert("Please type your answer first."); return; }
+        const btn = document.getElementById("btn-"+id);
+        btn.disabled=true; btn.innerHTML='<span class="spinner"></span><span class="ml-2">Marking...</span>';
+        const fb = document.getElementById("fb-"+id);
+        fb.className="mt-4 rounded-r-xl p-5 text-sm leading-relaxed fb-loading";
         fb.classList.remove("hidden");
-        document.getElementById("fbhd-" + id).textContent =
-          "Marking your answer...";
-        document.getElementById("fbb-" + id).innerHTML = "";
-        const prompt = `You are a helpful UKVI Pre-CAS credibility interview coach. The student is applying to study "${course.name}" at YSJ ${course.campus}, located at ${course.address}.
-
-Question: "${q.q}"
-
-What a strong answer MUST include: ${q.cr}
-
-Student answer: "${ans}"
-
-IMPORTANT RULES:
-- Do NOT penalize punctuation, capitalization, or minor grammar errors.
-- Do NOT penalize spelling mistakes unless they make the answer unclear.
-- Value personal language like "I", "my", "me" – this shows genuine response.
-- Focus on whether the student demonstrates understanding of YSJ, their course, and genuine intent to return home.
-- Reward specific details (module names, company names, location, figures).
-
-Return ONLY valid JSON in this exact format:
-{"pass":true,"score":80,"summary":"One clear sentence verdict specific to the answer.","good":["specific strength based on answer"],"improve":["specific weakness and how to fix it"]}
-
-Score should reflect quality (0-100). A score >= 70 is considered a pass.`;
+        document.getElementById("fbhd-"+id).textContent="Marking your answer...";
+        document.getElementById("fbb-"+id).innerHTML="";
+        const prompt = `You are a helpful UKVI Pre-CAS credibility interview coach. The student is applying to study "${course.name}" at YSJ ${course.campus}, located at ${course.address}.\n\nQuestion: "${q.q}"\n\nWhat a strong answer MUST include: ${q.cr}\n\nStudent answer: "${ans}"\n\nIMPORTANT RULES:\n- Do NOT penalize punctuation, capitalization, or minor grammar errors.\n- Do NOT penalize spelling mistakes unless they make the answer unclear.\n- Value personal language like "I", "my", "me" – this shows genuine response.\n- Focus on whether the student demonstrates understanding of YSJ, their course, and genuine intent to return home.\n- Reward specific details (module names, company names, location, figures).\n\nReturn ONLY valid JSON in this exact format:\n{"pass":true,"score":80,"summary":"One clear sentence verdict specific to the answer.","good":["specific strength based on answer"],"improve":["specific weakness and how to fix it"]}\n\nScore should reflect quality (0-100). A score >= 70 is considered a pass.`;
         try {
-          const response = await puter.ai.chat(prompt, {
-            model: "gpt-4o-mini",
-            stream: false,
-          });
-          let raw = "";
-          if (typeof response === "string") {
-            raw = response;
-          } else if (response.message?.content) {
-            raw = response.message.content;
-          } else if (response.content) {
-            raw = response.content;
-          } else {
-            throw new Error("Unexpected response format");
-          }
-          raw = raw.replace(/```json|```/g, "").replace(/\n/g, " ").trim();
-          const match = raw.match(/\{.*\}/);
-          if (!match) throw new Error("Invalid JSON response from AI");
-          const j = JSON.parse(match[0]);
-          if (typeof j.pass !== "boolean")
-            throw new Error("Invalid response structure");
-
-          // ✅ FIX: Count each question only once
-          if (!questionStatus[id]) {
-            questionStatus[id] = true;
-            if (j.pass) {
-              passN++;
-            } else {
-              failN++;
-            }
+          const response = await puter.ai.chat(prompt,{model:"gpt-4o-mini",stream:false});
+          let raw="";
+          if(typeof response==="string") raw=response;
+          else if(response.message?.content) raw=response.message.content;
+          else if(response.content) raw=response.content;
+          else throw new Error("Unexpected response format");
+          raw=raw.replace(/```json|```/g,"").replace(/\n/g," ").trim();
+          const match=raw.match(/\{.*\}/);
+          if(!match) throw new Error("Invalid JSON response from AI");
+          const j=JSON.parse(match[0]);
+          if(typeof j.pass!=="boolean") throw new Error("Invalid response structure");
+          // count only once
+          if(!questionStatus[id]){
+            questionStatus[id]=true;
+            if(j.pass) passN++; else failN++;
             totN++;
             updScore();
           }
-
-          // Display feedback
-          fb.className =
-            "mt-4 rounded-r-xl p-5 text-sm leading-relaxed " +
-            (j.pass ? "fb-pass" : "fb-fail");
-          document.getElementById("fbhd-" + id).innerHTML = j.pass
-            ? `<span class="text-success font-bold">✓ Passed</span> — ${j.summary}`
-            : `<span class="text-error font-bold">✘ Needs Improvement</span> — ${j.summary}`;
-          let h = "";
-          if (j.good?.length) {
-            h += j.good
-              .map(
-                (g) => `
-<div class="flex items-start gap-2 mt-2 text-xs text-on-surface">
-<span class="material-symbols-outlined text-success text-xs mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>
-<span>${g}</span>
-</div>
-`,
-              )
-              .join("");
+          fb.className="mt-4 rounded-r-xl p-5 text-sm leading-relaxed "+(j.pass?"fb-pass":"fb-fail");
+          document.getElementById("fbhd-"+id).innerHTML = j.pass ? `<span class="text-success font-bold">✓ Passed</span> — ${j.summary}` : `<span class="text-error font-bold">✘ Needs Improvement</span> — ${j.summary}`;
+          let h="";
+          if(j.good?.length) h+=j.good.map(g=>`<div class="flex items-start gap-2 mt-2 text-xs text-on-surface"><span class="material-symbols-outlined text-success text-xs mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span>${g}</span></div>`).join("");
+          if(j.improve?.length) h+=j.improve.map(x=>`<div class="flex items-start gap-2 mt-2 text-xs text-on-surface"><span class="material-symbols-outlined text-error text-xs mt-0.5">warning</span><span>${x}</span></div>`).join("");
+          document.getElementById("fbb-"+id).innerHTML=h;
+          if(typeof window.saveAIResponse==="function"){
+            try{
+              const questionId=id;
+              const answerText=document.getElementById("ans-"+id)?.value||"";
+              const score=j.score;
+              const feedbackText=j.summary||j.good?.[0]||JSON.stringify(j);
+              window.saveAIResponse(questionId,answerText,score,feedbackText);
+              console.log("✅ YSJ Saved:",questionId,"| Score:",score);
+            }catch(err){ console.warn("⚠️ YSJ Save Skipped:",err.message); }
           }
-          if (j.improve?.length) {
-            h += j.improve
-              .map(
-                (x) => `
-<div class="flex items-start gap-2 mt-2 text-xs text-on-surface">
-<span class="material-symbols-outlined text-error text-xs mt-0.5">warning</span>
-<span>${x}</span>
-</div>
-`,
-              )
-              .join("");
-          }
-          document.getElementById("fbb-" + id).innerHTML = h;
-
-          // ✅ AUTO-SAVE TO SUPABASE (YSJ)
-          if (typeof window.saveAIResponse === "function") {
-            try {
-              const questionId = id;
-              const answerText = document.getElementById("ans-" + id)?.value || "";
-              const score = j.score;
-              const feedbackText = j.summary || j.good?.[0] || JSON.stringify(j);
-              window.saveAIResponse(questionId, answerText, score, feedbackText);
-              console.log("✅ YSJ Saved:", questionId, "| Score:", score);
-            } catch (err) {
-              console.warn("⚠️ YSJ Save Skipped:", err.message);
-            }
-          }
-        } catch (e) {
-          console.error("AI marking error:", e);
-          fb.className =
-            "mt-4 rounded-r-xl p-5 text-sm leading-relaxed fb-fail";
-          document.getElementById("fbhd-" + id).innerHTML =
-            '<span class="text-error font-bold">Service Unavailable</span>';
-          document.getElementById("fbb-" + id).innerHTML = `
-<div class="text-xs text-muted mt-2">
-<p class="mb-2">Unable to connect to the AI marking service. This could be because:</p>
-<ul class="list-disc pl-4 space-y-1">
-<li>You need to sign in to Puter (free account) when prompted</li>
-<li>Your internet connection is unstable</li>
-<li>The service is temporarily busy</li>
-</ul>
-<p class="mt-2">Please try again in a moment.</p>
-</div>
-`;
+        }catch(e){
+          console.error("AI marking error:",e);
+          fb.className="mt-4 rounded-r-xl p-5 text-sm leading-relaxed fb-fail";
+          document.getElementById("fbhd-"+id).innerHTML='<span class="text-error font-bold">Service Unavailable</span>';
+          document.getElementById("fbb-"+id).innerHTML=`<div class="text-xs text-muted mt-2"><p class="mb-2">Unable to connect to the AI marking service. This could be because:</p><ul class="list-disc pl-4 space-y-1"><li>You need to sign in to Puter (free account) when prompted</li><li>Your internet connection is unstable</li><li>The service is temporarily busy</li></ul><p class="mt-2">Please try again in a moment.</p></div>`;
         }
-        btn.disabled = false;
-        btn.innerHTML =
-          '<span class="material-symbols-outlined text-sm">refresh</span><span class="ml-1">Check Again</span>';
+        btn.disabled=false; btn.innerHTML='<span class="material-symbols-outlined text-sm">refresh</span><span class="ml-1">Check Again</span>';
       }
       function updScore() {
-        document.getElementById("sc-p").textContent = passN;
-        document.getElementById("sc-f").textContent = failN;
-        document.getElementById("sc-t").textContent = totN;
-        const pct = totN ? Math.round((passN / totN) * 100) : 0;
-        let msg = "Answer questions to track your readiness.";
-        if (totN > 0 && pct === 100)
-          msg = "Perfect score! You are ready for the interview.";
-        else if (pct >= 70)
-          msg = `${pct}% pass rate — review the questions you missed.`;
-        else if (pct >= 40)
-          msg = `${pct}% pass rate — keep practising the weaker areas.`;
-        else if (totN > 0)
-          msg = `${pct}% pass rate — read the hints and try again.`;
-        document.getElementById("sc-msg").textContent = msg;
+        document.getElementById("sc-p").textContent=passN;
+        document.getElementById("sc-f").textContent=failN;
+        document.getElementById("sc-t").textContent=totN;
+        const pct=totN?Math.round((passN/totN)*100):0;
+        let msg="Answer questions to track your readiness.";
+        if(totN>0 && pct===100) msg="Perfect score! You are ready for the interview.";
+        else if(pct>=70) msg=`${pct}% pass rate — review the questions you missed.`;
+        else if(pct>=40) msg=`${pct}% pass rate — keep practising the weaker areas.`;
+        else if(totN>0) msg=`${pct}% pass rate — read the hints and try again.`;
+        document.getElementById("sc-msg").textContent=msg;
       }
       function buildChecklist() {
-        const groups = [
-          {
-            title: "YSJ and Course",
-            icon: "school",
-            color: "text-primary",
-            bg: "bg-primary-light",
-            items: [
-              "Know the exact name of your course and duration",
-              "Know your campus name, full street address, and postcode",
-              "Name at least 2-3 modules and explain why each interests you",
-              "Know how your course is assessed — the specific methods",
-              "Compared YSJ with 2 other named UK universities with specific reasons",
-              "Know YSJ rankings: top 10 student satisfaction, Gold teaching excellence",
-            ],
-          },
-          {
-            title: "Why YSJ Specifically",
-            icon: "star",
-            color: "text-secondary",
-            bg: "bg-secondary-light",
-            items: [
-              "Can explain specific reasons for choosing YSJ (not generic)",
-              "Know about £100m facilities investment",
-              "Know about smaller cohort sizes and personalised feedback",
-              "Mention CMI accreditation if applicable to your course",
-              "Know campus location advantages (York historic city OR London business hub)",
-            ],
-          },
-          {
-            title: "Career Plans",
-            icon: "work",
-            color: "text-accent",
-            bg: "bg-cyan-50",
-            items: [
-              "Named at least 2-3 specific real companies you will apply to",
-              "Have a specific job title ready",
-              "Can explain how the course qualifies you for this role",
-              "Clear plan to return to home country after graduation",
-              "Expected salary range in home currency",
-            ],
-          },
-          {
-            title: "Finance and Accommodation",
-            icon: "currency_pound",
-            color: "text-primary",
-            bg: "bg-primary-light",
-            items: [
-              "Know exact tuition fee (£11,800 York / £14,000 London)",
-              "Know how much deposit you have paid",
-              "Know UKVI living cost requirement (£1,171 York / £1,529 London)",
-              "Know who is funding you, their occupation and income",
-              "Have specific accommodation: hall name (York) or area (London)",
-              "Know weekly/monthly accommodation costs",
-            ],
-          },
-          {
-            title: "Living in the UK",
-            icon: "home",
-            color: "text-secondary",
-            bg: "bg-secondary-light",
-            items: [
-              "Know specific attractions in York (Minster, museums) OR London business areas",
-              "Know transport options from accommodation to campus",
-              "Know distance from accommodation to campus",
-              "Aware of clubs, societies, or student activities you might join",
-            ],
-          },
-          {
-            title: "Visa Rules",
-            icon: "verified_user",
-            color: "text-accent",
-            bg: "bg-cyan-50",
-            items: [
-              "Know the 20 hours per week working limit during term time",
-              "Know full-time work allowed during official holidays",
-              "Know you must attend all classes",
-              "Know you must report address changes",
-              "Know you cannot claim public funds",
-            ],
-          },
+        const groups=[
+          {title:"YSJ and Course", icon:"school", color:"text-primary", bg:"bg-primary-light", items:["Know the exact name of your course and duration","Know your campus name, full street address, and postcode","Name at least 2-3 modules and explain why each interests you","Know how your course is assessed — the specific methods","Compared YSJ with 2 other named UK universities with specific reasons","Know YSJ rankings: top 10 student satisfaction, Gold teaching excellence"]},
+          {title:"Why YSJ Specifically", icon:"star", color:"text-secondary", bg:"bg-secondary-light", items:["Can explain specific reasons for choosing YSJ (not generic)","Know about £100m facilities investment","Know about smaller cohort sizes and personalised feedback","Mention CMI accreditation if applicable to your course","Know campus location advantages (York historic city OR London business hub)"]},
+          {title:"Career Plans", icon:"work", color:"text-accent", bg:"bg-cyan-50", items:["Named at least 2-3 specific real companies you will apply to","Have a specific job title ready","Can explain how the course qualifies you for this role","Clear plan to return to home country after graduation","Expected salary range in home currency"]},
+          {title:"Finance and Accommodation", icon:"currency_pound", color:"text-primary", bg:"bg-primary-light", items:["Know exact tuition fee (£11,800 York / £14,000 London)","Know how much deposit you have paid","Know UKVI living cost requirement (£1,171 York / £1,529 London)","Know who is funding you, their occupation and income","Have specific accommodation: hall name (York) or area (London)","Know weekly/monthly accommodation costs"]},
+          {title:"Living in the UK", icon:"home", color:"text-secondary", bg:"bg-secondary-light", items:["Know specific attractions in York (Minster, museums) OR London business areas","Know transport options from accommodation to campus","Know distance from accommodation to campus","Aware of clubs, societies, or student activities you might join"]},
+          {title:"Visa Rules", icon:"verified_user", color:"text-accent", bg:"bg-cyan-50", items:["Know the 20 hours per week working limit during term time","Know full-time work allowed during official holidays","Know you must attend all classes","Know you must report address changes","Know you cannot claim public funds"]}
         ];
-        let html = "",
-          n = 0;
-        groups.forEach((g) => {
-          html += `<div class="panel p-6 shadow-sm"><div class="flex items-center gap-2 mb-4"><span class="material-symbols-outlined text-sm ${g.color}">${g.icon}</span><span class="font-label text-xs font-bold uppercase tracking-widest ${g.color}">${g.title}</span></div><div>`;
-          g.items.forEach((item) => {
-            html += `<div class="check-item flex items-start gap-3 py-3" id="ci${n}"><div class="check-box" onclick="togCB(this)"></div><span class="text-on-surface text-sm leading-relaxed ct">${item}</span></div>`;
-            n++;
-          });
-          html += `</div></div>`;
+        let html="", n=0;
+        groups.forEach(g=>{
+          html+=`<div class="panel p-6 shadow-sm"><div class="flex items-center gap-2 mb-4"><span class="material-symbols-outlined text-sm ${g.color}">${g.icon}</span><span class="font-label text-xs font-bold uppercase tracking-widest ${g.color}">${g.title}</span></div><div>`;
+          g.items.forEach(item=>{ html+=`<div class="check-item flex items-start gap-3 py-3" id="ci${n}"><div class="check-box" onclick="togCB(this)"></div><span class="text-on-surface text-sm leading-relaxed ct">${item}</span></div>`; n++; });
+          html+=`</div></div>`;
         });
-        document.getElementById("chk-content").innerHTML = html;
+        document.getElementById("chk-content").innerHTML=html;
         updProg();
       }
       function togCB(cb) {
         cb.classList.toggle("done");
-        const ct = cb.parentElement.querySelector(".ct");
-        if (cb.classList.contains("done")) {
-          ct.style.textDecoration = "line-through";
-          ct.style.color = "#94a3b8";
-        } else {
-          ct.style.textDecoration = "";
-          ct.style.color = "";
-        }
+        const ct=cb.parentElement.querySelector(".ct");
+        if(cb.classList.contains("done")){ ct.style.textDecoration="line-through"; ct.style.color="#94a3b8"; }
+        else{ ct.style.textDecoration=""; ct.style.color=""; }
         updProg();
       }
       function updProg() {
-        const all = document.querySelectorAll("#chk-content .check-box");
-        const done = document.querySelectorAll("#chk-content .check-box.done");
-        const pct = all.length
-          ? Math.round((done.length / all.length) * 100)
-          : 0;
-        document.getElementById("prog-lbl").textContent =
-          `${done.length} of ${all.length} completed`;
-        document.getElementById("prog-pct").textContent = pct + "%";
-        document.getElementById("prog-fill").style.width = pct + "%";
+        const all=document.querySelectorAll("#chk-content .check-box");
+        const done=document.querySelectorAll("#chk-content .check-box.done");
+        const pct=all.length?Math.round((done.length/all.length)*100):0;
+        document.getElementById("prog-lbl").textContent=`${done.length} of ${all.length} completed`;
+        document.getElementById("prog-pct").textContent=pct+"%";
+        document.getElementById("prog-fill").style.width=pct+"%";
       }
-
-      // ✅ FIXED: Auto-save checklist clicks for YSJ structure
-      document.addEventListener("DOMContentLoaded", async () => {
-        // Wait for app.js to load
-        if (typeof window.saveChecklistItem !== "function") {
-          setTimeout(arguments.callee, 100);
-          return;
-        }
-
-        // YSJ uses .check-box divs with onclick, not native checkboxes
-        document.querySelectorAll(".check-box").forEach((cb, index) => {
-          const checkItem = cb.closest(".check-item");
-          if (checkItem && !checkItem.id) checkItem.id = `ysj_chk_${index}`;
-          const itemId = checkItem ? checkItem.id : `ysj_chk_${index}`;
-
-          // Load saved state
-          window.loadSavedProgress?.().then((progress) => {
-            if (progress?.checklist_status?.[itemId]) {
-              cb.classList.add("done");
-              const titleSpan = checkItem?.querySelector(".ct");
-              if (titleSpan) {
-                titleSpan.style.textDecoration = "line-through";
-                titleSpan.style.color = "var(--text-muted)";
-              }
-              updProg();
-            }
-          });
-
-          // Save on click (YSJ uses onclick on .check-box, not change event)
-          cb.addEventListener("click", () => {
-            cb.classList.toggle("done");
-            const isChecked = cb.classList.contains("done");
-            const titleSpan = checkItem?.querySelector(".ct");
-            if (titleSpan) {
-              titleSpan.style.textDecoration = isChecked ? "line-through" : "";
-              titleSpan.style.color = isChecked ? "var(--text-muted)" : "";
-            }
-            window.saveChecklistItem?.(itemId, isChecked);
-            updProg();
-          });
-        });
-      });
-
-      // ✅ "I'm Ready" Email Button for YSJ
-      document
-        .getElementById("ysj-ready-btn")
-        ?.addEventListener("click", async () => {
-          const btn = document.getElementById("ysj-ready-btn");
-          const status = document.getElementById("ysj-ready-status");
-          if (!btn || !status) return;
-
-          btn.disabled = true;
-          btn.innerHTML = '<span class="spinner"></span> Sending...';
-
-          const progress = await window.loadSavedProgress?.();
-          const responses = progress?.ai_scores || {};
-          const checklist = progress?.checklist_status || {};
-          const scores = Object.values(responses)
-            .map((s) => s.score)
-            .filter((n) => !isNaN(n));
-          const avgScore = scores.length
-            ? (
-                scores.reduce((a, b) => a + b, 0) / scores.length
-              ).toFixed(1)
-            : "N/A";
-
-          const result = await window.sendReadyEmail?.(
-            responses,
-            checklist,
-            avgScore,
-            'Student clicked "I\'m Ready" in YSJ Prep',
-          );
-
-          if (result?.success) {
-            status.textContent =
-              "✅ Submitted! Your advisor will contact you soon.";
-            status.className = "mt-3 text-sm font-medium text-success";
-            btn.innerHTML =
-              '<span class="material-symbols-outlined">verified</span> Sent';
-            btn.disabled = true;
-          } else {
-            status.textContent = "⚠️ Could not send. Please try again.";
-            status.className = "mt-3 text-sm font-medium text-error";
-            btn.disabled = false;
-            btn.innerHTML =
-              '<span class="material-symbols-outlined">check_circle</span> I\'m Ready for Interview';
+      async function restoreChecklist() {
+        if(typeof window.saveChecklistItem!=="function") return;
+        const progress=await window.loadSavedProgress();
+        if(!progress?.checklist_status) return;
+        document.querySelectorAll(".check-box").forEach((cb,index)=>{
+          const checkItem=cb.closest(".check-item");
+          const itemId=checkItem?checkItem.id:`ysj_chk_${index}`;
+          if(progress.checklist_status[itemId]){
+            cb.classList.add("done");
+            const titleSpan=checkItem?.querySelector(".ct");
+            if(titleSpan){ titleSpan.style.textDecoration="line-through"; titleSpan.style.color="var(--text-muted)"; }
           }
         });
+        updProg();
+      }
+      async function restoreAIScores() {
+        const progress=await window.loadSavedProgress();
+        if(!progress?.ai_scores) return;
+        const scores=progress.ai_scores;
+        let newPass=0,newFail=0;
+        const newStatus={};
+        for(const [qId,data] of Object.entries(scores)){
+          const score=data.score;
+          if(typeof score==='number'){
+            if(score>=7) newPass++;
+            else newFail++;
+            newStatus[qId]=true;
+          }
+        }
+        passN=newPass; failN=newFail; totN=newPass+newFail; questionStatus=newStatus;
+        updScore();
+      }
+      document.addEventListener("DOMContentLoaded", async ()=>{
+        // auto-select last course if any
+        const lastCourse=localStorage.getItem('last_course');
+        if(lastCourse && !course) selectCourse(lastCourse);
+        if(typeof window.saveChecklistItem==="function"){
+          document.querySelectorAll(".check-box").forEach((cb,index)=>{
+            const checkItem=cb.closest(".check-item");
+            if(checkItem && !checkItem.id) checkItem.id=`ysj_chk_${index}`;
+            const itemId=checkItem?checkItem.id:`ysj_chk_${index}`;
+            window.loadSavedProgress?.().then(progress=>{
+              if(progress?.checklist_status?.[itemId]){
+                cb.classList.add("done");
+                const titleSpan=checkItem?.querySelector(".ct");
+                if(titleSpan){ titleSpan.style.textDecoration="line-through"; titleSpan.style.color="var(--text-muted)"; }
+                updProg();
+              }
+            });
+            cb.addEventListener("click",()=>{
+              cb.classList.toggle("done");
+              const isChecked=cb.classList.contains("done");
+              const titleSpan=checkItem?.querySelector(".ct");
+              if(titleSpan){
+                titleSpan.style.textDecoration=isChecked?"line-through":"";
+                titleSpan.style.color=isChecked?"var(--text-muted)":"";
+              }
+              window.saveChecklistItem?.(itemId,isChecked);
+              updProg();
+            });
+          });
+        }
+        const readyBtn=document.getElementById("ysj-ready-btn");
+        const readyStatus=document.getElementById("ysj-ready-status");
+        if(readyBtn && typeof window.sendReadyEmail==="function"){
+          readyBtn.addEventListener("click",async ()=>{
+            readyBtn.disabled=true; readyBtn.innerHTML='<span class="spinner"></span> Sending...';
+            const progress=await window.loadSavedProgress?.();
+            const responses=progress?.ai_scores||{};
+            const checklist=progress?.checklist_status||{};
+            const scores=Object.values(responses).map(s=>s.score).filter(n=>!isNaN(n));
+            const avg=scores.length?(scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1):"N/A";
+            const res=await window.sendReadyEmail?.(responses,checklist,avg,'Student clicked "I\'m Ready" in YSJ Prep');
+            if(res?.success){
+              if(readyStatus){ readyStatus.textContent="✅ Submitted! Your advisor will contact you soon."; readyStatus.className="mt-3 text-sm font-medium text-success"; }
+              readyBtn.innerHTML='<span class="material-symbols-outlined">verified</span> Sent';
+              readyBtn.disabled=true;
+            }else{
+              if(readyStatus){ readyStatus.textContent="⚠️ Could not send. Please try again."; readyStatus.className="mt-3 text-sm font-medium text-error"; }
+              readyBtn.disabled=false;
+              readyBtn.innerHTML='<span class="material-symbols-outlined">check_circle</span> I\'m Ready for Interview';
+            }
+          });
+        }else if(readyBtn){ readyBtn.addEventListener("click",()=>alert("Email service not configured.")); }
+        await restoreChecklist();
+        await restoreAIScores();
+      });
     </script>
   </body>
 </html>
