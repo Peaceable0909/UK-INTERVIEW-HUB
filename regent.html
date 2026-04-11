@@ -2539,8 +2539,7 @@
         passN = 0,
         failN = 0,
         totN = 0;
-      // Track which questions have been marked (to avoid counting multiple attempts)
-      let questionStatus = {};
+      let questionStatus = {}; // ✅ Track which questions have been counted
 
       function selectCourse(id) {
         course = COURSES[id];
@@ -2548,11 +2547,10 @@
         document.getElementById("s-main").classList.add("active");
         document.getElementById("tb-name").textContent = course.name;
         document.getElementById("tb-campus").textContent = course.campus;
-        // Reset all counts and status when new course is selected
         passN = 0;
         failN = 0;
         totN = 0;
-        questionStatus = {};
+        questionStatus = {}; // ✅ Reset status when new course selected
         updScore();
 
         document.getElementById("vid-notes").innerHTML = course.videoNotes
@@ -2729,7 +2727,7 @@
       }
 
       // ======================================================
-      // IMPROVED AI MARKING - Focus on content, not grammar
+      // IMPROVED AI PROMPT & FIXED MARKING (count once per question)
       // ======================================================
       async function chkAns(id) {
         const q = PQS.find((x) => x.id === id);
@@ -2752,14 +2750,14 @@
           "Marking your answer...";
         document.getElementById("fbb-" + id).innerHTML = "";
 
-        // IMPROVED PROMPT: focus on content, personalization, understanding
+        // IMPROVED PROMPT – focus on content, personal language, no grammar penalty
         const prompt = `You are a helpful UK student visa credibility interview coach. The student is applying to study "${course.name}" at Regent College London, campus: "${course.campus}".
 
 Question: "${q.q}"
 
-Student answer: "${ans}"
-
 What a strong answer MUST include: ${q.cr}
+
+Student answer: "${ans}"
 
 IMPORTANT RULES:
 - Do NOT penalize punctuation, capitalization, or minor grammar errors.
@@ -2799,7 +2797,7 @@ Score should reflect quality (0-100). A score >= 70 is considered a pass.`;
           if (typeof j.pass !== "boolean")
             throw new Error("Invalid response structure");
 
-          // FIXED: Count question only once
+          // ✅ FIX: Count each question only once
           if (!questionStatus[id]) {
             questionStatus[id] = true;
             if (j.pass) {
