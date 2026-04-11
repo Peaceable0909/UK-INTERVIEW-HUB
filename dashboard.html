@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <base href="/UK-INTERVIEW-HUB/">
+  <title>Prep Hub | Student Progress Dashboard</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "inverse-surface": "#2d3133",
+            "surface-container": "#eceef0",
+            "secondary": "#006c49",
+            "on-tertiary": "#ffffff",
+            "on-secondary-container": "#00714d",
+            "tertiary": "#480020",
+            "error": "#ba1a1a",
+            "surface-dim": "#d8dadc",
+            "surface-bright": "#f7f9fb",
+            "on-surface": "#191c1e",
+            "tertiary-fixed": "#ffd9e1",
+            "background": "#f7f9fb",
+            "outline": "#74777f",
+            "primary-container": "#1a365d",
+            "error-container": "#ffdad6",
+            "primary-fixed-dim": "#adc7f7",
+            "tertiary-container": "#6f0035",
+            "on-background": "#191c1e",
+            "surface-tint": "#455f88",
+            "secondary-fixed-dim": "#4edea3",
+            "on-primary-fixed": "#001b3c",
+            "secondary-fixed": "#6ffbbe",
+            "primary": "#002045",
+            "outline-variant": "#c4c6cf",
+            "on-tertiary-fixed-variant": "#8b0e45",
+            "surface-container-high": "#e6e8ea",
+            "secondary-container": "#6cf8bb",
+            "surface": "#f7f9fb",
+            "surface-container-low": "#f2f4f6",
+            "on-secondary-fixed": "#002113",
+            "on-error-container": "#93000a",
+            "surface-container-highest": "#e0e3e5",
+            "on-tertiary-fixed": "#3f001b",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed-dim": "#ffb1c5",
+            "primary-fixed": "#d6e3ff",
+            "inverse-primary": "#adc7f7",
+            "on-secondary-fixed-variant": "#005236",
+            "surface-variant": "#e0e3e5",
+            "on-secondary": "#ffffff",
+            "on-primary": "#ffffff",
+            "on-surface-variant": "#43474e",
+            "on-tertiary-container": "#fe6d9d",
+            "on-primary-fixed-variant": "#2d476f",
+            "inverse-on-surface": "#eff1f3",
+            "on-primary-container": "#86a0cd",
+            "on-error": "#ffffff"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Manrope"],
+            body: ["Inter"],
+            label: ["Inter"]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f7f9fb;
+      color: #191c1e;
+    }
+    .editorial-shadow {
+      box-shadow: 0 8px 32px rgba(0, 32, 69, 0.04);
+    }
+    details summary {
+      list-style: none;
+    }
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+    /* custom scroll for checklist */
+    .custom-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #e0e3e5;
+      border-radius: 8px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #74777f;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body class="bg-background min-h-screen pb-32">
+  <!-- Top Bar -->
+  <header class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl shadow-sm shadow-blue-900/5 flex items-center justify-between px-6 py-4">
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-200/50 transition-colors active:scale-95 duration-150">
+        <span class="material-symbols-outlined text-blue-900">arrow_back</span>
+      </a>
+      <h1 class="font-manrope font-extrabold text-xl tracking-tight text-blue-900">Prep Hub</h1>
+    </div>
+    <button id="logoutBtn" class="text-slate-500 font-inter font-semibold text-sm hover:text-blue-900 transition-colors active:scale-95 duration-150">
+      Sign Out
+    </button>
+  </header>
+
+  <main class="mt-24 px-6 space-y-8 max-w-md mx-auto">
+    <!-- Loading state -->
+    <div id="loadingState" class="flex justify-center py-12">
+      <div class="spinner w-8 h-8 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+    </div>
+
+    <!-- Dashboard content (hidden initially) -->
+    <div id="dashboardContent" class="hidden space-y-8">
+      <!-- Profile Card -->
+      <section class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-white text-2xl font-bold" id="avatarInitials">AC</div>
+          <div>
+            <h2 class="font-headline font-bold text-xl text-primary" id="studentName">Student Name</h2>
+            <p class="font-body text-sm text-on-surface-variant" id="studentEmail">email@example.com</p>
+            <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant/60 font-bold" id="studentId">ID: --</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <button id="emailReportBtn" class="flex items-center justify-center gap-2 py-3 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary hover:bg-slate-200/50 active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-sm">mail</span>
+            Email Report
+          </button>
+          <button id="exportJsonBtn" class="flex items-center justify-center gap-2 py-3 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary hover:bg-slate-200/50 active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-sm">download</span>
+            Export Data
+          </button>
+        </div>
+      </section>
+
+      <!-- Stats Grid -->
+      <section class="grid grid-cols-2 gap-4">
+        <div class="bg-surface-container-low p-5 rounded-2xl">
+          <span class="material-symbols-outlined text-primary mb-3">quiz</span>
+          <p class="font-label text-[10px] uppercase tracking-wider text-on-surface-variant mb-1 font-bold">Total AI Responses</p>
+          <p class="font-headline font-bold text-2xl text-primary" id="totalResponses">0</p>
+        </div>
+        <div class="bg-surface-container-low p-5 rounded-2xl">
+          <div class="flex justify-between items-start mb-3">
+            <span class="material-symbols-outlined text-secondary">trending_up</span>
+          </div>
+          <p class="font-label text-[10px] uppercase tracking-wider text-on-surface-variant mb-1 font-bold">Average Score</p>
+          <p class="font-headline font-bold text-2xl text-secondary" id="avgScore">0<span class="text-sm font-body text-secondary/60">/10</span></p>
+        </div>
+        <div class="bg-surface-container-low p-5 rounded-2xl">
+          <span class="material-symbols-outlined text-primary mb-3">fact_check</span>
+          <p class="font-label text-[10px] uppercase tracking-wider text-on-surface-variant mb-1 font-bold">Checklist Done</p>
+          <p class="font-headline font-bold text-2xl text-primary" id="checklistPercent">0<span class="text-sm font-body text-primary/60">%</span></p>
+        </div>
+        <div class="bg-surface-container-low p-5 rounded-2xl">
+          <span class="material-symbols-outlined text-secondary mb-3" style="font-variation-settings: 'FILL' 1;">verified</span>
+          <p class="font-label text-[10px] uppercase tracking-wider text-on-surface-variant mb-1 font-bold">Pass Rate</p>
+          <p class="font-headline font-bold text-2xl text-secondary" id="passRate">0<span class="text-sm font-body text-secondary/60">%</span></p>
+        </div>
+      </section>
+
+      <!-- Checklist Section -->
+      <section>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-headline font-bold text-lg text-primary">Preparation Checklist</h3>
+          <span class="font-label text-[10px] font-bold text-secondary bg-secondary-container/30 px-2 py-1 rounded-sm" id="checklistSummary">0/0 COMPLETED</span>
+        </div>
+        <div class="bg-surface-container-lowest rounded-[2rem] p-2 editorial-shadow overflow-hidden">
+          <div id="checklistContainer" class="max-h-[220px] overflow-y-auto px-4 py-2 space-y-4 custom-scroll">
+            <!-- dynamically filled -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Practice Responses Section -->
+      <section class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-headline font-bold text-lg text-primary">Practice Responses</h3>
+          <div class="flex gap-2">
+            <button id="searchBtn" class="w-10 h-10 bg-surface-container-high rounded-full flex items-center justify-center">
+              <span class="material-symbols-outlined text-primary text-xl">search</span>
+            </button>
+            <button id="filterBtn" class="w-10 h-10 bg-surface-container-high rounded-full flex items-center justify-center">
+              <span class="material-symbols-outlined text-primary text-xl">tune</span>
+            </button>
+          </div>
+        </div>
+        <div id="responsesContainer" class="space-y-4">
+          <!-- dynamically filled -->
+        </div>
+        <div id="noResponsesMsg" class="text-center text-slate-400 py-8 hidden">No practice responses yet. Start practicing on any university page!</div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation (cosmetic, matches design) -->
+  <nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-white/90 backdrop-blur-2xl shadow-[0_-8px_32px_rgba(0,32,69,0.06)] rounded-t-[2.5rem]">
+    <a href="index.html" class="flex flex-col items-center justify-center text-slate-400 px-4 py-2 hover:text-blue-900 transition-all duration-200 active:translate-y-0.5">
+      <span class="material-symbols-outlined mb-1">dashboard</span>
+      <span class="font-inter text-[10px] font-semibold uppercase tracking-wider">Dashboard</span>
+    </a>
+    <a href="index.html" class="flex flex-col items-center justify-center text-slate-400 px-4 py-2 hover:text-blue-900 transition-all duration-200 active:translate-y-0.5">
+      <span class="material-symbols-outlined mb-1">fact_check</span>
+      <span class="font-inter text-[10px] font-semibold uppercase tracking-wider">Checklist</span>
+    </a>
+    <a href="index.html" class="flex flex-col items-center justify-center text-slate-400 px-4 py-2 hover:text-blue-900 transition-all duration-200 active:translate-y-0.5">
+      <span class="material-symbols-outlined mb-1">forum</span>
+      <span class="font-inter text-[10px] font-semibold uppercase tracking-wider">Practice</span>
+    </a>
+    <a href="dashboard.html" class="flex flex-col items-center justify-center text-emerald-700 bg-emerald-50 rounded-2xl px-4 py-2 transition-all duration-200 active:translate-y-0.5">
+      <span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">person</span>
+      <span class="font-inter text-[10px] font-semibold uppercase tracking-wider">Profile</span>
+    </a>
+  </nav>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    // Helper: format checklist key to readable string
+    function formatChecklistKey(key) {
+      // Try to extract a meaningful description
+      const knownPatterns = {
+        'Watch the full training video': 'Watch the full training video',
+        'Research your specific BPP campus': 'Research your specific BPP campus',
+        'Review your CAS statement thoroughly': 'Review your CAS statement thoroughly',
+        'Prepare your "Why BPP?" answer': 'Prepare your "Why BPP?" answer',
+        'Practice 3+ questions aloud': 'Practice 3+ questions aloud',
+        'Prepare documents for the call': 'Prepare documents for the call',
+        'Test your tech setup': 'Test your tech setup',
+        'Choose a quiet, well-lit space': 'Choose a quiet, well-lit space',
+        'Prepare questions to ask': 'Prepare questions to ask',
+        'Plan your outfit': 'Plan your outfit',
+        'Get good rest the night before': 'Get good rest the night before',
+        'Log in 10 minutes early': 'Log in 10 minutes early',
+        'Know the exact name of your course and duration': 'Know the exact name of your course',
+        'Know your campus name, full street address, and postcode': 'Know your campus address',
+        'Name at least 2-3 modules and explain why each interests you': 'Name modules & explain interest',
+        'Know how your course is assessed — the specific methods': 'Know assessment methods',
+        'Compared YSJ with 2 other named UK universities with specific reasons': 'Compare YSJ with other unis',
+        'Know YSJ rankings: top 10 student satisfaction, Gold teaching excellence': 'Know YSJ rankings'
+      };
+      if (knownPatterns[key]) return knownPatterns[key];
+      // Remove prefixes like "bpp_chk_", "regent_chk_", "ysj_chk_", "nl_chk_", "ukvi_chk_"
+      let cleaned = key.replace(/^(bpp|regent|ysj|nl|ukvi)_chk_\d+_?/, '');
+      cleaned = cleaned.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
+      return cleaned || key;
+    }
+
+    // Render checklist
+    function renderChecklist(checklistStatus) {
+      const container = document.getElementById('checklistContainer');
+      const summarySpan = document.getElementById('checklistSummary');
+      if (!checklistStatus || Object.keys(checklistStatus).length === 0) {
+        container.innerHTML = '<div class="text-slate-400 text-sm py-4 text-center">No checklist items yet.</div>';
+        summarySpan.textContent = '0/0 COMPLETED';
+        return;
+      }
+      const items = Object.entries(checklistStatus);
+      const doneCount = items.filter(([, done]) => done === true).length;
+      const total = items.length;
+      const percent = total ? Math.round((doneCount / total) * 100) : 0;
+      document.getElementById('checklistPercent').innerHTML = `${percent}<span class="text-sm font-body text-primary/60">%</span>`;
+      summarySpan.textContent = `${doneCount}/${total} COMPLETED`;
+
+      const html = items.map(([key, done]) => `
+        <div class="flex items-center justify-between group">
+          <div class="flex items-center gap-3">
+            <div class="w-2 h-2 rounded-full ${done ? 'bg-secondary' : 'bg-slate-300'}"></div>
+            <p class="font-body text-sm font-medium text-on-surface">${escapeHtml(formatChecklistKey(key))}</p>
+          </div>
+          <span class="font-label text-[10px] font-bold ${done ? 'text-secondary' : 'text-slate-400'}">${done ? 'DONE' : 'PENDING'}</span>
+        </div>
+      `).join('');
+      container.innerHTML = html;
+    }
+
+    // Render practice responses
+    function renderResponses(aiScores) {
+      const container = document.getElementById('responsesContainer');
+      const noMsg = document.getElementById('noResponsesMsg');
+      if (!aiScores || Object.keys(aiScores).length === 0) {
+        container.innerHTML = '';
+        noMsg.classList.remove('hidden');
+        return;
+      }
+      noMsg.classList.add('hidden');
+      const entries = Object.entries(aiScores);
+      // Sort by date descending (if date exists, otherwise by key)
+      entries.sort((a, b) => {
+        const dateA = a[1]?.date ? new Date(a[1].date) : 0;
+        const dateB = b[1]?.date ? new Date(b[1].date) : 0;
+        return dateB - dateA;
+      });
+
+      const html = entries.map(([qId, data]) => {
+        const score = data.score ?? 0;
+        const pass = score >= 7;
+        const answerPreview = data.answer ? (data.answer.length > 100 ? data.answer.substring(0, 100) + '…' : data.answer) : 'No answer saved';
+        const feedback = data.feedback || (data.summary || 'No feedback available');
+        // Determine category hint (first part of qId)
+        let category = 'General';
+        if (qId.includes('REGENT')) category = 'Regent';
+        else if (qId.includes('BPP')) category = 'BPP';
+        else if (qId.includes('YSJ')) category = 'YSJ';
+        else if (qId.includes('NL')) category = 'Netherlands';
+        else if (qId.includes('UKVI')) category = 'UKVI';
+        else if (qId.includes('p')) category = 'Practice';
+        return `
+          <div class="bg-surface-container-lowest rounded-[1.5rem] p-5 editorial-shadow border border-white/40">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <span class="font-label text-[10px] uppercase font-bold text-on-surface-variant/60 tracking-wider">${escapeHtml(qId)} • ${category}</span>
+                <h4 class="font-headline font-bold text-primary mt-1">${escapeHtml(qId.length > 40 ? qId.substring(0,40)+'…' : qId)}</h4>
+              </div>
+              <div class="text-right">
+                <p class="font-headline font-bold ${pass ? 'text-secondary' : 'text-tertiary'} text-lg">${score}/10</p>
+                <span class="font-label text-[10px] font-bold ${pass ? 'text-on-secondary' : 'text-on-tertiary'} px-2 py-0.5 ${pass ? 'bg-secondary' : 'bg-tertiary'} rounded-sm uppercase">${pass ? 'Pass' : 'Needs Work'}</span>
+              </div>
+            </div>
+            <div class="space-y-3 pt-3">
+              <details class="group">
+                <summary class="list-none flex items-center justify-between cursor-pointer font-label text-[10px] font-bold text-primary uppercase tracking-widest">
+                  Review Analysis
+                  <span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+                </summary>
+                <div class="mt-4 space-y-4 font-body text-sm">
+                  <div class="p-4 bg-surface-container-low rounded-xl">
+                    <p class="font-label text-[10px] font-bold text-on-surface-variant uppercase mb-2">Your Answer</p>
+                    <p class="text-on-surface leading-relaxed italic">${escapeHtml(answerPreview)}</p>
+                  </div>
+                  <div class="p-4 ${pass ? 'bg-secondary/5 border-l-4 border-secondary' : 'bg-tertiary/5 border-l-4 border-tertiary'} rounded-xl">
+                    <p class="font-label text-[10px] font-bold ${pass ? 'text-secondary' : 'text-tertiary'} uppercase mb-2">AI Feedback</p>
+                    <p class="text-on-surface leading-relaxed">${escapeHtml(feedback.length > 200 ? feedback.substring(0,200)+'…' : feedback)}</p>
+                  </div>
+                </div>
+              </details>
+            </div>
+          </div>
+        `;
+      }).join('');
+      container.innerHTML = html;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
+
+    // Main load function
+    async function loadDashboard() {
+      const student = window.getCurrentStudent();
+      if (!student) {
+        window.location.href = 'index.html';
+        return;
+      }
+      // Update profile
+      document.getElementById('studentName').textContent = student.name || 'Student';
+      document.getElementById('studentEmail').textContent = student.email || '';
+      document.getElementById('studentId').textContent = `ID: ${student.student_id || '—'}`;
+      const initials = (student.name || 'S').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+      document.getElementById('avatarInitials').textContent = initials;
+
+      const progress = await window.loadSavedProgress();
+      const checklist = progress?.checklist_status || {};
+      const aiScores = progress?.ai_scores || {};
+
+      // Stats
+      const responsesList = Object.values(aiScores);
+      const total = responsesList.length;
+      let totalScore = 0;
+      let passCount = 0;
+      responsesList.forEach(r => {
+        const sc = r.score;
+        if (typeof sc === 'number') {
+          totalScore += sc;
+          if (sc >= 7) passCount++;
+        }
+      });
+      const avg = total ? (totalScore / total).toFixed(1) : '0';
+      const passRate = total ? Math.round((passCount/total)*100) : 0;
+      document.getElementById('totalResponses').textContent = total;
+      document.getElementById('avgScore').innerHTML = `${avg}<span class="text-sm font-body text-secondary/60">/10</span>`;
+      document.getElementById('passRate').innerHTML = `${passRate}<span class="text-sm font-body text-secondary/60">%</span>`;
+
+      // Checklist percent
+      const checklistEntries = Object.values(checklist);
+      const doneCount = checklistEntries.filter(v=>v===true).length;
+      const checklistPercent = checklistEntries.length ? Math.round((doneCount/checklistEntries.length)*100) : 0;
+      document.getElementById('checklistPercent').innerHTML = `${checklistPercent}<span class="text-sm font-body text-primary/60">%</span>`;
+
+      renderChecklist(checklist);
+      renderResponses(aiScores);
+
+      // Show dashboard
+      document.getElementById('loadingState').classList.add('hidden');
+      document.getElementById('dashboardContent').classList.remove('hidden');
+    }
+
+    // Email report
+    async function sendReport() {
+      const student = window.getCurrentStudent();
+      if (!student) return;
+      const progress = await window.loadSavedProgress();
+      const responses = progress?.ai_scores || {};
+      const checklist = progress?.checklist_status || {};
+      const scores = Object.values(responses).map(s=>s.score).filter(n=>typeof n==='number');
+      const avg = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1) : 'N/A';
+      const message = `Student: ${student.name} (ID: ${student.student_id || 'N/A'})
+Email: ${student.email}
+Date: ${new Date().toLocaleString()}
+Total responses: ${scores.length}
+Average score: ${avg}/10
+Checklist completed: ${Object.values(checklist).filter(v=>v===true).length}/${Object.keys(checklist).length} items
+
+Full report from Dashboard.`;
+      const result = await window.sendReadyEmail(responses, checklist, avg, message);
+      if (result?.success) alert('✅ Report sent successfully!');
+      else alert('❌ Failed to send email. Please try again.');
+    }
+
+    // Export JSON
+    async function exportJson() {
+      const student = window.getCurrentStudent();
+      const progress = await window.loadSavedProgress();
+      const data = {
+        student: student,
+        progress: progress,
+        exportedAt: new Date().toISOString()
+      };
+      const jsonStr = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonStr], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `interview_progress_${student?.student_id || 'student'}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // Logout
+    async function logout() {
+      await supabase.auth.signOut();
+      localStorage.removeItem('student');
+      localStorage.removeItem('selected_university');
+      window.location.href = 'index.html';
+    }
+
+    // Event listeners
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('emailReportBtn').addEventListener('click', sendReport);
+    document.getElementById('exportJsonBtn').addEventListener('click', exportJson);
+    // Simple search/filter could be added but keeping design
+    document.getElementById('searchBtn').addEventListener('click', () => alert('Search feature coming soon!'));
+    document.getElementById('filterBtn').addEventListener('click', () => alert('Filter feature coming soon!'));
+
+    loadDashboard();
+  </script>
+</body>
+</html>
