@@ -3057,7 +3057,7 @@ Focus on: genuine intent, research depth, career alignment, and return plan.`;
               }
             });
 
-            cb.addEventListener("click", () => {
+            cb.addEventListener("click", async () => {
               cb.classList.toggle("done");
               const isChecked = cb.classList.contains("done");
               const titleSpan = checkItem?.querySelector(".font-medium");
