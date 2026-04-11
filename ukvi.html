@@ -2406,14 +2406,13 @@
             <!-- Question Display -->
             <div class="panel p-5 mb-6">
               <div class="flex items-start gap-3">
-                <span class="q-num">Q1</span>
+                <span class="q-num" id="ukvi-question-num">Q1</span>
                 <div>
-                  <p class="font-bold text-base mb-1">
+                  <p class="font-bold text-base mb-1" id="ukvi-question-text">
                     Why have you chosen to study this programme in the UK?
                   </p>
-                  <p class="text-xs text-muted">
-                    Tip: Be specific about academic reasons, not just logistics.
-                    Show research depth.
+                  <p class="text-xs text-muted" id="ukvi-question-tip">
+                    Tip: Be specific about academic reasons, not just logistics. Show research depth.
                   </p>
                 </div>
               </div>
@@ -2926,7 +2925,7 @@
         try {
           const prompt = `You are a helpful UKVI credibility interview coach. The student is applying for a UK student visa.
 
-Question: "Why have you chosen to study this programme in the UK?"
+Question: "${document.getElementById('ukvi-question-text')?.textContent || 'Why have you chosen to study this programme in the UK?'}"
 
 Student answer: "${answer}"
 
@@ -2979,11 +2978,11 @@ Focus on: genuine intent, research depth, career alignment, and return plan.`;
           // ✅ AUTO-SAVE TO SUPABASE (UKVI)
           if (typeof window.saveAIResponse === "function") {
             try {
-              const questionId = "UKVI_Q1";
+              const questionId = window._currentUKVIQuestionId || "UKVI_Q1";
               const answerText = document.getElementById("ukvi-answer-input")?.value || "";
               const score = feedback.score;
               const feedbackText = feedback.strengths?.[0] || JSON.stringify(feedback);
-              window.saveAIResponse(questionId, answerText, score, feedbackText);
+              const saveResult = await window.saveAIResponse(questionId, answerText, score, feedbackText);
               console.log("✅ UKVI AI Saved:", questionId, "| Score:", score);
             } catch (err) {
               console.warn("⚠️ UKVI Save Skipped:", err.message);
@@ -3008,10 +3007,31 @@ Focus on: genuine intent, research depth, career alignment, and return plan.`;
         }
       }
 
-      function nextQuestion() {
-        document.getElementById("feedback-area").classList.add("hidden");
+      const UKVI_QUESTIONS = [
+        { id: "UKVI_Q1", text: "Why have you chosen to study this programme in the UK?", tip: "Be specific about academic reasons, not just logistics. Show research depth." },
+        { id: "UKVI_Q2", text: "Why did you choose this specific university?", tip: "Name specific features: rankings, modules, teaching style, campus facilities." },
+        { id: "UKVI_Q3", text: "What do you plan to do after you finish your studies?", tip: "Describe a concrete career plan and why you intend to return home." },
+        { id: "UKVI_Q4", text: "How will you fund your studies and living expenses in the UK?", tip: "Name the funding source clearly. Show you understand total costs." },
+        { id: "UKVI_Q5", text: "Have you studied in the UK before? Tell me about your academic background.", tip: "Be honest and clear. Show how your previous study connects to this course." },
+        { id: "UKVI_Q6", text: "What is the name of your course and how long does it last?", tip: "State the exact course title and duration. Errors here raise suspicion." },
+        { id: "UKVI_Q7", text: "Why do you want to study this subject at degree level?", tip: "Show genuine passion and connect to your work experience or future goals." },
+        { id: "UKVI_Q8", text: "What ties do you have to your home country that will ensure you return?", tip: "Mention family, property, job offers, or business interests back home." },
+      ];
+      let currentUKVIIndex = 0;
+
+      function loadQuestion(index) {
+        const q = UKVI_QUESTIONS[index];
+        document.getElementById("ukvi-question-text").textContent = q.text;
+        document.getElementById("ukvi-question-tip").textContent = "Tip: " + q.tip;
+        document.getElementById("ukvi-question-num").textContent = "Q" + (index + 1);
         document.getElementById("ukvi-answer-input").value = "";
-        alert("Next question loaded! (Demo mode)");
+        document.getElementById("feedback-area").classList.add("hidden");
+        window._currentUKVIQuestionId = q.id;
+      }
+
+      function nextQuestion() {
+        currentUKVIIndex = (currentUKVIIndex + 1) % UKVI_QUESTIONS.length;
+        loadQuestion(currentUKVIIndex);
       }
 
       function resetPractice() {
@@ -3023,6 +3043,7 @@ Focus on: genuine intent, research depth, career alignment, and return plan.`;
       document.addEventListener("DOMContentLoaded", async function () {
         initTheme();
         updateProgress();
+        loadQuestion(0);
 
         // Keyboard shortcut: Ctrl+D to toggle theme
         document.addEventListener("keydown", (e) => {
@@ -3059,7 +3080,7 @@ Focus on: genuine intent, research depth, career alignment, and return plan.`;
                 titleP.style.textDecoration = isChecked ? "line-through" : "";
                 titleP.style.color = isChecked ? "var(--text-muted)" : "";
               }
-              window.saveChecklistItem?.(itemId, isChecked);
+              await window.saveChecklistItem?.(itemId, isChecked);
               updateProgress();
             });
           });
