@@ -510,16 +510,36 @@
     }, observerOptions);
     document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
 
-    // Smooth scroll to universities
+    // Smooth scroll
     document.getElementById('getStartedBtn')?.addEventListener('click', () => {
       document.getElementById('universities').scrollIntoView({ behavior: 'smooth' });
     });
+
     document.getElementById('ctaGetStartedBtn')?.addEventListener('click', () => {
       document.getElementById('universities').scrollIntoView({ behavior: 'smooth' });
     });
 
-    // University tracking (already in app.js, but ensure data-university is set)
-    // The buttons already have data-university attributes.
+    // ✅ Menu toggle functionality
+    const toggleBtn = document.getElementById("menuToggle");
+    const mobileMenu = document.getElementById("mobileMenu");
+
+    if (toggleBtn && mobileMenu) {
+      toggleBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        mobileMenu.classList.toggle("hidden");
+      });
+    }
+
+    // ✅ Auto-close when clicking outside
+    document.addEventListener("click", (e) => {
+      if (mobileMenu && toggleBtn) {
+        if (!mobileMenu.classList.contains("hidden") && 
+            !mobileMenu.contains(e.target) && 
+            !toggleBtn.contains(e.target)) {
+          mobileMenu.classList.add("hidden");
+        }
+      }
+    });
   </script>
 </body>
 </html>
