@@ -369,27 +369,84 @@ window.saveChecklistItem = async (itemId, checked) => {
 };
 
 // ✅ MODIFIED: store answer inside ai_scores as well for easier dashboard access
-window.saveAIResponse = async (questionId, answerText, score, feedback) => {
+// QUESTION TEXT MAP — used by dashboard to show readable question titles
+window.QUESTION_TEXT_MAP = {
+  'UKVI_Q1': 'Why have you chosen to study this programme in the UK?',
+  'UKVI_Q2': 'Why did you choose this specific university?',
+  'UKVI_Q3': 'What do you plan to do after your studies?',
+  'UKVI_Q4': 'How will you fund your studies and living expenses?',
+  'UKVI_Q5': 'Tell me about your academic background.',
+  'UKVI_Q6': 'What is the name of your course and how long does it last?',
+  'UKVI_Q7': 'Why do you want to study this subject at degree level?',
+  'UKVI_Q8': 'What ties do you have to your home country?',
+  'NL_Q1': 'Why have you chosen to study in the Netherlands?',
+  'NL_Q2': 'Why did you choose this specific Dutch university?',
+  'NL_Q3': 'What are your plans after completing your studies?',
+  'NL_Q4': 'How will you fund your tuition and living costs?',
+  'NL_Q5': 'What is the language of instruction and your proficiency?',
+  'NL_Q6': 'What is the exact name and duration of your course?',
+  'NL_Q7': 'Do you have any family or connections in the Netherlands?',
+  'NL_Q8': 'What ties do you have to your home country?',
+  'BPP_Q1': 'Why have you chosen to study at BPP University?',
+};
+
+window.saveAIResponse = async (questionId, answerText, score, feedback, questionText) => {
   const student = window.getCurrentStudent();
-  if (!student?.id) return;
+  if (!student?.id) {
+    console.error('saveAIResponse: No student in localStorage. User may not be logged in.');
+    return { error: 'Not authenticated' };
+  }
+  // Store question text in the map for dashboard display
+  if (questionText && typeof questionText === 'string') {
+    window.QUESTION_TEXT_MAP[questionId] = questionText;
+  }
   try {
-    const { data: current } = await supabaseClient.from('student_progress').select('ai_scores, practice_responses').eq('user_id', student.id).single();
-    // Store answer inside ai_scores (so dashboard can show answer without merging)
-    const scores = { ...(current?.ai_scores || {}), [questionId]: { score, feedback, answer: answerText, date: new Date().toISOString() } };
+    const { data: current, error: fetchErr } = await supabaseClient
+      .from('student_progress')
+      .select('ai_scores, practice_responses')
+      .eq('user_id', student.id)
+      .single();
+    if (fetchErr) {
+      console.error('saveAIResponse: Failed to fetch current progress:', fetchErr.message);
+      return { error: fetchErr.message };
+    }
+    const questionLabel = window.QUESTION_TEXT_MAP[questionId] || questionText || questionId;
+    const scores = { ...(current?.ai_scores || {}), [questionId]: { score, feedback, answer: answerText, questionText: questionLabel, date: new Date().toISOString() } };
     const responses = { ...(current?.practice_responses || {}), [questionId]: { answer: answerText, date: new Date().toISOString() } };
-    await supabaseClient.from('student_progress').update({ 
-      ai_scores: scores, 
-      practice_responses: responses, 
-      updated_at: new Date().toISOString() 
-    }).eq('user_id', student.id);
-  } catch (err) { console.error('saveAIResponse error:', err); }
+    const { error: updateErr } = await supabaseClient
+      .from('student_progress')
+      .update({ ai_scores: scores, practice_responses: responses, updated_at: new Date().toISOString() })
+      .eq('user_id', student.id);
+    if (updateErr) {
+      console.error('saveAIResponse: Supabase update failed:', updateErr.message, '| Code:', updateErr.code);
+      return { error: updateErr.message };
+    }
+    console.log('✅ saveAIResponse: Saved to Supabase:', questionId, '| Score:', score);
+    return { success: true };
+  } catch (err) {
+    console.error('saveAIResponse: Unexpected error:', err);
+    return { error: err.message };
+  }
 };
 
 window.loadSavedProgress = async () => {
-  const student = window.getCurrentStudent();
+  // Try localStorage first
+  let student = window.getCurrentStudent();
+  // If not in localStorage, fall back to live Supabase session (handles post-refresh state)
+  if (!student?.id) {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session?.user) {
+      student = { id: session.user.id };
+    }
+  }
   if (!student?.id) return null;
   try {
-    const { data: progress } = await supabaseClient.from('student_progress').select('checklist_status, ai_scores, practice_responses, selected_university').eq('user_id', student.id).single();
+    const { data: progress, error } = await supabaseClient
+      .from('student_progress')
+      .select('checklist_status, ai_scores, practice_responses, selected_university')
+      .eq('user_id', student.id)
+      .single();
+    if (error) { console.error('loadSavedProgress: Supabase error:', error.message); return null; }
     return progress;
   } catch (err) { console.error('loadSavedProgress error:', err); return null; }
 };
