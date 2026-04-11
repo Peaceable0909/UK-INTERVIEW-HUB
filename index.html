@@ -1,545 +1,544 @@
 <!doctype html>
-<html class="light" lang="en">
+<html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <base href="/UK-INTERVIEW-HUB/">
   <title>Hub | UK Interview Prep</title>
-  <!-- Google Fonts: Manrope & Inter -->
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-  <!-- Material Symbols -->
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script id="tailwind-config">
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "inverse-on-surface": "#eff1f3",
-            "on-tertiary-container": "#ffffff",
-            "on-primary-fixed-variant": "#2d476f",
-            "error": "#d32f2f",
-            "surface-container-lowest": "#ffffff",
-            "on-error": "#ffffff",
-            "surface-variant": "#f1f3f4",
-            "inverse-surface": "#191c1e",
-            "on-primary": "#ffffff",
-            "on-error-container": "#93000a",
-            "secondary-fixed": "#ffdad6",
-            "secondary": "#d32f2f",
-            "outline": "#74777f",
-            "surface": "#ffffff",
-            "primary-container": "#002045",
-            "background": "#ffffff",
-            "tertiary-fixed": "#ffd9e1",
-            "secondary-fixed-dim": "#ffb4ab",
-            "surface-container-highest": "#e0e3e5",
-            "on-primary-container": "#ffffff",
-            "on-secondary-fixed-variant": "#690005",
-            "tertiary": "#480020",
-            "surface-tint": "#002045",
-            "on-primary-fixed": "#001b3c",
-            "on-tertiary-fixed": "#3f001b",
-            "surface-container": "#f8f9fa",
-            "on-secondary": "#ffffff",
-            "on-tertiary-fixed-variant": "#8b0e45",
-            "surface-bright": "#ffffff",
-            "on-secondary-container": "#d32f2f",
-            "inverse-primary": "#adc7f7",
-            "error-container": "#ffdad6",
-            "surface-container-low": "#f2f4f6",
-            "primary-fixed": "#d6e3ff",
-            "on-surface-variant": "#44474e",
-            "surface-dim": "#d8dadc",
-            "tertiary-fixed-dim": "#ffb1c5",
-            "primary": "#002045",
-            "on-tertiary": "#ffffff",
-            "on-surface": "#001b3c",
-            "outline-variant": "#c4c6cf",
-            "surface-container-high": "#eceef0",
-            "on-background": "#001b3c",
-            "secondary-container": "#ffdad6",
-            "primary-fixed-dim": "#adc7f7",
-            "on-secondary-fixed": "#410002",
-            "tertiary-container": "#6f0035"
-          },
-          borderRadius: {
-            DEFAULT: "0.25rem",
-            lg: "0.5rem",
-            xl: "1rem",
-            full: "9999px"
-          },
-          fontFamily: {
-            headline: ["Manrope"],
-            body: ["Inter"],
-            label: ["Inter"]
-          },
-          animation: {
-            "fade-in-up": "fadeInUp 0.8s ease-out forwards",
-            "shimmer": "shimmer 2s infinite linear",
-            "rotate-slow": "rotateSlow 10s infinite linear"
-          },
-          keyframes: {
-            fadeInUp: {
-              from: { opacity: "0", transform: "translateY(20px)" },
-              to: { opacity: "1", transform: "translateY(0)" }
-            },
-            shimmer: {
-              "0%": { backgroundPosition: "-200% 0" },
-              "100%": { backgroundPosition: "200% 0" }
-            },
-            rotateSlow: {
-              from: { transform: "rotate(0deg)" },
-              to: { transform: "rotate(360deg)" }
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #ffffff; scroll-behavior: smooth; }
-    h1, h2, h3, .font-headline { font-family: 'Manrope', sans-serif; }
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-    .glass-nav { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-    .animate-on-scroll {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    :root {
+      --navy: #002045;
+      --navy-mid: #003272;
+      --red: #d32f2f;
+      --surface: #f7f9fb;
+      --white: #ffffff;
+      --border: #e0e3e5;
+      --muted: #6b7280;
+      --shadow-sm: 0 1px 4px rgba(0,32,69,0.08);
+      --shadow-md: 0 4px 20px rgba(0,32,69,0.10);
+      --shadow-lg: 0 12px 40px rgba(0,32,69,0.14);
     }
-    .animate-on-scroll.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .shimmer-btn {
-      background: linear-gradient(90deg, #002045 0%, #003a7d 50%, #002045 100%);
-      background-size: 200% 100%;
-      animation: shimmer 3s infinite linear;
-    }
-    .card-hover {
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .card-hover:hover {
-      transform: translateY(-4px) scale(1.01);
-      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-    }
-    body { min-height: max(884px, 100dvh); }
-    /* Modal styling overrides */
-    .login-modal .modal-content { max-width: 440px; width: 100%; }
-    .login-modal { z-index: 9999; }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--navy);min-height:100dvh;scroll-behavior:smooth;}
+    h1,h2,h3{font-family:'Manrope',sans-serif;}
+    .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}
+
+    /* HEADER */
+    header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.93);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;}
+    .logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+    .logo-icon{width:36px;height:36px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;}
+    .logo-icon .material-symbols-outlined{color:white;font-size:20px;}
+    .logo-text{font-family:'Manrope',sans-serif;font-weight:800;font-size:18px;color:var(--navy);}
+    .header-right{display:flex;align-items:center;gap:10px;}
+    #userMenu{display:none;align-items:center;gap:8px;}
+    .avatar{width:32px;height:32px;border-radius:50%;background:var(--navy);color:white;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+    .user-name{font-size:13px;font-weight:600;color:var(--navy);}
+    .btn-login{background:var(--navy);color:white;border:none;padding:8px 18px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;}
+    .btn-login:hover{background:var(--navy-mid);}
+    .btn-login:active{transform:scale(0.97);}
+    .btn-menu{background:none;border:none;cursor:pointer;padding:4px;color:var(--navy);display:flex;align-items:center;}
+
+    /* DROPDOWN */
+    #mobileMenu{display:none;position:absolute;top:calc(100% + 1px);left:0;right:0;background:white;border-bottom:1px solid var(--border);padding:16px 20px;flex-direction:column;gap:10px;box-shadow:var(--shadow-md);}
+    #mobileMenu.open{display:flex;}
+    .menu-user-row{display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+    .menu-avatar{width:40px;height:40px;border-radius:50%;background:var(--navy);color:white;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;}
+    .menu-user-info .name{font-weight:700;font-size:14px;color:var(--navy);}
+    .menu-user-info .role{font-size:12px;color:var(--muted);}
+    .menu-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;text-decoration:none;font-weight:600;font-size:14px;color:var(--navy);transition:background 0.15s;}
+    .menu-link:hover{background:var(--surface);}
+    .menu-link .material-symbols-outlined{font-size:20px;}
+    .btn-signout{width:100%;background:#fee2e2;color:#b91c1c;border:none;padding:11px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:4px;}
+    .btn-signout:hover{background:#fecaca;}
+
+    /* MAIN */
+    main{padding:90px 20px 120px;max-width:480px;margin:0 auto;}
+
+    /* LOGIN BANNER */
+    .login-banner{background:#fff7ed;border:1.5px solid #fed7aa;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+    .login-banner .material-symbols-outlined{color:#ea580c;font-size:22px;flex-shrink:0;}
+    .login-banner p{font-size:13px;color:#9a3412;line-height:1.4;flex:1;}
+    .login-banner p strong{font-weight:700;}
+    .login-banner button{flex-shrink:0;background:#ea580c;color:white;border:none;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;}
+
+    /* HERO */
+    .hero{text-align:center;padding:40px 0 48px;}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:999px;background:rgba(211,47,47,0.08);border:1px solid rgba(211,47,47,0.15);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--red);margin-bottom:20px;}
+    .dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+    .hero h1{font-size:34px;font-weight:900;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.02em;}
+    .hero h1 span{color:var(--red);}
+    .hero p{font-size:15px;line-height:1.65;color:var(--muted);margin-bottom:32px;}
+    .hero-btns{display:flex;flex-direction:column;gap:12px;}
+    .btn-primary-hero{background:var(--navy);color:white;border:none;padding:16px;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .btn-primary-hero:hover{background:var(--navy-mid);transform:translateY(-1px);box-shadow:var(--shadow-md);}
+    .btn-secondary-hero{background:white;color:var(--navy);border:1.5px solid var(--border);padding:16px;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s;width:100%;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .btn-secondary-hero:hover{border-color:var(--navy);}
+
+    /* FEATURES */
+    .features{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:48px;}
+    .feature-big{grid-column:1/-1;background:var(--navy);color:white;border-radius:20px;padding:28px;position:relative;overflow:hidden;}
+    .feature-big .material-symbols-outlined{font-size:36px;color:#ffdad6;margin-bottom:10px;display:block;}
+    .feature-big h3{font-size:20px;font-weight:800;margin-bottom:6px;}
+    .feature-big p{font-size:13px;opacity:0.75;line-height:1.5;}
+    .feature-big .bg-icon{position:absolute;right:-20px;bottom:-20px;opacity:0.06;font-size:120px!important;}
+    .feature-small{background:white;border-radius:16px;padding:20px;border:1px solid var(--border);display:flex;flex-direction:column;gap:10px;min-height:130px;justify-content:space-between;}
+    .feature-small .material-symbols-outlined{font-size:28px;color:var(--red);}
+    .feature-small h3{font-size:14px;font-weight:700;color:var(--navy);}
+    .feature-small p{font-size:12px;color:var(--muted);line-height:1.45;}
+
+    /* SECTION */
+    .section-header{margin-bottom:20px;}
+    .section-header h2{font-size:22px;font-weight:800;color:var(--navy);margin-bottom:6px;}
+    .bar{width:36px;height:4px;background:var(--red);border-radius:999px;}
+
+    /* UNI CARDS */
+    .uni-cards{display:flex;flex-direction:column;gap:16px;margin-bottom:48px;}
+    .uni-card{background:white;border-radius:20px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-sm);transition:all 0.25s;}
+    .uni-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+    .uni-card-img{height:160px;position:relative;overflow:hidden;}
+    .uni-card-img img{width:100%;height:100%;object-fit:cover;filter:grayscale(30%);transition:filter 0.4s,transform 0.4s;}
+    .uni-card:hover .uni-card-img img{filter:grayscale(0);transform:scale(1.04);}
+    .uni-badge{position:absolute;top:12px;left:12px;background:var(--navy);color:white;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;}
+    .uni-card-body{padding:20px;}
+    .uni-title-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+    .uni-title-row .material-symbols-outlined{font-size:24px;color:var(--navy);}
+    .uni-title-row h3{font-size:17px;font-weight:800;color:var(--navy);}
+    .uni-desc{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:16px;}
+    .btn-start{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--navy);color:white;border:none;padding:14px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;text-decoration:none;}
+    .btn-start:hover{background:var(--navy-mid);}
+    .btn-start:active{transform:scale(0.98);}
+    .btn-start.red{background:var(--red);}
+    .btn-start.red:hover{background:#b91c1c;}
+    .uni-ukvi{background:var(--surface);border-radius:20px;padding:28px;border:2px dashed var(--border);text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;transition:all 0.25s;}
+    .uni-ukvi:hover{border-color:var(--red);background:white;}
+    .uni-ukvi .material-symbols-outlined{font-size:44px;color:var(--red);}
+    .uni-ukvi h3{font-size:18px;font-weight:800;color:var(--navy);}
+    .uni-ukvi p{font-size:13px;color:var(--muted);}
+    .uni-soon{background:rgba(0,0,0,0.02);border-radius:20px;padding:28px;border:2px dashed var(--border);text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0.6;}
+    .uni-soon .material-symbols-outlined{font-size:36px;color:var(--muted);animation:pulse 2s infinite;}
+    .uni-soon h3{font-size:16px;font-weight:700;color:var(--navy);}
+    .uni-soon p{font-size:12px;color:var(--muted);}
+
+    /* CTA */
+    .cta-banner{background:var(--navy);border-radius:24px;padding:40px 28px;text-align:center;color:white;margin-bottom:48px;position:relative;overflow:hidden;}
+    .cta-banner h2{font-size:26px;font-weight:900;margin-bottom:10px;}
+    .cta-banner p{font-size:14px;opacity:0.75;margin-bottom:24px;line-height:1.6;}
+    .btn-cta{background:var(--red);color:white;border:none;padding:14px 32px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+    .btn-cta:hover{background:#b91c1c;transform:scale(1.03);}
+
+    /* FOOTER */
+    footer{background:white;border-top:1px solid var(--border);padding:32px 24px 40px;}
+    .footer-brand{font-family:'Manrope',sans-serif;font-weight:900;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--navy);margin-bottom:4px;}
+    .footer-copy{font-size:12px;color:var(--muted);margin-bottom:20px;}
+    .footer-links{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .footer-link{font-size:13px;color:var(--muted);text-decoration:none;font-weight:500;padding:8px 12px;border-radius:8px;transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+    .footer-link:hover{background:var(--surface);color:var(--navy);}
+    .footer-link .material-symbols-outlined{font-size:16px;}
+
+    /* BOTTOM NAV */
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;padding:8px 0 16px;z-index:99;}
+    .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 16px;border-radius:12px;cursor:pointer;text-decoration:none;transition:all 0.2s;border:none;background:none;color:var(--muted);}
+    .nav-item.active{color:var(--navy);}
+    .nav-item .material-symbols-outlined{font-size:22px;}
+    .nav-item .nav-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+    .nav-item:active{transform:scale(0.93);}
+
+    /* MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;}
+    .modal-overlay.open,.modal-overlay[style*="flex"]{display:flex;}
+    .modal-box{background:white;border-radius:24px;padding:28px;width:100%;max-width:440px;position:relative;animation:slideUp 0.25s ease-out;}
+    @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .modal-close{position:absolute;top:16px;right:16px;background:var(--surface);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all 0.15s;}
+    .modal-close:hover{background:var(--border);color:var(--navy);}
+    .modal-title{font-size:22px;font-weight:800;color:var(--navy);text-align:center;margin-bottom:6px;}
+    .modal-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:20px;}
+    .btn-google{width:100%;background:white;border:1.5px solid var(--border);border-radius:12px;padding:13px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:14px;font-weight:600;color:#1f2937;cursor:pointer;transition:all 0.15s;margin-bottom:16px;}
+    .btn-google:hover{background:var(--surface);border-color:#aaa;}
+    .divider{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+    .divider hr{flex:1;border:none;border-top:1px solid var(--border);}
+    .divider span{font-size:12px;color:var(--muted);}
+    .tab-row{display:flex;gap:4px;background:var(--surface);padding:4px;border-radius:12px;margin-bottom:18px;}
+    .tab-btn{flex:1;padding:9px;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;background:transparent;color:var(--muted);}
+    .tab-btn.active{background:white;color:var(--navy);box-shadow:var(--shadow-sm);}
+    .form-group{margin-bottom:14px;}
+    .form-group label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:5px;}
+    .form-group input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-size:14px;outline:none;transition:border 0.15s;font-family:'Inter',sans-serif;}
+    .form-group input:focus{border-color:var(--navy);}
+    .btn-form-submit{width:100%;background:var(--navy);color:white;border:none;padding:13px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;}
+    .btn-form-submit:hover{background:var(--navy-mid);}
+    .btn-form-submit.red{background:var(--red);}
+    .btn-form-submit.red:hover{background:#b91c1c;}
+    #authError{color:#dc2626;font-size:13px;text-align:center;margin-top:10px;min-height:18px;}
+
+    /* AUTH SUCCESS */
+    #authSuccess{position:fixed;inset:0;background:white;z-index:9998;display:none;align-items:center;justify-content:center;text-align:center;padding:32px;flex-direction:column;}
+    #authSuccess[style*="flex"]{display:flex;}
+    .success-circle{width:72px;height:72px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;color:white;}
+    #authSuccess h3{font-size:24px;font-weight:800;color:var(--navy);margin-bottom:8px;}
+    #authSuccess p{color:var(--muted);font-size:14px;margin-bottom:24px;}
+    .spinner-el{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* TOAST */
+    #toast{display:none;position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--navy);color:white;padding:10px 20px;border-radius:999px;font-size:13px;font-weight:600;z-index:9999;box-shadow:var(--shadow-lg);white-space:nowrap;transition:opacity 0.3s;}
   </style>
 </head>
-<body class="bg-background text-on-surface">
- <!-- TopAppBar (fixed header) -->
-<header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
-  
-  <div class="flex items-center justify-between px-4 py-3">
-    
-    <!-- Logo -->
-    <div class="flex items-center gap-2">
-      <span class="material-symbols-outlined text-blue-600 text-2xl">school</span>
-      <span class="text-lg font-bold text-blue-600 tracking-tight">Hub</span>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a href="index.html" class="logo">
+    <div class="logo-icon"><span class="material-symbols-outlined">school</span></div>
+    <span class="logo-text">Hub</span>
+  </a>
+  <div class="header-right">
+    <div id="userMenu">
+      <div class="avatar" id="userAvatar">JS</div>
+      <span class="user-name" id="userNameDisplay">Student</span>
     </div>
-
-    <!-- Right Section -->
-    <div class="flex items-center gap-2">
-      
-      <!-- User (hidden by default) -->
-      <div id="userMenu" class="hidden items-center gap-2 bg-gray-100 px-2 py-1 rounded-full">
-        <div class="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold" id="userAvatar">
-          JS
-        </div>
-      </div>
-
-      <!-- Login Button -->
-      <button id="loginBtn" 
-        class="bg-blue-600 text-white px-4 py-1.5 rounded-full text-xs font-semibold shadow-sm active:scale-95 transition">
-        Login
-      </button>
-
-      <!-- Menu Toggle (for mobile dropdown) -->
-      <button id="menuToggle" class="text-gray-700 text-2xl">
-        <span class="material-symbols-outlined">menu</span>
-      </button>
-
-    </div>
+    <button id="loginBtn" class="btn-login">Login</button>
+    <button id="menuToggle" class="btn-menu">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
   </div>
-
-  <!-- Dropdown Menu (Mobile) -->
-  <div id="mobileMenu" class="hidden px-4 pb-4">
-    
-    <div class="bg-white rounded-2xl shadow-md p-4 flex flex-col gap-3">
-      
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
-          JS
-        </div>
-        <div>
-          <p class="text-sm font-semibold text-gray-800" id="userNameDisplay">John Doe</p>
-          <p class="text-xs text-gray-500">Student</p>
-        </div>
+  <div id="mobileMenu">
+    <div class="menu-user-row">
+      <div class="menu-avatar" id="menuAvatar">JS</div>
+      <div class="menu-user-info">
+        <div class="name" id="menuName">Student</div>
+        <div class="role">Interview Prep Hub</div>
       </div>
-
-      <a href="dashboard.html" class="text-sm text-blue-600 font-medium">Dashboard</a>
-
-      <button id="logoutBtn" 
-        class="w-full bg-red-500 text-white py-2 rounded-xl text-sm font-semibold">
-        Sign Out
-      </button>
-
     </div>
-
+    <a href="dashboard.html" class="menu-link"><span class="material-symbols-outlined">person</span> My Dashboard</a>
+    <a href="#universities" class="menu-link" id="menuExplore"><span class="material-symbols-outlined">school</span> Universities</a>
+    <a href="ukvi.html" class="menu-link start-training" data-university="ukvi"><span class="material-symbols-outlined">public</span> UKVI Prep</a>
+    <button id="logoutBtn" class="btn-signout">Sign Out</button>
   </div>
-
 </header>
 
-  <main class="pt-24 pb-12 px-6 overflow-x-hidden">
-    <!-- Hero Section -->
-    <section class="mb-16 animate-on-scroll">
-      <div class="flex flex-col gap-6 text-center">
-        <div class="inline-flex items-center self-center gap-2 px-4 py-1.5 bg-secondary-container/50 text-secondary rounded-full text-[11px] font-extrabold tracking-widest uppercase font-label border border-secondary/10">
-          <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-          Trusted by 10,000+ Students
-        </div>
-        <h1 class="text-4xl md:text-5xl font-extrabold text-primary leading-tight tracking-tight px-2">
-          Master Your UK University Interview
-        </h1>
-        <p class="text-on-surface-variant text-lg leading-relaxed px-4 font-body max-w-2xl mx-auto">
-          AI-powered training for credibility interviews. Practice questions, get instant feedback, and secure your CAS with confidence.
-        </p>
-        <div class="flex flex-col gap-4 mt-4 px-4 max-w-sm mx-auto w-full">
-          <button id="getStartedBtn" class="shimmer-btn text-on-primary py-4 rounded-xl font-bold text-lg shadow-xl shadow-primary/20 transition-transform active:scale-95">
-            Get Started Free
-          </button>
-          <a href="#universities" class="bg-surface-container-high/40 text-primary py-4 rounded-xl font-bold text-lg border border-outline-variant/30 hover:bg-surface-container-high transition-all active:scale-95 text-center">
-            Explore Universities
-          </a>
-        </div>
-      </div>
-    </section>
+<!-- MAIN -->
+<main>
+  <div id="loginPromptBanner" class="login-banner" style="display:none;">
+    <span class="material-symbols-outlined">info</span>
+    <p><strong>Log in to save your progress.</strong> Your scores and checklist are stored securely.</p>
+    <button onclick="openLoginModal()">Log in</button>
+  </div>
 
-    <!-- Features Grid -->
-    <section class="mb-20 animate-on-scroll">
-      <div class="grid grid-cols-2 gap-4">
-        <div class="col-span-2 bg-primary text-white p-8 rounded-2xl relative overflow-hidden group card-hover border border-primary/20">
-          <div class="relative z-10">
-            <span class="material-symbols-outlined text-secondary-fixed mb-4 text-4xl block group-hover:rotate-12 transition-transform">neurology</span>
-            <h3 class="text-2xl font-bold mb-2 font-headline">AI Feedback</h3>
-            <p class="text-white/80 text-sm leading-relaxed">Instant analysis and personalized tips to improve your interview confidence.</p>
-          </div>
-          <div class="absolute -right-8 -bottom-8 opacity-10 group-hover:rotate-45 transition-transform duration-1000">
-            <span class="material-symbols-outlined text-[160px]">psychology</span>
-          </div>
-        </div>
-        <div class="bg-surface-container-lowest p-6 rounded-2xl border border-surface-container-high card-hover flex flex-col justify-between h-48 group">
-          <span class="material-symbols-outlined text-secondary text-3xl group-hover:scale-110 transition-transform">update</span>
-          <div>
-            <h3 class="font-bold font-headline text-primary">Save Progress</h3>
-            <p class="text-xs text-on-surface-variant mt-1">Pick up where you left off at any time.</p>
-          </div>
-        </div>
-        <div class="bg-surface-container-lowest p-6 rounded-2xl border border-surface-container-high card-hover flex flex-col justify-between h-48 group">
-          <span class="material-symbols-outlined text-secondary text-3xl group-hover:scale-110 transition-transform">encrypted</span>
-          <div>
-            <h3 class="font-bold font-headline text-primary">Privacy First</h3>
-            <p class="text-xs text-on-surface-variant mt-1">Fully encrypted practice sessions.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- University Selection Grid -->
-    <section id="universities" class="mb-12 animate-on-scroll">
-      <div class="flex flex-col gap-4 mb-8">
-        <h2 class="text-2xl font-extrabold text-primary font-headline">Choose Your Pathway</h2>
-        <div class="h-1.5 w-12 bg-secondary rounded-full"></div>
-      </div>
-      <div class="flex flex-col gap-6">
-        <!-- Regent College London -->
-        <div class="bg-white rounded-2xl overflow-hidden group border border-surface-container-high card-hover shadow-sm">
-          <div class="h-44 bg-slate-100 relative overflow-hidden">
-            <img alt="Regent College London" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&h=400&fit=crop"/>
-            <div class="absolute top-4 left-4">
-              <span class="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">London</span>
-            </div>
-          </div>
-          <div class="p-6">
-            <div class="flex items-center gap-3 mb-3">
-              <span class="material-symbols-outlined text-primary text-3xl">account_balance</span>
-              <h3 class="font-bold text-xl text-primary font-headline">Regent College London</h3>
-            </div>
-            <p class="text-sm text-on-surface-variant mb-6 leading-relaxed">Specialized interview training for all Regent London campuses, focusing on academic commitment.</p>
-            <a href="regent.html" class="start-training w-full bg-primary text-on-primary py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:gap-4 active:scale-95" data-university="regent">
-              Start Training <span class="material-symbols-outlined text-sm">arrow_forward</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- York St John University -->
-        <div class="bg-white rounded-2xl overflow-hidden group border border-surface-container-high card-hover shadow-sm">
-          <div class="h-44 bg-slate-100 relative overflow-hidden">
-            <img alt="York St John University" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&h=400&fit=crop"/>
-            <div class="absolute top-4 left-4">
-              <span class="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">York &amp; London</span>
-            </div>
-          </div>
-          <div class="p-6">
-            <div class="flex items-center gap-3 mb-3">
-              <span class="material-symbols-outlined text-primary text-3xl">history_edu</span>
-              <h3 class="font-bold text-xl text-primary font-headline">York St John University</h3>
-            </div>
-            <p class="text-sm text-on-surface-variant mb-6 leading-relaxed">Comprehensive prep for York and London locations with historical context modules.</p>
-            <a href="yorkstjohn.html" class="start-training w-full bg-primary text-on-primary py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:gap-4 active:scale-95" data-university="yorkstjohn">
-              Start Training <span class="material-symbols-outlined text-sm">arrow_forward</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- BPP University -->
-        <div class="bg-white rounded-2xl overflow-hidden group border border-surface-container-high card-hover shadow-sm">
-          <div class="h-44 bg-slate-100 relative overflow-hidden">
-            <img alt="BPP University" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=400&fit=crop"/>
-            <div class="absolute top-4 left-4">
-              <span class="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">Professional</span>
-            </div>
-          </div>
-          <div class="p-6">
-            <div class="flex items-center gap-3 mb-3">
-              <span class="material-symbols-outlined text-primary text-3xl">work</span>
-              <h3 class="font-bold text-xl text-primary font-headline">BPP University</h3>
-            </div>
-            <p class="text-sm text-on-surface-variant mb-6 leading-relaxed">Professional education focus. Law, Business, Nursing &amp; Healthcare. Multiple UK locations.</p>
-            <a href="bpp.html" class="start-training w-full bg-primary text-on-primary py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:gap-4 active:scale-95" data-university="bpp">
-              Start Training <span class="material-symbols-outlined text-sm">arrow_forward</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Netherlands -->
-        <div class="bg-white rounded-2xl overflow-hidden group border border-surface-container-high card-hover shadow-sm">
-          <div class="h-44 bg-slate-100 relative overflow-hidden">
-            <img alt="Netherlands" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" src="https://images.unsplash.com/photo-1590050754231-5dac0ddb23c5?w=800&h=400&fit=crop"/>
-            <div class="absolute top-4 left-4">
-              <span class="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">Europe</span>
-            </div>
-          </div>
-          <div class="p-6">
-            <div class="flex items-center gap-3 mb-3">
-              <span class="material-symbols-outlined text-primary text-3xl">lightbulb</span>
-              <h3 class="font-bold text-xl text-primary font-headline">Netherlands</h3>
-            </div>
-            <p class="text-sm text-on-surface-variant mb-6 leading-relaxed">Special prep for Dutch university intakes focusing on innovation and startup culture.</p>
-            <a href="netherlands.html" class="start-training w-full bg-primary text-on-primary py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:gap-4 active:scale-95" data-university="netherlands">
-              Start Training <span class="material-symbols-outlined text-sm">arrow_forward</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- UKVI Hub (Universal) -->
-        <div class="bg-surface-container-low rounded-2xl p-8 border-2 border-dashed border-outline-variant/30 text-center flex flex-col items-center group card-hover">
-          <span class="material-symbols-outlined text-5xl text-secondary mb-4 group-hover:scale-110 transition-transform">public</span>
-          <h3 class="font-bold text-xl text-primary font-headline mb-2">UKVI Hub</h3>
-          <p class="text-sm text-on-surface-variant mb-6">Universal credibility prep for all UK Visas and Immigration requirements.</p>
-          <a href="ukvi.html" class="start-training w-full bg-secondary text-on-primary py-3.5 rounded-xl font-bold transition-all hover:bg-secondary/90 active:scale-95 shadow-lg shadow-secondary/10" data-university="ukvi">
-            Start Universal Prep
-          </a>
-        </div>
-
-        <!-- More Coming Soon -->
-        <div class="bg-surface-container-highest/20 rounded-2xl p-8 flex flex-col items-center justify-center text-center border-2 border-dashed border-outline-variant/20 opacity-80">
-          <span class="material-symbols-outlined text-4xl text-on-surface-variant mb-2 animate-pulse">more_horiz</span>
-          <h3 class="font-bold text-lg text-primary font-headline">More Coming Soon</h3>
-          <p class="text-xs text-on-surface-variant mt-1">Expanding to 50+ UK institutions this academic year.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Final CTA -->
-    <section class="mt-20 py-12 px-6 bg-primary rounded-3xl text-center text-white relative overflow-hidden animate-on-scroll">
-      <div class="relative z-10">
-        <h2 class="text-3xl font-extrabold mb-4 font-headline">Ready to Ace Your Interview?</h2>
-        <p class="text-white/80 text-sm mb-8 max-w-xs mx-auto leading-relaxed">Join thousands of successful students who secured their dream spot in the UK.</p>
-        <button id="ctaGetStartedBtn" class="bg-secondary text-white px-10 py-4 rounded-xl font-extrabold text-lg transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-black/20">
-          Get Started Free
-        </button>
-      </div>
-      <div class="absolute top-0 right-0 w-40 h-40 bg-secondary/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
-      <div class="absolute bottom-0 left-0 w-40 h-40 bg-secondary/10 rounded-full blur-3xl -ml-16 -mb-16"></div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="w-full py-12 px-8 bg-white border-t border-surface-container-high grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-    <div class="flex flex-col gap-4">
-      <div class="font-headline font-black uppercase text-xs text-primary tracking-widest">ASCEND PREP SYSTEM</div>
-      <p class="text-on-surface-variant font-body text-sm tracking-wide">© 2024 Ascend Prep System. All Rights Reserved.</p>
-    </div>
-    <div class="grid grid-cols-2 gap-4">
-      <a class="text-on-surface-variant hover:text-secondary transition-colors font-body text-sm tracking-wide" href="#">Privacy Policy</a>
-      <a class="text-on-surface-variant hover:text-secondary transition-colors font-body text-sm tracking-wide" href="#">Terms of Service</a>
-      <a class="text-on-surface-variant hover:text-secondary transition-colors font-body text-sm tracking-wide" href="#">Partnerships</a>
-      <a class="text-on-surface-variant hover:text-secondary transition-colors font-body text-sm tracking-wide" href="#">Support</a>
-    </div>
-  </footer>
-
-  <!-- Bottom Navigation Bar (Mobile) -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 h-20 glass-nav bg-white/90 border-t border-surface-container-high flex justify-around items-center px-4 z-50">
-    <div class="flex flex-col items-center gap-1 text-primary group cursor-pointer">
-      <span class="material-symbols-outlined group-active:scale-110 transition-transform" style="font-variation-settings: 'FILL' 1;">home</span>
-      <span class="text-[10px] font-extrabold font-label uppercase tracking-tighter">Home</span>
-    </div>
-    <div class="flex flex-col items-center gap-1 text-on-surface-variant group cursor-pointer">
-      <span class="material-symbols-outlined group-active:scale-110 transition-transform">explore</span>
-      <span class="text-[10px] font-bold font-label uppercase tracking-tighter">Explore</span>
-    </div>
-    <div class="flex flex-col items-center gap-1 text-on-surface-variant group cursor-pointer">
-      <span class="material-symbols-outlined group-active:scale-110 transition-transform">history</span>
-      <span class="text-[10px] font-bold font-label uppercase tracking-tighter">History</span>
-    </div>
-    <div class="flex flex-col items-center gap-1 text-on-surface-variant group cursor-pointer">
-      <span class="material-symbols-outlined group-active:scale-110 transition-transform">person</span>
-      <span class="text-[10px] font-bold font-label uppercase tracking-tighter">Profile</span>
-    </div>
-  </nav>
-  <div class="h-20 md:hidden"></div>
-
-  <!-- Login Modal (preserved from original) -->
-  <div id="loginModal" class="login-modal fixed inset-0 hidden items-center justify-center bg-black/60 z-[9999]">
-    <div class="modal-content bg-white rounded-2xl p-6 max-w-md w-full mx-4 relative">
-      <button class="modal-close absolute top-4 right-4 text-gray-400 hover:text-gray-600" id="modalClose">
-        <i class="fas fa-times"></i>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge"><span class="dot"></span> Trusted by 10,000+ Students</div>
+    <h1>Master Your UK <span>Interview</span></h1>
+    <p>AI-powered training for credibility interviews. Practice questions, get instant feedback, and secure your CAS with confidence.</p>
+    <div class="hero-btns">
+      <button id="getStartedBtn" class="btn-primary-hero">
+        <span class="material-symbols-outlined" style="font-size:20px">bolt</span> Get Started Free
       </button>
-      <h3 class="modal-title text-2xl font-bold text-primary mb-4 text-center">🎓 Student Login</h3>
-      <p class="text-center text-gray-600 mb-6 text-sm">Sign in to save progress, track scores, and get ready for your interview.</p>
+      <a href="#universities" class="btn-secondary-hero">
+        <span class="material-symbols-outlined" style="font-size:20px">explore</span> Explore Universities
+      </a>
+    </div>
+  </section>
 
-      <!-- Google Sign-In -->
-      <button id="googleSignInBtn" class="w-full bg-white text-gray-800 border border-gray-300 rounded-xl py-3 flex items-center justify-center gap-3 font-semibold hover:bg-gray-50 transition mb-4">
-        <i class="fab fa-google text-red-500 text-lg"></i> Continue with Google
-      </button>
-
-      <div class="flex items-center gap-2 my-4">
-        <div class="flex-1 h-px bg-gray-200"></div>
-        <span class="text-xs text-gray-400">or</span>
-        <div class="flex-1 h-px bg-gray-200"></div>
-      </div>
-
-      <!-- Tabs -->
-      <div class="flex gap-2 bg-gray-100 p-1 rounded-xl mb-5">
-        <button id="tabLogin" class="flex-1 py-2 text-sm font-semibold rounded-lg bg-white text-primary shadow-sm transition">Sign In</button>
-        <button id="tabSignup" class="flex-1 py-2 text-sm font-semibold rounded-lg text-gray-500 transition">Create Account</button>
-      </div>
-
-      <!-- Login Form -->
-      <form id="loginForm">
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-          <input type="email" id="loginEmail" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="your@email.com" required>
-        </div>
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-          <input type="password" id="loginPassword" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="••••••••" required>
-        </div>
-        <button type="submit" class="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-primary/90 transition">Sign In</button>
-      </form>
-
-      <!-- Signup Form -->
-      <form id="signupForm" style="display: none;">
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-          <input type="text" id="signupName" class="w-full border border-gray-300 rounded-lg px-4 py-3" placeholder="John Doe" required>
-        </div>
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Student ID</label>
-          <input type="text" id="signupStudentId" class="w-full border border-gray-300 rounded-lg px-4 py-3" placeholder="STU123456" required>
-        </div>
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-          <input type="email" id="signupEmail" class="w-full border border-gray-300 rounded-lg px-4 py-3" placeholder="your@email.com" required>
-        </div>
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Password (min 6 characters)</label>
-          <input type="password" id="signupPassword" class="w-full border border-gray-300 rounded-lg px-4 py-3" placeholder="••••••••" required minlength="6">
-        </div>
-        <button type="submit" class="w-full bg-secondary text-white py-3 rounded-xl font-bold hover:bg-secondary/90 transition">Create Account</button>
-      </form>
-
-      <p id="authError" class="text-red-500 text-sm text-center mt-4 min-h-[20px]"></p>
-      <div class="text-center text-xs text-gray-500 mt-6">
-        By continuing, you agree to our <a href="#" class="text-primary">Terms</a> and <a href="#" class="text-primary">Privacy Policy</a>.
-      </div>
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="feature-big">
+      <span class="material-symbols-outlined">neurology</span>
+      <h3>AI Feedback</h3>
+      <p>Instant analysis and personalised tips to improve your interview confidence.</p>
+      <span class="material-symbols-outlined bg-icon">psychology</span>
+    </div>
+    <div class="feature-small">
+      <span class="material-symbols-outlined">update</span>
+      <div><h3>Save Progress</h3><p>Pick up where you left off at any time.</p></div>
+    </div>
+    <div class="feature-small">
+      <span class="material-symbols-outlined">encrypted</span>
+      <div><h3>Privacy First</h3><p>Fully encrypted practice sessions.</p></div>
     </div>
   </div>
 
-  <!-- Auth Success Overlay -->
-  <div id="authSuccess" class="fixed inset-0 bg-white z-[9998] hidden items-center justify-center text-center p-8">
-    <div>
-      <div class="success-icon w-20 h-20 bg-red-600 rounded-full flex items-center justify-center text-white text-4xl mx-auto mb-6 animate-float">✓</div>
-      <h3 class="success-title text-2xl font-bold text-primary mb-2">Welcome, <span id="studentNameDisplay"></span>!</h3>
-      <p class="success-text text-gray-600 mb-6">Your progress is saved. Continue your interview preparation anytime, anywhere.</p>
-      <div class="spinner w-10 h-10 border-4 border-gray-200 border-t-primary rounded-full animate-spin mx-auto"></div>
-    </div>
-  </div>
+  <!-- UNIVERSITIES -->
+  <section id="universities">
+    <div class="section-header"><h2>Choose Your Pathway</h2><div class="bar"></div></div>
+    <div class="uni-cards">
 
-  <!-- Student ID Collection Modal (for Google users) -->
-  <div id="studentIdModal" class="login-modal fixed inset-0 hidden items-center justify-center bg-black/60 z-[9999]">
-    <div class="modal-content bg-white rounded-2xl p-6 max-w-md w-full mx-4">
-      <h3 class="modal-title text-2xl font-bold text-primary mb-4 text-center">✏️ Complete Your Profile</h3>
-      <p class="text-center text-gray-600 mb-4">Please enter your Student ID to continue.</p>
-      <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-1">Student ID</label>
-        <input type="text" id="studentIdInput" class="w-full border border-gray-300 rounded-lg px-4 py-3" placeholder="e.g. STU12345">
+      <div class="uni-card">
+        <div class="uni-card-img">
+          <img alt="Regent College London" src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&h=400&fit=crop"/>
+          <span class="uni-badge">London</span>
+        </div>
+        <div class="uni-card-body">
+          <div class="uni-title-row"><span class="material-symbols-outlined">account_balance</span><h3>Regent College London</h3></div>
+          <p class="uni-desc">Specialised interview training for all Regent London campuses, focusing on academic commitment.</p>
+          <a href="regent.html" class="btn-start start-training" data-university="regent">Start Training <span class="material-symbols-outlined" style="font-size:18px">arrow_forward</span></a>
+        </div>
       </div>
-      <button id="saveStudentIdBtn" class="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-primary/90 transition">Save & Continue</button>
-      <p id="studentIdError" class="text-red-500 text-sm text-center mt-3"></p>
+
+      <div class="uni-card">
+        <div class="uni-card-img">
+          <img alt="York St John University" src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&h=400&fit=crop"/>
+          <span class="uni-badge">York &amp; London</span>
+        </div>
+        <div class="uni-card-body">
+          <div class="uni-title-row"><span class="material-symbols-outlined">history_edu</span><h3>York St John University</h3></div>
+          <p class="uni-desc">Comprehensive prep for York and London locations with historical context modules.</p>
+          <a href="yorkstjohn.html" class="btn-start start-training" data-university="yorkstjohn">Start Training <span class="material-symbols-outlined" style="font-size:18px">arrow_forward</span></a>
+        </div>
+      </div>
+
+      <div class="uni-card">
+        <div class="uni-card-img">
+          <img alt="BPP University" src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=400&fit=crop"/>
+          <span class="uni-badge">Professional</span>
+        </div>
+        <div class="uni-card-body">
+          <div class="uni-title-row"><span class="material-symbols-outlined">work</span><h3>BPP University</h3></div>
+          <p class="uni-desc">Professional education focus. Law, Business, Nursing &amp; Healthcare. Multiple UK locations.</p>
+          <a href="bpp.html" class="btn-start start-training" data-university="bpp">Start Training <span class="material-symbols-outlined" style="font-size:18px">arrow_forward</span></a>
+        </div>
+      </div>
+
+      <div class="uni-card">
+        <div class="uni-card-img">
+          <img alt="Netherlands" src="https://images.unsplash.com/photo-1590050754231-5dac0ddb23c5?w=800&h=400&fit=crop"/>
+          <span class="uni-badge">Europe</span>
+        </div>
+        <div class="uni-card-body">
+          <div class="uni-title-row"><span class="material-symbols-outlined">lightbulb</span><h3>Netherlands</h3></div>
+          <p class="uni-desc">Special prep for Dutch university intakes focusing on innovation and startup culture.</p>
+          <a href="netherlands.html" class="btn-start start-training" data-university="netherlands">Start Training <span class="material-symbols-outlined" style="font-size:18px">arrow_forward</span></a>
+        </div>
+      </div>
+
+      <div class="uni-ukvi">
+        <span class="material-symbols-outlined">public</span>
+        <h3>UKVI Hub</h3>
+        <p>Universal credibility prep for all UK Visas and Immigration requirements.</p>
+        <a href="ukvi.html" class="btn-start red start-training" data-university="ukvi" style="width:100%;">Start Universal Prep</a>
+      </div>
+
+      <div class="uni-soon">
+        <span class="material-symbols-outlined">more_horiz</span>
+        <h3>More Coming Soon</h3>
+        <p>Expanding to 50+ UK institutions this academic year.</p>
+      </div>
+
     </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner">
+    <h2>Ready to Ace Your Interview?</h2>
+    <p>Join thousands of successful students who secured their dream spot in the UK.</p>
+    <button id="ctaGetStartedBtn" class="btn-cta">Get Started Free</button>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Ascend Prep System</div>
+  <div class="footer-copy">© 2024 Ascend Prep System. All Rights Reserved.</div>
+  <div class="footer-links">
+    <a href="#" class="footer-link" onclick="event.preventDefault();showToast('Privacy Policy coming soon')"><span class="material-symbols-outlined">privacy_tip</span> Privacy Policy</a>
+    <a href="#" class="footer-link" onclick="event.preventDefault();showToast('Terms coming soon')"><span class="material-symbols-outlined">gavel</span> Terms of Service</a>
+    <a href="mailto:support@ascendprep.com" class="footer-link"><span class="material-symbols-outlined">mail</span> Support</a>
+    <a href="#" class="footer-link" onclick="event.preventDefault();showToast('Partnerships coming soon')"><span class="material-symbols-outlined">handshake</span> Partnerships</a>
   </div>
+</footer>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script src="app.js"></script>
-  <script src="https://kit.fontawesome.com/your-kit.js" crossorigin="anonymous"></script>
-  <script>
-    // Intersection Observer for scroll animations
-    const observerOptions = { threshold: 0.1 };
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('visible');
-      });
-    }, observerOptions);
-    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item active">
+    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">home</span>
+    <span class="nav-label">Home</span>
+  </a>
+  <button class="nav-item" id="navExplore">
+    <span class="material-symbols-outlined">explore</span>
+    <span class="nav-label">Explore</span>
+  </button>
+  <a href="dashboard.html" class="nav-item" id="navHistory">
+    <span class="material-symbols-outlined">history</span>
+    <span class="nav-label">History</span>
+  </a>
+  <a href="dashboard.html" class="nav-item" id="navProfile">
+    <span class="material-symbols-outlined">person</span>
+    <span class="nav-label">Profile</span>
+  </a>
+</nav>
+<div style="height:80px;"></div>
 
-    // Smooth scroll
-    document.getElementById('getStartedBtn')?.addEventListener('click', () => {
-      document.getElementById('universities').scrollIntoView({ behavior: 'smooth' });
-    });
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose"><span class="material-symbols-outlined" style="font-size:18px">close</span></button>
+    <div class="modal-title">🎓 Student Login</div>
+    <p class="modal-sub">Sign in to save your progress and track your scores.</p>
+    <button id="googleSignInBtn" class="btn-google">
+      <i class="fab fa-google" style="color:#DB4437;font-size:18px;"></i> Continue with Google
+    </button>
+    <div class="divider"><hr/><span>or</span><hr/></div>
+    <div class="tab-row">
+      <button id="tabLogin" class="tab-btn active">Sign In</button>
+      <button id="tabSignup" class="tab-btn">Create Account</button>
+    </div>
+    <form id="loginForm">
+      <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="your@email.com" required/></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••" required/></div>
+      <button type="submit" class="btn-form-submit">Sign In</button>
+    </form>
+    <form id="signupForm" style="display:none;">
+      <div class="form-group"><label>Full Name</label><input type="text" id="signupName" placeholder="John Doe" required/></div>
+      <div class="form-group"><label>Student ID</label><input type="text" id="signupStudentId" placeholder="STU123456" required/></div>
+      <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="your@email.com" required/></div>
+      <div class="form-group"><label>Password (min 6 characters)</label><input type="password" id="signupPassword" placeholder="••••••••" required minlength="6"/></div>
+      <button type="submit" class="btn-form-submit red">Create Account</button>
+    </form>
+    <p id="authError"></p>
+    <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:14px;">By continuing, you agree to our <a href="#" style="color:var(--navy);">Terms</a> and <a href="#" style="color:var(--navy);">Privacy Policy</a>.</p>
+  </div>
+</div>
 
-    document.getElementById('ctaGetStartedBtn')?.addEventListener('click', () => {
-      document.getElementById('universities').scrollIntoView({ behavior: 'smooth' });
-    });
+<!-- AUTH SUCCESS -->
+<div id="authSuccess" style="display:none;">
+  <div class="success-circle">✓</div>
+  <h3>Welcome, <span id="studentNameDisplay"></span>!</h3>
+  <p>Your progress is saved. Continue your interview prep anytime.</p>
+  <div class="spinner-el"></div>
+</div>
 
-    // ✅ Menu toggle functionality
-    const toggleBtn = document.getElementById("menuToggle");
-    const mobileMenu = document.getElementById("mobileMenu");
+<!-- STUDENT ID MODAL -->
+<div id="studentIdModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <div class="modal-title">✏️ Complete Your Profile</div>
+    <p class="modal-sub">Please enter your Student ID to continue.</p>
+    <div class="form-group"><label>Student ID</label><input type="text" id="studentIdInput" placeholder="e.g. STU12345"/></div>
+    <button id="saveStudentIdBtn" class="btn-form-submit">Save &amp; Continue</button>
+    <p id="studentIdError" style="color:#dc2626;font-size:13px;text-align:center;margin-top:10px;"></p>
+  </div>
+</div>
 
-    if (toggleBtn && mobileMenu) {
-      toggleBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        mobileMenu.classList.toggle("hidden");
-      });
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="app.js"></script>
+<script>
+  // ===== TOAST =====
+  function showToast(msg, type='info') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = type === 'error' ? '#b91c1c' : '#002045';
+    t.style.display = 'block'; t.style.opacity = '1';
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => {
+      t.style.opacity = '0';
+      setTimeout(() => t.style.display = 'none', 300);
+    }, 2800);
+  }
+
+  // ===== MODAL HELPERS =====
+  function openLoginModal() {
+    document.getElementById('loginModal').style.display = 'flex';
+  }
+  function closeLoginModal() {
+    document.getElementById('loginModal').style.display = 'none';
+  }
+
+  document.getElementById('modalClose').addEventListener('click', closeLoginModal);
+  document.getElementById('loginModal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('loginModal')) closeLoginModal();
+  });
+
+  // ===== MENU TOGGLE =====
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    mobileMenu.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (!mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+      mobileMenu.classList.remove('open');
     }
+  });
+  document.getElementById('menuExplore').addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    document.getElementById('universities').scrollIntoView({ behavior: 'smooth' });
+  });
 
-    // ✅ Auto-close when clicking outside
-    document.addEventListener("click", (e) => {
-      if (mobileMenu && toggleBtn) {
-        if (!mobileMenu.classList.contains("hidden") && 
-            !mobileMenu.contains(e.target) && 
-            !toggleBtn.contains(e.target)) {
-          mobileMenu.classList.add("hidden");
-        }
+  // ===== SESSION-AWARE UI =====
+  function updateUI(student) {
+    if (student) {
+      document.getElementById('loginBtn').style.display = 'none';
+      document.getElementById('userMenu').style.display = 'flex';
+      const initials = (student.name || 'S').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+      document.getElementById('userAvatar').textContent = initials;
+      document.getElementById('userNameDisplay').textContent = student.name?.split(' ')[0] || 'Student';
+      document.getElementById('menuAvatar').textContent = initials;
+      document.getElementById('menuName').textContent = student.name || 'Student';
+      document.getElementById('loginPromptBanner').style.display = 'none';
+    } else {
+      document.getElementById('loginBtn').style.display = '';
+      document.getElementById('userMenu').style.display = 'none';
+      document.getElementById('loginPromptBanner').style.display = 'flex';
+    }
+  }
+
+  // Poll until app.js has loaded and session is resolved
+  (async () => {
+    let attempts = 0;
+    while (!window.getCurrentStudent && attempts < 40) {
+      await new Promise(r => setTimeout(r, 100));
+      attempts++;
+    }
+    updateUI(window.getCurrentStudent?.());
+    const poll = setInterval(() => {
+      const s = window.getCurrentStudent?.();
+      if (s) { updateUI(s); clearInterval(poll); }
+    }, 400);
+    // Stop polling after 10s regardless
+    setTimeout(() => clearInterval(poll), 10000);
+  })();
+
+  // ===== GET STARTED =====
+  function handleGetStarted() {
+    if (window.getCurrentStudent?.()) {
+      document.getElementById('universities').scrollIntoView({ behavior: 'smooth' });
+    } else {
+      openLoginModal();
+    }
+  }
+  document.getElementById('getStartedBtn').addEventListener('click', handleGetStarted);
+  document.getElementById('ctaGetStartedBtn').addEventListener('click', handleGetStarted);
+  document.getElementById('loginBtn').addEventListener('click', openLoginModal);
+
+  // ===== BOTTOM NAV =====
+  document.getElementById('navExplore').addEventListener('click', () => {
+    document.getElementById('universities').scrollIntoView({ behavior: 'smooth' });
+  });
+  ['navHistory','navProfile'].forEach(id => {
+    document.getElementById(id).addEventListener('click', (e) => {
+      if (!window.getCurrentStudent?.()) {
+        e.preventDefault();
+        openLoginModal();
+        showToast('Please log in to view your dashboard');
       }
     });
-  </script>
+  });
+
+  // ===== UNIVERSITY LINKS — track selection =====
+  document.querySelectorAll('.start-training').forEach(el => {
+    el.addEventListener('click', () => {
+      const uni = el.getAttribute('data-university');
+      if (uni) localStorage.setItem('selected_university', uni);
+    });
+  });
+</script>
 </body>
 </html>
