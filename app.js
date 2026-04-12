@@ -340,20 +340,64 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
   const student = window.getCurrentStudent();
   const university = window.getSelectedUniversity();
   if (!student) return { error: 'Not authenticated' };
-  const responsesText = Object.entries(responses).map(([q, a]) => `• ${q}\n  → ${a?.answer || 'No answer'}`).join('\n\n');
-  const checklistText = Object.entries(checklist).map(([item, done]) => `${done ? '✅' : '⬜'} ${item}`).join('\n');
+
+  // ===== CALCULATE SCORE & READINESS =====
+  const allQuestions = Object.entries(responses);
+  const totalQuestions = allQuestions.length;
+  const passedQuestions = allQuestions.filter(([, a]) => a?.finalStatus === 1 || a?.score >= 7);
+  const failedQuestions = allQuestions.filter(([, a]) => !(a?.finalStatus === 1 || a?.score >= 7));
+  const percentScore = totalQuestions > 0 ? Math.round((passedQuestions.length / totalQuestions) * 100) : 0;
+
+  let readinessLevel, readinessEmoji;
+  if (percentScore >= 90)      { readinessLevel = 'Ready for Interview';  readinessEmoji = '✅'; }
+  else if (percentScore >= 70) { readinessLevel = 'Almost Ready';         readinessEmoji = '⚠️'; }
+  else                         { readinessLevel = 'Not Ready';            readinessEmoji = '❌'; }
+
+  // ===== PASSED ANSWERS ONLY =====
+  const passedText = passedQuestions.length > 0
+    ? passedQuestions.map(([qId, a]) => {
+        const label = (window.QUESTION_TEXT_MAP || {})[qId] || qId;
+        return `✅ ${label}\n   Answer: ${a.answer || 'N/A'}\n   Score: ${a.score}/10 | Attempts: ${a.attempts || 1}`;
+      }).join('\n\n')
+    : 'No questions passed yet.';
+
+  // ===== FAILED QUESTIONS =====
+  const failedText = failedQuestions.length > 0
+    ? failedQuestions.map(([qId, a]) => {
+        const label = (window.QUESTION_TEXT_MAP || {})[qId] || qId;
+        return `❌ ${label}\n   Last answer: ${a.answer || 'N/A'}\n   Score: ${a.score}/10 | Attempts: ${a.attempts || 1}`;
+      }).join('\n\n')
+    : 'None — all questions passed!';
+
+  // ===== ATTEMPT SUMMARY =====
+  const attemptSummary = allQuestions.map(([qId, a]) => {
+    const label = (window.QUESTION_TEXT_MAP || {})[qId] || qId;
+    const passed = a?.finalStatus === 1 || a?.score >= 7;
+    return `${passed ? '✅' : '❌'} ${label}: ${a.attempts || 1} attempt(s) → ${a.score}/10`;
+  }).join('\n');
+
+  // ===== CHECKLIST =====
+  const checklistEntries = Object.entries(checklist);
+  const doneCount = checklistEntries.filter(([, v]) => v === true).length;
+  const checklistText = checklistEntries.length > 0
+    ? checklistEntries.map(([item, done]) => `${done ? '✅' : '⬜'} ${item}`).join('\n')
+    : 'No checklist items recorded.';
+
   try {
     const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
       student_name: student.name,
-      student_id: student.student_id,
+      student_id: student.student_id || 'N/A',
       student_email: student.email,
       university: university || 'Not selected',
-      overall_score: score || 'Not yet scored',
-      responses: responsesText || 'No practice responses yet',
-      checklist_status: checklistText || 'No checklist items',
-      message: message || 'Student clicked "I\'m Ready for Interview"'
+      overall_score: `${passedQuestions.length}/${totalQuestions} questions passed (${percentScore}%)`,
+      readiness_level: `${readinessEmoji} ${readinessLevel}`,
+      responses: passedText,
+      failed_questions: failedText,
+      attempt_summary: attemptSummary,
+      checklist_status: `${doneCount}/${checklistEntries.length} completed\n\n${checklistText}`,
+      message: message || `${readinessEmoji} ${readinessLevel} — ${percentScore}% (${passedQuestions.length}/${totalQuestions} passed)`
     });
-    return { success: true, result };
+    return { success: true, result, percentScore, readinessLevel };
   } catch (err) {
     console.error('Email send error:', err);
     return { error: err.message || 'Failed to send email' };
@@ -396,11 +440,11 @@ window.QUESTION_TEXT_MAP = {
 window.saveAIResponse = async (questionId, answerText, score, feedback, questionText) => {
   const student = window.getCurrentStudent();
   if (!student?.id) {
-    console.error('saveAIResponse: No student in localStorage. User may not be logged in.');
+    console.error('saveAIResponse: No student in localStorage.');
     return { error: 'Not authenticated' };
   }
-  // Store question text in the map for dashboard display
   if (questionText && typeof questionText === 'string') {
+    window.QUESTION_TEXT_MAP = window.QUESTION_TEXT_MAP || {};
     window.QUESTION_TEXT_MAP[questionId] = questionText;
   }
   try {
@@ -410,24 +454,50 @@ window.saveAIResponse = async (questionId, answerText, score, feedback, question
       .eq('user_id', student.id)
       .single();
     if (fetchErr) {
-      console.error('saveAIResponse: Failed to fetch current progress:', fetchErr.message);
+      console.error('saveAIResponse fetch error:', fetchErr.message);
       return { error: fetchErr.message };
     }
-    const questionLabel = window.QUESTION_TEXT_MAP[questionId] || questionText || questionId;
-    const scores = { ...(current?.ai_scores || {}), [questionId]: { score, feedback, answer: answerText, questionText: questionLabel, date: new Date().toISOString() } };
-    const responses = { ...(current?.practice_responses || {}), [questionId]: { answer: answerText, date: new Date().toISOString() } };
+
+    const existing = current?.ai_scores?.[questionId] || {};
+    const attempts = (existing.attempts || 0) + 1;
+
+    // pass = 1 if score >= 7 (on 0-10 scale), else 0
+    // Once passed, keep as passed even on retry
+    const passed = (score >= 7) ? 1 : (existing.finalStatus === 1 ? 1 : 0);
+
+    const questionLabel = (window.QUESTION_TEXT_MAP || {})[questionId] || questionText || questionId;
+
+    const scores = {
+      ...(current?.ai_scores || {}),
+      [questionId]: {
+        score,                      // last score (0-10)
+        finalStatus: passed,        // 0 or 1
+        attempts,                   // total attempts
+        feedback,
+        answer: answerText,
+        questionText: questionLabel,
+        date: new Date().toISOString()
+      }
+    };
+
+    const responses = {
+      ...(current?.practice_responses || {}),
+      [questionId]: { answer: answerText, date: new Date().toISOString() }
+    };
+
     const { error: updateErr } = await supabaseClient
       .from('student_progress')
       .update({ ai_scores: scores, practice_responses: responses, updated_at: new Date().toISOString() })
       .eq('user_id', student.id);
+
     if (updateErr) {
-      console.error('saveAIResponse: Supabase update failed:', updateErr.message, '| Code:', updateErr.code);
+      console.error('saveAIResponse update error:', updateErr.message, updateErr.code);
       return { error: updateErr.message };
     }
-    console.log('✅ saveAIResponse: Saved to Supabase:', questionId, '| Score:', score);
-    return { success: true };
+    console.log('✅ Saved:', questionId, '| Score:', score, '| Status:', passed ? 'PASS' : 'FAIL', '| Attempt:', attempts);
+    return { success: true, passed, attempts };
   } catch (err) {
-    console.error('saveAIResponse: Unexpected error:', err);
+    console.error('saveAIResponse unexpected error:', err);
     return { error: err.message };
   }
 };
