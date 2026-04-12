@@ -2139,26 +2139,39 @@
         fb.classList.remove("hidden");
         document.getElementById("fbhd-"+id).textContent="Marking your answer...";
         document.getElementById("fbb-"+id).innerHTML="";
-        const prompt = `You are a helpful UK student visa credibility interview coach. The student is applying to study "${course.name}" at Regent College London, campus: "${course.campus}".
+        const prompt = `You are a strict UK student visa credibility interview examiner evaluating a student's spoken answer.
 
+Course: "${course.name}" at ${course.campus}.
 Question: "${q.q}"
-
-What a strong answer MUST include: ${q.cr}
-
+Required content: ${q.cr}
 Student answer: "${ans}"
 
-IMPORTANT RULES:
-- Do NOT penalize punctuation, capitalization, or minor grammar errors.
-- Do NOT penalize spelling mistakes unless they make the answer unclear.
-- Value personal language like "I", "my", "me" – this shows genuine response.
-- Focus on whether the student demonstrates understanding of their course, university, and career plans.
-- Reward specific details (module names, company names, locations, figures).
-- Reward logical connection between the course and the student's background/goals.
+MARKING RULES — READ CAREFULLY:
+Do NOT penalise: punctuation, capitalisation, minor spelling, grammar.
+DO penalise strictly:
+- Vague or general answers with no specifics
+- Answers that do not directly address the question
+- Answers that feel copied, robotic, or impersonal
+- Answers that are too short to demonstrate real understanding
+- Missing use of "I" or "my" where the question requires personal response
 
-Return ONLY valid JSON in this exact format:
-{"pass":true,"score":80,"summary":"One sentence verdict specific to the answer.","good":["specific strength based on answer"],"improve":["specific weakness and how to fix it"]}
+A PASSING answer MUST:
+1. Directly answer the question asked
+2. Include specific details (real names, figures, locations, module names)
+3. Use personal language ("I", "my") showing genuine understanding
+4. Be clear and easy to follow
+5. Cover the key points listed in "Required content"
 
-Score should reflect quality (0-100). A score >= 70 is considered a pass.`;
+SCORING (0–100):
+- 85–100: Excellent — specific, personal, complete, convincing
+- 70–84: Good — mostly specific and personal, minor gaps
+- 50–69: Weak — too vague, missing key points, or impersonal
+- 0–49: Fail — off-topic, too short, generic, or no personal language
+
+PASS THRESHOLD: score >= 70
+
+Return ONLY valid JSON, no other text:
+{"pass":true,"score":75,"summary":"One specific sentence about this answer's main strength or weakness.","good":["one specific strength"],"improve":["one specific thing to fix"]}`;
         try {
           const response = await puter.ai.chat(prompt,{model:"gpt-4o-mini",stream:false});
           let raw="";
@@ -2239,10 +2252,17 @@ Score should reflect quality (0-100). A score >= 70 is considered a pass.`;
 
       function togCB(cb) {
         cb.classList.toggle("done");
-        const ct=cb.parentElement.querySelector(".ct");
-        if(cb.classList.contains("done")){ ct.style.textDecoration="line-through"; ct.style.color="#94a3b8"; }
-        else{ ct.style.textDecoration=""; ct.style.color=""; }
+        const isChecked = cb.classList.contains("done");
+        const ct = cb.parentElement.querySelector(".ct");
+        if (isChecked) { ct.style.textDecoration = "line-through"; ct.style.color = "#94a3b8"; }
+        else { ct.style.textDecoration = ""; ct.style.color = ""; }
         updProg();
+        // Save to Supabase
+        const checkItem = cb.closest(".check-item");
+        const itemId = checkItem ? checkItem.id : null;
+        if (itemId && typeof window.saveChecklistItem === "function") {
+          window.saveChecklistItem(itemId, isChecked);
+        }
       }
 
       function updProg() {
@@ -2329,8 +2349,14 @@ Score should reflect quality (0-100). A score >= 70 is considered a pass.`;
             const avg=scores.length?(scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1):"N/A";
             const res=await window.sendReadyEmail?.(responses,checklist,avg,"Regent Student Ready");
             if(res?.success){
-              if(readyStatus){ readyStatus.textContent="✅ Submitted! Your advisor will contact you soon."; readyStatus.className="mt-3 text-sm font-medium text-green-600"; }
-              readyBtn.innerHTML='<span class="material-symbols-outlined">verified</span> Sent';
+              const pct = res.percentScore ?? 0;
+              const lvl = res.readinessLevel ?? 'Submitted';
+              const emoji = pct >= 90 ? '✅' : pct >= 70 ? '⚠️' : '❌';
+              if(readyStatus){
+                readyStatus.textContent = emoji + ' ' + lvl + ' — ' + pct + '% (' + (pct >= 90 ? 'Ready!' : pct >= 70 ? 'Keep practising' : 'More practice needed') + ')';
+                readyStatus.className = "mt-3 text-sm font-medium " + (pct >= 70 ? "text-green-600" : "text-red-500");
+              }
+              readyBtn.innerHTML='<span class="material-symbols-outlined">verified</span> Report Sent';
             }else{
               if(readyStatus){ readyStatus.textContent="⚠️ Failed to send. Try again."; readyStatus.className="mt-3 text-sm font-medium text-red-600"; }
               readyBtn.disabled=false;
