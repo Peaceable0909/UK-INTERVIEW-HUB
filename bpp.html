@@ -2700,31 +2700,42 @@
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner"></span> Analysing...';
         try {
-          const prompt = `You are a helpful UK student visa credibility interview coach. The student is applying to study at BPP University.
+          const prompt = `You are a strict UK student visa credibility interview examiner.
 
 Question: "Why have you chosen to study this programme at BPP University?"
-
 Student answer: "${answer}"
 
-IMPORTANT RULES:
-- Do NOT penalize punctuation, capitalization, or minor grammar errors.
-- Do NOT penalize spelling mistakes unless they make the answer unclear.
-- Value personal language like "I", "my", "me" – this shows genuine response.
-- Focus on whether the student demonstrates understanding of BPP, their course, career plans.
-- Reward specific details (module names, teaching approach, industry links, campus location).
-- Reward logical connection between the course and the student's background/goals.
+MARKING RULES — READ CAREFULLY:
+Do NOT penalise: punctuation, capitalisation, minor spelling, grammar.
+DO penalise strictly:
+- Vague or general answers with no specifics
+- Answers that do not directly address the question
+- Copied, robotic, or impersonal language
+- Answers too short to show real understanding
+- Missing "I" or "my" where the question requires personal response
 
-Provide feedback in this EXACT JSON format (no other text):
+A PASSING answer (score 7+) MUST:
+1. Directly answer why BPP specifically — not just "good university"
+2. Name specific details: campus, course name, modules, industry links, teaching style
+3. Use personal language ("I chose BPP because", "my career plan is")
+4. Show genuine understanding of what BPP offers
+5. Link the course to the student's background or career goals
+
+SCORING (1-10):
+- 8-10: Strong — specific, personal, convincing, complete
+- 7: Good — mostly strong, small gaps acceptable
+- 5-6: Weak — too vague, impersonal, or missing key points
+- 1-4: Fail — generic, off-topic, too short, or no personal language
+
+Return ONLY valid JSON, no other text:
 {
-  "score": number between 1-10,
+  "score": number 1-10,
   "verdict": "Strong Response" | "Good Response" | "Needs Improvement",
   "icon": "verified" | "thumb_up" | "warning",
-  "strengths": [array of 2-3 specific strengths],
-  "suggestions": [array of 1-2 constructive suggestions],
-  "signals": [array of 3 credibility signals with ✓ or ✗]
-}
-
-Focus on: specificity about BPP, career alignment, realistic planning, and genuine intent.`;
+  "strengths": ["one specific strength from this answer"],
+  "suggestions": ["one specific improvement needed"],
+  "signals": ["✓ or ✗ with one credibility signal observed"]
+}`
           const response = await puter.ai.chat(prompt, { model: "gpt-4o-mini" });
           let jsonStr = response.message.content;
           const jsonMatch = jsonStr.match(/\{[\s\S]*\}/);
@@ -2851,11 +2862,14 @@ Focus on: specificity about BPP, career alignment, realistic planning, and genui
             const avg = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1) : "N/A";
             const res = await window.sendReadyEmail?.(responses, checklist, avg, "BPP Student Ready");
             if (res?.success) {
+              const pct = res?.percentScore ?? 0;
+              const lvl = res?.readinessLevel ?? 'Report Sent';
+              const emoji = pct >= 90 ? '✅' : pct >= 70 ? '⚠️' : '❌';
               if (readyStatus) {
-                readyStatus.textContent = "✅ Submitted! Your advisor will contact you soon.";
-                readyStatus.className = "mt-3 text-sm font-medium text-green-600";
+                readyStatus.textContent = emoji + ' ' + lvl + ' — ' + pct + '% (' + (pct >= 90 ? 'Ready!' : pct >= 70 ? 'Keep practising' : 'More practice needed') + ')';
+                readyStatus.className = "mt-3 text-sm font-medium " + (pct >= 70 ? "text-green-600" : "text-red-500");
               }
-              readyBtn.innerHTML = '<span class="material-symbols-outlined">verified</span> Sent';
+              readyBtn.innerHTML = '<span class="material-symbols-outlined">verified</span> Report Sent';
             } else {
               if (readyStatus) {
                 readyStatus.textContent = "⚠️ Failed to send. Try again.";
