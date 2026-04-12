@@ -2566,7 +2566,12 @@
       }
 
       // ===== COURSE SELECTION =====
-      function selectCourse(courseId) {
+      async function selectCourse(courseId) {
+        if (currentCourse && currentCourse !== courseData[courseId]) {
+          const confirmed = confirm("⚠️ Changing your course will reset your responses and checklist.\n\nDo you want to continue?");
+          if (!confirmed) return;
+          if (typeof window.resetAllProgress === "function") await window.resetAllProgress();
+        }
         currentCourse = courseData[courseId];
         localStorage.setItem('last_course', courseId); // save for auto-reload
         document.getElementById("tb-name").textContent = currentCourse.name;
@@ -2838,12 +2843,13 @@ Return ONLY valid JSON, no other text:
             cb.addEventListener("click", () => {
               cb.classList.toggle("done");
               const isChecked = cb.classList.contains("done");
-              const titleP = checkItem?.querySelector(".flex-1 p:first-child");
+              const titleP = checkItem?.querySelector(".flex-1 p.font-medium, .flex-1 p:first-child");
               if (titleP) {
                 titleP.style.textDecoration = isChecked ? "line-through" : "";
                 titleP.style.color = isChecked ? "var(--text-muted)" : "";
               }
-              window.saveChecklistItem?.(itemId, isChecked);
+              const itemText = titleP ? titleP.textContent.trim() : null;
+              window.saveChecklistItem?.(itemId, isChecked, itemText);
               updateProgress();
             });
           });
