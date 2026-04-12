@@ -1915,7 +1915,12 @@
       let course = null, passN = 0, failN = 0, totN = 0;
       let questionStatus = {};
 
-      function selectCourse(id) {
+      async function selectCourse(id) {
+        if (course && course !== COURSES[id]) {
+          const confirmed = confirm("⚠️ Changing your course will reset your responses and checklist.\n\nDo you want to continue?");
+          if (!confirmed) return;
+          if (typeof window.resetAllProgress === "function") await window.resetAllProgress();
+        }
         course = COURSES[id];
         localStorage.setItem('last_course', id); // save for auto-reload
         document.getElementById("s-select").classList.remove("active");
@@ -2088,8 +2093,9 @@ Return ONLY valid JSON, no other text:
         updProg();
         const checkItem = cb.closest(".check-item");
         const itemId = checkItem ? checkItem.id : null;
+        const itemText = ct ? ct.textContent.trim() : null;
         if (itemId && typeof window.saveChecklistItem === "function") {
-          window.saveChecklistItem(itemId, isChecked);
+          window.saveChecklistItem(itemId, isChecked, itemText);
         }
       }
       function updProg() {
@@ -2157,7 +2163,8 @@ Return ONLY valid JSON, no other text:
                 titleSpan.style.textDecoration=isChecked?"line-through":"";
                 titleSpan.style.color=isChecked?"var(--text-muted)":"";
               }
-              await window.saveChecklistItem?.(itemId,isChecked);
+              const itemText=titleSpan?titleSpan.textContent.trim():null;
+              await window.saveChecklistItem?.(itemId,isChecked,itemText);
               updProg();
             });
           });
