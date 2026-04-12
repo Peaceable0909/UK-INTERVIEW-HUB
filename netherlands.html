@@ -3084,7 +3084,8 @@ Return ONLY valid JSON, no other text:
                 titleSpan.style.textDecoration = isChecked ? "line-through" : "";
                 titleSpan.style.color = isChecked ? "var(--text-muted)" : "";
               }
-              await window.saveChecklistItem?.(itemId, isChecked);
+              const itemText = titleSpan ? titleSpan.textContent.trim() : null;
+              await window.saveChecklistItem?.(itemId, isChecked, itemText);
               updateProgress();
             });
           });
