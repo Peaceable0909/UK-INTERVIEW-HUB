@@ -2923,30 +2923,43 @@
         btn.innerHTML = '<span class="spinner"></span> Analysing...';
 
         try {
-          const prompt = `You are a helpful UKVI credibility interview coach. The student is applying for a UK student visa.
+          const prompt = `You are a strict UK student visa credibility interview examiner.
 
 Question: "${document.getElementById('ukvi-question-text')?.textContent || 'Why have you chosen to study this programme in the UK?'}"
-
 Student answer: "${answer}"
 
-IMPORTANT RULES:
-- Do NOT penalize punctuation, capitalization, or minor grammar errors.
-- Do NOT penalize spelling mistakes unless they make the answer unclear.
-- Value personal language like "I", "my", "me" – this shows genuine response.
-- Focus on whether the student demonstrates understanding of their course, university, and genuine intent to return home.
-- Reward specific details (module names, company names, location, figures).
+MARKING RULES — READ CAREFULLY:
+Do NOT penalise: punctuation, capitalisation, minor spelling, grammar.
+DO penalise strictly:
+- Vague or general answers with no specifics
+- Answers that do not directly address the question
+- Copied, robotic, or impersonal language
+- Answers too short to show real understanding
+- Missing "I" or "my" where the question requires personal response
 
-Provide feedback in this EXACT JSON format (no other text):
+A PASSING answer (score 7+) MUST:
+1. Directly answer the question asked
+2. Name specific details: university name, course, modules, campus, career plans
+3. Use personal language ("I chose", "my goal is", "I understand")
+4. Show genuine understanding — not a memorised script
+5. Be clear, logical, and relevant
+
+SCORING (1–10):
+- 8–10: Strong — specific, personal, convincing, complete
+- 7: Good — mostly strong, small gaps acceptable
+- 5–6: Weak — too vague, impersonal, or missing key points
+- 1–4: Fail — generic, off-topic, too short, or no personal language
+
+Return ONLY valid JSON, no other text:
 {
-  "score": number between 1-10,
+  "score": number 1-10,
   "verdict": "Strong Response" | "Good Response" | "Needs Improvement",
   "icon": "verified" | "thumb_up" | "warning",
-  "strengths": [array of 2-3 specific strengths],
-  "suggestions": [array of 1-2 constructive suggestions],
-  "signals": [array of 3 credibility signals with ✓ or ✗]
+  "strengths": ["one specific strength from this answer"],
+  "suggestions": ["one specific improvement needed"],
+  "signals": ["✓ or ✗ with one credibility signal observed"]
 }
-
-Focus on: genuine intent, research depth, career alignment, and return plan.`;
+`;
 
           const response = await puter.ai.chat(prompt, { model: "gpt-4o-mini" });
           let jsonStr = response.message.content;
@@ -3101,10 +3114,13 @@ Focus on: genuine intent, research depth, career alignment, and return plan.`;
             const res = await window.sendReadyEmail?.(responses, checklist, avg, "UKVI Student Ready");
             if (res?.success) {
               if (readyStatus) {
-                readyStatus.textContent = "✅ Submitted! Your advisor will contact you soon.";
-                readyStatus.className = "mt-3 text-sm font-medium text-green-600";
+                const pct = res?.percentScore ?? 0;
+              const lvl = res?.readinessLevel ?? 'Report Sent';
+              const emoji = pct >= 90 ? '✅' : pct >= 70 ? '⚠️' : '❌';
+              readyStatus.textContent = emoji + ' ' + lvl + ' — ' + pct + '% (' + (pct >= 90 ? 'Ready!' : pct >= 70 ? 'Keep practising' : 'More practice needed') + ')';
+              readyStatus.className = "mt-3 text-sm font-medium " + (pct >= 70 ? "text-green-600" : "text-red-500");
               }
-              readyBtn.innerHTML = '<span class="material-symbols-outlined">verified</span> Sent';
+              readyBtn.innerHTML = '<span class="material-symbols-outlined">verified</span> Report Sent';
             } else {
               if (readyStatus) {
                 readyStatus.textContent = "⚠️ Failed to send. Try again.";
