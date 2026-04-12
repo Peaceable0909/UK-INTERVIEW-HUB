@@ -2567,7 +2567,7 @@
             <div class="space-y-2">
               <!-- Checklist Items -->
               <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Review all 9 behavior principles
@@ -2579,7 +2579,7 @@
                 </div>
               </div>
               <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Memorize the 12 critical warnings
@@ -2591,7 +2591,7 @@
                 </div>
               </div>
               <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Know your acceptance letter details
@@ -2603,7 +2603,7 @@
                 </div>
               </div>
               <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Research your university's official course page
@@ -2615,7 +2615,7 @@
                 </div>
               </div>
               <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Prepare specific "Why Netherlands?" academic reasons
@@ -2627,7 +2627,7 @@
                 </div>
               </div>
               <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Compare with 2-3 alternative countries/universities
@@ -2639,7 +2639,7 @@
                 </div>
               </div>
               <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Prepare precise financial details
@@ -2651,7 +2651,7 @@
                 </div>
               </div>
               <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Build a clear post-study storyline
@@ -2663,7 +2663,7 @@
                 </div>
               </div>
               <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Practice 5+ questions aloud with timer
@@ -2675,7 +2675,7 @@
                 </div>
               </div>
               <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Prepare documents for the call
@@ -2687,7 +2687,7 @@
                 </div>
               </div>
               <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Test tech setup: camera, mic, internet, platform
@@ -2699,7 +2699,7 @@
                 </div>
               </div>
               <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Choose a quiet, well-lit, professional background
@@ -2711,7 +2711,7 @@
                 </div>
               </div>
               <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Prepare 1-2 thoughtful questions to ask
@@ -2723,7 +2723,7 @@
                 </div>
               </div>
               <div class="check-item flex items-start gap-3 p-3">
-                <div class="check-box" onclick="toggleCheck(this)"></div>
+                <div class="check-box"></div>
                 <div class="flex-1">
                   <p class="font-medium text-sm">
                     Plan to log in 10 minutes early
@@ -2875,7 +2875,13 @@
 
       function toggleCheck(checkbox) {
         checkbox.classList.toggle("done");
+        const isChecked = checkbox.classList.contains("done");
         updateProgress();
+        const checkItem = checkbox.closest(".check-item");
+        const itemId = checkItem ? checkItem.id : null;
+        if (itemId && typeof window.saveChecklistItem === "function") {
+          window.saveChecklistItem(itemId, isChecked);
+        }
       }
 
       function updateProgress() {
@@ -2909,30 +2915,43 @@
 
         try {
           // IMPROVED PROMPT: no grammar penalty, reward personal language
-          const prompt = `You are a helpful Netherlands IND credibility interview coach. The student is applying for a Dutch student visa.
+          const prompt = `You are a strict Netherlands IND visa interview examiner evaluating a student's answer.
 
 Question: "${document.getElementById('nl-question-text')?.textContent || 'Why have you chosen to study this programme in the Netherlands?'}"
-
 Student answer: "${answer}"
 
-IMPORTANT RULES:
-- Do NOT penalize punctuation, capitalization, or minor grammar errors.
-- Do NOT penalize spelling mistakes unless they make the answer unclear.
-- Value personal language like "I", "my", "me" – this shows genuine response.
-- Focus on whether the student demonstrates understanding of their course, university, and genuine intent to return home or use legal post-study options.
-- Reward specific details (module names, university specifics, company names, research depth).
+MARKING RULES — READ CAREFULLY:
+Do NOT penalise: punctuation, capitalisation, minor spelling, grammar.
+DO penalise strictly:
+- Vague or general answers with no specifics
+- Answers that do not directly address the question
+- Copied, robotic, or impersonal language
+- Answers too short to show real understanding
+- Missing "I" or "my" where the question requires personal response
 
-Provide feedback in this EXACT JSON format (no other text):
+A PASSING answer (score 7+) MUST:
+1. Directly answer the question asked
+2. Name specific details: university, course, city, modules, career plans
+3. Use personal language ("I chose", "my goal", "I plan to")
+4. Show genuine research — not a generic answer about "the Netherlands"
+5. Be clear, logical, and relevant
+
+SCORING (1–10):
+- 8–10: Strong — specific, personal, convincing, complete
+- 7: Good — mostly strong, small gaps acceptable
+- 5–6: Weak — too vague, impersonal, or missing key points
+- 1–4: Fail — generic, off-topic, too short, or no personal language
+
+Return ONLY valid JSON, no other text:
 {
-  "score": number between 1-10,
+  "score": number 1-10,
   "verdict": "Strong Response" | "Good Response" | "Needs Improvement",
   "icon": "verified" | "thumb_up" | "warning",
-  "strengths": [array of 2-3 specific strengths],
-  "suggestions": [array of 1-2 constructive suggestions],
-  "signals": [array of 3 credibility signals with ✓ or ✗]
+  "strengths": ["one specific strength from this answer"],
+  "suggestions": ["one specific improvement needed"],
+  "signals": ["✓ or ✗ with one credibility signal observed"]
 }
-
-Focus on: genuine intent, research depth, career alignment, and return plan.`;
+`;
 
           const response = await puter.ai.chat(prompt, { model: "gpt-4o-mini" });
           let jsonStr = response.message.content;
@@ -3086,10 +3105,13 @@ Focus on: genuine intent, research depth, career alignment, and return plan.`;
             const res = await window.sendReadyEmail?.(responses, checklist, avg, "Netherlands Student Ready");
             if (res?.success) {
               if (readyStatus) {
-                readyStatus.textContent = "✅ Submitted! Your advisor will contact you soon.";
-                readyStatus.className = "mt-3 text-sm font-medium text-green-600";
+                const pct = res?.percentScore ?? 0;
+              const lvl = res?.readinessLevel ?? 'Report Sent';
+              const emoji = pct >= 90 ? '✅' : pct >= 70 ? '⚠️' : '❌';
+              readyStatus.textContent = emoji + ' ' + lvl + ' — ' + pct + '% (' + (pct >= 90 ? 'Ready!' : pct >= 70 ? 'Keep practising' : 'More practice needed') + ')';
+              readyStatus.className = "mt-3 text-sm font-medium " + (pct >= 70 ? "text-green-600" : "text-red-500");
               }
-              readyBtn.innerHTML = '<span class="material-symbols-outlined">verified</span> Sent';
+              readyBtn.innerHTML = '<span class="material-symbols-outlined">verified</span> Report Sent';
             } else {
               if (readyStatus) {
                 readyStatus.textContent = "⚠️ Failed to send. Try again.";
