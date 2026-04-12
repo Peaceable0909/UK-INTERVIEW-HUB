@@ -300,30 +300,13 @@
 
     // ===== CHECKLIST KEY FORMATTER =====
     function formatChecklistKey(key) {
-      const knownPatterns = {
-        'Watch the full training video': 'Watch the full training video',
-        'Research your specific BPP campus': 'Research your specific BPP campus',
-        'Review your CAS statement thoroughly': 'Review your CAS statement thoroughly',
-        'Prepare your "Why BPP?" answer': 'Prepare your "Why BPP?" answer',
-        'Practice 3+ questions aloud': 'Practice 3+ questions aloud',
-        'Prepare documents for the call': 'Prepare documents for the call',
-        'Test your tech setup': 'Test your tech setup',
-        'Choose a quiet, well-lit space': 'Choose a quiet, well-lit space',
-        'Prepare questions to ask': 'Prepare questions to ask',
-        'Plan your outfit': 'Plan your outfit',
-        'Get good rest the night before': 'Get good rest the night before',
-        'Log in 10 minutes early': 'Log in 10 minutes early',
-        'Know the exact name of your course and duration': 'Know your course name and duration',
-        'Know your campus name, full street address, and postcode': 'Know your campus address',
-        'Name at least 2-3 modules and explain why each interests you': 'Name modules and explain interest',
-        'Know how your course is assessed — the specific methods': 'Know assessment methods',
-        'Compared YSJ with 2 other named UK universities with specific reasons': 'Compare YSJ with other unis',
-        'Know YSJ rankings: top 10 student satisfaction, Gold teaching excellence': 'Know YSJ rankings',
-      };
-      if (knownPatterns[key]) return knownPatterns[key];
-      let cleaned = key.replace(/^(bpp|regent|ysj|nl|ukvi)_chk_\d+_?/, '');
-      cleaned = cleaned.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
-      return cleaned || key;
+      // Keys are now stored as human-readable text directly.
+      // Strip old-style IDs like regent_chk_0 if they slip through.
+      if (/^(bpp|regent|ysj|nl|ukvi)_chk_\d+/.test(key)) {
+        // Old format - can't recover text, just show a generic label
+        return 'Checklist item ' + key.replace(/^.*_chk_/, '#');
+      }
+      return key || 'Checklist item';
     }
 
     function escapeHtml(str) {
