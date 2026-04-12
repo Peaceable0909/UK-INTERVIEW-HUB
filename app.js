@@ -341,7 +341,7 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
   const university = window.getSelectedUniversity();
   if (!student) return { error: 'Not authenticated' };
 
-  // ===== CALCULATE SCORE & READINESS =====
+  // ===== SCORE & READINESS =====
   const allQuestions = Object.entries(responses);
   const totalQuestions = allQuestions.length;
   const passedQuestions = allQuestions.filter(([, a]) => a?.finalStatus === 1 || a?.score >= 7);
@@ -353,35 +353,86 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
   else if (percentScore >= 70) { readinessLevel = 'Almost Ready';         readinessEmoji = '⚠️'; }
   else                         { readinessLevel = 'Not Ready';            readinessEmoji = '❌'; }
 
-  // ===== PASSED ANSWERS ONLY =====
+  // ===== PASSED ANSWERS (clean, full text) =====
+  const sep = '─────────────────────────────';
   const passedText = passedQuestions.length > 0
-    ? passedQuestions.map(([qId, a]) => {
-        const label = (window.QUESTION_TEXT_MAP || {})[qId] || qId;
-        return `✅ ${label}\n   Answer: ${a.answer || 'N/A'}\n   Score: ${a.score}/10 | Attempts: ${a.attempts || 1}`;
-      }).join('\n\n')
+    ? passedQuestions.map(([qId, a], i) => {
+        const label = (window.QUESTION_TEXT_MAP || {})[qId] || a.questionText || qId;
+        const attemptNote = (a.attempts || 1) > 1 ? ` (passed on attempt ${a.attempts})` : '';
+        return [
+          `Q${i + 1}: ${label}`,
+          `Score: ${a.score}/10${attemptNote}`,
+          `Answer: ${(a.answer || 'No answer recorded').trim()}`,
+          sep
+        ].join('\n');
+      }).join('\n')
     : 'No questions passed yet.';
 
-  // ===== FAILED QUESTIONS =====
+  // ===== FAILED QUESTIONS (summary only) =====
   const failedText = failedQuestions.length > 0
     ? failedQuestions.map(([qId, a]) => {
-        const label = (window.QUESTION_TEXT_MAP || {})[qId] || qId;
-        return `❌ ${label}\n   Last answer: ${a.answer || 'N/A'}\n   Score: ${a.score}/10 | Attempts: ${a.attempts || 1}`;
-      }).join('\n\n')
-    : 'None — all questions passed!';
+        const label = (window.QUESTION_TEXT_MAP || {})[qId] || a.questionText || qId;
+        return `• ${label} — Best score: ${a.score || 0}/10 after ${a.attempts || 1} attempt(s)`;
+      }).join('\n')
+    : 'All questions passed ✅';
 
-  // ===== ATTEMPT SUMMARY =====
-  const attemptSummary = allQuestions.map(([qId, a]) => {
-    const label = (window.QUESTION_TEXT_MAP || {})[qId] || qId;
+  // ===== ATTEMPT SUMMARY TABLE =====
+  const attemptSummary = allQuestions.map(([qId, a], i) => {
+    const label = (window.QUESTION_TEXT_MAP || {})[qId] || a.questionText || qId;
     const passed = a?.finalStatus === 1 || a?.score >= 7;
-    return `${passed ? '✅' : '❌'} ${label}: ${a.attempts || 1} attempt(s) → ${a.score}/10`;
-  }).join('\n');
+    const shortLabel = label.length > 55 ? label.substring(0, 52) + '...' : label;
+    return `${passed ? '✅' : '❌'} Q${i + 1}: ${shortLabel}\n     Score: ${a.score || 0}/10 | Attempts: ${a.attempts || 1}`;
+  }).join('\n\n');
 
-  // ===== CHECKLIST =====
+  // ===== CHECKLIST (text keys, ticked items first) =====
   const checklistEntries = Object.entries(checklist);
-  const doneCount = checklistEntries.filter(([, v]) => v === true).length;
+  const doneItems = checklistEntries.filter(([, v]) => v === true);
+  const pendingItems = checklistEntries.filter(([, v]) => v !== true);
+  const doneCount = doneItems.length;
+
   const checklistText = checklistEntries.length > 0
-    ? checklistEntries.map(([item, done]) => `${done ? '✅' : '⬜'} ${item}`).join('\n')
+    ? [
+        `Completed (${doneCount}/${checklistEntries.length}):`,
+        ...doneItems.map(([item]) => `  ✅ ${item}`),
+        pendingItems.length > 0 ? `\nNot completed (${pendingItems.length}):` : '',
+        ...pendingItems.map(([item]) => `  ⬜ ${item}`)
+      ].filter(Boolean).join('\n')
     : 'No checklist items recorded.';
+
+  // ===== BUILD FULL EMAIL BODY =====
+  const divider = '═══════════════════════════════════';
+  const emailBody = [
+    divider,
+    `STUDENT INTERVIEW READINESS REPORT`,
+    divider,
+    `Name:        ${student.name}`,
+    `Student ID:  ${student.student_id || 'N/A'}`,
+    `Email:       ${student.email}`,
+    `University:  ${university || 'Not selected'}`,
+    '',
+    `OVERALL RESULT`,
+    `${readinessEmoji} ${readinessLevel}`,
+    `Score: ${passedQuestions.length}/${totalQuestions} questions passed (${percentScore}%)`,
+    divider,
+    '',
+    `PASSED ANSWERS`,
+    sep,
+    passedText,
+    '',
+    `QUESTIONS NOT YET PASSED`,
+    sep,
+    failedText,
+    '',
+    `FULL ATTEMPT SUMMARY`,
+    sep,
+    attemptSummary || 'No attempts recorded.',
+    divider,
+    '',
+    `PREPARATION CHECKLIST`,
+    sep,
+    checklistText,
+    divider,
+  ].join('\n');
 
   try {
     const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
@@ -389,13 +440,13 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
       student_id: student.student_id || 'N/A',
       student_email: student.email,
       university: university || 'Not selected',
-      overall_score: `${passedQuestions.length}/${totalQuestions} questions passed (${percentScore}%)`,
+      overall_score: `${passedQuestions.length}/${totalQuestions} (${percentScore}%)`,
       readiness_level: `${readinessEmoji} ${readinessLevel}`,
       responses: passedText,
       failed_questions: failedText,
-      attempt_summary: attemptSummary,
-      checklist_status: `${doneCount}/${checklistEntries.length} completed\n\n${checklistText}`,
-      message: message || `${readinessEmoji} ${readinessLevel} — ${percentScore}% (${passedQuestions.length}/${totalQuestions} passed)`
+      attempt_summary: attemptSummary || 'No attempts recorded.',
+      checklist_status: checklistText,
+      message: emailBody
     });
     return { success: true, result, percentScore, readinessLevel };
   } catch (err) {
@@ -405,14 +456,30 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
 };
 
 // ===== AUTO-SAVE HELPERS =====
-window.saveChecklistItem = async (itemId, checked) => {
+window.saveChecklistItem = async (itemId, checked, itemText) => {
   const student = window.getCurrentStudent();
   if (!student?.id) return;
+  // Use itemText as the key if provided (human-readable), otherwise fall back to itemId
+  const key = (itemText && itemText.trim()) ? itemText.trim() : itemId;
   try {
     const { data: current } = await supabaseClient.from('student_progress').select('checklist_status').eq('user_id', student.id).single();
-    const updated = { ...(current?.checklist_status || {}), [itemId]: checked };
+    const updated = { ...(current?.checklist_status || {}), [key]: checked };
     await supabaseClient.from('student_progress').update({ checklist_status: updated, updated_at: new Date().toISOString() }).eq('user_id', student.id);
   } catch (err) { console.error('saveChecklistItem error:', err); }
+};
+
+// Reset all student progress (used when changing course)
+window.resetAllProgress = async () => {
+  const student = window.getCurrentStudent();
+  if (!student?.id) return { error: 'Not authenticated' };
+  try {
+    const { error } = await supabaseClient
+      .from('student_progress')
+      .update({ ai_scores: {}, practice_responses: {}, checklist_status: {}, updated_at: new Date().toISOString() })
+      .eq('user_id', student.id);
+    if (error) return { error: error.message };
+    return { success: true };
+  } catch (err) { return { error: err.message }; }
 };
 
 // ✅ MODIFIED: store answer inside ai_scores as well for easier dashboard access
