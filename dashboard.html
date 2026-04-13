@@ -4,11 +4,11 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <base href="/UK-INTERVIEW-HUB/">
-  <title>Prep Hub | Student Dashboard</title>
+  <title>Prep Hub | Student Progress Dashboard</title>
   <link href="https://fonts.googleapis.com" rel="preconnect"/>
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script id="tailwind-config">
     tailwind.config = {
@@ -16,20 +16,59 @@
       theme: {
         extend: {
           colors: {
-            "primary": "#002045",
-            "secondary": "#006c49",
-            "secondary-container": "#6cf8bb",
-            "on-secondary-container": "#00714d",
-            "surface": "#f7f9fb",
-            "surface-container-lowest": "#ffffff",
-            "surface-container-low": "#f2f4f6",
+            "inverse-surface": "#2d3133",
             "surface-container": "#eceef0",
-            "surface-container-high": "#e6e8ea",
+            "secondary": "#006c49",
+            "on-tertiary": "#ffffff",
+            "on-secondary-container": "#00714d",
+            "tertiary": "#480020",
+            "error": "#ba1a1a",
+            "surface-dim": "#d8dadc",
+            "surface-bright": "#f7f9fb",
             "on-surface": "#191c1e",
-            "on-surface-variant": "#43474e",
+            "tertiary-fixed": "#ffd9e1",
+            "background": "#f7f9fb",
             "outline": "#74777f",
+            "primary-container": "#1a365d",
+            "error-container": "#ffdad6",
+            "primary-fixed-dim": "#adc7f7",
+            "tertiary-container": "#6f0035",
+            "on-background": "#191c1e",
+            "surface-tint": "#455f88",
+            "secondary-fixed-dim": "#4edea3",
+            "on-primary-fixed": "#001b3c",
+            "secondary-fixed": "#6ffbbe",
+            "primary": "#002045",
             "outline-variant": "#c4c6cf",
-            "background": "#f7f9fb"
+            "on-tertiary-fixed-variant": "#8b0e45",
+            "surface-container-high": "#e6e8ea",
+            "secondary-container": "#6cf8bb",
+            "surface": "#f7f9fb",
+            "surface-container-low": "#f2f4f6",
+            "on-secondary-fixed": "#002113",
+            "on-error-container": "#93000a",
+            "surface-container-highest": "#e0e3e5",
+            "on-tertiary-fixed": "#3f001b",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed-dim": "#ffb1c5",
+            "primary-fixed": "#d6e3ff",
+            "inverse-primary": "#adc7f7",
+            "on-secondary-fixed-variant": "#005236",
+            "surface-variant": "#e0e3e5",
+            "on-secondary": "#ffffff",
+            "on-primary": "#ffffff",
+            "on-surface-variant": "#43474e",
+            "on-tertiary-container": "#fe6d9d",
+            "on-primary-fixed-variant": "#2d476f",
+            "inverse-on-surface": "#eff1f3",
+            "on-primary-container": "#86a0cd",
+            "on-error": "#ffffff"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
           },
           fontFamily: {
             headline: ["Manrope"],
@@ -41,344 +80,420 @@
     }
   </script>
   <style>
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-    body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; color: #191c1e; }
-    .card { background: #ffffff; border-radius: 1.25rem; box-shadow: 0 2px 12px rgba(0,32,69,0.06); }
-    details summary { list-style: none; }
-    details summary::-webkit-details-marker { display: none; }
-    .custom-scroll::-webkit-scrollbar { width: 4px; }
-    .custom-scroll::-webkit-scrollbar-track { background: #e0e3e5; border-radius: 8px; }
-    .custom-scroll::-webkit-scrollbar-thumb { background: #74777f; border-radius: 8px; }
-
-    @keyframes livePulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.55); }
-      60% { box-shadow: 0 0 0 14px rgba(220,38,38,0); }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     }
-    @keyframes dotBlink {
-      0%, 100% { opacity: 1; } 50% { opacity: 0.35; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f7f9fb;
+      color: #191c1e;
     }
-    .zoom-live-glow { animation: livePulse 1.7s ease-in-out infinite; }
-    .live-dot { animation: dotBlink 1.1s ease-in-out infinite; }
+    .editorial-shadow {
+      box-shadow: 0 8px 32px rgba(0, 32, 69, 0.04);
+    }
+    details summary {
+      list-style: none;
+    }
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #e0e3e5;
+      border-radius: 8px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #74777f;
+      border-radius: 8px;
+    }
+    /* Pulse animation for live session button */
+    @keyframes pulse-live {
+      0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); background-color: #dc2626; transform: scale(1); }
+      70% { box-shadow: 0 0 0 12px rgba(220, 38, 38, 0); background-color: #ef4444; transform: scale(1.02); }
+      100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); background-color: #dc2626; transform: scale(1); }
+    }
+    .btn-live-pulse {
+      animation: pulse-live 1.5s infinite;
+      font-weight: 700;
+    }
   </style>
 </head>
 <body class="bg-background min-h-screen pb-32">
-
-  <header class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl shadow-sm flex items-center justify-between px-4 py-3">
+  <!-- Top Bar -->
+  <header class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl shadow-sm shadow-blue-900/5 flex items-center justify-between px-6 py-4">
     <div class="flex items-center gap-3">
-      <a href="index.html" class="flex items-center justify-center w-9 h-9 rounded-full hover:bg-slate-100 transition-colors active:scale-95">
-        <span class="material-symbols-outlined text-primary" style="font-size:20px;">arrow_back</span>
+      <a href="index.html" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-200/50 transition-colors active:scale-95 duration-150">
+        <span class="material-symbols-outlined text-blue-900">arrow_back</span>
       </a>
-      <h1 class="font-headline font-extrabold text-lg tracking-tight text-primary">Prep Hub</h1>
+      <h1 class="font-manrope font-extrabold text-xl tracking-tight text-blue-900">Prep Hub</h1>
     </div>
-    <button id="logoutBtn" class="text-slate-500 font-semibold text-sm hover:text-primary transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-100 active:scale-95">
+    <button id="logoutBtn" class="text-slate-500 font-inter font-semibold text-sm hover:text-blue-900 transition-colors active:scale-95 duration-150">
       Sign Out
     </button>
   </header>
 
-  <main class="mt-16 px-4 max-w-lg mx-auto space-y-5 pt-4">
-
-    <div id="loadingState" class="flex justify-center py-14">
-      <div class="w-8 h-8 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+  <main class="mt-24 px-6 space-y-8 max-w-md mx-auto">
+    <!-- Loading state -->
+    <div id="loadingState" class="flex justify-center py-12">
+      <div class="spinner w-8 h-8 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
     </div>
 
-    <div id="dashboardContent" class="hidden space-y-5">
-
-      <!-- PROFILE CARD -->
-      <div class="card p-5">
-        <div id="profileView">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center text-white text-xl font-bold flex-shrink-0" id="avatarInitials">AC</div>
-            <div class="flex-1 min-w-0">
-              <h2 class="font-headline font-bold text-lg text-primary truncate" id="studentName">Student Name</h2>
-              <p class="text-sm text-on-surface-variant truncate" id="studentEmail">email@example.com</p>
-              <span class="text-[10px] uppercase tracking-widest text-on-surface-variant/60 font-bold" id="studentId">ID: --</span>
-            </div>
-            <button id="editProfileBtn" class="flex-shrink-0 flex items-center gap-1 px-3 py-1.5 bg-surface-container rounded-xl text-xs font-bold text-primary hover:bg-slate-200 active:scale-95 transition-all">
-              <span class="material-symbols-outlined" style="font-size:15px;">edit</span> Edit
-            </button>
-          </div>
-          <div id="currentEnrolment" class="hidden mb-4 p-3 bg-surface-container-low rounded-xl border border-outline-variant/20">
-            <p class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Currently Preparing For</p>
-            <p class="text-sm font-semibold text-primary" id="currentSchool">—</p>
-            <p class="text-xs text-on-surface-variant" id="currentProgramme">—</p>
+    <!-- Dashboard content (hidden initially) -->
+    <div id="dashboardContent" class="hidden space-y-8">
+      <!-- Profile Card -->
+      <section class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-white text-2xl font-bold" id="avatarInitials">AC</div>
+          <div>
+            <h2 class="font-headline font-bold text-xl text-primary" id="studentName">Student Name</h2>
+            <p class="font-body text-sm text-on-surface-variant" id="studentEmail">email@example.com</p>
+            <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant/60 font-bold" id="studentId">ID: --</span>
           </div>
         </div>
-
-        <div id="profileEdit" class="hidden mb-4">
-          <p class="text-xs font-bold text-primary uppercase tracking-wider mb-3">Edit Profile</p>
-          <div class="space-y-3">
-            <div>
-              <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Full Name *</label>
-              <input id="editName" type="text" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="Your full name"/>
-            </div>
-            <div>
-              <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Student ID *</label>
-              <input id="editStudentId" type="text" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="e.g. STU12345"/>
-            </div>
-          </div>
-          <p id="profileEditError" class="text-red-500 text-xs mt-2 hidden">All fields are required.</p>
-          <div class="flex gap-2 mt-3">
-            <button id="saveProfileBtn" class="flex-1 py-2.5 bg-primary text-white rounded-xl text-xs font-bold uppercase tracking-wider active:scale-95 transition-all">Save Changes</button>
-            <button id="cancelEditBtn" class="px-4 py-2.5 bg-surface-container rounded-xl text-xs font-bold text-primary uppercase tracking-wider active:scale-95 transition-all">Cancel</button>
-          </div>
-        </div>
-
         <div class="grid grid-cols-2 gap-3">
-          <button id="emailReportBtn" class="flex items-center justify-center gap-2 py-2.5 bg-surface-container rounded-xl text-xs font-bold text-primary hover:bg-slate-200 active:scale-95 transition-all">
-            <span class="material-symbols-outlined" style="font-size:16px;">mail</span> Email Report
+          <button id="emailReportBtn" class="flex items-center justify-center gap-2 py-3 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary hover:bg-slate-200/50 active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-sm">mail</span>
+            Email Report
           </button>
-          <button id="exportJsonBtn" class="flex items-center justify-center gap-2 py-2.5 bg-surface-container rounded-xl text-xs font-bold text-primary hover:bg-slate-200 active:scale-95 transition-all">
-            <span class="material-symbols-outlined" style="font-size:16px;">download</span> Export Data
-          </button>
-        </div>
-        <div class="mt-3 pt-3 border-t border-outline-variant/20">
-          <button id="optOutBtn" class="w-full flex items-center justify-center gap-2 py-2.5 bg-red-50 text-red-600 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-red-100 active:scale-95 transition-all">
-            <span class="material-symbols-outlined" style="font-size:16px;">restart_alt</span>
-            Change School / Reset Everything
+          <button id="exportJsonBtn" class="flex items-center justify-center gap-2 py-3 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary hover:bg-slate-200/50 active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-sm">download</span>
+            Export Data
           </button>
         </div>
-      </div>
+      </section>
 
-      <!-- ZOOM TRAINING CARD -->
-      <div class="card p-5">
+      <!-- LIVE INTERVIEW TRAINING SECTION (Join Zoom Training) -->
+      <section class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="material-symbols-outlined text-red-500 text-xl">videocam</span>
+          <h3 class="font-headline font-bold text-lg text-primary">Live Interview Training</h3>
+        </div>
+        <div id="liveSessionContainer" class="space-y-3">
+          <!-- Dynamically updated by JS -->
+          <div class="bg-surface-container-low rounded-xl p-4 text-center">
+            <span class="material-symbols-outlined text-slate-400 text-3xl">schedule</span>
+            <p class="font-body text-sm text-on-surface-variant mt-2">Checking for upcoming sessions...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- COUNSELLOR SECTION (from Code B) -->
+      <section class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow">
         <div class="flex items-center justify-between mb-4">
           <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary" style="font-size:22px;">videocam</span>
-            <h3 class="font-headline font-bold text-base text-primary">Join Zoom Training</h3>
+            <span class="material-symbols-outlined text-primary text-xl">support_agent</span>
+            <h3 class="font-headline font-bold text-lg text-primary">My Counselor</h3>
           </div>
-          <button id="manageZoomBtn" class="flex items-center gap-1 px-3 py-1.5 bg-surface-container rounded-xl text-xs font-bold text-primary hover:bg-slate-200 active:scale-95 transition-all">
-            <span class="material-symbols-outlined" style="font-size:15px;">settings</span> Manage
+          <button id="editCounselorBtn" class="flex items-center gap-1 px-3 py-1.5 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary hover:bg-slate-200/50 active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-sm">edit</span> Edit
           </button>
         </div>
 
-        <div id="zoomSessionDisplay" class="mb-1"></div>
-
-        <div id="zoomManager" class="hidden mt-4">
-          <p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-3">Scheduled Sessions</p>
-          <div id="zoomSessionsList" class="space-y-2 mb-4 max-h-48 overflow-y-auto custom-scroll"></div>
-          <div class="bg-surface-container-low rounded-2xl p-4 space-y-3">
-            <p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Add New Session</p>
-            <div>
-              <label class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest block mb-1">Session Label</label>
-              <input id="zoomLabel" type="text" placeholder="e.g. Mock Interview with Counselor" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"/>
-            </div>
-            <div>
-              <label class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest block mb-1">Zoom Link</label>
-              <input id="zoomLink" type="url" placeholder="https://zoom.us/j/..." class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"/>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest block mb-1">Date</label>
-                <input id="zoomDate" type="date" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"/>
-              </div>
-              <div>
-                <label class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest block mb-1">Time</label>
-                <input id="zoomTime" type="time" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"/>
-              </div>
-            </div>
-            <div>
-              <label class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest block mb-1">Duration</label>
-              <select id="zoomDuration" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-primary/30">
-                <option value="30">30 minutes</option>
-                <option value="45">45 minutes</option>
-                <option value="60" selected>1 hour</option>
-                <option value="90">1.5 hours</option>
-                <option value="120">2 hours</option>
-              </select>
-            </div>
-            <p id="zoomAddError" class="text-red-500 text-xs hidden">Please fill in all fields.</p>
-            <button id="addZoomBtn" class="w-full py-2.5 bg-primary text-white rounded-xl text-xs font-bold uppercase tracking-wider active:scale-95 transition-all">
-              Add Session
-            </button>
-          </div>
-          <button id="closeZoomManagerBtn" class="w-full mt-2 py-2 text-xs font-bold text-on-surface-variant uppercase tracking-wider hover:text-primary active:scale-95 transition-all">
-            Done
-          </button>
-        </div>
-      </div>
-
-      <!-- COUNSELOR CARD -->
-      <div class="card p-5">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary" style="font-size:22px;">support_agent</span>
-            <h3 class="font-headline font-bold text-base text-primary">My Counselor</h3>
-          </div>
-          <button id="editCounselorBtn" class="flex items-center gap-1 px-3 py-1.5 bg-surface-container rounded-xl text-xs font-bold text-primary hover:bg-slate-200 active:scale-95 transition-all">
-            <span class="material-symbols-outlined" style="font-size:15px;">edit</span> Edit
-          </button>
-        </div>
-
+        <!-- View mode -->
         <div id="counselorView">
           <div id="counselorEmpty" class="text-center py-4">
-            <span class="material-symbols-outlined text-slate-300 mb-2 block" style="font-size:40px;">person_add</span>
-            <p class="text-sm text-on-surface-variant mb-3">No counselor added yet</p>
-            <button onclick="document.getElementById('editCounselorBtn').click()" class="text-xs font-bold text-primary uppercase tracking-wider px-4 py-2 bg-surface-container rounded-xl active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-4xl text-slate-300 mb-2 block">person_add</span>
+            <p class="font-body text-sm text-on-surface-variant mb-3">No counselor added yet</p>
+            <button onclick="document.getElementById('editCounselorBtn').click()" class="font-label text-xs font-bold text-primary uppercase tracking-wider px-4 py-2 bg-surface-container-high rounded-xl active:scale-95 transition-all">
               Add Counselor
             </button>
           </div>
           <div id="counselorCard" class="hidden">
             <div class="flex items-center gap-4 mb-4">
-              <div class="w-11 h-11 rounded-2xl bg-secondary flex items-center justify-center text-white font-bold flex-shrink-0" id="counselorInitials">--</div>
+              <div class="w-12 h-12 rounded-2xl bg-secondary flex items-center justify-center text-white text-lg font-bold" id="counselorInitials">--</div>
               <div>
-                <p class="font-headline font-bold text-sm text-primary" id="counselorName">—</p>
-                <p class="text-xs text-on-surface-variant" id="counselorRole">—</p>
+                <p class="font-headline font-bold text-base text-primary" id="counselorName">—</p>
+                <p class="font-body text-sm text-on-surface-variant" id="counselorRole">Counselor</p>
               </div>
             </div>
             <div class="space-y-2">
-              <div id="counselorEmailRow" class="hidden flex items-center gap-3 p-2.5 bg-surface-container-low rounded-xl">
-                <span class="material-symbols-outlined text-primary" style="font-size:16px;">mail</span>
-                <div><p class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Email</p>
-                <a id="counselorEmailLink" href="#" class="text-sm text-primary font-medium">—</a></div>
+              <div id="counselorEmailRow" class="hidden flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+                <span class="material-symbols-outlined text-primary text-sm">mail</span>
+                <div>
+                  <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Email</p>
+                  <a id="counselorEmailLink" href="#" class="font-body text-sm text-primary font-medium">—</a>
+                </div>
               </div>
-              <div id="counselorPhoneRow" class="hidden flex items-center gap-3 p-2.5 bg-surface-container-low rounded-xl">
-                <span class="material-symbols-outlined text-primary" style="font-size:16px;">phone</span>
-                <div><p class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Phone</p>
-                <p id="counselorPhone" class="text-sm text-primary font-medium">—</p></div>
+              <div id="counselorPhoneRow" class="hidden flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+                <span class="material-symbols-outlined text-primary text-sm">phone</span>
+                <div>
+                  <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Phone / WhatsApp</p>
+                  <p id="counselorPhone" class="font-body text-sm text-primary font-medium">—</p>
+                </div>
               </div>
-              <div id="counselorNotesRow" class="hidden flex items-start gap-3 p-2.5 bg-surface-container-low rounded-xl">
-                <span class="material-symbols-outlined text-primary mt-0.5" style="font-size:16px;">sticky_note_2</span>
-                <div><p class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Notes</p>
-                <p id="counselorNotes" class="text-sm text-on-surface-variant leading-relaxed">—</p></div>
+              <div id="counselorNotesRow" class="hidden flex items-start gap-3 p-3 bg-surface-container-low rounded-xl">
+                <span class="material-symbols-outlined text-primary text-sm mt-0.5">sticky_note_2</span>
+                <div>
+                  <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Notes</p>
+                  <p id="counselorNotes" class="font-body text-sm text-on-surface-variant leading-relaxed">—</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div id="counselorEdit" class="hidden mt-3">
-          <p class="text-xs font-bold text-primary uppercase tracking-wider mb-3">Counselor Details</p>
+        <!-- Edit mode -->
+        <div id="counselorEdit" class="hidden">
+          <p class="font-label text-xs font-bold text-primary uppercase tracking-wider mb-3">Counselor Details</p>
           <div class="space-y-3">
             <div>
-              <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Full Name *</label>
-              <input id="cName" type="text" placeholder="e.g. Sarah Johnson" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Full Name *</label>
+              <input id="cName" type="text" placeholder="e.g. Sarah Johnson" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
             </div>
             <div>
-              <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Role / Company</label>
-              <input id="cRole" type="text" placeholder="e.g. Senior Education Consultant" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Role / Company</label>
+              <input id="cRole" type="text" placeholder="e.g. Senior Education Consultant at ABC Agency" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
             </div>
             <div>
-              <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Email</label>
-              <input id="cEmail" type="email" placeholder="counselor@agency.com" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Email</label>
+              <input id="cEmail" type="email" placeholder="counselor@agency.com" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
             </div>
             <div>
-              <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Phone / WhatsApp</label>
-              <input id="cPhone" type="tel" placeholder="+44 7700 000000" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Phone / WhatsApp</label>
+              <input id="cPhone" type="tel" placeholder="+44 7700 000000" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
             </div>
             <div>
-              <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Notes</label>
-              <textarea id="cNotes" rows="2" placeholder="e.g. Call every Tuesday, interview booked for 15 Jan..." class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"></textarea>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Notes</label>
+              <textarea id="cNotes" rows="2" placeholder="e.g. Call every Tuesday, interview booked for 15 Jan..." class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"></textarea>
             </div>
           </div>
           <p id="counselorError" class="text-red-500 text-xs mt-2 hidden">Counselor name is required.</p>
           <div class="flex gap-2 mt-3">
-            <button id="saveCounselorBtn" class="flex-1 py-2.5 bg-primary text-white rounded-xl text-xs font-bold uppercase tracking-wider active:scale-95 transition-all">Save Counselor</button>
-            <button id="cancelCounselorBtn" class="px-4 py-2.5 bg-surface-container rounded-xl text-xs font-bold text-primary uppercase tracking-wider active:scale-95 transition-all">Cancel</button>
+            <button id="saveCounselorBtn" class="flex-1 py-2.5 bg-primary text-white rounded-xl font-label text-xs font-bold uppercase tracking-wider active:scale-95 transition-all">Save Counselor</button>
+            <button id="cancelCounselorBtn" class="px-4 py-2.5 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary uppercase tracking-wider active:scale-95 transition-all">Cancel</button>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- STATS -->
-      <div class="grid grid-cols-2 gap-3">
-        <div class="card p-4">
-          <span class="material-symbols-outlined text-primary mb-2 block" style="font-size:22px;">quiz</span>
-          <p class="text-[10px] uppercase tracking-wider text-on-surface-variant mb-1 font-bold">AI Responses</p>
+      <!-- Stats Grid -->
+      <section class="grid grid-cols-2 gap-4">
+        <div class="bg-surface-container-low p-5 rounded-2xl">
+          <span class="material-symbols-outlined text-primary mb-3">quiz</span>
+          <p class="font-label text-[10px] uppercase tracking-wider text-on-surface-variant mb-1 font-bold">Total AI Responses</p>
           <p class="font-headline font-bold text-2xl text-primary" id="totalResponses">0</p>
         </div>
-        <div class="card p-4">
-          <span class="material-symbols-outlined text-secondary mb-2 block" style="font-size:22px;">trending_up</span>
-          <p class="text-[10px] uppercase tracking-wider text-on-surface-variant mb-1 font-bold">Avg Score</p>
-          <p class="font-headline font-bold text-2xl text-secondary" id="avgScore">0<span class="text-sm text-secondary/60">/10</span></p>
+        <div class="bg-surface-container-low p-5 rounded-2xl">
+          <div class="flex justify-between items-start mb-3">
+            <span class="material-symbols-outlined text-secondary">trending_up</span>
+          </div>
+          <p class="font-label text-[10px] uppercase tracking-wider text-on-surface-variant mb-1 font-bold">Average Score</p>
+          <p class="font-headline font-bold text-2xl text-secondary" id="avgScore">0<span class="text-sm font-body text-secondary/60">/10</span></p>
         </div>
-        <div class="card p-4">
-          <span class="material-symbols-outlined text-primary mb-2 block" style="font-size:22px;">fact_check</span>
-          <p class="text-[10px] uppercase tracking-wider text-on-surface-variant mb-1 font-bold">Checklist</p>
-          <p class="font-headline font-bold text-2xl text-primary" id="checklistPercent">0<span class="text-sm text-primary/60">%</span></p>
+        <div class="bg-surface-container-low p-5 rounded-2xl">
+          <span class="material-symbols-outlined text-primary mb-3">fact_check</span>
+          <p class="font-label text-[10px] uppercase tracking-wider text-on-surface-variant mb-1 font-bold">Checklist Done</p>
+          <p class="font-headline font-bold text-2xl text-primary" id="checklistPercent">0<span class="text-sm font-body text-primary/60">%</span></p>
         </div>
-        <div class="card p-4">
-          <span class="material-symbols-outlined text-secondary mb-2 block" style="font-size:22px; font-variation-settings:'FILL' 1;">verified</span>
-          <p class="text-[10px] uppercase tracking-wider text-on-surface-variant mb-1 font-bold">Pass Rate</p>
-          <p class="font-headline font-bold text-2xl text-secondary" id="passRate">0<span class="text-sm text-secondary/60">%</span></p>
+        <div class="bg-surface-container-low p-5 rounded-2xl">
+          <span class="material-symbols-outlined text-secondary mb-3" style="font-variation-settings: 'FILL' 1;">verified</span>
+          <p class="font-label text-[10px] uppercase tracking-wider text-on-surface-variant mb-1 font-bold">Pass Rate</p>
+          <p class="font-headline font-bold text-2xl text-secondary" id="passRate">0<span class="text-sm font-body text-secondary/60">%</span></p>
         </div>
-      </div>
+      </section>
 
-      <!-- CHECKLIST -->
-      <div class="card p-5">
+      <!-- Checklist Section -->
+      <section>
         <div class="flex items-center justify-between mb-4">
-          <h3 class="font-headline font-bold text-base text-primary">Preparation Checklist</h3>
-          <span class="text-[10px] font-bold text-secondary bg-green-50 px-2 py-1 rounded" id="checklistSummary">0/0</span>
+          <h3 class="font-headline font-bold text-lg text-primary">Preparation Checklist</h3>
+          <span class="font-label text-[10px] font-bold text-secondary bg-secondary-container/30 px-2 py-1 rounded-sm" id="checklistSummary">0/0 COMPLETED</span>
         </div>
-        <div id="checklistContainer" class="max-h-56 overflow-y-auto space-y-3 custom-scroll"></div>
-      </div>
+        <div class="bg-surface-container-lowest rounded-[2rem] p-2 editorial-shadow overflow-hidden">
+          <div id="checklistContainer" class="max-h-[220px] overflow-y-auto px-4 py-2 space-y-4 custom-scroll">
+            <!-- dynamically filled -->
+          </div>
+        </div>
+      </section>
 
-      <!-- PRACTICE RESPONSES -->
-      <div class="space-y-4">
+      <!-- Practice Responses Section -->
+      <section class="space-y-4">
         <div class="flex items-center justify-between">
-          <h3 class="font-headline font-bold text-base text-primary">Practice Responses</h3>
+          <h3 class="font-headline font-bold text-lg text-primary">Practice Responses</h3>
           <div class="flex gap-2">
-            <button id="searchBtn" class="w-9 h-9 bg-white rounded-full flex items-center justify-center shadow-sm active:scale-95 transition-all">
-              <span class="material-symbols-outlined text-primary" style="font-size:20px;">search</span>
+            <button id="searchBtn" class="w-10 h-10 bg-surface-container-high rounded-full flex items-center justify-center">
+              <span class="material-symbols-outlined text-primary text-xl">search</span>
             </button>
-            <button id="filterBtn" class="w-9 h-9 bg-white rounded-full flex items-center justify-center shadow-sm active:scale-95 transition-all">
-              <span class="material-symbols-outlined text-primary" style="font-size:20px;">tune</span>
+            <button id="filterBtn" class="w-10 h-10 bg-surface-container-high rounded-full flex items-center justify-center">
+              <span class="material-symbols-outlined text-primary text-xl">tune</span>
             </button>
           </div>
         </div>
-        <div id="searchBox" style="display:none;">
-          <input type="text" placeholder="Search by question, university, or keyword..."
-            class="w-full px-4 py-2.5 rounded-xl border border-outline/30 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+        <div id="searchBox" style="display:none;" class="mb-3">
+          <input type="text" placeholder="Search by question, university, or keyword..." 
+            class="w-full px-4 py-2.5 rounded-xl border border-outline/30 bg-surface-container-lowest text-sm font-body text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30">
         </div>
-        <div id="responsesContainer" class="space-y-4"></div>
-        <div id="noResponsesMsg" class="text-center text-slate-400 py-8 hidden text-sm">No practice responses yet. Start practising on any university page!</div>
-      </div>
-
+        <div id="responsesContainer" class="space-y-4">
+          <!-- dynamically filled -->
+        </div>
+        <div id="noResponsesMsg" class="text-center text-slate-400 py-8 hidden">No practice responses yet. Start practicing on any university page!</div>
+      </section>
     </div>
   </main>
 
-  <!-- BOTTOM NAV -->
-  <nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/95 backdrop-blur-2xl shadow-[0_-4px_20px_rgba(0,32,69,0.07)]">
-    <a href="index.html" class="flex flex-col items-center text-slate-400 px-4 py-1 hover:text-primary transition-all">
-      <span class="material-symbols-outlined mb-1" style="font-size:22px;">home</span>
-      <span class="text-[9px] font-bold uppercase tracking-wider">Home</span>
+  <!-- Bottom Navigation -->
+  <nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-white/90 backdrop-blur-2xl shadow-[0_-8px_32px_rgba(0,32,69,0.06)] rounded-t-[2.5rem]">
+    <a href="index.html" class="flex flex-col items-center justify-center text-slate-400 px-4 py-2 hover:text-blue-900 transition-all duration-200 active:translate-y-0.5">
+      <span class="material-symbols-outlined mb-1">dashboard</span>
+      <span class="font-inter text-[10px] font-semibold uppercase tracking-wider">Dashboard</span>
     </a>
-    <a href="index.html" class="flex flex-col items-center text-slate-400 px-4 py-1 hover:text-primary transition-all">
-      <span class="material-symbols-outlined mb-1" style="font-size:22px;">school</span>
-      <span class="text-[9px] font-bold uppercase tracking-wider">Practice</span>
+    <a href="index.html" class="flex flex-col items-center justify-center text-slate-400 px-4 py-2 hover:text-blue-900 transition-all duration-200 active:translate-y-0.5">
+      <span class="material-symbols-outlined mb-1">fact_check</span>
+      <span class="font-inter text-[10px] font-semibold uppercase tracking-wider">Checklist</span>
     </a>
-    <a href="dashboard.html" class="flex flex-col items-center text-primary bg-primary/5 rounded-2xl px-4 py-1.5 transition-all">
-      <span class="material-symbols-outlined mb-1" style="font-size:22px; font-variation-settings:'FILL' 1;">person</span>
-      <span class="text-[9px] font-bold uppercase tracking-wider">Profile</span>
+    <a href="index.html" class="flex flex-col items-center justify-center text-slate-400 px-4 py-2 hover:text-blue-900 transition-all duration-200 active:translate-y-0.5">
+      <span class="material-symbols-outlined mb-1">forum</span>
+      <span class="font-inter text-[10px] font-semibold uppercase tracking-wider">Practice</span>
+    </a>
+    <a href="dashboard.html" class="flex flex-col items-center justify-center text-emerald-700 bg-emerald-50 rounded-2xl px-4 py-2 transition-all duration-200 active:translate-y-0.5">
+      <span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">person</span>
+      <span class="font-inter text-[10px] font-semibold uppercase tracking-wider">Profile</span>
     </a>
   </nav>
 
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="app.js"></script>
 
-  <div id="toast" style="display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:10px 22px;border-radius:999px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.2);transition:opacity 0.3s;white-space:nowrap;"></div>
+  <div id="toast" style="display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:10px 20px;border-radius:999px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.2);transition:opacity 0.3s;"></div>
 
   <script>
+    // ================== TOAST ==================
     function showToast(msg, type = 'success') {
       const t = document.getElementById('toast');
       t.textContent = (type === 'success' ? '✅ ' : '❌ ') + msg;
       t.style.background = type === 'success' ? '#003a1f' : '#5c0000';
-      t.style.display = 'block'; t.style.opacity = '1';
+      t.style.display = 'block';
+      t.style.opacity = '1';
       clearTimeout(window._toastTimer);
       window._toastTimer = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.style.display = 'none', 300); }, 3000);
     }
 
+    // ================== LIVE SESSION SCHEDULER ==================
+    // ------------------------------------------------------------------
+    // EDIT YOUR SCHEDULED SESSIONS HERE (easy to find)
+    // Each session: { startTime: "YYYY-MM-DDTHH:MM:SS", zoomLink: "https://..." , title: "Optional title" }
+    // Times in your LOCAL timezone (browser will compare)
+    // ------------------------------------------------------------------
+    const SCHEDULED_SESSIONS = [
+      {
+        startTime: "2026-04-13T15:00:00",  // Example: 13 April 2026, 3:00 PM your local time
+        zoomLink: "https://us06web.zoom.us/j/123456789?pwd=abc123",
+        title: "UKVI Interview Prep"
+      },
+      {
+        startTime: "2026-04-15T10:30:00",
+        zoomLink: "https://zoom.us/j/987654321",
+        title: "Mock Interview - Regent College"
+      }
+    ];
+    // Duration (minutes) during which the button stays active/pulsing after start time
+    const SESSION_DURATION_MINUTES = 90;
+
+    function updateLiveSessionUI() {
+      const container = document.getElementById('liveSessionContainer');
+      if (!container) return;
+
+      const now = new Date();
+      let activeSession = null;
+      let upcomingSession = null;
+
+      // Find active session (start <= now <= start+duration)
+      for (const sess of SCHEDULED_SESSIONS) {
+        const start = new Date(sess.startTime);
+        const end = new Date(start.getTime() + SESSION_DURATION_MINUTES * 60000);
+        if (now >= start && now <= end) {
+          activeSession = sess;
+          break;
+        }
+      }
+      // If no active, find next upcoming session for info
+      if (!activeSession) {
+        const future = SCHEDULED_SESSIONS.filter(s => new Date(s.startTime) > now);
+        if (future.length) {
+          future.sort((a,b) => new Date(a.startTime) - new Date(b.startTime));
+          upcomingSession = future[0];
+        }
+      }
+
+      if (activeSession) {
+        // Show active session with pulsing button
+        const startDate = new Date(activeSession.startTime);
+        const endDate = new Date(startDate.getTime() + SESSION_DURATION_MINUTES * 60000);
+        const timeStr = startDate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) + ' – ' + endDate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+        container.innerHTML = `
+          <div class="bg-red-50 rounded-xl p-4 border-l-4 border-red-500">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="material-symbols-outlined text-red-500 animate-pulse">fiber_manual_record</span>
+              <span class="font-label text-xs font-bold text-red-600 uppercase tracking-wider">LIVE NOW</span>
+            </div>
+            <p class="font-headline font-bold text-base text-primary">${escapeHtml(activeSession.title || 'Interview Training')}</p>
+            <p class="font-body text-xs text-on-surface-variant mt-1">${timeStr}</p>
+            <a href="${activeSession.zoomLink}" target="_blank" rel="noopener noreferrer" class="btn-live-pulse mt-3 flex items-center justify-center gap-2 w-full py-3 bg-red-600 text-white rounded-xl font-label text-sm font-bold uppercase tracking-wider transition-all active:scale-95">
+              <span class="material-symbols-outlined text-base">videocam</span> Join Zoom Training
+            </a>
+          </div>
+        `;
+      } else if (upcomingSession) {
+        const startDate = new Date(upcomingSession.startTime);
+        const formattedDate = startDate.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
+        const formattedTime = startDate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+        container.innerHTML = `
+          <div class="bg-surface-container-low rounded-xl p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="material-symbols-outlined text-primary">event</span>
+              <span class="font-label text-xs font-bold text-primary uppercase tracking-wider">Next Session</span>
+            </div>
+            <p class="font-headline font-bold text-base text-primary">${escapeHtml(upcomingSession.title || 'Interview Training')}</p>
+            <p class="font-body text-sm text-on-surface-variant mt-1">${formattedDate} at ${formattedTime}</p>
+            <div class="mt-3 text-center text-slate-400 text-xs font-body">Zoom link will appear when session starts</div>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="bg-surface-container-low rounded-xl p-4 text-center">
+            <span class="material-symbols-outlined text-slate-400 text-3xl">event_busy</span>
+            <p class="font-body text-sm text-on-surface-variant mt-2">No upcoming training sessions scheduled</p>
+            <p class="font-body text-xs text-slate-400 mt-1">Check back later</p>
+          </div>
+        `;
+      }
+    }
+
+    // Check every 30 seconds
+    setInterval(updateLiveSessionUI, 30000);
+    // ================================================================
+
+    // ================== QUESTION LABELS (unchanged) ==================
     const QUESTION_LABELS = {
-      'UKVI_Q1':'Why study in the UK?','UKVI_Q2':'Why this specific university?','UKVI_Q3':'Plans after your studies?',
-      'UKVI_Q4':'How will you fund your studies?','UKVI_Q5':'Your academic background','UKVI_Q6':'Course name and duration',
-      'UKVI_Q7':'Why study this subject?','UKVI_Q8':'Ties to your home country?',
-      'NL_Q1':'Why study in the Netherlands?','NL_Q2':'Why this Dutch university?','NL_Q3':'Plans after your studies?',
-      'NL_Q4':'How will you fund your studies?','NL_Q5':'Language of instruction?','NL_Q6':'Course name and duration',
-      'NL_Q7':'Connections in the Netherlands?','NL_Q8':'Ties to your home country?','BPP_Q1':'Why study at BPP University?'
+      'UKVI_Q1': 'Why study in the UK?',
+      'UKVI_Q2': 'Why this specific university?',
+      'UKVI_Q3': 'Plans after your studies?',
+      'UKVI_Q4': 'How will you fund your studies?',
+      'UKVI_Q5': 'Your academic background',
+      'UKVI_Q6': 'Course name and duration',
+      'UKVI_Q7': 'Why study this subject?',
+      'UKVI_Q8': 'Ties to your home country?',
+      'NL_Q1': 'Why study in the Netherlands?',
+      'NL_Q2': 'Why this Dutch university?',
+      'NL_Q3': 'Plans after your studies?',
+      'NL_Q4': 'How will you fund your studies?',
+      'NL_Q5': 'Language of instruction?',
+      'NL_Q6': 'Course name and duration',
+      'NL_Q7': 'Connections in the Netherlands?',
+      'NL_Q8': 'Ties to your home country?',
+      'BPP_Q1': 'Why study at BPP University?',
     };
+
     function getQuestionLabel(qId, data) {
       if (data?.questionText && !data.questionText.match(/^(REGENT|YSJ|UKVI|BPP|NL)_/)) return data.questionText;
       if (QUESTION_LABELS[qId]) return QUESTION_LABELS[qId];
-      return qId.replace(/^(REGENT|YSJ|UKVI|BPP|NL)_/, '').replace(/_/g, ' ');
+      let label = qId.replace(/^(REGENT|YSJ|UKVI|BPP|NL)_/, '').replace(/_/g, ' ');
+      label = label.charAt(0).toUpperCase() + label.slice(1).toLowerCase();
+      return label;
     }
+
     function getCategoryFromId(qId) {
       if (qId.startsWith('REGENT')) return 'Regent College';
       if (qId.startsWith('YSJ')) return 'York St John';
@@ -387,125 +502,169 @@
       if (qId.startsWith('UKVI')) return 'UKVI';
       return 'Practice';
     }
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-    }
+
     function formatChecklistKey(key) {
       if (/^(bpp|regent|ysj|nl|ukvi)_chk_\d+/.test(key)) return 'Checklist item ' + key.replace(/^.*_chk_/, '#');
       return key || 'Checklist item';
     }
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+    }
+
+    // ================== STATE ==================
     let allAiScores = {};
-    let searchQuery = '', filterCategory = 'all', searchVisible = false;
+    let searchQuery = '';
+    let filterCategory = 'all';
+    let searchVisible = false;
 
-    const UNI_NAMES = {
-      'regent':'Regent College London','yorkstjohn':'York St John University',
-      'bpp':'BPP University','netherlands':'Netherlands (IND)','ukvi':'UKVI Credibility Prep'
-    };
-
-    function displayEnrolment() {
-      const uni = localStorage.getItem('selected_university');
-      const course = localStorage.getItem('last_course');
-      const block = document.getElementById('currentEnrolment');
-      if (uni && UNI_NAMES[uni]) {
-        block.classList.remove('hidden');
-        document.getElementById('currentSchool').textContent = UNI_NAMES[uni];
-        document.getElementById('currentProgramme').textContent = course ? course.replace(/-/g, ' ').toUpperCase() : 'General Prep';
-      }
-    }
-
-    function renderChecklist(status) {
+    // ================== RENDER CHECKLIST ==================
+    function renderChecklist(checklistStatus) {
       const container = document.getElementById('checklistContainer');
-      const summary = document.getElementById('checklistSummary');
-      if (!status || Object.keys(status).length === 0) {
+      const summarySpan = document.getElementById('checklistSummary');
+      if (!checklistStatus || Object.keys(checklistStatus).length === 0) {
         container.innerHTML = '<div class="text-slate-400 text-sm py-4 text-center">No checklist items yet.</div>';
-        summary.textContent = '0/0'; return;
+        summarySpan.textContent = '0/0 COMPLETED';
+        return;
       }
-      const items = Object.entries(status);
-      const done = items.filter(([, v]) => v === true).length;
+      const items = Object.entries(checklistStatus);
+      const doneCount = items.filter(([, done]) => done === true).length;
       const total = items.length;
-      const pct = total ? Math.round((done / total) * 100) : 0;
-      document.getElementById('checklistPercent').innerHTML = `${pct}<span class="text-sm text-primary/60">%</span>`;
-      summary.textContent = `${done}/${total}`;
-      container.innerHTML = items.map(([key, isDone]) => `
-        <div class="flex items-center justify-between gap-3">
-          <div class="flex items-center gap-3 flex-1 min-w-0">
-            <div class="w-2 h-2 rounded-full flex-shrink-0 ${isDone ? 'bg-secondary' : 'bg-slate-300'}"></div>
-            <p class="text-sm font-medium text-on-surface truncate">${escapeHtml(formatChecklistKey(key))}</p>
+      const percent = total ? Math.round((doneCount / total) * 100) : 0;
+      document.getElementById('checklistPercent').innerHTML = `${percent}<span class="text-sm font-body text-primary/60">%</span>`;
+      summarySpan.textContent = `${doneCount}/${total} COMPLETED`;
+      container.innerHTML = items.map(([key, done]) => `
+        <div class="flex items-center justify-between group">
+          <div class="flex items-center gap-3">
+            <div class="w-2 h-2 rounded-full ${done ? 'bg-secondary' : 'bg-slate-300'}"></div>
+            <p class="font-body text-sm font-medium text-on-surface">${escapeHtml(formatChecklistKey(key))}</p>
           </div>
-          <span class="text-[10px] font-bold flex-shrink-0 ${isDone ? 'text-secondary' : 'text-slate-400'}">${isDone ? 'DONE' : 'PENDING'}</span>
-        </div>`).join('');
+          <span class="font-label text-[10px] font-bold ${done ? 'text-secondary' : 'text-slate-400'}">${done ? 'DONE' : 'PENDING'}</span>
+        </div>
+      `).join('');
     }
 
+    // ================== RENDER RESPONSES ==================
     function renderResponses(aiScores, query = '', category = 'all') {
       const container = document.getElementById('responsesContainer');
       const noMsg = document.getElementById('noResponsesMsg');
       if (!aiScores || Object.keys(aiScores).length === 0) {
-        container.innerHTML = ''; noMsg.classList.remove('hidden'); return;
+        container.innerHTML = '';
+        noMsg.textContent = 'No practice responses yet. Start practising on any university page!';
+        noMsg.classList.remove('hidden');
+        return;
       }
       let entries = Object.entries(aiScores);
-      if (category !== 'all') entries = entries.filter(([qId]) => getCategoryFromId(qId).toLowerCase().includes(category.toLowerCase()));
+      if (category !== 'all') {
+        entries = entries.filter(([qId]) => getCategoryFromId(qId).toLowerCase().includes(category.toLowerCase()));
+      }
       if (query.trim()) {
         const q = query.toLowerCase();
-        entries = entries.filter(([qId, data]) =>
-          getQuestionLabel(qId, data).toLowerCase().includes(q) ||
-          (data.answer || '').toLowerCase().includes(q) ||
-          getCategoryFromId(qId).toLowerCase().includes(q));
+        entries = entries.filter(([qId, data]) => {
+          const label = getQuestionLabel(qId, data).toLowerCase();
+          const answer = (data.answer || '').toLowerCase();
+          const cat = getCategoryFromId(qId).toLowerCase();
+          return label.includes(q) || answer.includes(q) || cat.includes(q);
+        });
       }
       if (entries.length === 0) {
-        container.innerHTML = ''; noMsg.textContent = 'No responses match your search.'; noMsg.classList.remove('hidden'); return;
+        container.innerHTML = '';
+        noMsg.textContent = 'No responses match your search.';
+        noMsg.classList.remove('hidden');
+        return;
       }
       noMsg.classList.add('hidden');
-      entries.sort((a, b) => (b[1]?.date ? new Date(b[1].date) : 0) - (a[1]?.date ? new Date(a[1].date) : 0));
+      entries.sort((a, b) => {
+        const dateA = a[1]?.date ? new Date(a[1].date) : 0;
+        const dateB = b[1]?.date ? new Date(b[1].date) : 0;
+        return dateB - dateA;
+      });
       container.innerHTML = entries.map(([qId, data]) => {
         const score = typeof data.score === 'number' ? data.score : 0;
         const pass = score >= 7;
         const label = getQuestionLabel(qId, data);
-        const cat = getCategoryFromId(qId);
+        const category = getCategoryFromId(qId);
+        const answerPreview = data.answer ? (data.answer.length > 120 ? data.answer.substring(0, 120) + '…' : data.answer) : 'No answer saved';
         const feedback = data.feedback || data.summary || 'No feedback available';
-        const dateStr = data.date ? new Date(data.date).toLocaleDateString('en-GB') : '';
-        return `<div class="card p-4">
-          <div class="flex justify-between items-start mb-3">
-            <div class="flex-1 pr-3">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded bg-primary/10 text-primary">${escapeHtml(cat)}</span>
-                ${dateStr ? `<span class="text-[9px] text-slate-400">${escapeHtml(dateStr)}</span>` : ''}
+        const dateStr = data.date ? new Date(data.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+        return `
+          <div class="bg-surface-container-lowest rounded-[1.5rem] p-5 editorial-shadow border border-white/40">
+            <div class="flex justify-between items-start mb-3">
+              <div class="flex-1 pr-3">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="font-label text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm bg-primary/10 text-primary">${escapeHtml(category)}</span>
+                  ${dateStr ? `<span class="font-label text-[9px] text-slate-400">${escapeHtml(dateStr)}</span>` : ''}
+                </div>
+                <h4 class="font-headline font-bold text-sm text-primary leading-snug">${escapeHtml(label)}</h4>
               </div>
-              <h4 class="font-headline font-bold text-sm text-primary leading-snug">${escapeHtml(label)}</h4>
+              <div class="text-right flex-shrink-0">
+                <p class="font-headline font-bold ${pass ? 'text-secondary' : 'text-tertiary'} text-lg">${score.toFixed(1)}/10</p>
+                <span class="font-label text-[9px] font-bold text-white px-2 py-0.5 ${pass ? 'bg-secondary' : 'bg-tertiary'} rounded-sm uppercase">${pass ? 'Pass' : 'Needs Work'}</span>
+              </div>
             </div>
-            <div class="text-right flex-shrink-0">
-              <p class="font-headline font-bold text-lg ${pass ? 'text-secondary' : 'text-red-600'}">${score.toFixed(1)}/10</p>
-              <span class="text-[9px] font-bold text-white px-2 py-0.5 ${pass ? 'bg-secondary' : 'bg-red-600'} rounded uppercase">${pass ? 'Pass' : 'Needs Work'}</span>
-            </div>
+            <details class="group mt-3">
+              <summary class="list-none flex items-center justify-between cursor-pointer font-label text-[10px] font-bold text-primary uppercase tracking-widest">
+                Review
+                <span class="material-symbols-outlined transition-transform group-open:rotate-180 text-base">expand_more</span>
+              </summary>
+              <div class="mt-3 space-y-3 font-body text-sm">
+                <div class="p-3 bg-surface-container-low rounded-xl">
+                  <p class="font-label text-[9px] font-bold text-on-surface-variant uppercase mb-1">Your Answer</p>
+                  <p class="text-on-surface leading-relaxed italic text-xs">${escapeHtml(answerPreview)}</p>
+                </div>
+                <div class="p-3 ${pass ? 'bg-secondary/5 border-l-4 border-secondary' : 'bg-tertiary/5 border-l-4 border-tertiary'} rounded-xl">
+                  <p class="font-label text-[9px] font-bold ${pass ? 'text-secondary' : 'text-tertiary'} uppercase mb-1">AI Feedback</p>
+                  <p class="text-on-surface leading-relaxed text-xs">${escapeHtml(feedback.length > 250 ? feedback.substring(0,250)+'…' : feedback)}</p>
+                </div>
+                <button onclick="deleteResponse('${escapeHtml(qId)}')" class="flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors mt-1">
+                  <span class="material-symbols-outlined text-sm">delete</span> Remove this response
+                </button>
+              </div>
+            </details>
           </div>
-          <details class="group mt-3">
-            <summary class="list-none flex items-center justify-between cursor-pointer text-[10px] font-bold text-primary uppercase tracking-widest">
-              Review <span class="material-symbols-outlined transition-transform group-open:rotate-180" style="font-size:16px;">expand_more</span>
-            </summary>
-            <div class="mt-3 space-y-3 text-sm">
-              <div class="p-3 bg-surface-container-low rounded-xl">
-                <p class="text-[9px] font-bold text-on-surface-variant uppercase mb-1">Your Answer</p>
-                <p class="text-on-surface leading-relaxed italic text-xs">${escapeHtml(data.answer)}</p>
-              </div>
-              <div class="p-3 ${pass ? 'bg-green-50 border-l-4 border-secondary' : 'bg-red-50 border-l-4 border-red-400'} rounded-xl">
-                <p class="text-[9px] font-bold ${pass ? 'text-secondary' : 'text-red-600'} uppercase mb-1">AI Feedback</p>
-                <p class="text-on-surface leading-relaxed text-xs">${escapeHtml(feedback)}</p>
-              </div>
-            </div>
-          </details>
-        </div>`;
+        `;
       }).join('');
     }
 
+    async function deleteResponse(qId) {
+      if (!confirm('Remove this response from your record?')) return;
+      const student = window.getCurrentStudent();
+      if (!student?.id) return;
+      const progress = await window.loadSavedProgress();
+      const scores = progress?.ai_scores || {};
+      const responses = progress?.practice_responses || {};
+      delete scores[qId];
+      delete responses[qId];
+      delete allAiScores[qId];
+      const { createClient } = supabase;
+      const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+      const supabaseClient = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      window._supabaseClient = supabaseClient;
+      const { error } = await supabaseClient
+        .from('student_progress')
+        .update({ ai_scores: scores, practice_responses: responses, updated_at: new Date().toISOString() })
+        .eq('user_id', student.id);
+      if (error) { showToast('Could not remove response', 'error'); return; }
+      showToast('Response removed');
+      renderResponses(allAiScores, searchQuery, filterCategory);
+      updateStats(allAiScores);
+    }
+
     function updateStats(aiScores) {
-      const list = Object.values(aiScores);
-      const total = list.length;
+      const responsesList = Object.values(aiScores);
+      const total = responsesList.length;
       let totalScore = 0, passCount = 0;
-      list.forEach(r => { if (typeof r.score === 'number') { totalScore += r.score; if (r.score >= 7) passCount++; } });
+      responsesList.forEach(r => {
+        const sc = r.score;
+        if (typeof sc === 'number') { totalScore += sc; if (sc >= 7) passCount++; }
+      });
+      const avg = total ? (totalScore / total).toFixed(1) : '0';
+      const passRate = total ? Math.round((passCount / total) * 100) : 0;
       document.getElementById('totalResponses').textContent = total;
-      document.getElementById('avgScore').innerHTML = `${total ? (totalScore/total).toFixed(1) : '0'}<span class="text-sm text-secondary/60">/10</span>`;
-      document.getElementById('passRate').innerHTML = `${total ? Math.round((passCount/total)*100) : 0}<span class="text-sm text-secondary/60">%</span>`;
+      document.getElementById('avgScore').innerHTML = `${avg}<span class="text-sm font-body text-secondary/60">/10</span>`;
+      document.getElementById('passRate').innerHTML = `${passRate}<span class="text-sm font-body text-secondary/60">%</span>`;
     }
 
     function setupSearchFilter() {
@@ -517,315 +676,203 @@
         searchBox.style.display = searchVisible ? 'block' : 'none';
         if (searchVisible) searchBox.querySelector('input').focus();
       });
-      searchBox.querySelector('input').addEventListener('input', e => {
+      searchBox.querySelector('input').addEventListener('input', (e) => {
         searchQuery = e.target.value;
         renderResponses(allAiScores, searchQuery, filterCategory);
       });
-      const cats = ['all','Regent','YSJ','BPP','UKVI','Netherlands'];
-      let ci = 0;
+      const categories = ['all', 'Regent', 'YSJ', 'BPP', 'UKVI', 'Netherlands'];
+      let catIndex = 0;
       filterBtn.addEventListener('click', () => {
-        ci = (ci + 1) % cats.length;
-        filterCategory = cats[ci];
+        catIndex = (catIndex + 1) % categories.length;
+        filterCategory = categories[catIndex];
+        filterBtn.title = 'Filter: ' + (filterCategory === 'all' ? 'All' : filterCategory);
         filterBtn.querySelector('span').textContent = filterCategory === 'all' ? 'tune' : 'filter_alt';
         renderResponses(allAiScores, searchQuery, filterCategory);
       });
     }
 
+    // ================== COUNSELLOR FUNCTIONS ==================
     function renderCounselorCard(data) {
       const empty = document.getElementById('counselorEmpty');
-      const card = document.getElementById('counselorCard');
-      if (!data || !data.name) { empty.classList.remove('hidden'); card.classList.add('hidden'); return; }
-      empty.classList.add('hidden'); card.classList.remove('hidden');
-      document.getElementById('counselorInitials').textContent = data.name.charAt(0).toUpperCase();
+      const card  = document.getElementById('counselorCard');
+      if (!data || !data.name) {
+        empty.classList.remove('hidden');
+        card.classList.add('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+      card.classList.remove('hidden');
+      const initials = data.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
+      document.getElementById('counselorInitials').textContent = initials;
       document.getElementById('counselorName').textContent = data.name;
       document.getElementById('counselorRole').textContent = data.role || 'Counselor';
+      const emailRow  = document.getElementById('counselorEmailRow');
+      const phoneRow  = document.getElementById('counselorPhoneRow');
+      const notesRow  = document.getElementById('counselorNotesRow');
+      const emailLink = document.getElementById('counselorEmailLink');
       if (data.email) {
-        document.getElementById('counselorEmailRow').classList.remove('hidden');
-        document.getElementById('counselorEmailLink').textContent = data.email;
-        document.getElementById('counselorEmailLink').href = 'mailto:' + data.email;
-      }
-      if (data.phone) { document.getElementById('counselorPhoneRow').classList.remove('hidden'); document.getElementById('counselorPhone').textContent = data.phone; }
-      if (data.notes) { document.getElementById('counselorNotesRow').classList.remove('hidden'); document.getElementById('counselorNotes').textContent = data.notes; }
+        emailRow.classList.remove('hidden');
+        emailLink.textContent = data.email;
+        emailLink.href = 'mailto:' + data.email;
+      } else { emailRow.classList.add('hidden'); }
+      if (data.phone) {
+        phoneRow.classList.remove('hidden');
+        document.getElementById('counselorPhone').textContent = data.phone;
+      } else { phoneRow.classList.add('hidden'); }
+      if (data.notes) {
+        notesRow.classList.remove('hidden');
+        document.getElementById('counselorNotes').textContent = data.notes;
+      } else { notesRow.classList.add('hidden'); }
     }
 
-    // ===== ZOOM TRAINING =====
-    let zoomSessions = [];
-    try { zoomSessions = JSON.parse(localStorage.getItem('zoom_sessions') || '[]'); } catch(e) { zoomSessions = []; }
-
-    function saveZoom() { localStorage.setItem('zoom_sessions', JSON.stringify(zoomSessions)); }
-
-    function getZoomStatus(s) {
-      const now = new Date();
-      const start = new Date(`${s.date}T${s.time}`);
-      const end = new Date(start.getTime() + s.duration * 60000);
-      if (now >= start && now <= end) return 'live';
-      const diff = start - now;
-      if (diff > 0 && diff <= 30 * 60000) return 'soon';
-      if (diff > 0) return 'scheduled';
-      return 'ended';
-    }
-
-    function fmtSessionTime(s) {
-      return new Date(`${s.date}T${s.time}`).toLocaleString('en-GB', { weekday:'short', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
-    }
-
-    function renderZoomDisplay() {
-      const el = document.getElementById('zoomSessionDisplay');
-      const live = zoomSessions.find(s => getZoomStatus(s) === 'live');
-      const sorted = zoomSessions.filter(s => ['scheduled','soon'].includes(getZoomStatus(s))).sort((a,b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
-      const next = sorted[0];
-
-      if (live) {
-        el.innerHTML = `<div class="zoom-live-glow rounded-2xl p-4 text-white" style="background:linear-gradient(135deg,#dc2626,#b91c1c);">
-          <div class="flex items-center gap-2 mb-2">
-            <div class="live-dot w-2.5 h-2.5 rounded-full bg-white flex-shrink-0"></div>
-            <span class="text-xs font-bold uppercase tracking-widest opacity-90">Live Session In Progress</span>
-          </div>
-          <p class="font-headline font-bold text-base mb-1">${escapeHtml(live.label)}</p>
-          <p class="text-xs opacity-80 mb-3">${fmtSessionTime(live)} &nbsp;·&nbsp; ${live.duration} min</p>
-          <a href="${escapeHtml(live.link)}" target="_blank" rel="noopener noreferrer"
-             class="flex items-center justify-center gap-2 w-full py-3 bg-white text-red-600 rounded-xl font-bold text-sm active:scale-95 transition-all">
-            <span class="material-symbols-outlined" style="font-size:18px;">videocam</span> Join Zoom Now
-          </a>
-        </div>`;
-      } else if (next) {
-        const status = getZoomStatus(next);
-        const ms = new Date(`${next.date}T${next.time}`) - new Date();
-        const totalMins = Math.floor(ms / 60000);
-        const hrs = Math.floor(totalMins / 60);
-        const mins = totalMins % 60;
-        const label = status === 'soon' ? `Starting in ${mins} min` : hrs > 0 ? `In ${hrs}h ${mins}m` : `In ${totalMins} min`;
-        el.innerHTML = `<div class="rounded-2xl p-4 text-white" style="background:linear-gradient(135deg,#002045,#003272);">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="material-symbols-outlined opacity-70" style="font-size:16px;">schedule</span>
-            <span class="text-xs font-bold uppercase tracking-widest opacity-70">${status === 'soon' ? 'Starting Soon' : 'Next Session'}</span>
-          </div>
-          <p class="font-headline font-bold text-base mb-1">${escapeHtml(next.label)}</p>
-          <p class="text-xs opacity-70 mb-0.5">${fmtSessionTime(next)}</p>
-          <p class="text-xs font-bold opacity-60 mb-3">${label}</p>
-          <a href="${escapeHtml(next.link)}" target="_blank" rel="noopener noreferrer"
-             class="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl font-bold text-sm text-white active:scale-95 transition-all" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);">
-            <span class="material-symbols-outlined" style="font-size:18px;">videocam</span> Open Zoom Link
-          </a>
-        </div>`;
-      } else if (zoomSessions.length === 0) {
-        el.innerHTML = `<div class="bg-surface-container-low rounded-2xl p-5 text-center">
-          <span class="material-symbols-outlined text-slate-300 mb-2 block" style="font-size:38px;">event</span>
-          <p class="text-sm text-on-surface-variant mb-1">No sessions scheduled yet</p>
-          <p class="text-xs text-slate-400">Tap Manage to add your Zoom training times.</p>
-        </div>`;
-      } else {
-        el.innerHTML = `<div class="bg-surface-container-low rounded-2xl p-4 text-center">
-          <span class="material-symbols-outlined text-slate-300 mb-2 block" style="font-size:36px;">check_circle</span>
-          <p class="text-sm text-on-surface-variant">No upcoming sessions.</p>
-          <p class="text-xs text-slate-400 mt-1">${zoomSessions.length} past session(s) recorded.</p>
-        </div>`;
-      }
-    }
-
-    function renderZoomList() {
-      const list = document.getElementById('zoomSessionsList');
-      if (zoomSessions.length === 0) { list.innerHTML = '<p class="text-xs text-slate-400 text-center py-2">No sessions added yet.</p>'; return; }
-      const sorted = [...zoomSessions].sort((a,b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
-      list.innerHTML = sorted.map(s => {
-        const idx = zoomSessions.indexOf(s);
-        const st = getZoomStatus(s);
-        const dot = st === 'live' ? 'bg-red-500 text-red-700' : st === 'soon' ? 'bg-orange-400 text-orange-700' : st === 'ended' ? 'bg-slate-300 text-slate-500' : 'bg-primary text-primary';
-        const label = st === 'live' ? 'LIVE' : st === 'soon' ? 'SOON' : st === 'ended' ? 'ENDED' : 'SCHEDULED';
-        return `<div class="flex items-center gap-3 p-3 bg-white rounded-xl border border-outline-variant/20">
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2 mb-0.5">
-              <span class="text-[9px] font-bold px-1.5 py-0.5 rounded uppercase ${dot === 'bg-red-500 text-red-700' ? 'bg-red-50 text-red-600' : dot === 'bg-orange-400 text-orange-700' ? 'bg-orange-50 text-orange-600' : dot === 'bg-slate-300 text-slate-500' ? 'bg-slate-100 text-slate-400' : 'bg-primary/10 text-primary'}">${label}</span>
-            </div>
-            <p class="text-xs font-bold text-primary truncate">${escapeHtml(s.label)}</p>
-            <p class="text-[10px] text-slate-400">${fmtSessionTime(s)} · ${s.duration} min</p>
-          </div>
-          <button onclick="deleteZoom(${idx})" class="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors active:scale-95">
-            <span class="material-symbols-outlined" style="font-size:16px;">delete</span>
-          </button>
-        </div>`;
-      }).join('');
-    }
-
-    function deleteZoom(idx) {
-      zoomSessions.splice(idx, 1);
-      saveZoom(); renderZoomList(); renderZoomDisplay();
-    }
-
-    function setupZoom() {
-      const manageBtn = document.getElementById('manageZoomBtn');
-      const manager = document.getElementById('zoomManager');
-      const closeBtn = document.getElementById('closeZoomManagerBtn');
-      const addBtn = document.getElementById('addZoomBtn');
-
-      manageBtn.addEventListener('click', () => {
-        const hidden = manager.classList.contains('hidden');
-        manager.classList.toggle('hidden');
-        if (hidden) renderZoomList();
-      });
-      closeBtn.addEventListener('click', () => manager.classList.add('hidden'));
-      addBtn.addEventListener('click', () => {
-        const label = document.getElementById('zoomLabel').value.trim();
-        const link = document.getElementById('zoomLink').value.trim();
-        const date = document.getElementById('zoomDate').value;
-        const time = document.getElementById('zoomTime').value;
-        const duration = parseInt(document.getElementById('zoomDuration').value);
-        const err = document.getElementById('zoomAddError');
-        if (!label || !link || !date || !time) { err.classList.remove('hidden'); return; }
-        err.classList.add('hidden');
-        zoomSessions.push({ label, link, date, time, duration });
-        saveZoom(); renderZoomList(); renderZoomDisplay();
-        ['zoomLabel','zoomLink','zoomDate','zoomTime'].forEach(id => document.getElementById(id).value = '');
-        showToast('Session added');
-      });
-
-      renderZoomDisplay();
-      setInterval(renderZoomDisplay, 30000);
-    }
-
-    // ===== PROFILE =====
-    function setupProfile() {
-      document.getElementById('editProfileBtn').addEventListener('click', () => {
-        const s = window.getCurrentStudent();
-        document.getElementById('editName').value = s?.name || '';
-        document.getElementById('editStudentId').value = s?.student_id || '';
-        document.getElementById('profileView').classList.add('hidden');
-        document.getElementById('profileEdit').classList.remove('hidden');
-      });
-      document.getElementById('cancelEditBtn').addEventListener('click', () => {
-        document.getElementById('profileEdit').classList.add('hidden');
-        document.getElementById('profileView').classList.remove('hidden');
-        document.getElementById('profileEditError').classList.add('hidden');
-      });
-      document.getElementById('saveProfileBtn').addEventListener('click', async () => {
-        const name = document.getElementById('editName').value.trim();
-        const sid = document.getElementById('editStudentId').value.trim();
-        const err = document.getElementById('profileEditError');
-        if (!name || !sid) { err.classList.remove('hidden'); return; }
-        err.classList.add('hidden');
-        const student = window.getCurrentStudent();
-        localStorage.setItem('student', JSON.stringify({ ...student, name, student_id: sid }));
-        await window.saveProgress({ full_name: name, student_id: sid });
-        document.getElementById('studentName').textContent = name;
-        document.getElementById('studentId').textContent = `ID: ${sid}`;
-        document.getElementById('avatarInitials').textContent = name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-        document.getElementById('profileEdit').classList.add('hidden');
-        document.getElementById('profileView').classList.remove('hidden');
-        showToast('Profile updated');
-      });
-    }
-
-    // ===== COUNSELOR =====
-    function setupCounselor() {
-      document.getElementById('editCounselorBtn').addEventListener('click', () => {
-        const card = document.getElementById('counselorCard');
-        if (!card.classList.contains('hidden')) {
-          document.getElementById('cName').value = document.getElementById('counselorName').textContent || '';
-          document.getElementById('cRole').value = document.getElementById('counselorRole').textContent || '';
-          const emailEl = document.getElementById('counselorEmailLink');
-          document.getElementById('cEmail').value = emailEl.style.display !== 'none' ? emailEl.textContent : '';
-          document.getElementById('cPhone').value = document.getElementById('counselorPhone').textContent || '';
-          document.getElementById('cNotes').value = document.getElementById('counselorNotes').textContent || '';
+    async function setupCounselor(initialCounselor) {
+      const editBtn = document.getElementById('editCounselorBtn');
+      const cancelBtn = document.getElementById('cancelCounselorBtn');
+      const saveBtn = document.getElementById('saveCounselorBtn');
+      const viewDiv = document.getElementById('counselorView');
+      const editDiv = document.getElementById('counselorEdit');
+      const errorEl = document.getElementById('counselorError');
+      let current = initialCounselor || null;
+      renderCounselorCard(current);
+      editBtn.addEventListener('click', () => {
+        if (current) {
+          document.getElementById('cName').value = current.name || '';
+          document.getElementById('cRole').value = current.role || '';
+          document.getElementById('cEmail').value = current.email || '';
+          document.getElementById('cPhone').value = current.phone || '';
+          document.getElementById('cNotes').value = current.notes || '';
         }
-        document.getElementById('counselorEdit').classList.remove('hidden');
+        viewDiv.classList.add('hidden');
+        editDiv.classList.remove('hidden');
+        errorEl.classList.add('hidden');
       });
-      document.getElementById('cancelCounselorBtn').addEventListener('click', () => {
-        document.getElementById('counselorEdit').classList.add('hidden');
-        document.getElementById('counselorError').classList.add('hidden');
+      cancelBtn.addEventListener('click', () => {
+        viewDiv.classList.remove('hidden');
+        editDiv.classList.add('hidden');
       });
-      document.getElementById('saveCounselorBtn').addEventListener('click', async () => {
+      saveBtn.addEventListener('click', async () => {
         const name = document.getElementById('cName').value.trim();
-        const err = document.getElementById('counselorError');
-        if (!name) { err.classList.remove('hidden'); return; }
-        err.classList.add('hidden');
-        const data = {
-          name, role: document.getElementById('cRole').value.trim(),
-          email: document.getElementById('cEmail').value.trim(),
-          phone: document.getElementById('cPhone').value.trim(),
-          notes: document.getElementById('cNotes').value.trim()
+        if (!name) {
+          errorEl.textContent = 'Counselor name is required.';
+          errorEl.classList.remove('hidden');
+          return;
+        }
+        const counselorData = {
+          name: name,
+          role: document.getElementById('cRole').value.trim() || null,
+          email: document.getElementById('cEmail').value.trim() || null,
+          phone: document.getElementById('cPhone').value.trim() || null,
+          notes: document.getElementById('cNotes').value.trim() || null
         };
-        await window.saveProgress({ counselor: data });
-        renderCounselorCard(data);
-        document.getElementById('counselorEdit').classList.add('hidden');
+        errorEl.classList.add('hidden');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+        const student = window.getCurrentStudent();
+        if (student?.id) {
+          const { createClient } = supabase;
+          const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
+          const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+          const sc = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          window._supabaseClient = sc;
+          await sc.from('student_progress')
+            .update({ counselor: counselorData, updated_at: new Date().toISOString() })
+            .eq('user_id', student.id);
+        }
+        current = counselorData;
+        renderCounselorCard(current);
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save Counselor';
+        viewDiv.classList.remove('hidden');
+        editDiv.classList.add('hidden');
         showToast('Counselor saved');
       });
     }
 
-    // ===== EMAIL REPORT =====
-    function setupEmailReport() {
-      document.getElementById('emailReportBtn').addEventListener('click', async () => {
-        const student = window.getCurrentStudent();
-        if (!student) { showToast('Please log in first', 'error'); return; }
-        const btn = document.getElementById('emailReportBtn');
-        const orig = btn.innerHTML;
-        btn.innerHTML = 'Sending...'; btn.disabled = true;
-        const progress = await window.loadSavedProgress();
-        const res = await window.sendReadyEmail(progress?.ai_scores || {}, progress?.checklist_status || {}, 0);
-        btn.innerHTML = orig; btn.disabled = false;
-        if (res?.error) showToast('Failed: ' + res.error, 'error');
-        else showToast('Report sent to ' + student.email);
-      });
+    // ================== EMAIL, EXPORT, LOGOUT ==================
+    async function sendReport() {
+      const student = window.getCurrentStudent();
+      if (!student) return;
+      const btn = document.getElementById('emailReportBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">progress_activity</span> Sending...';
+      const progress = await window.loadSavedProgress();
+      const responses = progress?.ai_scores || {};
+      const checklist = progress?.checklist_status || {};
+      const scores = Object.values(responses).map(s => s.score).filter(n => typeof n === 'number');
+      const avg = scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : 'N/A';
+      const message = `Student: ${student.name} (ID: ${student.student_id || 'N/A'})\nEmail: ${student.email}\nDate: ${new Date().toLocaleString()}\nTotal responses: ${scores.length}\nAverage score: ${avg}/10\nChecklist: ${Object.values(checklist).filter(v=>v===true).length}/${Object.keys(checklist).length} done`;
+      const result = await window.sendReadyEmail(responses, checklist, avg, message);
+      btn.disabled = false;
+      btn.innerHTML = '<span class="material-symbols-outlined text-sm">mail</span> Email Report';
+      if (result?.success) showToast('Report sent to your tutor');
+      else showToast('Failed to send report', 'error');
     }
 
-    // ===== EXPORT =====
-    function setupExport() {
-      document.getElementById('exportJsonBtn').addEventListener('click', async () => {
-        const progress = await window.loadSavedProgress();
-        const student = window.getCurrentStudent();
-        const blob = new Blob([JSON.stringify({ student, progress, exported: new Date().toISOString() }, null, 2)], { type: 'application/json' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `prepHub_${(student?.name || 'data').replace(/\s+/g, '_')}.json`;
-        a.click();
-        showToast('Data exported');
-      });
+    async function exportJson() {
+      const student = window.getCurrentStudent();
+      const progress = await window.loadSavedProgress();
+      const data = { student, progress, exportedAt: new Date().toISOString() };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `interview_progress_${student?.student_id || 'student'}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Data exported');
     }
 
-    // ===== OPT OUT =====
-    function setupOptOut() {
-      document.getElementById('optOutBtn').addEventListener('click', async () => {
-        if (!confirm('This will reset all your progress and school registration. Are you sure?')) return;
-        const res = await window.resetAllProgress();
-        if (res?.success) {
-          localStorage.removeItem('selected_university');
-          localStorage.removeItem('last_course');
-          allAiScores = {};
-          renderChecklist({}); renderResponses({}); updateStats({});
-          document.getElementById('currentEnrolment').classList.add('hidden');
-          showToast('Progress reset successfully');
-        } else { showToast('Reset failed', 'error'); }
-      });
+    async function logout() {
+      const { createClient } = supabase;
+      const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+      const supabaseClient = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      await supabaseClient.auth.signOut();
+      localStorage.removeItem('student');
+      localStorage.removeItem('selected_university');
+      window.location.href = 'index.html';
     }
 
-    document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.clear(); window.location.href = 'index.html'; });
-
-    // ===== INIT =====
-    async function init() {
+    // ================== LOAD DASHBOARD ==================
+    async function loadDashboard() {
       const student = window.getCurrentStudent();
       if (!student) { window.location.href = 'index.html'; return; }
-      document.getElementById('studentName').textContent = student.name;
-      document.getElementById('studentEmail').textContent = student.email;
+      document.getElementById('studentName').textContent = student.name || 'Student';
+      document.getElementById('studentEmail').textContent = student.email || '';
       document.getElementById('studentId').textContent = `ID: ${student.student_id || '—'}`;
-      document.getElementById('avatarInitials').textContent = (student.name || 'S').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-
+      const initials = (student.name || 'S').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+      document.getElementById('avatarInitials').textContent = initials;
       const progress = await window.loadSavedProgress();
+      const checklist = progress?.checklist_status || {};
       allAiScores = progress?.ai_scores || {};
-      renderChecklist(progress?.checklist_status || {});
-      renderResponses(allAiScores);
       updateStats(allAiScores);
-      renderCounselorCard(progress?.counselor);
-      displayEnrolment();
-
-      setupSearchFilter();
-      setupProfile();
-      setupCounselor();
-      setupEmailReport();
-      setupExport();
-      setupOptOut();
-      setupZoom();
-
+      const checklistEntries = Object.values(checklist);
+      const doneCount = checklistEntries.filter(v => v === true).length;
+      const checklistPercent = checklistEntries.length ? Math.round((doneCount / checklistEntries.length) * 100) : 0;
+      document.getElementById('checklistPercent').innerHTML = `${checklistPercent}<span class="text-sm font-body text-primary/60">%</span>`;
+      renderChecklist(checklist);
+      renderResponses(allAiScores);
+      await setupCounselor(progress?.counselor || null);
+      updateLiveSessionUI(); // initial check
       document.getElementById('loadingState').classList.add('hidden');
       document.getElementById('dashboardContent').classList.remove('hidden');
+    }
+
+    // ================== INIT ==================
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('emailReportBtn').addEventListener('click', sendReport);
+    document.getElementById('exportJsonBtn').addEventListener('click', exportJson);
+    setupSearchFilter();
+
+    async function init() {
+      let attempts = 0;
+      while (!window.getCurrentStudent() && attempts < 20) {
+        await new Promise(r => setTimeout(r, 150));
+        attempts++;
+      }
+      await loadDashboard();
     }
     init();
   </script>
