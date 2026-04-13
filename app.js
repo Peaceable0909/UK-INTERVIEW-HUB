@@ -32,7 +32,7 @@ async function checkSession() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (session?.user) {
     await loadStudentProfile(session.user);
-    await checkCompulsoryProfile(session.user);
+    await checkStudentId(session.user);  // 👈 Prompt for Student ID if missing
     showAuthenticatedUI(session.user);
   } else {
     setTimeout(() => {
@@ -72,62 +72,39 @@ async function loadStudentProfile(user) {
     id: profile.user_id,
     name: profile.full_name,
     student_id: profile.student_id || '',
-    email: profile.email,
-    selected_university: profile.selected_university || '',
-    selected_program: profile.selected_program || ''
+    email: profile.email
   }));
   return profile;
 }
 
-// ===== COMPULSORY PROFILE CHECK =====
-async function checkCompulsoryProfile(user) {
+// ===== CHECK & PROMPT FOR STUDENT ID (for Google users) =====
+async function checkStudentId(user) {
   const student = JSON.parse(localStorage.getItem('student'));
-  const hasName = student && student.name && student.name.trim() !== '';
-  const hasId = student && student.student_id && student.student_id.trim() !== '';
-  
-  if (hasName && hasId) return true;
+  if (student && student.student_id && student.student_id !== '') {
+    return true;
+  }
 
   const modal = document.getElementById('studentIdModal');
-  if (!modal) return true; // Not on index.html
-
-  // Update modal for compulsory profile (Name + ID)
-  const title = modal.querySelector('.modal-title');
-  if (title) title.textContent = '📋 Complete Your Profile';
-  const sub = modal.querySelector('.modal-sub');
-  if (sub) sub.textContent = 'Full Name and Student ID are required to continue.';
-  
-  let nameGroup = document.getElementById('compulsoryNameGroup');
-  if (!nameGroup) {
-    nameGroup = document.createElement('div');
-    nameGroup.id = 'compulsoryNameGroup';
-    nameGroup.className = 'form-group';
-    nameGroup.innerHTML = '<label>Full Name</label><input type="text" id="compulsoryNameInput" placeholder="John Doe"/>';
-    modal.querySelector('.form-group').before(nameGroup);
-  }
-  
-  const nameInput = document.getElementById('compulsoryNameInput');
-  const idInput = document.getElementById('studentIdInput');
+  const input = document.getElementById('studentIdInput');
   const saveBtn = document.getElementById('saveStudentIdBtn');
   const errorDiv = document.getElementById('studentIdError');
 
-  if (student.name) nameInput.value = student.name;
-  if (student.student_id) idInput.value = student.student_id;
+  // Modal doesn't exist on sub-pages (regent, bpp, etc.) — skip silently
+  if (!modal || !input || !saveBtn) return true;
 
   modal.style.display = 'flex';
   
   return new Promise((resolve) => {
     saveBtn.onclick = async () => {
-      const fullName = nameInput.value.trim();
-      const studentId = idInput.value.trim();
-      
-      if (!fullName || !studentId) {
-        errorDiv.textContent = 'Both Name and Student ID are required.';
+      const studentId = input.value.trim();
+      if (!studentId) {
+        errorDiv.textContent = 'Please enter a valid Student ID.';
         return;
       }
       
       const { error } = await supabaseClient
         .from('student_progress')
-        .update({ full_name: fullName, student_id: studentId })
+        .update({ student_id: studentId })
         .eq('user_id', user.id);
       
       if (error) {
@@ -135,11 +112,10 @@ async function checkCompulsoryProfile(user) {
         return;
       }
       
-      const updatedStudent = { ...student, name: fullName, student_id: studentId };
+      const updatedStudent = { ...student, student_id: studentId };
       localStorage.setItem('student', JSON.stringify(updatedStudent));
       
       modal.style.display = 'none';
-      if (window.updateUI) window.updateUI(updatedStudent);
       resolve(true);
     };
   });
@@ -170,15 +146,27 @@ function setupTabSwitching() {
   tabLogin.addEventListener('click', () => {
     loginForm.style.display = 'block';
     signupForm.style.display = 'none';
-    tabLogin.classList.add('active');
-    tabSignup.classList.remove('active');
+    tabLogin.style.background = 'var(--white)';
+    tabLogin.style.color = 'var(--navy)';
+    tabLogin.style.fontWeight = '600';
+    tabLogin.style.boxShadow = 'var(--shadow-sm)';
+    tabSignup.style.background = 'transparent';
+    tabSignup.style.color = 'var(--gray-600)';
+    tabSignup.style.fontWeight = '500';
+    tabSignup.style.boxShadow = 'none';
     if (authError) authError.textContent = '';
   });
   tabSignup.addEventListener('click', () => {
     signupForm.style.display = 'block';
     loginForm.style.display = 'none';
-    tabSignup.classList.add('active');
-    tabLogin.classList.remove('active');
+    tabSignup.style.background = 'var(--white)';
+    tabSignup.style.color = 'var(--navy)';
+    tabSignup.style.fontWeight = '600';
+    tabSignup.style.boxShadow = 'var(--shadow-sm)';
+    tabLogin.style.background = 'transparent';
+    tabLogin.style.color = 'var(--gray-600)';
+    tabLogin.style.fontWeight = '500';
+    tabLogin.style.boxShadow = 'none';
     if (authError) authError.textContent = '';
   });
 }
@@ -189,7 +177,7 @@ function setupGoogleSignIn() {
   googleSignInBtn.addEventListener('click', async () => {
     if (authError) authError.textContent = '';
     googleSignInBtn.disabled = true;
-    googleSignInBtn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border:2px solid #ccc;border-top-color:#002045;border-radius:50%;animation:spin 1s linear infinite;display:inline-block;"></span> Connecting...';
+    googleSignInBtn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border:2px solid var(--gray-300);border-top-color:var(--navy);border-radius:50%;animation:spin 1s linear infinite;display:inline-block;"></span> Connecting...';
     try {
       const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
@@ -228,6 +216,7 @@ function setupEmailSignup() {
         options: { data: { full_name: name, student_id } }
       });
       if (authErrorObj) {
+        console.error('Signup failed:', authErrorObj);
         if (authError) authError.textContent = authErrorObj.message;
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnText;
@@ -238,6 +227,7 @@ function setupEmailSignup() {
           .from('student_progress')
           .insert({ user_id: authData.user.id, full_name: name, student_id, email });
         if (dbError) {
+          console.error('DB insert failed:', dbError);
           if (authError) authError.textContent = dbError.message;
           submitBtn.disabled = false;
           submitBtn.innerHTML = originalBtnText;
@@ -259,6 +249,7 @@ function setupEmailSignup() {
         }, 1500);
       }
     } catch (err) {
+      console.error('Unexpected signup error:', err);
       if (authError) authError.textContent = err.message || 'An unexpected error occurred.';
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalBtnText;
@@ -274,139 +265,141 @@ function setupEmailLogin() {
     if (authError) authError.textContent = '';
     const email = document.getElementById('loginEmail')?.value.trim();
     const password = document.getElementById('loginPassword')?.value;
-    const submitBtn = loginForm.querySelector('button[type="submit"]');
-    const originalBtnText = submitBtn.innerHTML;
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner"></span> Signing in...';
-    try {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      if (data?.user) {
-        const profile = await loadStudentProfile(data.user);
-        await checkCompulsoryProfile(data.user);
-        showAuthenticatedUI(data.user);
-      }
-    } catch (err) {
-      if (authError) authError.textContent = err.message || 'Login failed.';
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = originalBtnText;
+    if (!email || !password) {
+      if (authError) authError.textContent = 'Please enter email and password.';
+      return;
+    }
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) {
+      if (authError) authError.textContent = error.message;
+      return;
+    }
+    const { data: profile } = await supabaseClient
+      .from('student_progress')
+      .select('*')
+      .eq('user_id', data.user.id)
+      .single();
+    if (profile) {
+      localStorage.setItem('student', JSON.stringify({
+        id: profile.user_id, name: profile.full_name, student_id: profile.student_id, email: profile.email
+      }));
+      if (loginForm) loginForm.style.display = 'none';
+      if (studentNameDisplay) studentNameDisplay.textContent = profile.full_name.split(' ')[0];
+      if (authSuccess) authSuccess.style.display = 'flex';
+      setTimeout(() => {
+        if (authSuccess) authSuccess.style.display = 'none';
+        if (loginModal) loginModal.style.display = 'none';
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (userMenu) userMenu.style.display = 'flex';
+        if (userNameDisplay) userNameDisplay.textContent = profile.full_name.split(' ')[0];
+        if (userAvatar) {
+          userAvatar.textContent = profile.full_name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+        }
+      }, 1500);
     }
   });
 }
 
 // ===== LOGOUT =====
 function setupLogout() {
-  const btns = document.querySelectorAll('#logoutBtn');
-  btns.forEach(btn => {
-    btn.addEventListener('click', async () => {
-      await supabaseClient.auth.signOut();
-      localStorage.removeItem('student');
-      localStorage.removeItem('selected_university');
-      localStorage.removeItem('last_course');
-      window.location.href = 'index.html';
-    });
+  if (!logoutBtn) return;
+  logoutBtn.addEventListener('click', async () => {
+    await supabaseClient.auth.signOut();
+    localStorage.removeItem('student');
+    localStorage.removeItem('selected_university');
+    location.reload();
   });
 }
 
 // ===== MODAL CONTROLS =====
 function setupModalControls() {
-  if (modalClose) {
-    modalClose.addEventListener('click', () => {
-      if (loginModal) loginModal.style.display = 'none';
-    });
-  }
+  if (loginBtn) loginBtn.addEventListener('click', () => { if (loginModal) loginModal.style.display = 'flex'; });
+  if (modalClose) modalClose.addEventListener('click', () => { if (loginModal) loginModal.style.display = 'none'; });
+  if (loginModal) loginModal.addEventListener('click', (e) => { if (e.target === loginModal) loginModal.style.display = 'none'; });
 }
 
 // ===== UNIVERSITY TRACKING =====
 function setupUniversityTracking() {
-  document.querySelectorAll('.start-training').forEach(el => {
-    el.addEventListener('click', async (e) => {
-      const uni = el.getAttribute('data-university');
-      if (uni) {
-        localStorage.setItem('selected_university', uni);
-        const student = window.getCurrentStudent();
-        if (student?.id) {
-          await supabaseClient.from('student_progress').update({ 
-            selected_university: uni,
-            updated_at: new Date().toISOString() 
-          }).eq('user_id', student.id);
-          // Sync local storage
-          student.selected_university = uni;
-          localStorage.setItem('student', JSON.stringify(student));
-        }
-      }
+  document.querySelectorAll('.start-training').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const uni = btn.getAttribute('data-university');
+      if (localStorage.getItem('student') && uni) localStorage.setItem('selected_university', uni);
     });
   });
 }
 
-// ===== EXPORTS =====
-window.getCurrentStudent = () => {
-  const s = localStorage.getItem('student');
-  return s ? JSON.parse(s) : null;
-};
-
-window.updateStudentProfile = async (updates) => {
+// ===== GLOBAL FUNCTIONS =====
+window.getCurrentStudent = () => { try { return JSON.parse(localStorage.getItem('student')); } catch { return null; } };
+window.getSelectedUniversity = () => localStorage.getItem('selected_university');
+window.saveProgress = async (data) => {
   const student = window.getCurrentStudent();
   if (!student?.id) return { error: 'Not authenticated' };
-  try {
-    const { error } = await supabaseClient
-      .from('student_progress')
-      .update({ ...updates, updated_at: new Date().toISOString() })
-      .eq('user_id', student.id);
-    if (error) return { error: error.message };
-    
-    const updatedStudent = { ...student, ...updates };
-    if (updates.full_name) updatedStudent.name = updates.full_name;
-    localStorage.setItem('student', JSON.stringify(updatedStudent));
-    return { success: true };
-  } catch (err) { return { error: err.message }; }
+  return await supabaseClient.from('student_progress').update({ updated_at: new Date().toISOString(), ...data }).eq('user_id', student.id);
 };
-
-window.getSelectedUniversity = () => localStorage.getItem('selected_university');
-
-window.saveProgress = async (checklist, scores, responses) => {
+window.sendReadyEmail = async (responses, checklist, score, message = '') => {
   const student = window.getCurrentStudent();
-  if (!student?.id) return;
-  try {
-    await supabaseClient.from('student_progress').update({
-      checklist_status: checklist,
-      ai_scores: scores,
-      practice_responses: responses,
-      updated_at: new Date().toISOString()
-    }).eq('user_id', student.id);
-  } catch (err) { console.error('saveProgress error:', err); }
-};
-
-window.sendReadyEmail = async (responses, checklist, avg, university) => {
-  const student = window.getCurrentStudent();
+  const university = window.getSelectedUniversity();
   if (!student) return { error: 'Not authenticated' };
 
-  const totalQuestions = Object.keys(responses).length;
-  const passedQuestions = Object.values(responses).filter(r => r.score >= 7);
-  const percentScore = totalQuestions ? Math.round((passedQuestions.length / totalQuestions) * 100) : 0;
-  
-  const readinessLevel = percentScore >= 90 ? 'INTERVIEW READY' : percentScore >= 70 ? 'ALMOST READY' : 'NEEDS PRACTICE';
-  const readinessEmoji = percentScore >= 90 ? '✅' : percentScore >= 70 ? '⚠️' : '❌';
+  // ===== SCORE & READINESS =====
+  const allQuestions = Object.entries(responses);
+  const totalQuestions = allQuestions.length;
+  const passedQuestions = allQuestions.filter(([, a]) => a?.finalStatus === 1 || a?.score >= 7);
+  const failedQuestions = allQuestions.filter(([, a]) => !(a?.finalStatus === 1 || a?.score >= 7));
+  const percentScore = totalQuestions > 0 ? Math.round((passedQuestions.length / totalQuestions) * 100) : 0;
 
-  const sep = '-----------------------------------';
-  const passedText = Object.entries(responses)
-    .filter(([_, data]) => data.score >= 7)
-    .map(([id, data]) => `Q: ${data.questionText || id}\nA: ${data.answer}\nScore: ${data.score}/10\nFeedback: ${data.feedback}\n${sep}`)
-    .join('\n\n');
+  let readinessLevel, readinessEmoji;
+  if (percentScore >= 90)      { readinessLevel = 'Ready for Interview';  readinessEmoji = '✅'; }
+  else if (percentScore >= 70) { readinessLevel = 'Almost Ready';         readinessEmoji = '⚠️'; }
+  else                         { readinessLevel = 'Not Ready';            readinessEmoji = '❌'; }
 
-  const failedText = Object.entries(responses)
-    .filter(([_, data]) => data.score < 7)
-    .map(([id, data]) => `Q: ${data.questionText || id}\nA: ${data.answer}\nScore: ${data.score}/10\nFeedback: ${data.feedback}\n${sep}`)
-    .join('\n\n');
+  // ===== PASSED ANSWERS (clean, full text) =====
+  const sep = '─────────────────────────────';
+  const passedText = passedQuestions.length > 0
+    ? passedQuestions.map(([qId, a], i) => {
+        const label = (window.QUESTION_TEXT_MAP || {})[qId] || a.questionText || qId;
+        const attemptNote = (a.attempts || 1) > 1 ? ` (passed on attempt ${a.attempts})` : '';
+        return [
+          `Q${i + 1}: ${label}`,
+          `Score: ${a.score}/10${attemptNote}`,
+          `Answer: ${(a.answer || 'No answer recorded').trim()}`,
+          sep
+        ].join('\n');
+      }).join('\n')
+    : 'No questions passed yet.';
 
-  const attemptSummary = Object.entries(responses)
-    .map(([id, data]) => `${data.questionText || id}: ${data.score}/10 (${data.attempts || 1} attempts)`)
-    .join('\n');
+  // ===== FAILED QUESTIONS (summary only) =====
+  const failedText = failedQuestions.length > 0
+    ? failedQuestions.map(([qId, a]) => {
+        const label = (window.QUESTION_TEXT_MAP || {})[qId] || a.questionText || qId;
+        return `• ${label} — Best score: ${a.score || 0}/10 after ${a.attempts || 1} attempt(s)`;
+      }).join('\n')
+    : 'All questions passed ✅';
 
-  const checklistText = Object.entries(checklist)
-    .map(([item, done]) => `[${done ? 'X' : ' '}] ${item}`)
-    .join('\n');
+  // ===== ATTEMPT SUMMARY TABLE =====
+  const attemptSummary = allQuestions.map(([qId, a], i) => {
+    const label = (window.QUESTION_TEXT_MAP || {})[qId] || a.questionText || qId;
+    const passed = a?.finalStatus === 1 || a?.score >= 7;
+    const shortLabel = label.length > 55 ? label.substring(0, 52) + '...' : label;
+    return `${passed ? '✅' : '❌'} Q${i + 1}: ${shortLabel}\n     Score: ${a.score || 0}/10 | Attempts: ${a.attempts || 1}`;
+  }).join('\n\n');
 
+  // ===== CHECKLIST (text keys, ticked items first) =====
+  const checklistEntries = Object.entries(checklist);
+  const doneItems = checklistEntries.filter(([, v]) => v === true);
+  const pendingItems = checklistEntries.filter(([, v]) => v !== true);
+  const doneCount = doneItems.length;
+
+  const checklistText = checklistEntries.length > 0
+    ? [
+        `Completed (${doneCount}/${checklistEntries.length}):`,
+        ...doneItems.map(([item]) => `  ✅ ${item}`),
+        pendingItems.length > 0 ? `\nNot completed (${pendingItems.length}):` : '',
+        ...pendingItems.map(([item]) => `  ⬜ ${item}`)
+      ].filter(Boolean).join('\n')
+    : 'No checklist items recorded.';
+
+  // ===== BUILD FULL EMAIL BODY =====
   const divider = '═══════════════════════════════════';
   const emailBody = [
     divider,
@@ -415,8 +408,7 @@ window.sendReadyEmail = async (responses, checklist, avg, university) => {
     `Name:        ${student.name}`,
     `Student ID:  ${student.student_id || 'N/A'}`,
     `Email:       ${student.email}`,
-    `University:  ${university || student.selected_university || 'Not selected'}`,
-    `Program:     ${student.selected_program || 'Not selected'}`,
+    `University:  ${university || 'Not selected'}`,
     '',
     `OVERALL RESULT`,
     `${readinessEmoji} ${readinessLevel}`,
@@ -447,7 +439,7 @@ window.sendReadyEmail = async (responses, checklist, avg, university) => {
       student_name: student.name,
       student_id: student.student_id || 'N/A',
       student_email: student.email,
-      university: university || student.selected_university || 'Not selected',
+      university: university || 'Not selected',
       overall_score: `${passedQuestions.length}/${totalQuestions} (${percentScore}%)`,
       readiness_level: `${readinessEmoji} ${readinessLevel}`,
       responses: passedText,
@@ -463,9 +455,11 @@ window.sendReadyEmail = async (responses, checklist, avg, university) => {
   }
 };
 
+// ===== AUTO-SAVE HELPERS =====
 window.saveChecklistItem = async (itemId, checked, itemText) => {
   const student = window.getCurrentStudent();
   if (!student?.id) return;
+  // Use itemText as the key if provided (human-readable), otherwise fall back to itemId
   const key = (itemText && itemText.trim()) ? itemText.trim() : itemId;
   try {
     const { data: current } = await supabaseClient.from('student_progress').select('checklist_status').eq('user_id', student.id).single();
@@ -474,63 +468,151 @@ window.saveChecklistItem = async (itemId, checked, itemText) => {
   } catch (err) { console.error('saveChecklistItem error:', err); }
 };
 
+// Reset all student progress (used when changing course)
 window.resetAllProgress = async () => {
   const student = window.getCurrentStudent();
   if (!student?.id) return { error: 'Not authenticated' };
   try {
     const { error } = await supabaseClient
       .from('student_progress')
-      .update({ 
-        ai_scores: {}, 
-        practice_responses: {}, 
-        checklist_status: {}, 
-        selected_university: null,
-        selected_program: null,
-        updated_at: new Date().toISOString() 
-      })
+      .update({ ai_scores: {}, practice_responses: {}, checklist_status: {}, updated_at: new Date().toISOString() })
       .eq('user_id', student.id);
-    
     if (error) return { error: error.message };
-    
-    localStorage.removeItem('selected_university');
-    localStorage.removeItem('last_course');
-    student.selected_university = '';
-    student.selected_program = '';
-    localStorage.setItem('student', JSON.stringify(student));
-    
     return { success: true };
   } catch (err) { return { error: err.message }; }
 };
 
+// ✅ MODIFIED: store answer inside ai_scores as well for easier dashboard access
+// QUESTION TEXT MAP — used by dashboard to show readable question titles
+window.QUESTION_TEXT_MAP = {
+  'UKVI_Q1': 'Why have you chosen to study this programme in the UK?',
+  'UKVI_Q2': 'Why did you choose this specific university?',
+  'UKVI_Q3': 'What do you plan to do after your studies?',
+  'UKVI_Q4': 'How will you fund your studies and living expenses?',
+  'UKVI_Q5': 'Tell me about your academic background.',
+  'UKVI_Q6': 'What is the name of your course and how long does it last?',
+  'UKVI_Q7': 'Why do you want to study this subject at degree level?',
+  'UKVI_Q8': 'What ties do you have to your home country?',
+  'UKVI_Q9': 'Where will you live during your studies in the UK?',
+  'UKVI_Q10': 'What are your key responsibilities as a student visa holder?',
+  'UKVI_Q11': 'How many hours can you work per week during term time?',
+  'UKVI_Q12': 'Have you ever been refused a visa before? If yes, explain.',
+  'UKVI_Q13': 'What do you know about the Graduate Route visa?',
+  'UKVI_Q14': 'How does this course fit with your previous work experience?',
+  'UKVI_Q15': 'What specific modules interest you most and why?',
+  'UKVI_Q16': 'Who is sponsoring your studies? What is their occupation?',
+  'UKVI_Q17': 'What research did you do before choosing this university?',
+  'UKVI_Q18': 'Why did you choose the UK over other countries like Canada or Australia?',
+  'NL_Q1': 'Why have you chosen to study in the Netherlands?',
+  'NL_Q2': 'Why did you choose this specific Dutch university?',
+  'NL_Q3': 'What are your plans after completing your studies?',
+  'NL_Q4': 'How will you fund your tuition and living costs?',
+  'NL_Q5': 'What is the language of instruction and your proficiency?',
+  'NL_Q6': 'What is the exact name and duration of your course?',
+  'NL_Q7': 'Do you have any family or connections in the Netherlands?',
+  'NL_Q8': 'What ties do you have to your home country?',
+  'NL_Q9': 'Where will you live during your studies? (City and postcode)',
+  'NL_Q10': 'What do you know about the Orientation Year (Zoekjaar) visa?',
+  'NL_Q11': 'How does this course connect to your future career goals?',
+  'NL_Q12': 'What specific modules are you most excited about and why?',
+  'NL_Q13': 'Have you ever applied for a Dutch visa before? If yes, what happened?',
+  'NL_Q14': 'What is the total amount of funds required by IND for living costs?',
+  'NL_Q15': 'What is your accommodation budget per month?',
+  'NL_Q16': 'Why did you choose a research university (WO) over a university of applied sciences (HBO)?',
+  'NL_Q17': 'What extracurricular activities or student life aspects attract you?',
+  'NL_Q18': 'How will you contribute to Dutch society or your home country after graduation?',
+  'BPP_Q1': 'Why have you chosen to study at BPP University?',
+  'BPP_Q2': 'What specific programme are you applying for and why?',
+  'BPP_Q3': 'How does BPP’s career‑focused teaching approach benefit you?',
+  'BPP_Q4': 'What modules in your course are you most interested in and why?',
+  'BPP_Q5': 'Which BPP campus will you attend and what is its full address?',
+  'BPP_Q6': 'What are your career goals after completing your studies?',
+  'BPP_Q7': 'How will you fund your tuition fees and living costs?',
+  'BPP_Q8': 'What is your expected salary range after graduation?',
+  'BPP_Q9': 'Where will you live in the UK? (Area and postcode)',
+  'BPP_Q10': 'What do you know about BPP’s industry partnerships and employer links?',
+  'BPP_Q11': 'How is your course assessed? (Assignments, exams, projects)',
+  'BPP_Q12': 'What visa responsibilities do you have as a student?',
+  'BPP_Q13': 'Have you ever been refused a UK visa before? If yes, explain.',
+  'BPP_Q14': 'Why did you choose BPP over other universities you considered?',
+  'BPP_Q15': 'What is the duration of your course and your expected start date?',
+  'BPP_Q16': 'Who is sponsoring you and what is their annual income?',
+  'BPP_Q17': 'What research did you do before applying to BPP?',
+  'BPP_Q18': 'What will you do if your visa application is refused?',
+  'REGENT_Q1': 'Why have you chosen to study at Regent College London?',
+  'REGENT_Q2': 'What is the exact name of your course and which university awards the degree?',
+  'REGENT_Q3': 'Which modules interest you most and why?',
+  'REGENT_Q4': 'How is your course assessed?',
+  'REGENT_Q5': 'Compare your course at Regent with a similar programme at two other UK universities. Why did you choose Regent?',
+  'REGENT_Q6': 'What skills do you expect to gain from this course and how will you use them?',
+  'REGENT_Q7': 'Which campus will you study at and what is the full address including postcode?',
+  'REGENT_Q8': 'What extra programmes does Regent offer beyond your academic course? (e.g., TIC, laptop loan)',
+  'REGENT_Q9': 'Why did you choose Regent over other colleges?',
+  'REGENT_Q10': 'Which companies will you apply to after graduating and what job title will you target?',
+  'REGENT_Q11': 'What salary range do you expect in your first role after graduation?',
+  'REGENT_Q12': 'Do you plan to return to your home country after your studies? Why?',
+  'REGENT_Q13': 'How much does it cost to live in London per month and how will you fund this?',
+  'REGENT_Q14': 'How much is your total tuition fee and have you converted it to your local currency?',
+  'REGENT_Q15': 'Who is funding your studies and how will you cover unexpected expenses?',
+  'REGENT_Q16': 'How many hours can you work per week during term time and what are your key responsibilities?',
+  'REGENT_Q17': 'Where will you be living in the UK and what is the postcode?',
+  'REGENT_Q18': 'Why did you choose the UK instead of studying in another country?',
+  'YSJ_Q1': 'Why did you choose York St John University specifically?',
+  'YSJ_Q2': 'What modules will you study and why do they interest you?',
+  'YSJ_Q3': 'How does this course relate to your previous studies or work experience?',
+  'YSJ_Q4': 'Did you apply to other universities? Why did you reject them?',
+  'YSJ_Q5': 'Where will you stay in the UK and what are the costs?',
+  'YSJ_Q6': 'How much is your tuition fee and how much have you paid?',
+  'YSJ_Q7': 'Who is sponsoring you and what is their occupation/income?',
+  'YSJ_Q8': 'What are your living costs and how will you fund them?',
+  'YSJ_Q9': 'What are your career plans after graduation?',
+  'YSJ_Q10': 'How will this course help you achieve your career goals?',
+  'YSJ_Q11': 'What do you know about life in York or London?',
+  'YSJ_Q12': 'What are your working rights and visa responsibilities?',
+  'YSJ_Q13': 'What do you know about YSJ’s rankings and reputation? (e.g., top 10 for student satisfaction)',
+  'YSJ_Q14': 'How is your course assessed?',
+  'YSJ_Q15': 'What accommodation options have you researched?',
+  'YSJ_Q16': 'How will you cover unexpected expenses?',
+  'YSJ_Q17': 'Why study in York or London specifically?',
+  'YSJ_Q18': 'What are the transport options from your accommodation?'
+};
+
 window.saveAIResponse = async (questionId, answerText, score, feedback, questionText) => {
   const student = window.getCurrentStudent();
-  if (!student?.id) return { error: 'Not authenticated' };
-  
+  if (!student?.id) {
+    console.error('saveAIResponse: No student in localStorage.');
+    return { error: 'Not authenticated' };
+  }
   if (questionText && typeof questionText === 'string') {
     window.QUESTION_TEXT_MAP = window.QUESTION_TEXT_MAP || {};
     window.QUESTION_TEXT_MAP[questionId] = questionText;
   }
-  
   try {
     const { data: current, error: fetchErr } = await supabaseClient
       .from('student_progress')
       .select('ai_scores, practice_responses')
       .eq('user_id', student.id)
       .single();
-    
-    if (fetchErr) return { error: fetchErr.message };
+    if (fetchErr) {
+      console.error('saveAIResponse fetch error:', fetchErr.message);
+      return { error: fetchErr.message };
+    }
 
     const existing = current?.ai_scores?.[questionId] || {};
     const attempts = (existing.attempts || 0) + 1;
+
+    // pass = 1 if score >= 7 (on 0-10 scale), else 0
+    // Once passed, keep as passed even on retry
     const passed = (score >= 7) ? 1 : (existing.finalStatus === 1 ? 1 : 0);
+
     const questionLabel = (window.QUESTION_TEXT_MAP || {})[questionId] || questionText || questionId;
 
     const scores = {
       ...(current?.ai_scores || {}),
       [questionId]: {
-        score,
-        finalStatus: passed,
-        attempts,
+        score,                      // last score (0-10)
+        finalStatus: passed,        // 0 or 1
+        attempts,                   // total attempts
         feedback,
         answer: answerText,
         questionText: questionLabel,
@@ -543,57 +625,43 @@ window.saveAIResponse = async (questionId, answerText, score, feedback, question
       [questionId]: { answer: answerText, date: new Date().toISOString() }
     };
 
-    await supabaseClient
+    const { error: updateErr } = await supabaseClient
       .from('student_progress')
       .update({ ai_scores: scores, practice_responses: responses, updated_at: new Date().toISOString() })
       .eq('user_id', student.id);
 
+    if (updateErr) {
+      console.error('saveAIResponse update error:', updateErr.message, updateErr.code);
+      return { error: updateErr.message };
+    }
+    console.log('✅ Saved:', questionId, '| Score:', score, '| Status:', passed ? 'PASS' : 'FAIL', '| Attempt:', attempts);
     return { success: true, passed, attempts };
   } catch (err) {
+    console.error('saveAIResponse unexpected error:', err);
     return { error: err.message };
   }
 };
 
 window.loadSavedProgress = async () => {
+  // Try localStorage first
   let student = window.getCurrentStudent();
+  // If not in localStorage, fall back to live Supabase session (handles post-refresh state)
   if (!student?.id) {
     const { data: { session } } = await supabaseClient.auth.getSession();
-    if (session?.user) student = { id: session.user.id };
+    if (session?.user) {
+      student = { id: session.user.id };
+    }
   }
   if (!student?.id) return null;
   try {
     const { data: progress, error } = await supabaseClient
       .from('student_progress')
-      .select('*')
+      .select('checklist_status, ai_scores, practice_responses, selected_university, counselor')
       .eq('user_id', student.id)
       .single();
-    if (error) return null;
-    
-    // Sync local storage with latest profile data
-    const currentLocal = window.getCurrentStudent();
-    if (currentLocal) {
-      currentLocal.selected_university = progress.selected_university || '';
-      currentLocal.selected_program = progress.selected_program || '';
-      currentLocal.name = progress.full_name || currentLocal.name;
-      currentLocal.student_id = progress.student_id || currentLocal.student_id;
-      localStorage.setItem('student', JSON.stringify(currentLocal));
-    }
-    
+    if (error) { console.error('loadSavedProgress: Supabase error:', error.message); return null; }
     return progress;
-  } catch (err) { return null; }
-};
-
-window.trackProgram = async (programName) => {
-  const student = window.getCurrentStudent();
-  if (!student?.id) return;
-  try {
-    await supabaseClient.from('student_progress').update({
-      selected_program: programName,
-      updated_at: new Date().toISOString()
-    }).eq('user_id', student.id);
-    student.selected_program = programName;
-    localStorage.setItem('student', JSON.stringify(student));
-  } catch (err) { console.error('trackProgram error:', err); }
+  } catch (err) { console.error('loadSavedProgress error:', err); return null; }
 };
 
 // ===== INIT ALL =====
