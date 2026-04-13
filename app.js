@@ -32,7 +32,7 @@ async function checkSession() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (session?.user) {
     await loadStudentProfile(session.user);
-    await checkStudentId(session.user);  // 👈 Prompt for Student ID if missing
+    await checkCompulsoryProfile(session.user);
     showAuthenticatedUI(session.user);
   } else {
     setTimeout(() => {
@@ -72,39 +72,62 @@ async function loadStudentProfile(user) {
     id: profile.user_id,
     name: profile.full_name,
     student_id: profile.student_id || '',
-    email: profile.email
+    email: profile.email,
+    selected_university: profile.selected_university || '',
+    selected_program: profile.selected_program || ''
   }));
   return profile;
 }
 
-// ===== CHECK & PROMPT FOR STUDENT ID (for Google users) =====
-async function checkStudentId(user) {
+// ===== COMPULSORY PROFILE CHECK =====
+async function checkCompulsoryProfile(user) {
   const student = JSON.parse(localStorage.getItem('student'));
-  if (student && student.student_id && student.student_id !== '') {
-    return true;
-  }
+  const hasName = student && student.name && student.name.trim() !== '';
+  const hasId = student && student.student_id && student.student_id.trim() !== '';
+  
+  if (hasName && hasId) return true;
 
   const modal = document.getElementById('studentIdModal');
-  const input = document.getElementById('studentIdInput');
+  if (!modal) return true; // Not on index.html
+
+  // Update modal for compulsory profile (Name + ID)
+  const title = modal.querySelector('.modal-title');
+  if (title) title.textContent = '📋 Complete Your Profile';
+  const sub = modal.querySelector('.modal-sub');
+  if (sub) sub.textContent = 'Full Name and Student ID are required to continue.';
+  
+  let nameGroup = document.getElementById('compulsoryNameGroup');
+  if (!nameGroup) {
+    nameGroup = document.createElement('div');
+    nameGroup.id = 'compulsoryNameGroup';
+    nameGroup.className = 'form-group';
+    nameGroup.innerHTML = '<label>Full Name</label><input type="text" id="compulsoryNameInput" placeholder="John Doe"/>';
+    modal.querySelector('.form-group').before(nameGroup);
+  }
+  
+  const nameInput = document.getElementById('compulsoryNameInput');
+  const idInput = document.getElementById('studentIdInput');
   const saveBtn = document.getElementById('saveStudentIdBtn');
   const errorDiv = document.getElementById('studentIdError');
 
-  // Modal doesn't exist on sub-pages (regent, bpp, etc.) — skip silently
-  if (!modal || !input || !saveBtn) return true;
+  if (student.name) nameInput.value = student.name;
+  if (student.student_id) idInput.value = student.student_id;
 
   modal.style.display = 'flex';
   
   return new Promise((resolve) => {
     saveBtn.onclick = async () => {
-      const studentId = input.value.trim();
-      if (!studentId) {
-        errorDiv.textContent = 'Please enter a valid Student ID.';
+      const fullName = nameInput.value.trim();
+      const studentId = idInput.value.trim();
+      
+      if (!fullName || !studentId) {
+        errorDiv.textContent = 'Both Name and Student ID are required.';
         return;
       }
       
       const { error } = await supabaseClient
         .from('student_progress')
-        .update({ student_id: studentId })
+        .update({ full_name: fullName, student_id: studentId })
         .eq('user_id', user.id);
       
       if (error) {
@@ -112,10 +135,11 @@ async function checkStudentId(user) {
         return;
       }
       
-      const updatedStudent = { ...student, student_id: studentId };
+      const updatedStudent = { ...student, name: fullName, student_id: studentId };
       localStorage.setItem('student', JSON.stringify(updatedStudent));
       
       modal.style.display = 'none';
+      if (window.updateUI) window.updateUI(updatedStudent);
       resolve(true);
     };
   });
@@ -146,27 +170,15 @@ function setupTabSwitching() {
   tabLogin.addEventListener('click', () => {
     loginForm.style.display = 'block';
     signupForm.style.display = 'none';
-    tabLogin.style.background = 'var(--white)';
-    tabLogin.style.color = 'var(--navy)';
-    tabLogin.style.fontWeight = '600';
-    tabLogin.style.boxShadow = 'var(--shadow-sm)';
-    tabSignup.style.background = 'transparent';
-    tabSignup.style.color = 'var(--gray-600)';
-    tabSignup.style.fontWeight = '500';
-    tabSignup.style.boxShadow = 'none';
+    tabLogin.classList.add('active');
+    tabSignup.classList.remove('active');
     if (authError) authError.textContent = '';
   });
   tabSignup.addEventListener('click', () => {
     signupForm.style.display = 'block';
     loginForm.style.display = 'none';
-    tabSignup.style.background = 'var(--white)';
-    tabSignup.style.color = 'var(--navy)';
-    tabSignup.style.fontWeight = '600';
-    tabSignup.style.boxShadow = 'var(--shadow-sm)';
-    tabLogin.style.background = 'transparent';
-    tabLogin.style.color = 'var(--gray-600)';
-    tabLogin.style.fontWeight = '500';
-    tabLogin.style.boxShadow = 'none';
+    tabSignup.classList.add('active');
+    tabLogin.classList.remove('active');
     if (authError) authError.textContent = '';
   });
 }
@@ -177,7 +189,7 @@ function setupGoogleSignIn() {
   googleSignInBtn.addEventListener('click', async () => {
     if (authError) authError.textContent = '';
     googleSignInBtn.disabled = true;
-    googleSignInBtn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border:2px solid var(--gray-300);border-top-color:var(--navy);border-radius:50%;animation:spin 1s linear infinite;display:inline-block;"></span> Connecting...';
+    googleSignInBtn.innerHTML = '<span class="spinner" style="width:20px;height:20px;border:2px solid #ccc;border-top-color:#002045;border-radius:50%;animation:spin 1s linear infinite;display:inline-block;"></span> Connecting...';
     try {
       const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
@@ -216,7 +228,6 @@ function setupEmailSignup() {
         options: { data: { full_name: name, student_id } }
       });
       if (authErrorObj) {
-        console.error('Signup failed:', authErrorObj);
         if (authError) authError.textContent = authErrorObj.message;
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnText;
@@ -227,7 +238,6 @@ function setupEmailSignup() {
           .from('student_progress')
           .insert({ user_id: authData.user.id, full_name: name, student_id, email });
         if (dbError) {
-          console.error('DB insert failed:', dbError);
           if (authError) authError.textContent = dbError.message;
           submitBtn.disabled = false;
           submitBtn.innerHTML = originalBtnText;
@@ -249,7 +259,6 @@ function setupEmailSignup() {
         }, 1500);
       }
     } catch (err) {
-      console.error('Unexpected signup error:', err);
       if (authError) authError.textContent = err.message || 'An unexpected error occurred.';
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalBtnText;
@@ -265,141 +274,139 @@ function setupEmailLogin() {
     if (authError) authError.textContent = '';
     const email = document.getElementById('loginEmail')?.value.trim();
     const password = document.getElementById('loginPassword')?.value;
-    if (!email || !password) {
-      if (authError) authError.textContent = 'Please enter email and password.';
-      return;
-    }
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-    if (error) {
-      if (authError) authError.textContent = error.message;
-      return;
-    }
-    const { data: profile } = await supabaseClient
-      .from('student_progress')
-      .select('*')
-      .eq('user_id', data.user.id)
-      .single();
-    if (profile) {
-      localStorage.setItem('student', JSON.stringify({
-        id: profile.user_id, name: profile.full_name, student_id: profile.student_id, email: profile.email
-      }));
-      if (loginForm) loginForm.style.display = 'none';
-      if (studentNameDisplay) studentNameDisplay.textContent = profile.full_name.split(' ')[0];
-      if (authSuccess) authSuccess.style.display = 'flex';
-      setTimeout(() => {
-        if (authSuccess) authSuccess.style.display = 'none';
-        if (loginModal) loginModal.style.display = 'none';
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (userMenu) userMenu.style.display = 'flex';
-        if (userNameDisplay) userNameDisplay.textContent = profile.full_name.split(' ')[0];
-        if (userAvatar) {
-          userAvatar.textContent = profile.full_name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-        }
-      }, 1500);
+    const submitBtn = loginForm.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span> Signing in...';
+    try {
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      if (data?.user) {
+        const profile = await loadStudentProfile(data.user);
+        await checkCompulsoryProfile(data.user);
+        showAuthenticatedUI(data.user);
+      }
+    } catch (err) {
+      if (authError) authError.textContent = err.message || 'Login failed.';
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
     }
   });
 }
 
 // ===== LOGOUT =====
 function setupLogout() {
-  if (!logoutBtn) return;
-  logoutBtn.addEventListener('click', async () => {
-    await supabaseClient.auth.signOut();
-    localStorage.removeItem('student');
-    localStorage.removeItem('selected_university');
-    location.reload();
+  const btns = document.querySelectorAll('#logoutBtn');
+  btns.forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await supabaseClient.auth.signOut();
+      localStorage.removeItem('student');
+      localStorage.removeItem('selected_university');
+      localStorage.removeItem('last_course');
+      window.location.href = 'index.html';
+    });
   });
 }
 
 // ===== MODAL CONTROLS =====
 function setupModalControls() {
-  if (loginBtn) loginBtn.addEventListener('click', () => { if (loginModal) loginModal.style.display = 'flex'; });
-  if (modalClose) modalClose.addEventListener('click', () => { if (loginModal) loginModal.style.display = 'none'; });
-  if (loginModal) loginModal.addEventListener('click', (e) => { if (e.target === loginModal) loginModal.style.display = 'none'; });
+  if (modalClose) {
+    modalClose.addEventListener('click', () => {
+      if (loginModal) loginModal.style.display = 'none';
+    });
+  }
 }
 
 // ===== UNIVERSITY TRACKING =====
 function setupUniversityTracking() {
-  document.querySelectorAll('.start-training').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const uni = btn.getAttribute('data-university');
-      if (localStorage.getItem('student') && uni) localStorage.setItem('selected_university', uni);
+  document.querySelectorAll('.start-training').forEach(el => {
+    el.addEventListener('click', async (e) => {
+      const uni = el.getAttribute('data-university');
+      if (uni) {
+        localStorage.setItem('selected_university', uni);
+        const student = window.getCurrentStudent();
+        if (student?.id) {
+          await supabaseClient.from('student_progress').update({ 
+            selected_university: uni,
+            updated_at: new Date().toISOString() 
+          }).eq('user_id', student.id);
+          // Sync local storage
+          student.selected_university = uni;
+          localStorage.setItem('student', JSON.stringify(student));
+        }
+      }
     });
   });
 }
 
-// ===== GLOBAL FUNCTIONS =====
-window.getCurrentStudent = () => { try { return JSON.parse(localStorage.getItem('student')); } catch { return null; } };
-window.getSelectedUniversity = () => localStorage.getItem('selected_university');
-window.saveProgress = async (data) => {
+// ===== EXPORTS =====
+window.getCurrentStudent = () => {
+  const s = localStorage.getItem('student');
+  return s ? JSON.parse(s) : null;
+};
+
+window.updateStudentProfile = async (updates) => {
   const student = window.getCurrentStudent();
   if (!student?.id) return { error: 'Not authenticated' };
-  return await supabaseClient.from('student_progress').update({ updated_at: new Date().toISOString(), ...data }).eq('user_id', student.id);
+  try {
+    const { error } = await supabaseClient
+      .from('student_progress')
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq('user_id', student.id);
+    if (error) return { error: error.message };
+    
+    const updatedStudent = { ...student, ...updates };
+    if (updates.full_name) updatedStudent.name = updates.full_name;
+    localStorage.setItem('student', JSON.stringify(updatedStudent));
+    return { success: true };
+  } catch (err) { return { error: err.message }; }
 };
-window.sendReadyEmail = async (responses, checklist, score, message = '') => {
+
+window.getSelectedUniversity = () => localStorage.getItem('selected_university');
+
+window.saveProgress = async (checklist, scores, responses) => {
   const student = window.getCurrentStudent();
-  const university = window.getSelectedUniversity();
+  if (!student?.id) return;
+  try {
+    await supabaseClient.from('student_progress').update({
+      checklist_status: checklist,
+      ai_scores: scores,
+      practice_responses: responses,
+      updated_at: new Date().toISOString()
+    }).eq('user_id', student.id);
+  } catch (err) { console.error('saveProgress error:', err); }
+};
+
+window.sendReadyEmail = async (responses, checklist, avg, university) => {
+  const student = window.getCurrentStudent();
   if (!student) return { error: 'Not authenticated' };
 
-  // ===== SCORE & READINESS =====
-  const allQuestions = Object.entries(responses);
-  const totalQuestions = allQuestions.length;
-  const passedQuestions = allQuestions.filter(([, a]) => a?.finalStatus === 1 || a?.score >= 7);
-  const failedQuestions = allQuestions.filter(([, a]) => !(a?.finalStatus === 1 || a?.score >= 7));
-  const percentScore = totalQuestions > 0 ? Math.round((passedQuestions.length / totalQuestions) * 100) : 0;
+  const totalQuestions = Object.keys(responses).length;
+  const passedQuestions = Object.values(responses).filter(r => r.score >= 7);
+  const percentScore = totalQuestions ? Math.round((passedQuestions.length / totalQuestions) * 100) : 0;
+  
+  const readinessLevel = percentScore >= 90 ? 'INTERVIEW READY' : percentScore >= 70 ? 'ALMOST READY' : 'NEEDS PRACTICE';
+  const readinessEmoji = percentScore >= 90 ? '✅' : percentScore >= 70 ? '⚠️' : '❌';
 
-  let readinessLevel, readinessEmoji;
-  if (percentScore >= 90)      { readinessLevel = 'Ready for Interview';  readinessEmoji = '✅'; }
-  else if (percentScore >= 70) { readinessLevel = 'Almost Ready';         readinessEmoji = '⚠️'; }
-  else                         { readinessLevel = 'Not Ready';            readinessEmoji = '❌'; }
+  const sep = '-----------------------------------';
+  const passedText = Object.entries(responses)
+    .filter(([_, data]) => data.score >= 7)
+    .map(([id, data]) => `Q: ${data.questionText || id}\nA: ${data.answer}\nScore: ${data.score}/10\nFeedback: ${data.feedback}\n${sep}`)
+    .join('\n\n');
 
-  // ===== PASSED ANSWERS (clean, full text) =====
-  const sep = '─────────────────────────────';
-  const passedText = passedQuestions.length > 0
-    ? passedQuestions.map(([qId, a], i) => {
-        const label = (window.QUESTION_TEXT_MAP || {})[qId] || a.questionText || qId;
-        const attemptNote = (a.attempts || 1) > 1 ? ` (passed on attempt ${a.attempts})` : '';
-        return [
-          `Q${i + 1}: ${label}`,
-          `Score: ${a.score}/10${attemptNote}`,
-          `Answer: ${(a.answer || 'No answer recorded').trim()}`,
-          sep
-        ].join('\n');
-      }).join('\n')
-    : 'No questions passed yet.';
+  const failedText = Object.entries(responses)
+    .filter(([_, data]) => data.score < 7)
+    .map(([id, data]) => `Q: ${data.questionText || id}\nA: ${data.answer}\nScore: ${data.score}/10\nFeedback: ${data.feedback}\n${sep}`)
+    .join('\n\n');
 
-  // ===== FAILED QUESTIONS (summary only) =====
-  const failedText = failedQuestions.length > 0
-    ? failedQuestions.map(([qId, a]) => {
-        const label = (window.QUESTION_TEXT_MAP || {})[qId] || a.questionText || qId;
-        return `• ${label} — Best score: ${a.score || 0}/10 after ${a.attempts || 1} attempt(s)`;
-      }).join('\n')
-    : 'All questions passed ✅';
+  const attemptSummary = Object.entries(responses)
+    .map(([id, data]) => `${data.questionText || id}: ${data.score}/10 (${data.attempts || 1} attempts)`)
+    .join('\n');
 
-  // ===== ATTEMPT SUMMARY TABLE =====
-  const attemptSummary = allQuestions.map(([qId, a], i) => {
-    const label = (window.QUESTION_TEXT_MAP || {})[qId] || a.questionText || qId;
-    const passed = a?.finalStatus === 1 || a?.score >= 7;
-    const shortLabel = label.length > 55 ? label.substring(0, 52) + '...' : label;
-    return `${passed ? '✅' : '❌'} Q${i + 1}: ${shortLabel}\n     Score: ${a.score || 0}/10 | Attempts: ${a.attempts || 1}`;
-  }).join('\n\n');
+  const checklistText = Object.entries(checklist)
+    .map(([item, done]) => `[${done ? 'X' : ' '}] ${item}`)
+    .join('\n');
 
-  // ===== CHECKLIST (text keys, ticked items first) =====
-  const checklistEntries = Object.entries(checklist);
-  const doneItems = checklistEntries.filter(([, v]) => v === true);
-  const pendingItems = checklistEntries.filter(([, v]) => v !== true);
-  const doneCount = doneItems.length;
-
-  const checklistText = checklistEntries.length > 0
-    ? [
-        `Completed (${doneCount}/${checklistEntries.length}):`,
-        ...doneItems.map(([item]) => `  ✅ ${item}`),
-        pendingItems.length > 0 ? `\nNot completed (${pendingItems.length}):` : '',
-        ...pendingItems.map(([item]) => `  ⬜ ${item}`)
-      ].filter(Boolean).join('\n')
-    : 'No checklist items recorded.';
-
-  // ===== BUILD FULL EMAIL BODY =====
   const divider = '═══════════════════════════════════';
   const emailBody = [
     divider,
@@ -408,7 +415,8 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
     `Name:        ${student.name}`,
     `Student ID:  ${student.student_id || 'N/A'}`,
     `Email:       ${student.email}`,
-    `University:  ${university || 'Not selected'}`,
+    `University:  ${university || student.selected_university || 'Not selected'}`,
+    `Program:     ${student.selected_program || 'Not selected'}`,
     '',
     `OVERALL RESULT`,
     `${readinessEmoji} ${readinessLevel}`,
@@ -439,7 +447,7 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
       student_name: student.name,
       student_id: student.student_id || 'N/A',
       student_email: student.email,
-      university: university || 'Not selected',
+      university: university || student.selected_university || 'Not selected',
       overall_score: `${passedQuestions.length}/${totalQuestions} (${percentScore}%)`,
       readiness_level: `${readinessEmoji} ${readinessLevel}`,
       responses: passedText,
@@ -455,11 +463,9 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
   }
 };
 
-// ===== AUTO-SAVE HELPERS =====
 window.saveChecklistItem = async (itemId, checked, itemText) => {
   const student = window.getCurrentStudent();
   if (!student?.id) return;
-  // Use itemText as the key if provided (human-readable), otherwise fall back to itemId
   const key = (itemText && itemText.trim()) ? itemText.trim() : itemId;
   try {
     const { data: current } = await supabaseClient.from('student_progress').select('checklist_status').eq('user_id', student.id).single();
@@ -468,78 +474,63 @@ window.saveChecklistItem = async (itemId, checked, itemText) => {
   } catch (err) { console.error('saveChecklistItem error:', err); }
 };
 
-// Reset all student progress (used when changing course)
 window.resetAllProgress = async () => {
   const student = window.getCurrentStudent();
   if (!student?.id) return { error: 'Not authenticated' };
   try {
     const { error } = await supabaseClient
       .from('student_progress')
-      .update({ ai_scores: {}, practice_responses: {}, checklist_status: {}, updated_at: new Date().toISOString() })
+      .update({ 
+        ai_scores: {}, 
+        practice_responses: {}, 
+        checklist_status: {}, 
+        selected_university: null,
+        selected_program: null,
+        updated_at: new Date().toISOString() 
+      })
       .eq('user_id', student.id);
+    
     if (error) return { error: error.message };
+    
+    localStorage.removeItem('selected_university');
+    localStorage.removeItem('last_course');
+    student.selected_university = '';
+    student.selected_program = '';
+    localStorage.setItem('student', JSON.stringify(student));
+    
     return { success: true };
   } catch (err) { return { error: err.message }; }
 };
 
-// ✅ MODIFIED: store answer inside ai_scores as well for easier dashboard access
-// QUESTION TEXT MAP — used by dashboard to show readable question titles
-window.QUESTION_TEXT_MAP = {
-  'UKVI_Q1': 'Why have you chosen to study this programme in the UK?',
-  'UKVI_Q2': 'Why did you choose this specific university?',
-  'UKVI_Q3': 'What do you plan to do after your studies?',
-  'UKVI_Q4': 'How will you fund your studies and living expenses?',
-  'UKVI_Q5': 'Tell me about your academic background.',
-  'UKVI_Q6': 'What is the name of your course and how long does it last?',
-  'UKVI_Q7': 'Why do you want to study this subject at degree level?',
-  'UKVI_Q8': 'What ties do you have to your home country?',
-  'NL_Q1': 'Why have you chosen to study in the Netherlands?',
-  'NL_Q2': 'Why did you choose this specific Dutch university?',
-  'NL_Q3': 'What are your plans after completing your studies?',
-  'NL_Q4': 'How will you fund your tuition and living costs?',
-  'NL_Q5': 'What is the language of instruction and your proficiency?',
-  'NL_Q6': 'What is the exact name and duration of your course?',
-  'NL_Q7': 'Do you have any family or connections in the Netherlands?',
-  'NL_Q8': 'What ties do you have to your home country?',
-  'BPP_Q1': 'Why have you chosen to study at BPP University?',
-};
-
 window.saveAIResponse = async (questionId, answerText, score, feedback, questionText) => {
   const student = window.getCurrentStudent();
-  if (!student?.id) {
-    console.error('saveAIResponse: No student in localStorage.');
-    return { error: 'Not authenticated' };
-  }
+  if (!student?.id) return { error: 'Not authenticated' };
+  
   if (questionText && typeof questionText === 'string') {
     window.QUESTION_TEXT_MAP = window.QUESTION_TEXT_MAP || {};
     window.QUESTION_TEXT_MAP[questionId] = questionText;
   }
+  
   try {
     const { data: current, error: fetchErr } = await supabaseClient
       .from('student_progress')
       .select('ai_scores, practice_responses')
       .eq('user_id', student.id)
       .single();
-    if (fetchErr) {
-      console.error('saveAIResponse fetch error:', fetchErr.message);
-      return { error: fetchErr.message };
-    }
+    
+    if (fetchErr) return { error: fetchErr.message };
 
     const existing = current?.ai_scores?.[questionId] || {};
     const attempts = (existing.attempts || 0) + 1;
-
-    // pass = 1 if score >= 7 (on 0-10 scale), else 0
-    // Once passed, keep as passed even on retry
     const passed = (score >= 7) ? 1 : (existing.finalStatus === 1 ? 1 : 0);
-
     const questionLabel = (window.QUESTION_TEXT_MAP || {})[questionId] || questionText || questionId;
 
     const scores = {
       ...(current?.ai_scores || {}),
       [questionId]: {
-        score,                      // last score (0-10)
-        finalStatus: passed,        // 0 or 1
-        attempts,                   // total attempts
+        score,
+        finalStatus: passed,
+        attempts,
         feedback,
         answer: answerText,
         questionText: questionLabel,
@@ -552,43 +543,57 @@ window.saveAIResponse = async (questionId, answerText, score, feedback, question
       [questionId]: { answer: answerText, date: new Date().toISOString() }
     };
 
-    const { error: updateErr } = await supabaseClient
+    await supabaseClient
       .from('student_progress')
       .update({ ai_scores: scores, practice_responses: responses, updated_at: new Date().toISOString() })
       .eq('user_id', student.id);
 
-    if (updateErr) {
-      console.error('saveAIResponse update error:', updateErr.message, updateErr.code);
-      return { error: updateErr.message };
-    }
-    console.log('✅ Saved:', questionId, '| Score:', score, '| Status:', passed ? 'PASS' : 'FAIL', '| Attempt:', attempts);
     return { success: true, passed, attempts };
   } catch (err) {
-    console.error('saveAIResponse unexpected error:', err);
     return { error: err.message };
   }
 };
 
 window.loadSavedProgress = async () => {
-  // Try localStorage first
   let student = window.getCurrentStudent();
-  // If not in localStorage, fall back to live Supabase session (handles post-refresh state)
   if (!student?.id) {
     const { data: { session } } = await supabaseClient.auth.getSession();
-    if (session?.user) {
-      student = { id: session.user.id };
-    }
+    if (session?.user) student = { id: session.user.id };
   }
   if (!student?.id) return null;
   try {
     const { data: progress, error } = await supabaseClient
       .from('student_progress')
-      .select('checklist_status, ai_scores, practice_responses, selected_university, counselor')
+      .select('*')
       .eq('user_id', student.id)
       .single();
-    if (error) { console.error('loadSavedProgress: Supabase error:', error.message); return null; }
+    if (error) return null;
+    
+    // Sync local storage with latest profile data
+    const currentLocal = window.getCurrentStudent();
+    if (currentLocal) {
+      currentLocal.selected_university = progress.selected_university || '';
+      currentLocal.selected_program = progress.selected_program || '';
+      currentLocal.name = progress.full_name || currentLocal.name;
+      currentLocal.student_id = progress.student_id || currentLocal.student_id;
+      localStorage.setItem('student', JSON.stringify(currentLocal));
+    }
+    
     return progress;
-  } catch (err) { console.error('loadSavedProgress error:', err); return null; }
+  } catch (err) { return null; }
+};
+
+window.trackProgram = async (programName) => {
+  const student = window.getCurrentStudent();
+  if (!student?.id) return;
+  try {
+    await supabaseClient.from('student_progress').update({
+      selected_program: programName,
+      updated_at: new Date().toISOString()
+    }).eq('user_id', student.id);
+    student.selected_program = programName;
+    localStorage.setItem('student', JSON.stringify(student));
+  } catch (err) { console.error('trackProgram error:', err); }
 };
 
 // ===== INIT ALL =====
