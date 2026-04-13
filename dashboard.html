@@ -109,6 +109,24 @@
       background: #74777f;
       border-radius: 8px;
     }
+    /* LIVE SESSION PULSE ANIMATION */
+    @keyframes livePulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
+        transform: scale(1.02);
+      }
+    }
+    .live-session-active {
+      animation: livePulse 2s infinite;
+      border: 2px solid #ef4444 !important;
+    }
+    .live-indicator {
+      animation: livePulse 1.5s infinite;
+    }
   </style>
 </head>
 <body class="bg-background min-h-screen pb-32">
@@ -133,6 +151,65 @@
 
     <!-- Dashboard content (hidden initially) -->
     <div id="dashboardContent" class="hidden space-y-8">
+      
+      <!-- ZOOM LIVE SESSION SECTION - EASY TO CONFIGURE -->
+      <!-- ============================================ -->
+      <!-- EDIT THE CONFIG OBJECT BELOW TO UPDATE SESSION -->
+      <section id="zoomSessionSection" class="hidden">
+        <div id="zoomSessionCard" class="bg-gradient-to-br from-red-500 to-red-600 rounded-[2rem] p-6 editorial-shadow text-white relative overflow-hidden">
+          <!-- Live indicator dot -->
+          <div class="absolute top-4 right-4 flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
+            <div class="w-2.5 h-2.5 bg-white rounded-full live-indicator"></div>
+            <span class="font-label text-[10px] font-bold uppercase tracking-wider">LIVE NOW</span>
+          </div>
+          
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
+              <span class="material-symbols-outlined text-white text-2xl">videocam</span>
+            </div>
+            <div>
+              <p class="font-label text-[10px] uppercase tracking-widest text-white/80 font-bold">Live Interview Session</p>
+              <h3 class="font-headline font-bold text-xl text-white" id="sessionSchoolName">School Name</h3>
+            </div>
+          </div>
+          
+          <div class="mb-4 p-3 bg-white/10 backdrop-blur-sm rounded-xl">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="material-symbols-outlined text-white/80 text-sm">schedule</span>
+              <p class="font-label text-[10px] uppercase tracking-wider text-white/80 font-bold">Session Time</p>
+            </div>
+            <p class="font-body text-sm text-white font-medium" id="sessionTimeDisplay">--:-- - --:--</p>
+          </div>
+          
+          <a id="joinZoomBtn" href="#" target="_blank" class="flex items-center justify-center gap-2 w-full py-3.5 bg-white text-red-600 rounded-xl font-label text-sm font-bold uppercase tracking-wider hover:bg-red-50 active:scale-95 transition-all shadow-lg">
+            <span class="material-symbols-outlined text-lg">login</span>
+            Join Interview Now
+          </a>
+        </div>
+      </section>
+
+      <!-- Upcoming Session (shown when not live) -->
+      <section id="upcomingSessionSection" class="hidden">
+        <div class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow border-2 border-dashed border-outline-variant/40">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+              <span class="material-symbols-outlined text-slate-400">event</span>
+            </div>
+            <div>
+              <p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Upcoming Session</p>
+              <h3 class="font-headline font-bold text-base text-primary" id="upcomingSchoolName">School Name</h3>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+            <span class="material-symbols-outlined text-base">schedule</span>
+            <span class="font-body" id="upcomingTimeDisplay">--:-- - --:--</span>
+          </div>
+          <p class="font-body text-xs text-slate-400 mt-2">The join button will appear here when the session starts.</p>
+        </div>
+      </section>
+      <!-- END ZOOM SESSION SECTION -->
+      <!-- ============================================ -->
+
       <!-- Profile Card -->
       <section class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow">
         <!-- View mode -->
@@ -307,94 +384,6 @@
         </div>
       </section>
 
-      <!-- Counselor Section -->
-      <section class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary text-xl">support_agent</span>
-            <h3 class="font-headline font-bold text-lg text-primary">My Counselor</h3>
-          </div>
-          <button id="editCounselorBtn" class="flex items-center gap-1 px-3 py-1.5 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary hover:bg-slate-200/50 active:scale-95 transition-all">
-            <span class="material-symbols-outlined text-sm">edit</span> Edit
-          </button>
-        </div>
-
-        <!-- View mode -->
-        <div id="counselorView">
-          <div id="counselorEmpty" class="text-center py-4">
-            <span class="material-symbols-outlined text-4xl text-slate-300 mb-2 block">person_add</span>
-            <p class="font-body text-sm text-on-surface-variant mb-3">No counselor added yet</p>
-            <button onclick="document.getElementById('editCounselorBtn').click()" class="font-label text-xs font-bold text-primary uppercase tracking-wider px-4 py-2 bg-surface-container-high rounded-xl active:scale-95 transition-all">
-              Add Counselor
-            </button>
-          </div>
-          <div id="counselorCard" class="hidden">
-            <div class="flex items-center gap-4 mb-4">
-              <div class="w-12 h-12 rounded-2xl bg-secondary flex items-center justify-center text-white text-lg font-bold" id="counselorInitials">--</div>
-              <div>
-                <p class="font-headline font-bold text-base text-primary" id="counselorName">—</p>
-                <p class="font-body text-sm text-on-surface-variant" id="counselorRole">—</p>
-              </div>
-            </div>
-            <div class="space-y-2">
-              <div id="counselorEmailRow" class="hidden flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
-                <span class="material-symbols-outlined text-primary text-sm">mail</span>
-                <div>
-                  <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Email</p>
-                  <a id="counselorEmailLink" href="#" class="font-body text-sm text-primary font-medium">—</a>
-                </div>
-              </div>
-              <div id="counselorPhoneRow" class="hidden flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
-                <span class="material-symbols-outlined text-primary text-sm">phone</span>
-                <div>
-                  <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Phone / WhatsApp</p>
-                  <p id="counselorPhone" class="font-body text-sm text-primary font-medium">—</p>
-                </div>
-              </div>
-              <div id="counselorNotesRow" class="hidden flex items-start gap-3 p-3 bg-surface-container-low rounded-xl">
-                <span class="material-symbols-outlined text-primary text-sm mt-0.5">sticky_note_2</span>
-                <div>
-                  <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Notes</p>
-                  <p id="counselorNotes" class="font-body text-sm text-on-surface-variant leading-relaxed">—</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Edit mode -->
-        <div id="counselorEdit" class="hidden">
-          <p class="font-label text-xs font-bold text-primary uppercase tracking-wider mb-3">Counselor Details</p>
-          <div class="space-y-3">
-            <div>
-              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Full Name *</label>
-              <input id="cName" type="text" placeholder="e.g. Sarah Johnson" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
-            </div>
-            <div>
-              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Role / Company</label>
-              <input id="cRole" type="text" placeholder="e.g. Senior Education Consultant at ABC Agency" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
-            </div>
-            <div>
-              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Email</label>
-              <input id="cEmail" type="email" placeholder="counselor@agency.com" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
-            </div>
-            <div>
-              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Phone / WhatsApp</label>
-              <input id="cPhone" type="tel" placeholder="+44 7700 000000" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
-            </div>
-            <div>
-              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Notes</label>
-              <textarea id="cNotes" rows="2" placeholder="e.g. Call every Tuesday, interview booked for 15 Jan..." class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"></textarea>
-            </div>
-          </div>
-          <p id="counselorError" class="text-red-500 text-xs mt-2 hidden">Counselor name is required.</p>
-          <div class="flex gap-2 mt-3">
-            <button id="saveCounselorBtn" class="flex-1 py-2.5 bg-primary text-white rounded-xl font-label text-xs font-bold uppercase tracking-wider active:scale-95 transition-all">Save Counselor</button>
-            <button id="cancelCounselorBtn" class="px-4 py-2.5 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary uppercase tracking-wider active:scale-95 transition-all">Cancel</button>
-          </div>
-        </div>
-      </section>
-
       <!-- Checklist Section -->
       <section>
         <div class="flex items-center justify-between mb-4">
@@ -462,6 +451,28 @@
   <div id="toast" style="display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:10px 20px;border-radius:999px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.2);transition:opacity 0.3s;"></div>
 
   <script>
+    // ============================================================
+    // ZOOM SESSION CONFIG - EDIT THIS SECTION TO UPDATE SESSIONS
+    // ============================================================
+    const ZOOM_CONFIG = {
+      // Paste your Zoom meeting link here
+      meetingLink: "https://zoom.us/j/YOUR_MEETING_ID",
+      
+      // School name to display
+      schoolName: "Regent College London",
+      
+      // Session start time (24-hour format: "HH:MM")
+      startTime: "14:00",
+      
+      // Session end time (24-hour format: "HH:MM")  
+      endTime: "15:30",
+      
+      // Timezone offset from UTC in hours (e.g., 0 for GMT, 1 for BST, 5.5 for IST)
+      // Set to null to use browser's local time
+      timezoneOffset: 0
+    };
+    // ============================================================
+
     // ===== TOAST =====
     function showToast(msg, type = 'success') {
       const t = document.getElementById('toast');
@@ -472,6 +483,66 @@
       clearTimeout(window._toastTimer);
       window._toastTimer = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.style.display = 'none', 300); }, 3000);
     }
+
+    // ===== ZOOM SESSION MANAGER =====
+    function checkZoomSession() {
+      const config = ZOOM_CONFIG;
+      const now = new Date();
+      
+      // Get current time in minutes since midnight
+      let currentMinutes = now.getHours() * 60 + now.getMinutes();
+      
+      // Adjust for timezone if specified
+      if (config.timezoneOffset !== null) {
+        const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
+        currentMinutes = utcMinutes + (config.timezoneOffset * 60);
+        // Handle day wrap-around
+        currentMinutes = ((currentMinutes % 1440) + 1440) % 1440;
+      }
+      
+      // Parse start and end times
+      const [startH, startM] = config.startTime.split(':').map(Number);
+      const [endH, endM] = config.endTime.split(':').map(Number);
+      const startMinutes = startH * 60 + startM;
+      const endMinutes = endH * 60 + endM;
+      
+      // Check if current time is within session window
+      const isLive = currentMinutes >= startMinutes && currentMinutes <= endMinutes;
+      
+      // Format time display (12-hour format with AM/PM)
+      const formatTime = (timeStr) => {
+        const [h, m] = timeStr.split(':').map(Number);
+        const period = h >= 12 ? 'PM' : 'AM';
+        const displayH = h % 12 || 12;
+        return `${displayH}:${m.toString().padStart(2, '0')} ${period}`;
+      };
+      
+      const timeDisplay = `${formatTime(config.startTime)} - ${formatTime(config.endTime)}`;
+      
+      // Update DOM elements
+      document.getElementById('sessionSchoolName').textContent = config.schoolName;
+      document.getElementById('upcomingSchoolName').textContent = config.schoolName;
+      document.getElementById('sessionTimeDisplay').textContent = timeDisplay;
+      document.getElementById('upcomingTimeDisplay').textContent = timeDisplay;
+      document.getElementById('joinZoomBtn').href = config.meetingLink;
+      
+      const liveSection = document.getElementById('zoomSessionSection');
+      const upcomingSection = document.getElementById('upcomingSessionSection');
+      const card = document.getElementById('zoomSessionCard');
+      
+      if (isLive) {
+        liveSection.classList.remove('hidden');
+        upcomingSection.classList.add('hidden');
+        card.classList.add('live-session-active');
+      } else {
+        liveSection.classList.add('hidden');
+        upcomingSection.classList.remove('hidden');
+        card.classList.remove('live-session-active');
+      }
+    }
+
+    // Check session status every minute
+    setInterval(checkZoomSession, 60000);
 
     // ===== QUESTION LABEL MAP =====
     const QUESTION_LABELS = {
@@ -750,9 +821,12 @@
 
       renderChecklist(checklist);
       renderResponses(allAiScores);
-      renderCounselor(progress?.counselor || null);
 
       displayEnrolment();
+      
+      // Check Zoom session status
+      checkZoomSession();
+      
       document.getElementById('loadingState').classList.add('hidden');
       document.getElementById('dashboardContent').classList.remove('hidden');
     }
@@ -1044,69 +1118,6 @@ Checklist: ${Object.values(checklist).filter(v=>v===true).length}/${Object.keys(
       });
     }
 
-
-    // ===== COUNSELOR =====
-    function loadCounselorFromStorage() {
-      try { return JSON.parse(localStorage.getItem('counselor') || 'null'); } catch { return null; }
-    }
-
-    async function loadCounselorFromSupabase() {
-      const progress = await window.loadSavedProgress?.();
-      if (progress?.counselor) {
-        // Sync back to localStorage so it's available offline
-        localStorage.setItem('counselor', JSON.stringify(progress.counselor));
-        return progress.counselor;
-      }
-      return loadCounselorFromStorage();
-    }
-
-    function saveCounselorToStorage(data) {
-      localStorage.setItem('counselor', JSON.stringify(data));
-      // Also save to Supabase student_progress metadata if possible
-      const student = window.getCurrentStudent();
-      if (student?.id && window.saveProgress) {
-        window.saveProgress({ counselor: data }).catch(() => {});
-      }
-    }
-
-    function renderCounselorCard(data) {
-      const empty = document.getElementById('counselorEmpty');
-      const card  = document.getElementById('counselorCard');
-      if (!data || !data.name) {
-        empty.classList.remove('hidden');
-        card.classList.add('hidden');
-        return;
-      }
-      empty.classList.add('hidden');
-      card.classList.remove('hidden');
-
-      const initials = data.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
-      document.getElementById('counselorInitials').textContent = initials;
-      document.getElementById('counselorName').textContent = data.name;
-      document.getElementById('counselorRole').textContent = data.role || 'Counselor';
-
-      const emailRow  = document.getElementById('counselorEmailRow');
-      const phoneRow  = document.getElementById('counselorPhoneRow');
-      const notesRow  = document.getElementById('counselorNotesRow');
-      const emailLink = document.getElementById('counselorEmailLink');
-
-      if (data.email) {
-        emailRow.classList.remove('hidden');
-        emailLink.textContent = data.email;
-        emailLink.href = 'mailto:' + data.email;
-      } else { emailRow.classList.add('hidden'); }
-
-      if (data.phone) {
-        phoneRow.classList.remove('hidden');
-        document.getElementById('counselorPhone').textContent = data.phone;
-      } else { phoneRow.classList.add('hidden'); }
-
-      if (data.notes) {
-        notesRow.classList.remove('hidden');
-        document.getElementById('counselorNotes').textContent = data.notes;
-      } else { notesRow.classList.add('hidden'); }
-    }
-
     // ===== INIT =====
     document.getElementById('logoutBtn').addEventListener('click', logout);
     document.getElementById('emailReportBtn').addEventListener('click', sendReport);
@@ -1128,3 +1139,4 @@ Checklist: ${Object.values(checklist).filter(v=>v===true).length}/${Object.keys(
     init();
   </script>
 </body>
+</html>
