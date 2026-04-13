@@ -78,6 +78,18 @@
     .btn-secondary-hero{background:white;color:var(--navy);border:1.5px solid var(--border);padding:16px;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s;width:100%;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;}
     .btn-secondary-hero:hover{border-color:var(--navy);}
 
+    /* HISTORY / CURRENT STATUS */
+    .history-card{background:white;border-radius:20px;padding:20px;border:1px solid var(--border);box-shadow:var(--shadow-sm);margin-bottom:32px;display:none;}
+    .history-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+    .history-title{font-size:14px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:0.05em;}
+    .history-content{display:flex;align-items:center;gap:16px;}
+    .history-icon{width:48px;height:48px;background:var(--surface);border-radius:14px;display:flex;align-items:center;justify-content:center;color:var(--navy);}
+    .history-info{flex:1;}
+    .history-school{font-size:16px;font-weight:700;color:var(--navy);}
+    .history-program{font-size:13px;color:var(--muted);margin-top:2px;}
+    .btn-opt-out{background:var(--surface);color:var(--red);border:1px solid var(--border);padding:8px 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+    .btn-opt-out:hover{background:#fee2e2;border-color:#fecaca;}
+
     /* FEATURES */
     .features{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:48px;}
     .feature-big{grid-column:1/-1;background:var(--navy);color:white;border-radius:20px;padding:28px;position:relative;overflow:hidden;}
@@ -140,8 +152,8 @@
     .footer-link .material-symbols-outlined{font-size:16px;}
 
     /* BOTTOM NAV */
-    .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;padding:8px 0 16px;z-index:99;}
-    .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 16px;border-radius:12px;cursor:pointer;text-decoration:none;transition:all 0.2s;border:none;background:none;color:var(--muted);}
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 0;z-index:100;}
+    .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--muted);background:none;border:none;cursor:pointer;transition:all 0.2s;flex:1;}
     .nav-item.active{color:var(--navy);}
     .nav-item .material-symbols-outlined{font-size:22px;}
     .nav-item .nav-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
@@ -214,7 +226,7 @@
       </div>
     </div>
     <a href="dashboard.html" class="menu-link"><span class="material-symbols-outlined">person</span> My Dashboard</a>
-    <a href="#universities" class="menu-link" id="menuExplore"><span class="material-symbols-outlined">school</span> Universities</a>
+    <a href="#universities" class="menu-link" id="menuExploreLink"><span class="material-symbols-outlined">school</span> Universities</a>
     <a href="ukvi.html" class="menu-link start-training" data-university="ukvi"><span class="material-symbols-outlined">public</span> UKVI Prep</a>
     <button id="logoutBtn" class="btn-signout">Sign Out</button>
   </div>
@@ -227,6 +239,26 @@
     <p><strong>Log in to save your progress.</strong> Your scores and checklist are stored securely.</p>
     <button onclick="openLoginModal()">Log in</button>
   </div>
+
+  <!-- CURRENT REGISTRATION (HISTORY) -->
+  <section id="currentRegistration" class="history-card">
+    <div class="history-header">
+      <h3 class="history-title">Current Registration</h3>
+      <button id="optOutBtn" class="btn-opt-out">Opt Out / Reset</button>
+    </div>
+    <div class="history-content">
+      <div class="history-icon">
+        <span class="material-symbols-outlined" style="font-size:32px;">account_balance</span>
+      </div>
+      <div class="history-info">
+        <div class="history-school" id="currentSchool">Not Selected</div>
+        <div class="history-program" id="currentProgram">Choose a pathway below to start</div>
+      </div>
+      <a href="#" id="continueTrainingBtn" class="btn-start" style="width:auto; padding:10px 16px;">
+        <span class="material-symbols-outlined" style="font-size:18px">play_arrow</span>
+      </a>
+    </div>
+  </section>
 
   <!-- HERO -->
   <section class="hero">
@@ -360,10 +392,9 @@
     <span class="material-symbols-outlined">explore</span>
     <span class="nav-label">Explore</span>
   </button>
-  <a href="dashboard.html" class="nav-item" id="navHistory" style="max-width:120px;">
+  <a href="dashboard.html" class="nav-item" id="navHistory">
     <span class="material-symbols-outlined">history</span>
-    <span class="nav-label" id="historyLabel">History</span>
-    <span id="historySchool" class="nav-label" style="display:none;font-size:8px;color:var(--red);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;"></span>
+    <span class="nav-label">History</span>
   </a>
   <a href="dashboard.html" class="nav-item" id="navProfile">
     <span class="material-symbols-outlined">person</span>
@@ -411,11 +442,12 @@
   <div class="spinner-el"></div>
 </div>
 
-<!-- STUDENT ID MODAL -->
+<!-- STUDENT ID MODAL (USED FOR COMPULSORY PROFILE) -->
 <div id="studentIdModal" class="modal-overlay" style="display:none;">
   <div class="modal-box">
-    <div class="modal-title">✏️ Complete Your Profile</div>
-    <p class="modal-sub">Please enter your Student ID to continue.</p>
+    <div class="modal-title">📋 Complete Your Profile</div>
+    <p class="modal-sub">Please complete your details to continue.</p>
+    <div class="form-group"><label>Full Name</label><input type="text" id="compulsoryNameInput" placeholder="John Doe"/></div>
     <div class="form-group"><label>Student ID</label><input type="text" id="studentIdInput" placeholder="e.g. STU12345"/></div>
     <button id="saveStudentIdBtn" class="btn-form-submit">Save &amp; Continue</button>
     <p id="studentIdError" style="color:#dc2626;font-size:13px;text-align:center;margin-top:10px;"></p>
@@ -468,7 +500,7 @@
       mobileMenu.classList.remove('open');
     }
   });
-  document.getElementById('menuExplore').addEventListener('click', () => {
+  document.getElementById('menuExploreLink').addEventListener('click', () => {
     mobileMenu.classList.remove('open');
     document.getElementById('universities').scrollIntoView({ behavior: 'smooth' });
   });
@@ -484,10 +516,32 @@
       document.getElementById('menuAvatar').textContent = initials;
       document.getElementById('menuName').textContent = student.name || 'Student';
       document.getElementById('loginPromptBanner').style.display = 'none';
+      
+      // Update Registration History
+      const historyCard = document.getElementById('currentRegistration');
+      const uni = student.selected_university;
+      const prog = student.selected_program;
+      
+      if (uni) {
+        historyCard.style.display = 'block';
+        const uniNames = {
+          'regent': 'Regent College London',
+          'yorkstjohn': 'York St John University',
+          'bpp': 'BPP University',
+          'netherlands': 'Netherlands Pathways',
+          'ukvi': 'UKVI Universal Prep'
+        };
+        document.getElementById('currentSchool').textContent = uniNames[uni] || uni;
+        document.getElementById('currentProgram').textContent = prog || 'Programme not yet selected';
+        document.getElementById('continueTrainingBtn').href = uni + '.html';
+      } else {
+        historyCard.style.display = 'none';
+      }
     } else {
       document.getElementById('loginBtn').style.display = '';
       document.getElementById('userMenu').style.display = 'none';
       document.getElementById('loginPromptBanner').style.display = 'flex';
+      document.getElementById('currentRegistration').style.display = 'none';
     }
   }
 
@@ -501,8 +555,8 @@
     updateUI(window.getCurrentStudent?.());
     const poll = setInterval(() => {
       const s = window.getCurrentStudent?.();
-      if (s) { updateUI(s); clearInterval(poll); }
-    }, 400);
+      if (s) { updateUI(s); }
+    }, 1000);
     // Stop polling after 10s regardless
     setTimeout(() => clearInterval(poll), 10000);
   })();
@@ -533,41 +587,24 @@
     });
   });
 
-  // ===== HISTORY NAV — show current school/programme =====
-  const UNI_SHORT = {
-    'regent': 'Regent',
-    'yorkstjohn': 'York St John',
-    'bpp': 'BPP',
-    'netherlands': 'Netherlands',
-    'ukvi': 'UKVI Prep'
-  };
-
-  function updateHistoryNav() {
-    const uni = localStorage.getItem('selected_university');
-    const course = localStorage.getItem('last_course');
-    const label = document.getElementById('historyLabel');
-    const school = document.getElementById('historySchool');
-    if (uni && UNI_SHORT[uni]) {
-      label.textContent = UNI_SHORT[uni];
-      if (course) {
-        const prog = course.replace(/-/g, ' ').replace(/\w/g, l => l.toUpperCase());
-        school.textContent = prog;
-        school.style.display = 'block';
+  // ===== OPT OUT / RESET =====
+  document.getElementById('optOutBtn').addEventListener('click', async () => {
+    if (confirm('This will reset your current school registration and all progress. Are you sure?')) {
+      const res = await window.resetAllProgress();
+      if (res.success) {
+        showToast('Progress reset successfully');
+        updateUI(window.getCurrentStudent());
       } else {
-        school.style.display = 'none';
+        showToast('Reset failed: ' + res.error, 'error');
       }
-    } else {
-      label.textContent = 'History';
-      school.style.display = 'none';
     }
-  }
-  updateHistoryNav();
+  });
 
   // ===== UNIVERSITY LINKS — track selection =====
   document.querySelectorAll('.start-training').forEach(el => {
     el.addEventListener('click', () => {
       const uni = el.getAttribute('data-university');
-      if (uni) { localStorage.setItem('selected_university', uni); updateHistoryNav(); }
+      if (uni) localStorage.setItem('selected_university', uni);
     });
   });
 </script>
