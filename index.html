@@ -360,9 +360,10 @@
     <span class="material-symbols-outlined">explore</span>
     <span class="nav-label">Explore</span>
   </button>
-  <a href="dashboard.html" class="nav-item" id="navHistory">
+  <a href="dashboard.html" class="nav-item" id="navHistory" style="max-width:120px;">
     <span class="material-symbols-outlined">history</span>
-    <span class="nav-label">History</span>
+    <span class="nav-label" id="historyLabel">History</span>
+    <span id="historySchool" class="nav-label" style="display:none;font-size:8px;color:var(--red);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;"></span>
   </a>
   <a href="dashboard.html" class="nav-item" id="navProfile">
     <span class="material-symbols-outlined">person</span>
@@ -532,11 +533,41 @@
     });
   });
 
+  // ===== HISTORY NAV — show current school/programme =====
+  const UNI_SHORT = {
+    'regent': 'Regent',
+    'yorkstjohn': 'York St John',
+    'bpp': 'BPP',
+    'netherlands': 'Netherlands',
+    'ukvi': 'UKVI Prep'
+  };
+
+  function updateHistoryNav() {
+    const uni = localStorage.getItem('selected_university');
+    const course = localStorage.getItem('last_course');
+    const label = document.getElementById('historyLabel');
+    const school = document.getElementById('historySchool');
+    if (uni && UNI_SHORT[uni]) {
+      label.textContent = UNI_SHORT[uni];
+      if (course) {
+        const prog = course.replace(/-/g, ' ').replace(/\w/g, l => l.toUpperCase());
+        school.textContent = prog;
+        school.style.display = 'block';
+      } else {
+        school.style.display = 'none';
+      }
+    } else {
+      label.textContent = 'History';
+      school.style.display = 'none';
+    }
+  }
+  updateHistoryNav();
+
   // ===== UNIVERSITY LINKS — track selection =====
   document.querySelectorAll('.start-training').forEach(el => {
     el.addEventListener('click', () => {
       const uni = el.getAttribute('data-university');
-      if (uni) localStorage.setItem('selected_university', uni);
+      if (uni) { localStorage.setItem('selected_university', uni); updateHistoryNav(); }
     });
   });
 </script>
