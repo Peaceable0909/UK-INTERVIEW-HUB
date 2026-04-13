@@ -583,7 +583,7 @@ window.loadSavedProgress = async () => {
   try {
     const { data: progress, error } = await supabaseClient
       .from('student_progress')
-      .select('checklist_status, ai_scores, practice_responses, selected_university')
+      .select('checklist_status, ai_scores, practice_responses, selected_university, counselor')
       .eq('user_id', student.id)
       .single();
     if (error) { console.error('loadSavedProgress: Supabase error:', error.message); return null; }
