@@ -108,7 +108,6 @@
       background: #74777f;
       border-radius: 8px;
     }
-    /* Pulse animation for live session button */
     @keyframes pulse-live {
       0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); background-color: #dc2626; transform: scale(1); }
       70% { box-shadow: 0 0 0 12px rgba(220, 38, 38, 0); background-color: #ef4444; transform: scale(1.02); }
@@ -152,6 +151,19 @@
             <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant/60 font-bold" id="studentId">ID: --</span>
           </div>
         </div>
+
+        <!-- CURRENT UNIVERSITY & PROGRAM DISPLAY (NEW) -->
+        <div id="currentEnrollmentCard" class="mb-5 p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+          <div class="flex items-center justify-between mb-2">
+            <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Currently Preparing For</p>
+            <button id="changeCourseBtn" class="text-xs font-bold text-red-500 hover:text-red-700 flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">refresh</span> Change
+            </button>
+          </div>
+          <p class="font-body text-sm font-semibold text-primary" id="currentUniversity">—</p>
+          <p class="font-body text-xs text-on-surface-variant mt-1" id="currentProgram">—</p>
+        </div>
+
         <div class="grid grid-cols-2 gap-3">
           <button id="emailReportBtn" class="flex items-center justify-center gap-2 py-3 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary hover:bg-slate-200/50 active:scale-95 transition-all">
             <span class="material-symbols-outlined text-sm">mail</span>
@@ -164,14 +176,13 @@
         </div>
       </section>
 
-      <!-- LIVE INTERVIEW TRAINING SECTION (Join Zoom Training) -->
+      <!-- LIVE INTERVIEW TRAINING SECTION -->
       <section class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow">
         <div class="flex items-center gap-2 mb-4">
           <span class="material-symbols-outlined text-red-500 text-xl">videocam</span>
           <h3 class="font-headline font-bold text-lg text-primary">Live Interview Training</h3>
         </div>
         <div id="liveSessionContainer" class="space-y-3">
-          <!-- Dynamically updated by JS -->
           <div class="bg-surface-container-low rounded-xl p-4 text-center">
             <span class="material-symbols-outlined text-slate-400 text-3xl">schedule</span>
             <p class="font-body text-sm text-on-surface-variant mt-2">Checking for upcoming sessions...</p>
@@ -179,7 +190,7 @@
         </div>
       </section>
 
-      <!-- COUNSELLOR SECTION (from Code B) -->
+      <!-- COUNSELLOR SECTION -->
       <section class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow">
         <div class="flex items-center justify-between mb-4">
           <div class="flex items-center gap-2">
@@ -191,7 +202,6 @@
           </button>
         </div>
 
-        <!-- View mode -->
         <div id="counselorView">
           <div id="counselorEmpty" class="text-center py-4">
             <span class="material-symbols-outlined text-4xl text-slate-300 mb-2 block">person_add</span>
@@ -234,7 +244,6 @@
           </div>
         </div>
 
-        <!-- Edit mode -->
         <div id="counselorEdit" class="hidden">
           <p class="font-label text-xs font-bold text-primary uppercase tracking-wider mb-3">Counselor Details</p>
           <div class="space-y-3">
@@ -300,9 +309,7 @@
           <span class="font-label text-[10px] font-bold text-secondary bg-secondary-container/30 px-2 py-1 rounded-sm" id="checklistSummary">0/0 COMPLETED</span>
         </div>
         <div class="bg-surface-container-lowest rounded-[2rem] p-2 editorial-shadow overflow-hidden">
-          <div id="checklistContainer" class="max-h-[220px] overflow-y-auto px-4 py-2 space-y-4 custom-scroll">
-            <!-- dynamically filled -->
-          </div>
+          <div id="checklistContainer" class="max-h-[220px] overflow-y-auto px-4 py-2 space-y-4 custom-scroll"></div>
         </div>
       </section>
 
@@ -323,9 +330,7 @@
           <input type="text" placeholder="Search by question, university, or keyword..." 
             class="w-full px-4 py-2.5 rounded-xl border border-outline/30 bg-surface-container-lowest text-sm font-body text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30">
         </div>
-        <div id="responsesContainer" class="space-y-4">
-          <!-- dynamically filled -->
-        </div>
+        <div id="responsesContainer" class="space-y-4"></div>
         <div id="noResponsesMsg" class="text-center text-slate-400 py-8 hidden">No practice responses yet. Start practicing on any university page!</div>
       </section>
     </div>
@@ -351,7 +356,6 @@
     </a>
   </nav>
 
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="app.js"></script>
@@ -371,14 +375,9 @@
     }
 
     // ================== LIVE SESSION SCHEDULER ==================
-    // ------------------------------------------------------------------
-    // EDIT YOUR SCHEDULED SESSIONS HERE (easy to find)
-    // Each session: { startTime: "YYYY-MM-DDTHH:MM:SS", zoomLink: "https://..." , title: "Optional title" }
-    // Times in your LOCAL timezone (browser will compare)
-    // ------------------------------------------------------------------
     const SCHEDULED_SESSIONS = [
       {
-        startTime: "2026-04-13T15:00:00",  // Example: 13 April 2026, 3:00 PM your local time
+        startTime: "2026-04-13T15:00:00",
         zoomLink: "https://us06web.zoom.us/j/123456789?pwd=abc123",
         title: "UKVI Interview Prep"
       },
@@ -388,18 +387,14 @@
         title: "Mock Interview - Regent College"
       }
     ];
-    // Duration (minutes) during which the button stays active/pulsing after start time
     const SESSION_DURATION_MINUTES = 90;
 
     function updateLiveSessionUI() {
       const container = document.getElementById('liveSessionContainer');
       if (!container) return;
-
       const now = new Date();
       let activeSession = null;
       let upcomingSession = null;
-
-      // Find active session (start <= now <= start+duration)
       for (const sess of SCHEDULED_SESSIONS) {
         const start = new Date(sess.startTime);
         const end = new Date(start.getTime() + SESSION_DURATION_MINUTES * 60000);
@@ -408,7 +403,6 @@
           break;
         }
       }
-      // If no active, find next upcoming session for info
       if (!activeSession) {
         const future = SCHEDULED_SESSIONS.filter(s => new Date(s.startTime) > now);
         if (future.length) {
@@ -416,9 +410,7 @@
           upcomingSession = future[0];
         }
       }
-
       if (activeSession) {
-        // Show active session with pulsing button
         const startDate = new Date(activeSession.startTime);
         const endDate = new Date(startDate.getTime() + SESSION_DURATION_MINUTES * 60000);
         const timeStr = startDate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) + ' – ' + endDate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
@@ -460,12 +452,9 @@
         `;
       }
     }
-
-    // Check every 30 seconds
     setInterval(updateLiveSessionUI, 30000);
-    // ================================================================
 
-    // ================== QUESTION LABELS (unchanged) ==================
+    // ================== QUESTION LABELS ==================
     const QUESTION_LABELS = {
       'UKVI_Q1': 'Why study in the UK?',
       'UKVI_Q2': 'Why this specific university?',
@@ -788,6 +777,71 @@
       });
     }
 
+    // ================== CURRENT ENROLLMENT DISPLAY & RESET ==================
+    const UNI_NAMES = {
+      'regent': 'Regent College London',
+      'yorkstjohn': 'York St John University',
+      'bpp': 'BPP University',
+      'netherlands': 'Netherlands (IND)',
+      'ukvi': 'UKVI Credibility Prep'
+    };
+
+    function updateEnrollmentDisplay() {
+      const uni = localStorage.getItem('selected_university') || '';
+      const course = localStorage.getItem('last_course') || '';
+      let uniDisplay = '—';
+      let courseDisplay = '—';
+      if (uni && UNI_NAMES[uni]) uniDisplay = UNI_NAMES[uni];
+      if (course) courseDisplay = course.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      document.getElementById('currentUniversity').textContent = uniDisplay;
+      document.getElementById('currentProgram').textContent = courseDisplay;
+    }
+
+    async function resetAndChangeCourse() {
+      const confirmed = confirm(
+        '⚠️ CHANGE COURSE / RESET EVERYTHING\n\n' +
+        'This will erase ALL your:\n' +
+        '• Practice responses & AI scores\n' +
+        '• Checklist progress\n' +
+        '• Counselor details (if any)\n\n' +
+        'You will be taken to the homepage to choose a new university and course.\n\n' +
+        'Are you sure you want to continue?'
+      );
+      if (!confirmed) return;
+
+      const btn = document.getElementById('changeCourseBtn');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin inline-block mr-1"></span> Resetting...';
+
+      // Clear all progress in Supabase
+      if (typeof window.resetAllProgress === 'function') {
+        await window.resetAllProgress();
+      } else {
+        // Fallback: manually clear
+        const student = window.getCurrentStudent();
+        if (student?.id) {
+          const { createClient } = supabase;
+          const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
+          const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+          const sc = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          await sc.from('student_progress')
+            .update({ ai_scores: {}, practice_responses: {}, checklist_status: {}, counselor: {}, updated_at: new Date().toISOString() })
+            .eq('user_id', student.id);
+        }
+      }
+
+      // Clear local storage items
+      localStorage.removeItem('selected_university');
+      localStorage.removeItem('last_course');
+      localStorage.removeItem('counselor');
+
+      showToast('Progress reset. Redirecting to course selection...');
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1500);
+    }
+
     // ================== EMAIL, EXPORT, LOGOUT ==================
     async function sendReport() {
       const student = window.getCurrentStudent();
@@ -832,6 +886,7 @@
       await supabaseClient.auth.signOut();
       localStorage.removeItem('student');
       localStorage.removeItem('selected_university');
+      localStorage.removeItem('last_course');
       window.location.href = 'index.html';
     }
 
@@ -844,6 +899,8 @@
       document.getElementById('studentId').textContent = `ID: ${student.student_id || '—'}`;
       const initials = (student.name || 'S').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
       document.getElementById('avatarInitials').textContent = initials;
+      updateEnrollmentDisplay();
+
       const progress = await window.loadSavedProgress();
       const checklist = progress?.checklist_status || {};
       allAiScores = progress?.ai_scores || {};
@@ -855,7 +912,7 @@
       renderChecklist(checklist);
       renderResponses(allAiScores);
       await setupCounselor(progress?.counselor || null);
-      updateLiveSessionUI(); // initial check
+      updateLiveSessionUI();
       document.getElementById('loadingState').classList.add('hidden');
       document.getElementById('dashboardContent').classList.remove('hidden');
     }
@@ -864,6 +921,7 @@
     document.getElementById('logoutBtn').addEventListener('click', logout);
     document.getElementById('emailReportBtn').addEventListener('click', sendReport);
     document.getElementById('exportJsonBtn').addEventListener('click', exportJson);
+    document.getElementById('changeCourseBtn').addEventListener('click', resetAndChangeCourse);
     setupSearchFilter();
 
     async function init() {
