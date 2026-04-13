@@ -97,6 +97,7 @@
     details summary::-webkit-details-marker {
       display: none;
     }
+    /* custom scroll for checklist */
     .custom-scroll::-webkit-scrollbar {
       width: 4px;
     }
@@ -187,37 +188,11 @@
         </div>
       </section>
 
-      <section id="zoomTrainingSection" class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow border-2 border-transparent transition-all duration-500">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-4">
-            <div id="zoomPulse" class="relative flex h-3 w-3 hidden">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-            </div>
-            
-            <div>
-              <h3 class="font-headline font-bold text-lg text-primary" id="zoomSchool">Regent College Training</h3>
-              <p class="font-body text-xs text-on-surface-variant" id="zoomTimeDisplay">Scheduled: 4:00 PM Today</p>
-            </div>
-          </div>
-
-          <a href="https://zoom.us/j/YOUR_MEETING_ID" target="_blank" id="zoomJoinBtn" class="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl font-label text-xs font-bold uppercase tracking-wider opacity-50 pointer-events-none transition-all duration-300">
-            <span class="material-symbols-outlined text-sm">videocam</span>
-            Join Session
-          </a>
-        </div>
-      </section>
-
       <section class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow">
         <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
-              <span class="material-symbols-outlined text-emerald-600" style="font-size:20px;">support_agent</span>
-            </div>
-            <div>
-              <h3 class="font-headline font-bold text-base text-primary">My Counselor</h3>
-              <p class="font-body text-xs text-on-surface-variant">Your assigned interview advisor</p>
-            </div>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-xl">support_agent</span>
+            <h3 class="font-headline font-bold text-lg text-primary">My Counselor</h3>
           </div>
           <button id="editCounselorBtn" class="flex items-center gap-1 px-3 py-1.5 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary hover:bg-slate-200/50 active:scale-95 transition-all">
             <span class="material-symbols-outlined text-sm">edit</span> Edit
@@ -225,66 +200,74 @@
         </div>
 
         <div id="counselorView">
-          <div id="counselorEmpty" class="py-4 text-center">
-            <span class="material-symbols-outlined text-slate-300 text-4xl mb-2 block">person_add</span>
-            <p class="font-body text-sm text-slate-400">No counselor added yet</p>
-            <p class="font-body text-xs text-slate-300 mt-1">Add your counselor's details so your report goes to the right person</p>
+          <div id="counselorEmpty" class="text-center py-4">
+            <span class="material-symbols-outlined text-4xl text-slate-300 mb-2 block">person_add</span>
+            <p class="font-body text-sm text-on-surface-variant mb-3">No counselor added yet</p>
+            <button onclick="document.getElementById('editCounselorBtn').click()" class="font-label text-xs font-bold text-primary uppercase tracking-wider px-4 py-2 bg-surface-container-high rounded-xl active:scale-95 transition-all">
+              Add Counselor
+            </button>
           </div>
-          <div id="counselorDetails" class="hidden space-y-2">
-            <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
-              <span class="material-symbols-outlined text-emerald-500 text-base">person</span>
+          <div id="counselorCard" class="hidden">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-secondary flex items-center justify-center text-white text-lg font-bold" id="counselorInitials">--</div>
               <div>
-                <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Name</p>
-                <p class="font-body text-sm font-semibold text-primary" id="counselorName">—</p>
+                <p class="font-headline font-bold text-base text-primary" id="counselorName">—</p>
+                <p class="font-body text-sm text-on-surface-variant" id="counselorRole">—</p>
               </div>
             </div>
-            <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
-              <span class="material-symbols-outlined text-emerald-500 text-base">mail</span>
-              <div>
-                <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Email</p>
-                <p class="font-body text-sm font-semibold text-primary" id="counselorEmail">—</p>
+            <div class="space-y-2">
+              <div id="counselorEmailRow" class="hidden flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+                <span class="material-symbols-outlined text-primary text-sm">mail</span>
+                <div>
+                  <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Email</p>
+                  <a id="counselorEmailLink" href="#" class="font-body text-sm text-primary font-medium">—</a>
+                </div>
               </div>
-            </div>
-            <div id="counselorPhoneRow" class="hidden flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
-              <span class="material-symbols-outlined text-emerald-500 text-base">phone</span>
-              <div>
-                <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Phone</p>
-                <p class="font-body text-sm font-semibold text-primary" id="counselorPhone">—</p>
+              <div id="counselorPhoneRow" class="hidden flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+                <span class="material-symbols-outlined text-primary text-sm">phone</span>
+                <div>
+                  <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Phone / WhatsApp</p>
+                  <p id="counselorPhone" class="font-body text-sm text-primary font-medium">—</p>
+                </div>
               </div>
-            </div>
-            <div id="counselorOrgRow" class="hidden flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
-              <span class="material-symbols-outlined text-emerald-500 text-base">business</span>
-              <div>
-                <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Organisation</p>
-                <p class="font-body text-sm font-semibold text-primary" id="counselorOrg">—</p>
+              <div id="counselorNotesRow" class="hidden flex items-start gap-3 p-3 bg-surface-container-low rounded-xl">
+                <span class="material-symbols-outlined text-primary text-sm mt-0.5">sticky_note_2</span>
+                <div>
+                  <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Notes</p>
+                  <p id="counselorNotes" class="font-body text-sm text-on-surface-variant leading-relaxed">—</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <div id="counselorEdit" class="hidden">
-          <p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-3">Counselor Details <span class="text-red-400">* required</span></p>
+          <p class="font-label text-xs font-bold text-primary uppercase tracking-wider mb-3">Counselor Details</p>
           <div class="space-y-3">
             <div>
               <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Full Name *</label>
-              <input id="cName" type="text" placeholder="e.g. Sarah Johnson" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-emerald-500/30"/>
+              <input id="cName" type="text" placeholder="e.g. Sarah Johnson" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
             </div>
             <div>
-              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Email Address *</label>
-              <input id="cEmail" type="email" placeholder="e.g. sarah@agency.com" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-emerald-500/30"/>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Role / Company</label>
+              <input id="cRole" type="text" placeholder="e.g. Senior Education Consultant at ABC Agency" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
             </div>
             <div>
-              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Phone <span class="text-slate-400 normal-case font-normal">(optional)</span></label>
-              <input id="cPhone" type="tel" placeholder="e.g. +44 7700 900000" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-emerald-500/30"/>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Email</label>
+              <input id="cEmail" type="email" placeholder="counselor@agency.com" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
             </div>
             <div>
-              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Organisation / Agency <span class="text-slate-400 normal-case font-normal">(optional)</span></label>
-              <input id="cOrg" type="text" placeholder="e.g. Bright Futures Education" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-emerald-500/30"/>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Phone / WhatsApp</label>
+              <input id="cPhone" type="tel" placeholder="+44 7700 000000" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+            </div>
+            <div>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Notes</label>
+              <textarea id="cNotes" rows="2" placeholder="e.g. Call every Tuesday, interview booked for 15 Jan..." class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"></textarea>
             </div>
           </div>
-          <p id="counselorEditError" class="text-red-500 text-xs mt-2 hidden">Name and email are required.</p>
-          <div class="flex gap-2 mt-4">
-            <button id="saveCounselorBtn" class="flex-1 py-2.5 bg-emerald-600 text-white rounded-xl font-label text-xs font-bold uppercase tracking-wider active:scale-95 transition-all hover:bg-emerald-700">Save Counselor</button>
+          <p id="counselorError" class="text-red-500 text-xs mt-2 hidden">Counselor name is required.</p>
+          <div class="flex gap-2 mt-3">
+            <button id="saveCounselorBtn" class="flex-1 py-2.5 bg-primary text-white rounded-xl font-label text-xs font-bold uppercase tracking-wider active:scale-95 transition-all">Save Counselor</button>
             <button id="cancelCounselorBtn" class="px-4 py-2.5 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary uppercase tracking-wider active:scale-95 transition-all">Cancel</button>
           </div>
         </div>
@@ -322,7 +305,7 @@
         </div>
         <div class="bg-surface-container-lowest rounded-[2rem] p-2 editorial-shadow overflow-hidden">
           <div id="checklistContainer" class="max-h-[220px] overflow-y-auto px-4 py-2 space-y-4 custom-scroll">
-          </div>
+            </div>
         </div>
       </section>
 
@@ -343,7 +326,7 @@
             class="w-full px-4 py-2.5 rounded-xl border border-outline/30 bg-surface-container-lowest text-sm font-body text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30">
         </div>
         <div id="responsesContainer" class="space-y-4">
-        </div>
+          </div>
         <div id="noResponsesMsg" class="text-center text-slate-400 py-8 hidden">No practice responses yet. Start practicing on any university page!</div>
       </section>
     </div>
@@ -375,49 +358,7 @@
   <div id="toast" style="display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:10px 20px;border-radius:999px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.2);transition:opacity 0.3s;"></div>
 
   <script>
-    // ===== ZOOM TRAINING SCHEDULER (EDIT HERE) =====
-    function updateZoomStatus() {
-      const zoomConfig = {
-        school: "Regent",               // E.g. "Regent", "YSJ", "BPP"
-        timeLabel: "4:00 PM - 5:00 PM", // Human-readable label for students
-        startHour: 16,                  // 24-hour format (e.g., 16 = 4 PM)
-        startMinute: 0,
-        endHour: 17,                    // 24-hour format (e.g., 17 = 5 PM)
-        endMinute: 0
-      };
-
-      const now = new Date();
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-
-      const section = document.getElementById('zoomTrainingSection');
-      const pulse = document.getElementById('zoomPulse');
-      const btn = document.getElementById('zoomJoinBtn');
-      const schoolText = document.getElementById('zoomSchool');
-      const timeText = document.getElementById('zoomTimeDisplay');
-
-      schoolText.textContent = zoomConfig.school + " Training";
-      timeText.textContent = "Scheduled: " + zoomConfig.timeLabel;
-
-      // Check if current time is within range
-      const isLive = (currentHour > zoomConfig.startHour || (currentHour === zoomConfig.startHour && currentMinute >= zoomConfig.startMinute)) &&
-                     (currentHour < zoomConfig.endHour || (currentHour === zoomConfig.endHour && currentMinute < zoomConfig.endMinute));
-
-      if (isLive) {
-        section.classList.add('border-emerald-500', 'bg-emerald-50/30');
-        pulse.classList.remove('hidden');
-        btn.classList.remove('opacity-50', 'pointer-events-none', 'bg-primary');
-        btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'scale-105');
-        btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-pulse">videocam</span> JOIN INTERVIEW';
-      } else {
-        section.classList.remove('border-emerald-500', 'bg-emerald-50/30');
-        pulse.classList.add('hidden');
-        btn.classList.add('opacity-50', 'pointer-events-none', 'bg-primary');
-        btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700', 'scale-105');
-        btn.innerHTML = '<span class="material-symbols-outlined text-sm">videocam</span> Join Session';
-      }
-    }
-
+    // ===== TOAST =====
     function showToast(msg, type = 'success') {
       const t = document.getElementById('toast');
       t.textContent = (type === 'success' ? '✅ ' : '❌ ') + msg;
@@ -428,6 +369,7 @@
       window._toastTimer = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.style.display = 'none', 300); }, 3000);
     }
 
+    // ===== QUESTION LABEL MAP (UPDATED FOR NETHERLANDS) =====
     const QUESTION_LABELS = {
       'UKVI_Q1': 'Why study in the UK?',
       'UKVI_Q2': 'Why this specific university?',
@@ -465,6 +407,7 @@
       return 'Practice';
     }
 
+    // ===== CHECKLIST KEY FORMATTER =====
     function formatChecklistKey(key) {
       if (/^(bpp|regent|ysj|nl|ukvi)_chk_\d+/.test(key)) {
         return 'Checklist item ' + key.replace(/^.*_chk_/, '#');
@@ -477,11 +420,13 @@
       return String(str).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
     }
 
+    // ===== STATE =====
     let allAiScores = {};
     let searchQuery = '';
     let filterCategory = 'all';
     let searchVisible = false;
 
+    // ===== RENDER CHECKLIST =====
     function renderChecklist(checklistStatus) {
       const container = document.getElementById('checklistContainer');
       const summarySpan = document.getElementById('checklistSummary');
@@ -507,14 +452,17 @@
       `).join('');
     }
 
+    // ===== RENDER RESPONSES =====
     function renderResponses(aiScores, query = '', category = 'all') {
       const container = document.getElementById('responsesContainer');
       const noMsg = document.getElementById('noResponsesMsg');
+
       if (!aiScores || Object.keys(aiScores).length === 0) {
         container.innerHTML = '';
         noMsg.classList.remove('hidden');
         return;
       }
+
       let entries = Object.entries(aiScores);
       if (category !== 'all') {
         entries = entries.filter(([qId]) => getCategoryFromId(qId).toLowerCase().includes(category.toLowerCase()));
@@ -524,27 +472,37 @@
         entries = entries.filter(([qId, data]) => {
           const label = getQuestionLabel(qId, data).toLowerCase();
           const answer = (data.answer || '').toLowerCase();
-          return label.includes(q) || answer.includes(q);
+          const cat = getCategoryFromId(qId).toLowerCase();
+          return label.includes(q) || answer.includes(q) || cat.includes(q);
         });
       }
+
       if (entries.length === 0) {
         container.innerHTML = '';
+        noMsg.textContent = 'No responses match your search.';
         noMsg.classList.remove('hidden');
         return;
       }
+
       noMsg.classList.add('hidden');
       entries.sort((a, b) => (b[1]?.date ? new Date(b[1].date) : 0) - (a[1]?.date ? new Date(a[1].date) : 0));
+
       container.innerHTML = entries.map(([qId, data]) => {
         const score = typeof data.score === 'number' ? data.score : 0;
         const pass = score >= 7;
         const label = getQuestionLabel(qId, data);
         const category = getCategoryFromId(qId);
         const feedback = data.feedback || data.summary || 'No feedback available';
+        const dateStr = data.date ? new Date(data.date).toLocaleDateString('en-GB') : '';
+
         return `
           <div class="bg-surface-container-lowest rounded-[1.5rem] p-5 editorial-shadow border border-white/40">
             <div class="flex justify-between items-start mb-3">
               <div class="flex-1 pr-3">
-                <span class="font-label text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm bg-primary/10 text-primary mb-1 inline-block">${escapeHtml(category)}</span>
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="font-label text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm bg-primary/10 text-primary">${escapeHtml(category)}</span>
+                  ${dateStr ? `<span class="font-label text-[9px] text-slate-400">${escapeHtml(dateStr)}</span>` : ''}
+                </div>
                 <h4 class="font-headline font-bold text-sm text-primary leading-snug">${escapeHtml(label)}</h4>
               </div>
               <div class="text-right flex-shrink-0">
@@ -559,58 +517,115 @@
               </summary>
               <div class="mt-3 space-y-3 font-body text-sm">
                 <div class="p-3 bg-surface-container-low rounded-xl">
-                  <p class="font-label text-[9px] font-bold text-on-surface-variant uppercase mb-1">AI Feedback</p>
+                  <p class="font-label text-[9px] font-bold text-on-surface-variant uppercase mb-1">Your Answer</p>
+                  <p class="text-on-surface leading-relaxed italic text-xs">${escapeHtml(data.answer)}</p>
+                </div>
+                <div class="p-3 ${pass ? 'bg-secondary/5 border-l-4 border-secondary' : 'bg-tertiary/5 border-l-4 border-tertiary'} rounded-xl">
+                  <p class="font-label text-[9px] font-bold ${pass ? 'text-secondary' : 'text-tertiary'} uppercase mb-1">AI Feedback</p>
                   <p class="text-on-surface leading-relaxed text-xs">${escapeHtml(feedback)}</p>
                 </div>
               </div>
             </details>
-          </div>
-        `;
+          </div>`;
       }).join('');
     }
 
-    async function loadDashboard() {
+    // ===== UPDATE STATS =====
+    function updateStats(aiScores) {
+      const responsesList = Object.values(aiScores);
+      const total = responsesList.length;
+      let totalScore = 0, passCount = 0;
+      responsesList.forEach(r => {
+        if (typeof r.score === 'number') { totalScore += r.score; if (r.score >= 7) passCount++; }
+      });
+      document.getElementById('totalResponses').textContent = total;
+      document.getElementById('avgScore').innerHTML = `${total ? (totalScore / total).toFixed(1) : '0'}<span class="text-sm font-body text-secondary/60">/10</span>`;
+      document.getElementById('passRate').innerHTML = `${total ? Math.round((passCount / total) * 100) : 0}<span class="text-sm font-body text-secondary/60">%</span>`;
+    }
+
+    // ===== SEARCH & FILTER =====
+    function setupSearchFilter() {
+      const searchBtn = document.getElementById('searchBtn');
+      const filterBtn = document.getElementById('filterBtn');
+      const searchBox = document.getElementById('searchBox');
+      searchBtn.addEventListener('click', () => {
+        searchVisible = !searchVisible;
+        searchBox.style.display = searchVisible ? 'block' : 'none';
+        if (searchVisible) searchBox.querySelector('input').focus();
+      });
+      searchBox.querySelector('input').addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        renderResponses(allAiScores, searchQuery, filterCategory);
+      });
+      const categories = ['all', 'Regent', 'YSJ', 'BPP', 'UKVI', 'Netherlands'];
+      let catIndex = 0;
+      filterBtn.addEventListener('click', () => {
+        catIndex = (catIndex + 1) % categories.length;
+        filterCategory = categories[catIndex];
+        filterBtn.querySelector('span').textContent = filterCategory === 'all' ? 'tune' : 'filter_alt';
+        renderResponses(allAiScores, searchQuery, filterCategory);
+      });
+    }
+
+    // ===== UNIVERSITY MAPPING (UPDATED FOR NETHERLANDS) =====
+    const UNI_NAMES = {
+      'regent': 'Regent College London',
+      'yorkstjohn': 'York St John University',
+      'bpp': 'BPP University',
+      'netherlands': 'Netherlands (IND)',
+      'ukvi': 'UKVI Credibility Prep'
+    };
+
+    function displayEnrolment() {
+      const uni = localStorage.getItem('selected_university');
+      const course = localStorage.getItem('last_course');
+      const block = document.getElementById('currentEnrolment');
+      if (uni && UNI_NAMES[uni]) {
+        block.classList.remove('hidden');
+        document.getElementById('currentSchool').textContent = UNI_NAMES[uni];
+        document.getElementById('currentProgramme').textContent = course ? course.replace(/-/g, ' ').toUpperCase() : 'General Prep';
+      }
+    }
+
+    // ===== COUNSELOR LOGIC =====
+    function renderCounselorCard(data) {
+      const empty = document.getElementById('counselorEmpty');
+      const card  = document.getElementById('counselorCard');
+      if (!data || !data.name) { empty.classList.remove('hidden'); card.classList.add('hidden'); return; }
+      empty.classList.add('hidden'); card.classList.remove('hidden');
+      document.getElementById('counselorInitials').textContent = data.name.charAt(0).toUpperCase();
+      document.getElementById('counselorName').textContent = data.name;
+      document.getElementById('counselorRole').textContent = data.role || 'Counselor';
+      if (data.email) {
+        document.getElementById('counselorEmailRow').classList.remove('hidden');
+        document.getElementById('counselorEmailLink').textContent = data.email;
+        document.getElementById('counselorEmailLink').href = 'mailto:' + data.email;
+      }
+    }
+
+    // ===== INIT =====
+    document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.clear(); window.location.href = 'index.html'; });
+    
+    async function init() {
       const student = window.getCurrentStudent();
       if (!student) { window.location.href = 'index.html'; return; }
-      document.getElementById('studentName').textContent = student.name || 'Student';
-      document.getElementById('studentEmail').textContent = student.email || '';
+      document.getElementById('studentName').textContent = student.name;
+      document.getElementById('studentEmail').textContent = student.email;
       document.getElementById('studentId').textContent = `ID: ${student.student_id || '—'}`;
-      const initials = (student.name || 'S').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-      document.getElementById('avatarInitials').textContent = initials;
+      
       const progress = await window.loadSavedProgress();
-      renderChecklist(progress?.checklist_status || {});
       allAiScores = progress?.ai_scores || {};
+      renderChecklist(progress?.checklist_status || {});
       renderResponses(allAiScores);
       updateStats(allAiScores);
-      updateZoomStatus();
-      setInterval(updateZoomStatus, 60000);
+      renderCounselorCard(progress?.counselor);
+      displayEnrolment();
+      
+      setupSearchFilter();
       document.getElementById('loadingState').classList.add('hidden');
       document.getElementById('dashboardContent').classList.remove('hidden');
     }
-
-    function updateStats(aiScores) {
-      const list = Object.values(aiScores);
-      const total = list.length;
-      let totalScore = 0, passCount = 0;
-      list.forEach(r => { if (typeof r.score === 'number') { totalScore += r.score; if (r.score >= 7) passCount++; } });
-      const avg = total ? (totalScore / total).toFixed(1) : '0';
-      document.getElementById('totalResponses').textContent = total;
-      document.getElementById('avgScore').innerHTML = `${avg}<span class="text-sm font-body text-secondary/60">/10</span>`;
-      document.getElementById('passRate').innerHTML = `${total ? Math.round((passCount/total)*100) : 0}<span class="text-sm font-body text-secondary/60">%</span>`;
-    }
-
-    async function logout() {
-      const { createClient } = supabase;
-      const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
-      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
-      const sc = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      await sc.auth.signOut();
-      localStorage.removeItem('student');
-      window.location.href = 'index.html';
-    }
-
-    document.getElementById('logoutBtn').addEventListener('click', logout);
-    loadDashboard();
+    init();
   </script>
 </body>
 </html>
