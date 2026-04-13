@@ -133,32 +133,49 @@
 
     <!-- Dashboard content (hidden initially) -->
     <div id="dashboardContent" class="hidden space-y-8">
-      
-      <!-- Profile Card (Editable) -->
+      <!-- Profile Card -->
       <section class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow">
-        <div class="flex items-center gap-4 mb-6">
-          <div class="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-white text-2xl font-bold" id="avatarInitials">JS</div>
-          <div class="flex-1">
-            <div id="profileDisplay">
+        <!-- View mode -->
+        <div id="profileView">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-white text-2xl font-bold" id="avatarInitials">AC</div>
+            <div class="flex-1">
               <h2 class="font-headline font-bold text-xl text-primary" id="studentName">Student Name</h2>
               <p class="font-body text-sm text-on-surface-variant" id="studentEmail">email@example.com</p>
-              <div class="flex items-center justify-between mt-1">
-                <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant/60 font-bold" id="studentId">ID: --</span>
-                <button id="editProfileBtn" class="text-[10px] font-bold text-primary flex items-center gap-1">
-                  <span class="material-symbols-outlined text-xs">edit</span> Edit Profile
-                </button>
-              </div>
+              <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant/60 font-bold" id="studentId">ID: --</span>
             </div>
-            <div id="profileEdit" class="hidden space-y-3">
-              <input type="text" id="editNameInput" placeholder="Full Name" class="w-full px-3 py-2 text-sm border border-outline/30 rounded-xl focus:ring-2 focus:ring-primary/30">
-              <input type="text" id="editIdInput" placeholder="Student ID" class="w-full px-3 py-2 text-sm border border-outline/30 rounded-xl focus:ring-2 focus:ring-primary/30">
-              <div class="flex gap-2">
-                <button id="saveProfileBtn" class="flex-1 py-2 bg-primary text-white rounded-xl text-xs font-bold">Save Changes</button>
-                <button id="cancelEditBtn" class="px-4 py-2 bg-surface-container-high text-primary rounded-xl text-xs font-bold">Cancel</button>
-              </div>
-            </div>
+            <button id="editProfileBtn" class="flex items-center gap-1 px-3 py-1.5 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary hover:bg-slate-200/50 active:scale-95 transition-all">
+              <span class="material-symbols-outlined text-sm">edit</span> Edit
+            </button>
+          </div>
+          <!-- Current school/programme -->
+          <div id="currentEnrolment" class="hidden mb-4 p-3 bg-surface-container-low rounded-xl border border-outline-variant/20">
+            <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Currently Preparing For</p>
+            <p class="font-body text-sm font-semibold text-primary" id="currentSchool">—</p>
+            <p class="font-body text-xs text-on-surface-variant" id="currentProgramme">—</p>
           </div>
         </div>
+
+        <!-- Edit mode (hidden by default) -->
+        <div id="profileEdit" class="hidden mb-4">
+          <p class="font-label text-xs font-bold text-primary uppercase tracking-wider mb-3">Edit Profile — all fields required</p>
+          <div class="space-y-3">
+            <div>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Full Name *</label>
+              <input id="editName" type="text" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="Your full name"/>
+            </div>
+            <div>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Student ID *</label>
+              <input id="editStudentId" type="text" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="e.g. STU12345"/>
+            </div>
+          </div>
+          <p id="profileEditError" class="text-red-500 text-xs mt-2 hidden">All fields are required.</p>
+          <div class="flex gap-2 mt-3">
+            <button id="saveProfileBtn" class="flex-1 py-2.5 bg-primary text-white rounded-xl font-label text-xs font-bold uppercase tracking-wider active:scale-95 transition-all">Save Changes</button>
+            <button id="cancelEditBtn" class="px-4 py-2.5 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary uppercase tracking-wider active:scale-95 transition-all">Cancel</button>
+          </div>
+        </div>
+
         <div class="grid grid-cols-2 gap-3">
           <button id="emailReportBtn" class="flex items-center justify-center gap-2 py-3 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary hover:bg-slate-200/50 active:scale-95 transition-all">
             <span class="material-symbols-outlined text-sm">mail</span>
@@ -169,26 +186,97 @@
             Export Data
           </button>
         </div>
-      </section>
 
-      <!-- Current Registration Status -->
-      <section class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow border-l-4 border-primary">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="font-headline font-bold text-lg text-primary">Current Pathway</h3>
-          <button id="dashOptOutBtn" class="text-[10px] font-bold text-error uppercase tracking-wider flex items-center gap-1">
-            <span class="material-symbols-outlined text-xs">restart_alt</span> Reset
+        <!-- Opt-out / reset -->
+        <div class="mt-3 pt-3 border-t border-outline-variant/20">
+          <button id="optOutBtn" class="w-full flex items-center justify-center gap-2 py-2.5 bg-red-50 text-red-600 rounded-xl font-label text-xs font-bold uppercase tracking-wider hover:bg-red-100 active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-sm">restart_alt</span>
+            Change School / Reset Everything
           </button>
         </div>
-        <div class="flex items-start gap-4">
-          <div class="w-12 h-12 bg-surface-container-high rounded-xl flex items-center justify-center text-primary">
-            <span class="material-symbols-outlined" id="pathwayIcon">school</span>
+      </section>
+
+      <!-- Counselor Section -->
+      <section class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+              <span class="material-symbols-outlined text-emerald-600" style="font-size:20px;">support_agent</span>
+            </div>
+            <div>
+              <h3 class="font-headline font-bold text-base text-primary">My Counselor</h3>
+              <p class="font-body text-xs text-on-surface-variant">Your assigned interview advisor</p>
+            </div>
           </div>
-          <div>
-            <p class="font-headline font-bold text-base text-primary" id="dashSchool">No School Selected</p>
-            <p class="font-body text-xs text-on-surface-variant" id="dashProgram">Choose a pathway on the home page</p>
-            <a href="index.html" id="dashContinueBtn" class="inline-flex items-center gap-1 mt-3 text-xs font-bold text-primary">
-              Continue Practice <span class="material-symbols-outlined text-xs">arrow_forward</span>
-            </a>
+          <button id="editCounselorBtn" class="flex items-center gap-1 px-3 py-1.5 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary hover:bg-slate-200/50 active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-sm">edit</span> Edit
+          </button>
+        </div>
+
+        <!-- View mode -->
+        <div id="counselorView">
+          <div id="counselorEmpty" class="py-4 text-center">
+            <span class="material-symbols-outlined text-slate-300 text-4xl mb-2 block">person_add</span>
+            <p class="font-body text-sm text-slate-400">No counselor added yet</p>
+            <p class="font-body text-xs text-slate-300 mt-1">Add your counselor's details so your report goes to the right person</p>
+          </div>
+          <div id="counselorDetails" class="hidden space-y-2">
+            <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+              <span class="material-symbols-outlined text-emerald-500 text-base">person</span>
+              <div>
+                <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Name</p>
+                <p class="font-body text-sm font-semibold text-primary" id="counselorName">—</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+              <span class="material-symbols-outlined text-emerald-500 text-base">mail</span>
+              <div>
+                <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Email</p>
+                <p class="font-body text-sm font-semibold text-primary" id="counselorEmail">—</p>
+              </div>
+            </div>
+            <div id="counselorPhoneRow" class="hidden flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+              <span class="material-symbols-outlined text-emerald-500 text-base">phone</span>
+              <div>
+                <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Phone</p>
+                <p class="font-body text-sm font-semibold text-primary" id="counselorPhone">—</p>
+              </div>
+            </div>
+            <div id="counselorOrgRow" class="hidden flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+              <span class="material-symbols-outlined text-emerald-500 text-base">business</span>
+              <div>
+                <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Organisation</p>
+                <p class="font-body text-sm font-semibold text-primary" id="counselorOrg">—</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit mode -->
+        <div id="counselorEdit" class="hidden">
+          <p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-3">Counselor Details <span class="text-red-400">* required</span></p>
+          <div class="space-y-3">
+            <div>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Full Name *</label>
+              <input id="cName" type="text" placeholder="e.g. Sarah Johnson" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-emerald-500/30"/>
+            </div>
+            <div>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Email Address *</label>
+              <input id="cEmail" type="email" placeholder="e.g. sarah@agency.com" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-emerald-500/30"/>
+            </div>
+            <div>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Phone <span class="text-slate-400 normal-case font-normal">(optional)</span></label>
+              <input id="cPhone" type="tel" placeholder="e.g. +44 7700 900000" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-emerald-500/30"/>
+            </div>
+            <div>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Organisation / Agency <span class="text-slate-400 normal-case font-normal">(optional)</span></label>
+              <input id="cOrg" type="text" placeholder="e.g. Bright Futures Education" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-emerald-500/30"/>
+            </div>
+          </div>
+          <p id="counselorEditError" class="text-red-500 text-xs mt-2 hidden">Name and email are required.</p>
+          <div class="flex gap-2 mt-4">
+            <button id="saveCounselorBtn" class="flex-1 py-2.5 bg-emerald-600 text-white rounded-xl font-label text-xs font-bold uppercase tracking-wider active:scale-95 transition-all hover:bg-emerald-700">Save Counselor</button>
+            <button id="cancelCounselorBtn" class="px-4 py-2.5 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary uppercase tracking-wider active:scale-95 transition-all">Cancel</button>
           </div>
         </div>
       </section>
@@ -219,6 +307,94 @@
         </div>
       </section>
 
+      <!-- Counselor Section -->
+      <section class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-xl">support_agent</span>
+            <h3 class="font-headline font-bold text-lg text-primary">My Counselor</h3>
+          </div>
+          <button id="editCounselorBtn" class="flex items-center gap-1 px-3 py-1.5 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary hover:bg-slate-200/50 active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-sm">edit</span> Edit
+          </button>
+        </div>
+
+        <!-- View mode -->
+        <div id="counselorView">
+          <div id="counselorEmpty" class="text-center py-4">
+            <span class="material-symbols-outlined text-4xl text-slate-300 mb-2 block">person_add</span>
+            <p class="font-body text-sm text-on-surface-variant mb-3">No counselor added yet</p>
+            <button onclick="document.getElementById('editCounselorBtn').click()" class="font-label text-xs font-bold text-primary uppercase tracking-wider px-4 py-2 bg-surface-container-high rounded-xl active:scale-95 transition-all">
+              Add Counselor
+            </button>
+          </div>
+          <div id="counselorCard" class="hidden">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-12 h-12 rounded-2xl bg-secondary flex items-center justify-center text-white text-lg font-bold" id="counselorInitials">--</div>
+              <div>
+                <p class="font-headline font-bold text-base text-primary" id="counselorName">—</p>
+                <p class="font-body text-sm text-on-surface-variant" id="counselorRole">—</p>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div id="counselorEmailRow" class="hidden flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+                <span class="material-symbols-outlined text-primary text-sm">mail</span>
+                <div>
+                  <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Email</p>
+                  <a id="counselorEmailLink" href="#" class="font-body text-sm text-primary font-medium">—</a>
+                </div>
+              </div>
+              <div id="counselorPhoneRow" class="hidden flex items-center gap-3 p-3 bg-surface-container-low rounded-xl">
+                <span class="material-symbols-outlined text-primary text-sm">phone</span>
+                <div>
+                  <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Phone / WhatsApp</p>
+                  <p id="counselorPhone" class="font-body text-sm text-primary font-medium">—</p>
+                </div>
+              </div>
+              <div id="counselorNotesRow" class="hidden flex items-start gap-3 p-3 bg-surface-container-low rounded-xl">
+                <span class="material-symbols-outlined text-primary text-sm mt-0.5">sticky_note_2</span>
+                <div>
+                  <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Notes</p>
+                  <p id="counselorNotes" class="font-body text-sm text-on-surface-variant leading-relaxed">—</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit mode -->
+        <div id="counselorEdit" class="hidden">
+          <p class="font-label text-xs font-bold text-primary uppercase tracking-wider mb-3">Counselor Details</p>
+          <div class="space-y-3">
+            <div>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Full Name *</label>
+              <input id="cName" type="text" placeholder="e.g. Sarah Johnson" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+            </div>
+            <div>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Role / Company</label>
+              <input id="cRole" type="text" placeholder="e.g. Senior Education Consultant at ABC Agency" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+            </div>
+            <div>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Email</label>
+              <input id="cEmail" type="email" placeholder="counselor@agency.com" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+            </div>
+            <div>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Phone / WhatsApp</label>
+              <input id="cPhone" type="tel" placeholder="+44 7700 000000" class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+            </div>
+            <div>
+              <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold block mb-1">Notes</label>
+              <textarea id="cNotes" rows="2" placeholder="e.g. Call every Tuesday, interview booked for 15 Jan..." class="w-full border border-outline-variant/40 rounded-xl px-3 py-2 text-sm font-body bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"></textarea>
+            </div>
+          </div>
+          <p id="counselorError" class="text-red-500 text-xs mt-2 hidden">Counselor name is required.</p>
+          <div class="flex gap-2 mt-3">
+            <button id="saveCounselorBtn" class="flex-1 py-2.5 bg-primary text-white rounded-xl font-label text-xs font-bold uppercase tracking-wider active:scale-95 transition-all">Save Counselor</button>
+            <button id="cancelCounselorBtn" class="px-4 py-2.5 bg-surface-container-high rounded-xl font-label text-xs font-bold text-primary uppercase tracking-wider active:scale-95 transition-all">Cancel</button>
+          </div>
+        </div>
+      </section>
+
       <!-- Checklist Section -->
       <section>
         <div class="flex items-center justify-between mb-4">
@@ -246,7 +422,7 @@
           </div>
         </div>
         <div id="searchBox" style="display:none;" class="mb-3">
-          <input type="text" id="searchInput" placeholder="Search by question, university, or keyword..." 
+          <input type="text" placeholder="Search by question, university, or keyword..." 
             class="w-full px-4 py-2.5 rounded-xl border border-outline/30 bg-surface-container-lowest text-sm font-body text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30">
         </div>
         <div id="responsesContainer" class="space-y-4">
@@ -257,124 +433,185 @@
     </div>
   </main>
 
-  <!-- Bottom Navigation -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-outline/10 flex justify-around py-3 px-6 z-50">
-    <a href="index.html" class="flex flex-col items-center gap-1 text-slate-400">
-      <span class="material-symbols-outlined text-2xl">home</span>
-      <span class="text-[9px] font-bold uppercase tracking-widest">Home</span>
+  <!-- Bottom Navigation (cosmetic, matches design) -->
+  <nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-white/90 backdrop-blur-2xl shadow-[0_-8px_32px_rgba(0,32,69,0.06)] rounded-t-[2.5rem]">
+    <a href="index.html" class="flex flex-col items-center justify-center text-slate-400 px-4 py-2 hover:text-blue-900 transition-all duration-200 active:translate-y-0.5">
+      <span class="material-symbols-outlined mb-1">dashboard</span>
+      <span class="font-inter text-[10px] font-semibold uppercase tracking-wider">Dashboard</span>
     </a>
-    <a href="index.html#universities" class="flex flex-col items-center gap-1 text-slate-400">
-      <span class="material-symbols-outlined text-2xl">explore</span>
-      <span class="text-[9px] font-bold uppercase tracking-widest">Explore</span>
+    <a href="index.html" class="flex flex-col items-center justify-center text-slate-400 px-4 py-2 hover:text-blue-900 transition-all duration-200 active:translate-y-0.5">
+      <span class="material-symbols-outlined mb-1">fact_check</span>
+      <span class="font-inter text-[10px] font-semibold uppercase tracking-wider">Checklist</span>
     </a>
-    <a href="dashboard.html" class="flex flex-col items-center gap-1 text-primary">
-      <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">history</span>
-      <span class="text-[9px] font-bold uppercase tracking-widest">History</span>
+    <a href="index.html" class="flex flex-col items-center justify-center text-slate-400 px-4 py-2 hover:text-blue-900 transition-all duration-200 active:translate-y-0.5">
+      <span class="material-symbols-outlined mb-1">forum</span>
+      <span class="font-inter text-[10px] font-semibold uppercase tracking-wider">Practice</span>
     </a>
-    <a href="dashboard.html" class="flex flex-col items-center gap-1 text-primary">
-      <span class="material-symbols-outlined text-2xl">person</span>
-      <span class="text-[9px] font-bold uppercase tracking-widest">Profile</span>
+    <a href="dashboard.html" class="flex flex-col items-center justify-center text-emerald-700 bg-emerald-50 rounded-2xl px-4 py-2 transition-all duration-200 active:translate-y-0.5">
+      <span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">person</span>
+      <span class="font-inter text-[10px] font-semibold uppercase tracking-wider">Profile</span>
     </a>
   </nav>
 
-  <!-- TOAST -->
-  <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-3 rounded-full text-sm font-bold shadow-lg z-[9999] opacity-0 pointer-events-none transition-all duration-300"></div>
-
-  <!-- SCRIPTS -->
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="app.js"></script>
+
+  <!-- Toast notification -->
+  <div id="toast" style="display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:10px 20px;border-radius:999px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.2);transition:opacity 0.3s;"></div>
+
   <script>
+    // ===== TOAST =====
+    function showToast(msg, type = 'success') {
+      const t = document.getElementById('toast');
+      t.textContent = (type === 'success' ? '✅ ' : '❌ ') + msg;
+      t.style.background = type === 'success' ? '#003a1f' : '#5c0000';
+      t.style.display = 'block';
+      t.style.opacity = '1';
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.style.display = 'none', 300); }, 3000);
+    }
+
+    // ===== QUESTION LABEL MAP =====
+    const QUESTION_LABELS = {
+      'UKVI_Q1': 'Why study in the UK?',
+      'UKVI_Q2': 'Why this specific university?',
+      'UKVI_Q3': 'Plans after your studies?',
+      'UKVI_Q4': 'How will you fund your studies?',
+      'UKVI_Q5': 'Your academic background',
+      'UKVI_Q6': 'Course name and duration',
+      'UKVI_Q7': 'Why study this subject?',
+      'UKVI_Q8': 'Ties to your home country?',
+      'NL_Q1': 'Why study in the Netherlands?',
+      'NL_Q2': 'Why this Dutch university?',
+      'NL_Q3': 'Plans after your studies?',
+      'NL_Q4': 'How will you fund your studies?',
+      'NL_Q5': 'Language of instruction?',
+      'NL_Q6': 'Course name and duration',
+      'NL_Q7': 'Connections in the Netherlands?',
+      'NL_Q8': 'Ties to your home country?',
+      'BPP_Q1': 'Why study at BPP University?',
+    };
+
+    function getQuestionLabel(qId, data) {
+      // Prefer stored questionText, then map, then formatted ID
+      if (data?.questionText && !data.questionText.match(/^(REGENT|YSJ|UKVI|BPP|NL)_/)) return data.questionText;
+      if (QUESTION_LABELS[qId]) return QUESTION_LABELS[qId];
+      let label = qId.replace(/^(REGENT|YSJ|UKVI|BPP|NL)_/, '').replace(/_/g, ' ');
+      label = label.charAt(0).toUpperCase() + label.slice(1).toLowerCase();
+      return label;
+    }
+
+    function getCategoryFromId(qId) {
+      if (qId.startsWith('REGENT')) return 'Regent College';
+      if (qId.startsWith('YSJ')) return 'York St John';
+      if (qId.startsWith('BPP')) return 'BPP University';
+      if (qId.startsWith('NL')) return 'Netherlands';
+      if (qId.startsWith('UKVI')) return 'UKVI';
+      return 'Practice';
+    }
+
+    // ===== CHECKLIST KEY FORMATTER =====
+    function formatChecklistKey(key) {
+      // Keys are now stored as human-readable text directly.
+      // Strip old-style IDs like regent_chk_0 if they slip through.
+      if (/^(bpp|regent|ysj|nl|ukvi)_chk_\d+/.test(key)) {
+        // Old format - can't recover text, just show a generic label
+        return 'Checklist item ' + key.replace(/^.*_chk_/, '#');
+      }
+      return key || 'Checklist item';
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+    }
+
+    // ===== STATE =====
     let allAiScores = {};
     let searchQuery = '';
     let filterCategory = 'all';
     let searchVisible = false;
 
-    // ===== TOAST =====
-    function showToast(msg, type='info') {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.style.background = type === 'error' ? '#ba1a1a' : '#002045';
-      t.classList.remove('opacity-0', 'pointer-events-none');
-      t.classList.add('opacity-100');
-      setTimeout(() => {
-        t.classList.add('opacity-0', 'pointer-events-none');
-        t.classList.remove('opacity-100');
-      }, 3000);
-    }
-
-    function escapeHtml(text) {
-      if (!text) return '';
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
     // ===== RENDER CHECKLIST =====
-    function renderChecklist(checklist) {
+    function renderChecklist(checklistStatus) {
       const container = document.getElementById('checklistContainer');
-      const entries = Object.entries(checklist);
-      if (!entries.length) {
-        container.innerHTML = '<div class="text-center text-slate-400 py-4 text-xs">No checklist items yet.</div>';
-        document.getElementById('checklistSummary').textContent = '0/0 COMPLETED';
+      const summarySpan = document.getElementById('checklistSummary');
+      if (!checklistStatus || Object.keys(checklistStatus).length === 0) {
+        container.innerHTML = '<div class="text-slate-400 text-sm py-4 text-center">No checklist items yet.</div>';
+        summarySpan.textContent = '0/0 COMPLETED';
         return;
       }
-
-      const doneCount = entries.filter(e => e[1] === true).length;
-      document.getElementById('checklistSummary').textContent = `${doneCount}/${entries.length} COMPLETED`;
-
-      container.innerHTML = entries.map(([text, done]) => `
-        <div class="flex items-start gap-3 p-1">
-          <span class="material-symbols-outlined text-lg ${done ? 'text-secondary' : 'text-slate-300'}" style="font-variation-settings: 'FILL' ${done ? 1 : 0};">
-            ${done ? 'check_circle' : 'radio_button_unchecked'}
-          </span>
-          <p class="text-xs font-medium ${done ? 'text-slate-400 line-through' : 'text-on-surface'}">${escapeHtml(text)}</p>
+      const items = Object.entries(checklistStatus);
+      const doneCount = items.filter(([, done]) => done === true).length;
+      const total = items.length;
+      const percent = total ? Math.round((doneCount / total) * 100) : 0;
+      document.getElementById('checklistPercent').innerHTML = `${percent}<span class="text-sm font-body text-primary/60">%</span>`;
+      summarySpan.textContent = `${doneCount}/${total} COMPLETED`;
+      container.innerHTML = items.map(([key, done]) => `
+        <div class="flex items-center justify-between group">
+          <div class="flex items-center gap-3">
+            <div class="w-2 h-2 rounded-full ${done ? 'bg-secondary' : 'bg-slate-300'}"></div>
+            <p class="font-body text-sm font-medium text-on-surface">${escapeHtml(formatChecklistKey(key))}</p>
+          </div>
+          <span class="font-label text-[10px] font-bold ${done ? 'text-secondary' : 'text-slate-400'}">${done ? 'DONE' : 'PENDING'}</span>
         </div>
       `).join('');
     }
 
     // ===== RENDER RESPONSES =====
-    function renderResponses(aiScores, search = '', filter = 'all') {
+    function renderResponses(aiScores, query = '', category = 'all') {
       const container = document.getElementById('responsesContainer');
       const noMsg = document.getElementById('noResponsesMsg');
-      
-      let items = Object.entries(aiScores);
-      
-      // Filter
-      if (filter !== 'all') {
-        items = items.filter(([id, data]) => {
-          const cat = id.split('_')[0];
-          return cat === filter;
-        });
-      }
 
-      // Search
-      if (search.trim()) {
-        const q = search.toLowerCase();
-        items = items.filter(([id, data]) => {
-          return (data.questionText || '').toLowerCase().includes(q) || 
-                 (data.answer || '').toLowerCase().includes(q) ||
-                 (data.feedback || '').toLowerCase().includes(q);
-        });
-      }
-
-      if (!items.length) {
+      if (!aiScores || Object.keys(aiScores).length === 0) {
         container.innerHTML = '';
+        noMsg.textContent = 'No practice responses yet. Start practising on any university page!';
         noMsg.classList.remove('hidden');
         return;
       }
+
+      let entries = Object.entries(aiScores);
+
+      // Filter by category
+      if (category !== 'all') {
+        entries = entries.filter(([qId]) => getCategoryFromId(qId).toLowerCase().includes(category.toLowerCase()));
+      }
+
+      // Filter by search
+      if (query.trim()) {
+        const q = query.toLowerCase();
+        entries = entries.filter(([qId, data]) => {
+          const label = getQuestionLabel(qId, data).toLowerCase();
+          const answer = (data.answer || '').toLowerCase();
+          const cat = getCategoryFromId(qId).toLowerCase();
+          return label.includes(q) || answer.includes(q) || cat.includes(q);
+        });
+      }
+
+      if (entries.length === 0) {
+        container.innerHTML = '';
+        noMsg.textContent = 'No responses match your search.';
+        noMsg.classList.remove('hidden');
+        return;
+      }
+
       noMsg.classList.add('hidden');
 
-      // Sort by date desc
-      items.sort((a, b) => new Date(b[1].date || 0) - new Date(a[1].date || 0));
+      entries.sort((a, b) => {
+        const dateA = a[1]?.date ? new Date(a[1].date) : 0;
+        const dateB = b[1]?.date ? new Date(b[1].date) : 0;
+        return dateB - dateA;
+      });
 
-      container.innerHTML = items.map(([qId, data]) => {
-        const category = qId.split('_')[0];
-        const label = data.questionText || qId;
-        const score = data.score || 0;
+      container.innerHTML = entries.map(([qId, data]) => {
+        const score = typeof data.score === 'number' ? data.score : 0;
         const pass = score >= 7;
-        const feedback = data.feedback || '';
-        const answerPreview = data.answer || '';
+        const label = getQuestionLabel(qId, data);
+        const category = getCategoryFromId(qId);
+        const answerPreview = data.answer ? (data.answer.length > 120 ? data.answer.substring(0, 120) + '…' : data.answer) : 'No answer saved';
+        const feedback = data.feedback || data.summary || 'No feedback available';
         const dateStr = data.date ? new Date(data.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
 
         return `
@@ -429,6 +666,12 @@
       delete responses[qId];
       delete allAiScores[qId];
 
+      const { createClient } = supabase;
+      const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+      const supabaseClient = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      window._supabaseClient = supabaseClient;
+
       const { error } = await supabaseClient
         .from('student_progress')
         .update({ ai_scores: scores, practice_responses: responses, updated_at: new Date().toISOString() })
@@ -461,15 +704,14 @@
       const searchBtn = document.getElementById('searchBtn');
       const filterBtn = document.getElementById('filterBtn');
       const searchBox = document.getElementById('searchBox');
-      const searchInput = document.getElementById('searchInput');
 
       searchBtn.addEventListener('click', () => {
         searchVisible = !searchVisible;
         searchBox.style.display = searchVisible ? 'block' : 'none';
-        if (searchVisible) searchInput.focus();
+        if (searchVisible) searchBox.querySelector('input').focus();
       });
 
-      searchInput.addEventListener('input', (e) => {
+      searchBox.querySelector('input').addEventListener('input', (e) => {
         searchQuery = e.target.value;
         renderResponses(allAiScores, searchQuery, filterCategory);
       });
@@ -499,23 +741,6 @@
       const progress = await window.loadSavedProgress();
       const checklist = progress?.checklist_status || {};
       allAiScores = progress?.ai_scores || {};
-      
-      // Update Registration
-      const uni = progress.selected_university || student.selected_university;
-      const prog = progress.selected_program || student.selected_program;
-      if (uni) {
-        const uniNames = {
-          'regent': 'Regent College London',
-          'yorkstjohn': 'York St John University',
-          'bpp': 'BPP University',
-          'netherlands': 'Netherlands Pathways',
-          'ukvi': 'UKVI Universal Prep'
-        };
-        document.getElementById('dashSchool').textContent = uniNames[uni] || uni;
-        document.getElementById('dashProgram').textContent = prog || 'Programme not yet selected';
-        document.getElementById('dashContinueBtn').href = uni + '.html';
-        document.getElementById('pathwayIcon').textContent = uni === 'ukvi' ? 'public' : 'account_balance';
-      }
 
       updateStats(allAiScores);
       const checklistEntries = Object.values(checklist);
@@ -525,75 +750,12 @@
 
       renderChecklist(checklist);
       renderResponses(allAiScores);
+      renderCounselor(progress?.counselor || null);
 
+      displayEnrolment();
       document.getElementById('loadingState').classList.add('hidden');
       document.getElementById('dashboardContent').classList.remove('hidden');
     }
-
-    // ===== PROFILE EDITING =====
-    function setupProfileEdit() {
-      const editBtn = document.getElementById('editProfileBtn');
-      const saveBtn = document.getElementById('saveProfileBtn');
-      const cancelBtn = document.getElementById('cancelEditBtn');
-      const display = document.getElementById('profileDisplay');
-      const edit = document.getElementById('profileEdit');
-      const nameInput = document.getElementById('editNameInput');
-      const idInput = document.getElementById('editIdInput');
-
-      editBtn.addEventListener('click', () => {
-        const student = window.getCurrentStudent();
-        nameInput.value = student.name || '';
-        idInput.value = student.student_id || '';
-        display.classList.add('hidden');
-        edit.classList.remove('hidden');
-      });
-
-      cancelBtn.addEventListener('click', () => {
-        display.classList.remove('hidden');
-        edit.classList.add('hidden');
-      });
-
-      saveBtn.addEventListener('click', async () => {
-        const name = nameInput.value.trim();
-        const id = idInput.value.trim();
-        if (!name || !id) {
-          showToast('Name and Student ID are compulsory', 'error');
-          return;
-        }
-        
-        saveBtn.disabled = true;
-        saveBtn.textContent = 'Saving...';
-        
-        const res = await window.updateStudentProfile({ full_name: name, student_id: id });
-        saveBtn.disabled = false;
-        saveBtn.textContent = 'Save Changes';
-        
-        if (res.success) {
-          showToast('Profile updated');
-          document.getElementById('studentName').textContent = name;
-          document.getElementById('studentId').textContent = `ID: ${id}`;
-          const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-          document.getElementById('avatarInitials').textContent = initials;
-          display.classList.remove('hidden');
-          edit.classList.add('hidden');
-        } else {
-          showToast('Update failed: ' + res.error, 'error');
-        }
-      });
-    }
-
-    // ===== OPT OUT =====
-    document.getElementById('dashOptOutBtn').addEventListener('click', async () => {
-      if (confirm('This will reset your current school registration and all progress. Are you sure?')) {
-        const res = await window.resetAllProgress();
-        if (res.success) {
-          showToast('Progress reset successfully');
-          location.reload();
-        } else {
-          showToast('Reset failed: ' + res.error, 'error');
-        }
-      }
-    });
 
     // ===== EMAIL REPORT =====
     async function sendReport() {
@@ -607,8 +769,13 @@
       const checklist = progress?.checklist_status || {};
       const scores = Object.values(responses).map(s => s.score).filter(n => typeof n === 'number');
       const avg = scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : 'N/A';
-      
-      const result = await window.sendReadyEmail(responses, checklist, avg);
+      const message = `Student: ${student.name} (ID: ${student.student_id || 'N/A'})
+Email: ${student.email}
+Date: ${new Date().toLocaleString()}
+Total responses: ${scores.length}
+Average score: ${avg}/10
+Checklist: ${Object.values(checklist).filter(v=>v===true).length}/${Object.keys(checklist).length} done`;
+      const result = await window.sendReadyEmail(responses, checklist, avg, message);
       btn.disabled = false;
       btn.innerHTML = '<span class="material-symbols-outlined text-sm">mail</span> Email Report';
       if (result?.success) showToast('Report sent to your tutor');
@@ -632,17 +799,321 @@
       showToast('Data exported');
     }
 
-    // ===== INIT =====
-    document.getElementById('logoutBtn').addEventListener('click', () => {
+    // ===== LOGOUT =====
+    async function logout() {
+      const { createClient } = supabase;
+      const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+      const supabaseClient = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      await supabaseClient.auth.signOut();
       localStorage.removeItem('student');
       localStorage.removeItem('selected_university');
-      localStorage.removeItem('last_course');
       window.location.href = 'index.html';
-    });
+    }
+
+
+
+    // ===== COUNSELOR =====
+    function renderCounselor(data) {
+      const empty = document.getElementById('counselorEmpty');
+      const details = document.getElementById('counselorDetails');
+      if (!data || !data.name || !data.email) {
+        empty.classList.remove('hidden');
+        details.classList.add('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+      details.classList.remove('hidden');
+      document.getElementById('counselorName').textContent = data.name;
+      document.getElementById('counselorEmail').textContent = data.email;
+      if (data.phone) {
+        document.getElementById('counselorPhone').textContent = data.phone;
+        document.getElementById('counselorPhoneRow').classList.remove('hidden');
+      } else {
+        document.getElementById('counselorPhoneRow').classList.add('hidden');
+      }
+      if (data.org) {
+        document.getElementById('counselorOrg').textContent = data.org;
+        document.getElementById('counselorOrgRow').classList.remove('hidden');
+      } else {
+        document.getElementById('counselorOrgRow').classList.add('hidden');
+      }
+    }
+
+    function setupCounselor(savedCounselor) {
+      const editBtn = document.getElementById('editCounselorBtn');
+      const cancelBtn = document.getElementById('cancelCounselorBtn');
+      const saveBtn = document.getElementById('saveCounselorBtn');
+      const view = document.getElementById('counselorView');
+      const editDiv = document.getElementById('counselorEdit');
+      const errorEl = document.getElementById('counselorEditError');
+
+      // Store current data for cancel
+      let current = savedCounselor || null;
+
+      editBtn.addEventListener('click', () => {
+        if (current) {
+          document.getElementById('cName').value = current.name || '';
+          document.getElementById('cEmail').value = current.email || '';
+          document.getElementById('cPhone').value = current.phone || '';
+          document.getElementById('cOrg').value = current.org || '';
+        }
+        view.classList.add('hidden');
+        editDiv.classList.remove('hidden');
+        errorEl.classList.add('hidden');
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        view.classList.remove('hidden');
+        editDiv.classList.add('hidden');
+      });
+
+      saveBtn.addEventListener('click', async () => {
+        const name = document.getElementById('cName').value.trim();
+        const email = document.getElementById('cEmail').value.trim();
+        const phone = document.getElementById('cPhone').value.trim();
+        const org = document.getElementById('cOrg').value.trim();
+
+        if (!name || !email) {
+          errorEl.textContent = 'Name and email are required.';
+          errorEl.classList.remove('hidden');
+          return;
+        }
+        if (!email.includes('@')) {
+          errorEl.textContent = 'Please enter a valid email address.';
+          errorEl.classList.remove('hidden');
+          return;
+        }
+        errorEl.classList.add('hidden');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+
+        const counselorData = { name, email, phone: phone || null, org: org || null };
+
+        // Save to Supabase
+        const student = window.getCurrentStudent();
+        if (student?.id) {
+          const { createClient } = supabase;
+          const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
+          const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+          const sc = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          window._supabaseClient = sc;
+          const { error } = await sc
+            .from('student_progress')
+            .update({ counselor: counselorData, updated_at: new Date().toISOString() })
+            .eq('user_id', student.id);
+          if (error) {
+            errorEl.textContent = 'Could not save. Please try again.';
+            errorEl.classList.remove('hidden');
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save Counselor';
+            return;
+          }
+        }
+
+        current = counselorData;
+        renderCounselor(counselorData);
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save Counselor';
+        view.classList.remove('hidden');
+        editDiv.classList.add('hidden');
+        showToast('Counselor saved ✓');
+      });
+    }
+
+    const UNI_NAMES = {
+      'regent': 'Regent College London',
+      'yorkstjohn': 'York St John University',
+      'bpp': 'BPP University',
+      'netherlands': 'Netherlands (IND)',
+      'ukvi': 'UKVI Credibility Prep'
+    };
+
+    function getEnrolmentInfo() {
+      const uni = localStorage.getItem('selected_university') || '';
+      const course = localStorage.getItem('last_course') || '';
+      return { uni, course };
+    }
+
+    function displayEnrolment() {
+      const { uni, course } = getEnrolmentInfo();
+      const block = document.getElementById('currentEnrolment');
+      const schoolEl = document.getElementById('currentSchool');
+      const progEl = document.getElementById('currentProgramme');
+      if (uni && UNI_NAMES[uni]) {
+        block.classList.remove('hidden');
+        schoolEl.textContent = UNI_NAMES[uni];
+        // Format course id to readable string
+        const prog = course
+          ? course.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+          : 'No programme selected';
+        progEl.textContent = prog;
+      } else {
+        block.classList.add('hidden');
+      }
+    }
+
+    // ===== PROFILE EDIT =====
+    function setupProfileEdit() {
+      const editBtn = document.getElementById('editProfileBtn');
+      const cancelBtn = document.getElementById('cancelEditBtn');
+      const saveBtn = document.getElementById('saveProfileBtn');
+      const profileView = document.getElementById('profileView');
+      const profileEdit = document.getElementById('profileEdit');
+      const errorEl = document.getElementById('profileEditError');
+
+      editBtn.addEventListener('click', () => {
+        const student = window.getCurrentStudent();
+        document.getElementById('editName').value = student?.name || '';
+        document.getElementById('editStudentId').value = student?.student_id || '';
+        profileView.classList.add('hidden');
+        profileEdit.classList.remove('hidden');
+        errorEl.classList.add('hidden');
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        profileView.classList.remove('hidden');
+        profileEdit.classList.add('hidden');
+      });
+
+      saveBtn.addEventListener('click', async () => {
+        const name = document.getElementById('editName').value.trim();
+        const studentId = document.getElementById('editStudentId').value.trim();
+        if (!name || !studentId) {
+          errorEl.textContent = 'Both name and student ID are required.';
+          errorEl.classList.remove('hidden');
+          return;
+        }
+        errorEl.classList.add('hidden');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+
+        // Update Supabase
+        const student = window.getCurrentStudent();
+        if (student?.id) {
+          const { createClient } = supabase;
+          const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
+          const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+          const sc = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          window._supabaseClient = sc;
+          await sc.from('student_progress')
+            .update({ full_name: name, student_id: studentId, updated_at: new Date().toISOString() })
+            .eq('user_id', student.id);
+        }
+
+        // Update localStorage
+        const updated = { ...window.getCurrentStudent(), name, student_id: studentId };
+        localStorage.setItem('student', JSON.stringify(updated));
+
+        // Refresh UI
+        document.getElementById('studentName').textContent = name;
+        document.getElementById('studentId').textContent = `ID: ${studentId}`;
+        const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        document.getElementById('avatarInitials').textContent = initials;
+
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save Changes';
+        profileView.classList.remove('hidden');
+        profileEdit.classList.add('hidden');
+        showToast('Profile updated');
+      });
+    }
+
+    // ===== OPT-OUT / RESET =====
+    function setupOptOut() {
+      document.getElementById('optOutBtn').addEventListener('click', async () => {
+        const confirmed = confirm(
+          '⚠️ This will reset ALL your answers, checklist, and scores.\n\n' +
+          'You will be able to choose a new school and start fresh.\n\n' +
+          'Are you sure you want to continue?'
+        );
+        if (!confirmed) return;
+
+        const btn = document.getElementById('optOutBtn');
+        btn.disabled = true;
+        btn.textContent = 'Resetting...';
+
+        if (typeof window.resetAllProgress === 'function') {
+          await window.resetAllProgress();
+        }
+        localStorage.removeItem('selected_university');
+        localStorage.removeItem('last_course');
+
+        showToast('Reset complete — choose a new school');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+      });
+    }
+
+
+    // ===== COUNSELOR =====
+    function loadCounselorFromStorage() {
+      try { return JSON.parse(localStorage.getItem('counselor') || 'null'); } catch { return null; }
+    }
+
+    async function loadCounselorFromSupabase() {
+      const progress = await window.loadSavedProgress?.();
+      if (progress?.counselor) {
+        // Sync back to localStorage so it's available offline
+        localStorage.setItem('counselor', JSON.stringify(progress.counselor));
+        return progress.counselor;
+      }
+      return loadCounselorFromStorage();
+    }
+
+    function saveCounselorToStorage(data) {
+      localStorage.setItem('counselor', JSON.stringify(data));
+      // Also save to Supabase student_progress metadata if possible
+      const student = window.getCurrentStudent();
+      if (student?.id && window.saveProgress) {
+        window.saveProgress({ counselor: data }).catch(() => {});
+      }
+    }
+
+    function renderCounselorCard(data) {
+      const empty = document.getElementById('counselorEmpty');
+      const card  = document.getElementById('counselorCard');
+      if (!data || !data.name) {
+        empty.classList.remove('hidden');
+        card.classList.add('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+      card.classList.remove('hidden');
+
+      const initials = data.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
+      document.getElementById('counselorInitials').textContent = initials;
+      document.getElementById('counselorName').textContent = data.name;
+      document.getElementById('counselorRole').textContent = data.role || 'Counselor';
+
+      const emailRow  = document.getElementById('counselorEmailRow');
+      const phoneRow  = document.getElementById('counselorPhoneRow');
+      const notesRow  = document.getElementById('counselorNotesRow');
+      const emailLink = document.getElementById('counselorEmailLink');
+
+      if (data.email) {
+        emailRow.classList.remove('hidden');
+        emailLink.textContent = data.email;
+        emailLink.href = 'mailto:' + data.email;
+      } else { emailRow.classList.add('hidden'); }
+
+      if (data.phone) {
+        phoneRow.classList.remove('hidden');
+        document.getElementById('counselorPhone').textContent = data.phone;
+      } else { phoneRow.classList.add('hidden'); }
+
+      if (data.notes) {
+        notesRow.classList.remove('hidden');
+        document.getElementById('counselorNotes').textContent = data.notes;
+      } else { notesRow.classList.add('hidden'); }
+    }
+
+    // ===== INIT =====
+    document.getElementById('logoutBtn').addEventListener('click', logout);
     document.getElementById('emailReportBtn').addEventListener('click', sendReport);
     document.getElementById('exportJsonBtn').addEventListener('click', exportJson);
     setupSearchFilter();
     setupProfileEdit();
+    setupOptOut();
 
     async function init() {
       let attempts = 0;
@@ -650,9 +1121,10 @@
         await new Promise(r => setTimeout(r, 150));
         attempts++;
       }
-      loadDashboard();
+      await loadDashboard();
+      const prog = await window.loadSavedProgress();
+      setupCounselor(prog?.counselor || null);
     }
     init();
   </script>
 </body>
-</html>
