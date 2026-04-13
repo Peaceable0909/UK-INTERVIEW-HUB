@@ -97,7 +97,6 @@
     details summary::-webkit-details-marker {
       display: none;
     }
-    /* custom scroll for checklist */
     .custom-scroll::-webkit-scrollbar {
       width: 4px;
     }
@@ -109,28 +108,9 @@
       background: #74777f;
       border-radius: 8px;
     }
-    /* LIVE SESSION PULSE ANIMATION */
-    @keyframes livePulse {
-      0%, 100% {
-        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-        transform: scale(1);
-      }
-      50% {
-        box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
-        transform: scale(1.02);
-      }
-    }
-    .live-session-active {
-      animation: livePulse 2s infinite;
-      border: 2px solid #ef4444 !important;
-    }
-    .live-indicator {
-      animation: livePulse 1.5s infinite;
-    }
   </style>
 </head>
 <body class="bg-background min-h-screen pb-32">
-  <!-- Top Bar -->
   <header class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl shadow-sm shadow-blue-900/5 flex items-center justify-between px-6 py-4">
     <div class="flex items-center gap-3">
       <a href="index.html" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-200/50 transition-colors active:scale-95 duration-150">
@@ -144,75 +124,12 @@
   </header>
 
   <main class="mt-24 px-6 space-y-8 max-w-md mx-auto">
-    <!-- Loading state -->
     <div id="loadingState" class="flex justify-center py-12">
       <div class="spinner w-8 h-8 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
     </div>
 
-    <!-- Dashboard content (hidden initially) -->
     <div id="dashboardContent" class="hidden space-y-8">
-      
-      <!-- ZOOM LIVE SESSION SECTION - EASY TO CONFIGURE -->
-      <!-- ============================================ -->
-      <!-- EDIT THE CONFIG OBJECT BELOW TO UPDATE SESSION -->
-      <section id="zoomSessionSection" class="hidden">
-        <div id="zoomSessionCard" class="bg-gradient-to-br from-red-500 to-red-600 rounded-[2rem] p-6 editorial-shadow text-white relative overflow-hidden">
-          <!-- Live indicator dot -->
-          <div class="absolute top-4 right-4 flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
-            <div class="w-2.5 h-2.5 bg-white rounded-full live-indicator"></div>
-            <span class="font-label text-[10px] font-bold uppercase tracking-wider">LIVE NOW</span>
-          </div>
-          
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
-              <span class="material-symbols-outlined text-white text-2xl">videocam</span>
-            </div>
-            <div>
-              <p class="font-label text-[10px] uppercase tracking-widest text-white/80 font-bold">Live Interview Session</p>
-              <h3 class="font-headline font-bold text-xl text-white" id="sessionSchoolName">School Name</h3>
-            </div>
-          </div>
-          
-          <div class="mb-4 p-3 bg-white/10 backdrop-blur-sm rounded-xl">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="material-symbols-outlined text-white/80 text-sm">schedule</span>
-              <p class="font-label text-[10px] uppercase tracking-wider text-white/80 font-bold">Session Time</p>
-            </div>
-            <p class="font-body text-sm text-white font-medium" id="sessionTimeDisplay">--:-- - --:--</p>
-          </div>
-          
-          <a id="joinZoomBtn" href="#" target="_blank" class="flex items-center justify-center gap-2 w-full py-3.5 bg-white text-red-600 rounded-xl font-label text-sm font-bold uppercase tracking-wider hover:bg-red-50 active:scale-95 transition-all shadow-lg">
-            <span class="material-symbols-outlined text-lg">login</span>
-            Join Interview Now
-          </a>
-        </div>
-      </section>
-
-      <!-- Upcoming Session (shown when not live) -->
-      <section id="upcomingSessionSection" class="hidden">
-        <div class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow border-2 border-dashed border-outline-variant/40">
-          <div class="flex items-center gap-3 mb-3">
-            <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
-              <span class="material-symbols-outlined text-slate-400">event</span>
-            </div>
-            <div>
-              <p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Upcoming Session</p>
-              <h3 class="font-headline font-bold text-base text-primary" id="upcomingSchoolName">School Name</h3>
-            </div>
-          </div>
-          <div class="flex items-center gap-2 text-sm text-on-surface-variant">
-            <span class="material-symbols-outlined text-base">schedule</span>
-            <span class="font-body" id="upcomingTimeDisplay">--:-- - --:--</span>
-          </div>
-          <p class="font-body text-xs text-slate-400 mt-2">The join button will appear here when the session starts.</p>
-        </div>
-      </section>
-      <!-- END ZOOM SESSION SECTION -->
-      <!-- ============================================ -->
-
-      <!-- Profile Card -->
       <section class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow">
-        <!-- View mode -->
         <div id="profileView">
           <div class="flex items-center gap-4 mb-4">
             <div class="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-white text-2xl font-bold" id="avatarInitials">AC</div>
@@ -225,7 +142,6 @@
               <span class="material-symbols-outlined text-sm">edit</span> Edit
             </button>
           </div>
-          <!-- Current school/programme -->
           <div id="currentEnrolment" class="hidden mb-4 p-3 bg-surface-container-low rounded-xl border border-outline-variant/20">
             <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Currently Preparing For</p>
             <p class="font-body text-sm font-semibold text-primary" id="currentSchool">—</p>
@@ -233,7 +149,6 @@
           </div>
         </div>
 
-        <!-- Edit mode (hidden by default) -->
         <div id="profileEdit" class="hidden mb-4">
           <p class="font-label text-xs font-bold text-primary uppercase tracking-wider mb-3">Edit Profile — all fields required</p>
           <div class="space-y-3">
@@ -264,7 +179,6 @@
           </button>
         </div>
 
-        <!-- Opt-out / reset -->
         <div class="mt-3 pt-3 border-t border-outline-variant/20">
           <button id="optOutBtn" class="w-full flex items-center justify-center gap-2 py-2.5 bg-red-50 text-red-600 rounded-xl font-label text-xs font-bold uppercase tracking-wider hover:bg-red-100 active:scale-95 transition-all">
             <span class="material-symbols-outlined text-sm">restart_alt</span>
@@ -273,7 +187,27 @@
         </div>
       </section>
 
-      <!-- Counselor Section -->
+      <section id="zoomTrainingSection" class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow border-2 border-transparent transition-all duration-500">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div id="zoomPulse" class="relative flex h-3 w-3 hidden">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </div>
+            
+            <div>
+              <h3 class="font-headline font-bold text-lg text-primary" id="zoomSchool">Regent College Training</h3>
+              <p class="font-body text-xs text-on-surface-variant" id="zoomTimeDisplay">Scheduled: 4:00 PM Today</p>
+            </div>
+          </div>
+
+          <a href="https://zoom.us/j/YOUR_MEETING_ID" target="_blank" id="zoomJoinBtn" class="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl font-label text-xs font-bold uppercase tracking-wider opacity-50 pointer-events-none transition-all duration-300">
+            <span class="material-symbols-outlined text-sm">videocam</span>
+            Join Session
+          </a>
+        </div>
+      </section>
+
       <section class="bg-surface-container-lowest rounded-[2rem] p-6 editorial-shadow">
         <div class="flex items-center justify-between mb-4">
           <div class="flex items-center gap-3">
@@ -290,7 +224,6 @@
           </button>
         </div>
 
-        <!-- View mode -->
         <div id="counselorView">
           <div id="counselorEmpty" class="py-4 text-center">
             <span class="material-symbols-outlined text-slate-300 text-4xl mb-2 block">person_add</span>
@@ -329,7 +262,6 @@
           </div>
         </div>
 
-        <!-- Edit mode -->
         <div id="counselorEdit" class="hidden">
           <p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-3">Counselor Details <span class="text-red-400">* required</span></p>
           <div class="space-y-3">
@@ -358,7 +290,6 @@
         </div>
       </section>
 
-      <!-- Stats Grid -->
       <section class="grid grid-cols-2 gap-4">
         <div class="bg-surface-container-low p-5 rounded-2xl">
           <span class="material-symbols-outlined text-primary mb-3">quiz</span>
@@ -384,7 +315,6 @@
         </div>
       </section>
 
-      <!-- Checklist Section -->
       <section>
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-headline font-bold text-lg text-primary">Preparation Checklist</h3>
@@ -392,12 +322,10 @@
         </div>
         <div class="bg-surface-container-lowest rounded-[2rem] p-2 editorial-shadow overflow-hidden">
           <div id="checklistContainer" class="max-h-[220px] overflow-y-auto px-4 py-2 space-y-4 custom-scroll">
-            <!-- dynamically filled -->
           </div>
         </div>
       </section>
 
-      <!-- Practice Responses Section -->
       <section class="space-y-4">
         <div class="flex items-center justify-between">
           <h3 class="font-headline font-bold text-lg text-primary">Practice Responses</h3>
@@ -415,14 +343,12 @@
             class="w-full px-4 py-2.5 rounded-xl border border-outline/30 bg-surface-container-lowest text-sm font-body text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30">
         </div>
         <div id="responsesContainer" class="space-y-4">
-          <!-- dynamically filled -->
         </div>
         <div id="noResponsesMsg" class="text-center text-slate-400 py-8 hidden">No practice responses yet. Start practicing on any university page!</div>
       </section>
     </div>
   </main>
 
-  <!-- Bottom Navigation (cosmetic, matches design) -->
   <nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-white/90 backdrop-blur-2xl shadow-[0_-8px_32px_rgba(0,32,69,0.06)] rounded-t-[2.5rem]">
     <a href="index.html" class="flex flex-col items-center justify-center text-slate-400 px-4 py-2 hover:text-blue-900 transition-all duration-200 active:translate-y-0.5">
       <span class="material-symbols-outlined mb-1">dashboard</span>
@@ -442,38 +368,56 @@
     </a>
   </nav>
 
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="app.js"></script>
 
-  <!-- Toast notification -->
   <div id="toast" style="display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:10px 20px;border-radius:999px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.2);transition:opacity 0.3s;"></div>
 
   <script>
-    // ============================================================
-    // ZOOM SESSION CONFIG - EDIT THIS SECTION TO UPDATE SESSIONS
-    // ============================================================
-    const ZOOM_CONFIG = {
-      // Paste your Zoom meeting link here
-      meetingLink: "https://zoom.us/j/YOUR_MEETING_ID",
-      
-      // School name to display
-      schoolName: "Regent College London",
-      
-      // Session start time (24-hour format: "HH:MM")
-      startTime: "14:00",
-      
-      // Session end time (24-hour format: "HH:MM")  
-      endTime: "15:30",
-      
-      // Timezone offset from UTC in hours (e.g., 0 for GMT, 1 for BST, 5.5 for IST)
-      // Set to null to use browser's local time
-      timezoneOffset: 0
-    };
-    // ============================================================
+    // ===== ZOOM TRAINING SCHEDULER (EDIT HERE) =====
+    function updateZoomStatus() {
+      const zoomConfig = {
+        school: "Regent",               // E.g. "Regent", "YSJ", "BPP"
+        timeLabel: "4:00 PM - 5:00 PM", // Human-readable label for students
+        startHour: 16,                  // 24-hour format (e.g., 16 = 4 PM)
+        startMinute: 0,
+        endHour: 17,                    // 24-hour format (e.g., 17 = 5 PM)
+        endMinute: 0
+      };
 
-    // ===== TOAST =====
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+
+      const section = document.getElementById('zoomTrainingSection');
+      const pulse = document.getElementById('zoomPulse');
+      const btn = document.getElementById('zoomJoinBtn');
+      const schoolText = document.getElementById('zoomSchool');
+      const timeText = document.getElementById('zoomTimeDisplay');
+
+      schoolText.textContent = zoomConfig.school + " Training";
+      timeText.textContent = "Scheduled: " + zoomConfig.timeLabel;
+
+      // Check if current time is within range
+      const isLive = (currentHour > zoomConfig.startHour || (currentHour === zoomConfig.startHour && currentMinute >= zoomConfig.startMinute)) &&
+                     (currentHour < zoomConfig.endHour || (currentHour === zoomConfig.endHour && currentMinute < zoomConfig.endMinute));
+
+      if (isLive) {
+        section.classList.add('border-emerald-500', 'bg-emerald-50/30');
+        pulse.classList.remove('hidden');
+        btn.classList.remove('opacity-50', 'pointer-events-none', 'bg-primary');
+        btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'scale-105');
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-pulse">videocam</span> JOIN INTERVIEW';
+      } else {
+        section.classList.remove('border-emerald-500', 'bg-emerald-50/30');
+        pulse.classList.add('hidden');
+        btn.classList.add('opacity-50', 'pointer-events-none', 'bg-primary');
+        btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700', 'scale-105');
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">videocam</span> Join Session';
+      }
+    }
+
     function showToast(msg, type = 'success') {
       const t = document.getElementById('toast');
       t.textContent = (type === 'success' ? '✅ ' : '❌ ') + msg;
@@ -484,67 +428,6 @@
       window._toastTimer = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.style.display = 'none', 300); }, 3000);
     }
 
-    // ===== ZOOM SESSION MANAGER =====
-    function checkZoomSession() {
-      const config = ZOOM_CONFIG;
-      const now = new Date();
-      
-      // Get current time in minutes since midnight
-      let currentMinutes = now.getHours() * 60 + now.getMinutes();
-      
-      // Adjust for timezone if specified
-      if (config.timezoneOffset !== null) {
-        const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
-        currentMinutes = utcMinutes + (config.timezoneOffset * 60);
-        // Handle day wrap-around
-        currentMinutes = ((currentMinutes % 1440) + 1440) % 1440;
-      }
-      
-      // Parse start and end times
-      const [startH, startM] = config.startTime.split(':').map(Number);
-      const [endH, endM] = config.endTime.split(':').map(Number);
-      const startMinutes = startH * 60 + startM;
-      const endMinutes = endH * 60 + endM;
-      
-      // Check if current time is within session window
-      const isLive = currentMinutes >= startMinutes && currentMinutes <= endMinutes;
-      
-      // Format time display (12-hour format with AM/PM)
-      const formatTime = (timeStr) => {
-        const [h, m] = timeStr.split(':').map(Number);
-        const period = h >= 12 ? 'PM' : 'AM';
-        const displayH = h % 12 || 12;
-        return `${displayH}:${m.toString().padStart(2, '0')} ${period}`;
-      };
-      
-      const timeDisplay = `${formatTime(config.startTime)} - ${formatTime(config.endTime)}`;
-      
-      // Update DOM elements
-      document.getElementById('sessionSchoolName').textContent = config.schoolName;
-      document.getElementById('upcomingSchoolName').textContent = config.schoolName;
-      document.getElementById('sessionTimeDisplay').textContent = timeDisplay;
-      document.getElementById('upcomingTimeDisplay').textContent = timeDisplay;
-      document.getElementById('joinZoomBtn').href = config.meetingLink;
-      
-      const liveSection = document.getElementById('zoomSessionSection');
-      const upcomingSection = document.getElementById('upcomingSessionSection');
-      const card = document.getElementById('zoomSessionCard');
-      
-      if (isLive) {
-        liveSection.classList.remove('hidden');
-        upcomingSection.classList.add('hidden');
-        card.classList.add('live-session-active');
-      } else {
-        liveSection.classList.add('hidden');
-        upcomingSection.classList.remove('hidden');
-        card.classList.remove('live-session-active');
-      }
-    }
-
-    // Check session status every minute
-    setInterval(checkZoomSession, 60000);
-
-    // ===== QUESTION LABEL MAP =====
     const QUESTION_LABELS = {
       'UKVI_Q1': 'Why study in the UK?',
       'UKVI_Q2': 'Why this specific university?',
@@ -566,7 +449,6 @@
     };
 
     function getQuestionLabel(qId, data) {
-      // Prefer stored questionText, then map, then formatted ID
       if (data?.questionText && !data.questionText.match(/^(REGENT|YSJ|UKVI|BPP|NL)_/)) return data.questionText;
       if (QUESTION_LABELS[qId]) return QUESTION_LABELS[qId];
       let label = qId.replace(/^(REGENT|YSJ|UKVI|BPP|NL)_/, '').replace(/_/g, ' ');
@@ -583,12 +465,8 @@
       return 'Practice';
     }
 
-    // ===== CHECKLIST KEY FORMATTER =====
     function formatChecklistKey(key) {
-      // Keys are now stored as human-readable text directly.
-      // Strip old-style IDs like regent_chk_0 if they slip through.
       if (/^(bpp|regent|ysj|nl|ukvi)_chk_\d+/.test(key)) {
-        // Old format - can't recover text, just show a generic label
         return 'Checklist item ' + key.replace(/^.*_chk_/, '#');
       }
       return key || 'Checklist item';
@@ -599,13 +477,11 @@
       return String(str).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
     }
 
-    // ===== STATE =====
     let allAiScores = {};
     let searchQuery = '';
     let filterCategory = 'all';
     let searchVisible = false;
 
-    // ===== RENDER CHECKLIST =====
     function renderChecklist(checklistStatus) {
       const container = document.getElementById('checklistContainer');
       const summarySpan = document.getElementById('checklistSummary');
@@ -631,68 +507,44 @@
       `).join('');
     }
 
-    // ===== RENDER RESPONSES =====
     function renderResponses(aiScores, query = '', category = 'all') {
       const container = document.getElementById('responsesContainer');
       const noMsg = document.getElementById('noResponsesMsg');
-
       if (!aiScores || Object.keys(aiScores).length === 0) {
         container.innerHTML = '';
-        noMsg.textContent = 'No practice responses yet. Start practising on any university page!';
         noMsg.classList.remove('hidden');
         return;
       }
-
       let entries = Object.entries(aiScores);
-
-      // Filter by category
       if (category !== 'all') {
         entries = entries.filter(([qId]) => getCategoryFromId(qId).toLowerCase().includes(category.toLowerCase()));
       }
-
-      // Filter by search
       if (query.trim()) {
         const q = query.toLowerCase();
         entries = entries.filter(([qId, data]) => {
           const label = getQuestionLabel(qId, data).toLowerCase();
           const answer = (data.answer || '').toLowerCase();
-          const cat = getCategoryFromId(qId).toLowerCase();
-          return label.includes(q) || answer.includes(q) || cat.includes(q);
+          return label.includes(q) || answer.includes(q);
         });
       }
-
       if (entries.length === 0) {
         container.innerHTML = '';
-        noMsg.textContent = 'No responses match your search.';
         noMsg.classList.remove('hidden');
         return;
       }
-
       noMsg.classList.add('hidden');
-
-      entries.sort((a, b) => {
-        const dateA = a[1]?.date ? new Date(a[1].date) : 0;
-        const dateB = b[1]?.date ? new Date(b[1].date) : 0;
-        return dateB - dateA;
-      });
-
+      entries.sort((a, b) => (b[1]?.date ? new Date(b[1].date) : 0) - (a[1]?.date ? new Date(a[1].date) : 0));
       container.innerHTML = entries.map(([qId, data]) => {
         const score = typeof data.score === 'number' ? data.score : 0;
         const pass = score >= 7;
         const label = getQuestionLabel(qId, data);
         const category = getCategoryFromId(qId);
-        const answerPreview = data.answer ? (data.answer.length > 120 ? data.answer.substring(0, 120) + '…' : data.answer) : 'No answer saved';
         const feedback = data.feedback || data.summary || 'No feedback available';
-        const dateStr = data.date ? new Date(data.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
-
         return `
           <div class="bg-surface-container-lowest rounded-[1.5rem] p-5 editorial-shadow border border-white/40">
             <div class="flex justify-between items-start mb-3">
               <div class="flex-1 pr-3">
-                <div class="flex items-center gap-2 mb-1">
-                  <span class="font-label text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm bg-primary/10 text-primary">${escapeHtml(category)}</span>
-                  ${dateStr ? `<span class="font-label text-[9px] text-slate-400">${escapeHtml(dateStr)}</span>` : ''}
-                </div>
+                <span class="font-label text-[9px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-sm bg-primary/10 text-primary mb-1 inline-block">${escapeHtml(category)}</span>
                 <h4 class="font-headline font-bold text-sm text-primary leading-snug">${escapeHtml(label)}</h4>
               </div>
               <div class="text-right flex-shrink-0">
@@ -707,16 +559,9 @@
               </summary>
               <div class="mt-3 space-y-3 font-body text-sm">
                 <div class="p-3 bg-surface-container-low rounded-xl">
-                  <p class="font-label text-[9px] font-bold text-on-surface-variant uppercase mb-1">Your Answer</p>
-                  <p class="text-on-surface leading-relaxed italic text-xs">${escapeHtml(answerPreview)}</p>
+                  <p class="font-label text-[9px] font-bold text-on-surface-variant uppercase mb-1">AI Feedback</p>
+                  <p class="text-on-surface leading-relaxed text-xs">${escapeHtml(feedback)}</p>
                 </div>
-                <div class="p-3 ${pass ? 'bg-secondary/5 border-l-4 border-secondary' : 'bg-tertiary/5 border-l-4 border-tertiary'} rounded-xl">
-                  <p class="font-label text-[9px] font-bold ${pass ? 'text-secondary' : 'text-tertiary'} uppercase mb-1">AI Feedback</p>
-                  <p class="text-on-surface leading-relaxed text-xs">${escapeHtml(feedback.length > 250 ? feedback.substring(0,250)+'…' : feedback)}</p>
-                </div>
-                <button onclick="deleteResponse('${escapeHtml(qId)}')" class="flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors mt-1">
-                  <span class="material-symbols-outlined text-sm">delete</span> Remove this response
-                </button>
               </div>
             </details>
           </div>
@@ -724,419 +569,48 @@
       }).join('');
     }
 
-    // ===== DELETE RESPONSE =====
-    async function deleteResponse(qId) {
-      if (!confirm('Remove this response from your record?')) return;
-      const student = window.getCurrentStudent();
-      if (!student?.id) return;
-
-      const progress = await window.loadSavedProgress();
-      const scores = progress?.ai_scores || {};
-      const responses = progress?.practice_responses || {};
-      delete scores[qId];
-      delete responses[qId];
-      delete allAiScores[qId];
-
-      const { createClient } = supabase;
-      const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
-      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
-      const supabaseClient = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      window._supabaseClient = supabaseClient;
-
-      const { error } = await supabaseClient
-        .from('student_progress')
-        .update({ ai_scores: scores, practice_responses: responses, updated_at: new Date().toISOString() })
-        .eq('user_id', student.id);
-
-      if (error) { showToast('Could not remove response', 'error'); return; }
-      showToast('Response removed');
-      renderResponses(allAiScores, searchQuery, filterCategory);
-      updateStats(allAiScores);
-    }
-
-    // ===== UPDATE STATS =====
-    function updateStats(aiScores) {
-      const responsesList = Object.values(aiScores);
-      const total = responsesList.length;
-      let totalScore = 0, passCount = 0;
-      responsesList.forEach(r => {
-        const sc = r.score;
-        if (typeof sc === 'number') { totalScore += sc; if (sc >= 7) passCount++; }
-      });
-      const avg = total ? (totalScore / total).toFixed(1) : '0';
-      const passRate = total ? Math.round((passCount / total) * 100) : 0;
-      document.getElementById('totalResponses').textContent = total;
-      document.getElementById('avgScore').innerHTML = `${avg}<span class="text-sm font-body text-secondary/60">/10</span>`;
-      document.getElementById('passRate').innerHTML = `${passRate}<span class="text-sm font-body text-secondary/60">%</span>`;
-    }
-
-    // ===== SEARCH & FILTER =====
-    function setupSearchFilter() {
-      const searchBtn = document.getElementById('searchBtn');
-      const filterBtn = document.getElementById('filterBtn');
-      const searchBox = document.getElementById('searchBox');
-
-      searchBtn.addEventListener('click', () => {
-        searchVisible = !searchVisible;
-        searchBox.style.display = searchVisible ? 'block' : 'none';
-        if (searchVisible) searchBox.querySelector('input').focus();
-      });
-
-      searchBox.querySelector('input').addEventListener('input', (e) => {
-        searchQuery = e.target.value;
-        renderResponses(allAiScores, searchQuery, filterCategory);
-      });
-
-      const categories = ['all', 'Regent', 'YSJ', 'BPP', 'UKVI', 'Netherlands'];
-      let catIndex = 0;
-      filterBtn.addEventListener('click', () => {
-        catIndex = (catIndex + 1) % categories.length;
-        filterCategory = categories[catIndex];
-        filterBtn.title = 'Filter: ' + (filterCategory === 'all' ? 'All' : filterCategory);
-        filterBtn.querySelector('span').textContent = filterCategory === 'all' ? 'tune' : 'filter_alt';
-        renderResponses(allAiScores, searchQuery, filterCategory);
-      });
-    }
-
-    // ===== LOAD DASHBOARD =====
     async function loadDashboard() {
       const student = window.getCurrentStudent();
       if (!student) { window.location.href = 'index.html'; return; }
-
       document.getElementById('studentName').textContent = student.name || 'Student';
       document.getElementById('studentEmail').textContent = student.email || '';
       document.getElementById('studentId').textContent = `ID: ${student.student_id || '—'}`;
       const initials = (student.name || 'S').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
       document.getElementById('avatarInitials').textContent = initials;
-
       const progress = await window.loadSavedProgress();
-      const checklist = progress?.checklist_status || {};
+      renderChecklist(progress?.checklist_status || {});
       allAiScores = progress?.ai_scores || {};
-
-      updateStats(allAiScores);
-      const checklistEntries = Object.values(checklist);
-      const doneCount = checklistEntries.filter(v => v === true).length;
-      const checklistPercent = checklistEntries.length ? Math.round((doneCount / checklistEntries.length) * 100) : 0;
-      document.getElementById('checklistPercent').innerHTML = `${checklistPercent}<span class="text-sm font-body text-primary/60">%</span>`;
-
-      renderChecklist(checklist);
       renderResponses(allAiScores);
-
-      displayEnrolment();
-      
-      // Check Zoom session status
-      checkZoomSession();
-      
+      updateStats(allAiScores);
+      updateZoomStatus();
+      setInterval(updateZoomStatus, 60000);
       document.getElementById('loadingState').classList.add('hidden');
       document.getElementById('dashboardContent').classList.remove('hidden');
     }
 
-    // ===== EMAIL REPORT =====
-    async function sendReport() {
-      const student = window.getCurrentStudent();
-      if (!student) return;
-      const btn = document.getElementById('emailReportBtn');
-      btn.disabled = true;
-      btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">progress_activity</span> Sending...';
-      const progress = await window.loadSavedProgress();
-      const responses = progress?.ai_scores || {};
-      const checklist = progress?.checklist_status || {};
-      const scores = Object.values(responses).map(s => s.score).filter(n => typeof n === 'number');
-      const avg = scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : 'N/A';
-      const message = `Student: ${student.name} (ID: ${student.student_id || 'N/A'})
-Email: ${student.email}
-Date: ${new Date().toLocaleString()}
-Total responses: ${scores.length}
-Average score: ${avg}/10
-Checklist: ${Object.values(checklist).filter(v=>v===true).length}/${Object.keys(checklist).length} done`;
-      const result = await window.sendReadyEmail(responses, checklist, avg, message);
-      btn.disabled = false;
-      btn.innerHTML = '<span class="material-symbols-outlined text-sm">mail</span> Email Report';
-      if (result?.success) showToast('Report sent to your tutor');
-      else showToast('Failed to send report', 'error');
+    function updateStats(aiScores) {
+      const list = Object.values(aiScores);
+      const total = list.length;
+      let totalScore = 0, passCount = 0;
+      list.forEach(r => { if (typeof r.score === 'number') { totalScore += r.score; if (r.score >= 7) passCount++; } });
+      const avg = total ? (totalScore / total).toFixed(1) : '0';
+      document.getElementById('totalResponses').textContent = total;
+      document.getElementById('avgScore').innerHTML = `${avg}<span class="text-sm font-body text-secondary/60">/10</span>`;
+      document.getElementById('passRate').innerHTML = `${total ? Math.round((passCount/total)*100) : 0}<span class="text-sm font-body text-secondary/60">%</span>`;
     }
 
-    // ===== EXPORT JSON =====
-    async function exportJson() {
-      const student = window.getCurrentStudent();
-      const progress = await window.loadSavedProgress();
-      const data = { student, progress, exportedAt: new Date().toISOString() };
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `interview_progress_${student?.student_id || 'student'}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      showToast('Data exported');
-    }
-
-    // ===== LOGOUT =====
     async function logout() {
       const { createClient } = supabase;
       const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
       const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
-      const supabaseClient = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      await supabaseClient.auth.signOut();
+      const sc = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      await sc.auth.signOut();
       localStorage.removeItem('student');
-      localStorage.removeItem('selected_university');
       window.location.href = 'index.html';
     }
 
-
-
-    // ===== COUNSELOR =====
-    function renderCounselor(data) {
-      const empty = document.getElementById('counselorEmpty');
-      const details = document.getElementById('counselorDetails');
-      if (!data || !data.name || !data.email) {
-        empty.classList.remove('hidden');
-        details.classList.add('hidden');
-        return;
-      }
-      empty.classList.add('hidden');
-      details.classList.remove('hidden');
-      document.getElementById('counselorName').textContent = data.name;
-      document.getElementById('counselorEmail').textContent = data.email;
-      if (data.phone) {
-        document.getElementById('counselorPhone').textContent = data.phone;
-        document.getElementById('counselorPhoneRow').classList.remove('hidden');
-      } else {
-        document.getElementById('counselorPhoneRow').classList.add('hidden');
-      }
-      if (data.org) {
-        document.getElementById('counselorOrg').textContent = data.org;
-        document.getElementById('counselorOrgRow').classList.remove('hidden');
-      } else {
-        document.getElementById('counselorOrgRow').classList.add('hidden');
-      }
-    }
-
-    function setupCounselor(savedCounselor) {
-      const editBtn = document.getElementById('editCounselorBtn');
-      const cancelBtn = document.getElementById('cancelCounselorBtn');
-      const saveBtn = document.getElementById('saveCounselorBtn');
-      const view = document.getElementById('counselorView');
-      const editDiv = document.getElementById('counselorEdit');
-      const errorEl = document.getElementById('counselorEditError');
-
-      // Store current data for cancel
-      let current = savedCounselor || null;
-
-      editBtn.addEventListener('click', () => {
-        if (current) {
-          document.getElementById('cName').value = current.name || '';
-          document.getElementById('cEmail').value = current.email || '';
-          document.getElementById('cPhone').value = current.phone || '';
-          document.getElementById('cOrg').value = current.org || '';
-        }
-        view.classList.add('hidden');
-        editDiv.classList.remove('hidden');
-        errorEl.classList.add('hidden');
-      });
-
-      cancelBtn.addEventListener('click', () => {
-        view.classList.remove('hidden');
-        editDiv.classList.add('hidden');
-      });
-
-      saveBtn.addEventListener('click', async () => {
-        const name = document.getElementById('cName').value.trim();
-        const email = document.getElementById('cEmail').value.trim();
-        const phone = document.getElementById('cPhone').value.trim();
-        const org = document.getElementById('cOrg').value.trim();
-
-        if (!name || !email) {
-          errorEl.textContent = 'Name and email are required.';
-          errorEl.classList.remove('hidden');
-          return;
-        }
-        if (!email.includes('@')) {
-          errorEl.textContent = 'Please enter a valid email address.';
-          errorEl.classList.remove('hidden');
-          return;
-        }
-        errorEl.classList.add('hidden');
-        saveBtn.disabled = true;
-        saveBtn.textContent = 'Saving...';
-
-        const counselorData = { name, email, phone: phone || null, org: org || null };
-
-        // Save to Supabase
-        const student = window.getCurrentStudent();
-        if (student?.id) {
-          const { createClient } = supabase;
-          const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
-          const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
-          const sc = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-          window._supabaseClient = sc;
-          const { error } = await sc
-            .from('student_progress')
-            .update({ counselor: counselorData, updated_at: new Date().toISOString() })
-            .eq('user_id', student.id);
-          if (error) {
-            errorEl.textContent = 'Could not save. Please try again.';
-            errorEl.classList.remove('hidden');
-            saveBtn.disabled = false;
-            saveBtn.textContent = 'Save Counselor';
-            return;
-          }
-        }
-
-        current = counselorData;
-        renderCounselor(counselorData);
-        saveBtn.disabled = false;
-        saveBtn.textContent = 'Save Counselor';
-        view.classList.remove('hidden');
-        editDiv.classList.add('hidden');
-        showToast('Counselor saved ✓');
-      });
-    }
-
-    const UNI_NAMES = {
-      'regent': 'Regent College London',
-      'yorkstjohn': 'York St John University',
-      'bpp': 'BPP University',
-      'netherlands': 'Netherlands (IND)',
-      'ukvi': 'UKVI Credibility Prep'
-    };
-
-    function getEnrolmentInfo() {
-      const uni = localStorage.getItem('selected_university') || '';
-      const course = localStorage.getItem('last_course') || '';
-      return { uni, course };
-    }
-
-    function displayEnrolment() {
-      const { uni, course } = getEnrolmentInfo();
-      const block = document.getElementById('currentEnrolment');
-      const schoolEl = document.getElementById('currentSchool');
-      const progEl = document.getElementById('currentProgramme');
-      if (uni && UNI_NAMES[uni]) {
-        block.classList.remove('hidden');
-        schoolEl.textContent = UNI_NAMES[uni];
-        // Format course id to readable string
-        const prog = course
-          ? course.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
-          : 'No programme selected';
-        progEl.textContent = prog;
-      } else {
-        block.classList.add('hidden');
-      }
-    }
-
-    // ===== PROFILE EDIT =====
-    function setupProfileEdit() {
-      const editBtn = document.getElementById('editProfileBtn');
-      const cancelBtn = document.getElementById('cancelEditBtn');
-      const saveBtn = document.getElementById('saveProfileBtn');
-      const profileView = document.getElementById('profileView');
-      const profileEdit = document.getElementById('profileEdit');
-      const errorEl = document.getElementById('profileEditError');
-
-      editBtn.addEventListener('click', () => {
-        const student = window.getCurrentStudent();
-        document.getElementById('editName').value = student?.name || '';
-        document.getElementById('editStudentId').value = student?.student_id || '';
-        profileView.classList.add('hidden');
-        profileEdit.classList.remove('hidden');
-        errorEl.classList.add('hidden');
-      });
-
-      cancelBtn.addEventListener('click', () => {
-        profileView.classList.remove('hidden');
-        profileEdit.classList.add('hidden');
-      });
-
-      saveBtn.addEventListener('click', async () => {
-        const name = document.getElementById('editName').value.trim();
-        const studentId = document.getElementById('editStudentId').value.trim();
-        if (!name || !studentId) {
-          errorEl.textContent = 'Both name and student ID are required.';
-          errorEl.classList.remove('hidden');
-          return;
-        }
-        errorEl.classList.add('hidden');
-        saveBtn.disabled = true;
-        saveBtn.textContent = 'Saving...';
-
-        // Update Supabase
-        const student = window.getCurrentStudent();
-        if (student?.id) {
-          const { createClient } = supabase;
-          const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
-          const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
-          const sc = window._supabaseClient || createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-          window._supabaseClient = sc;
-          await sc.from('student_progress')
-            .update({ full_name: name, student_id: studentId, updated_at: new Date().toISOString() })
-            .eq('user_id', student.id);
-        }
-
-        // Update localStorage
-        const updated = { ...window.getCurrentStudent(), name, student_id: studentId };
-        localStorage.setItem('student', JSON.stringify(updated));
-
-        // Refresh UI
-        document.getElementById('studentName').textContent = name;
-        document.getElementById('studentId').textContent = `ID: ${studentId}`;
-        const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-        document.getElementById('avatarInitials').textContent = initials;
-
-        saveBtn.disabled = false;
-        saveBtn.textContent = 'Save Changes';
-        profileView.classList.remove('hidden');
-        profileEdit.classList.add('hidden');
-        showToast('Profile updated');
-      });
-    }
-
-    // ===== OPT-OUT / RESET =====
-    function setupOptOut() {
-      document.getElementById('optOutBtn').addEventListener('click', async () => {
-        const confirmed = confirm(
-          '⚠️ This will reset ALL your answers, checklist, and scores.\n\n' +
-          'You will be able to choose a new school and start fresh.\n\n' +
-          'Are you sure you want to continue?'
-        );
-        if (!confirmed) return;
-
-        const btn = document.getElementById('optOutBtn');
-        btn.disabled = true;
-        btn.textContent = 'Resetting...';
-
-        if (typeof window.resetAllProgress === 'function') {
-          await window.resetAllProgress();
-        }
-        localStorage.removeItem('selected_university');
-        localStorage.removeItem('last_course');
-
-        showToast('Reset complete — choose a new school');
-        setTimeout(() => { window.location.href = 'index.html'; }, 1500);
-      });
-    }
-
-    // ===== INIT =====
     document.getElementById('logoutBtn').addEventListener('click', logout);
-    document.getElementById('emailReportBtn').addEventListener('click', sendReport);
-    document.getElementById('exportJsonBtn').addEventListener('click', exportJson);
-    setupSearchFilter();
-    setupProfileEdit();
-    setupOptOut();
-
-    async function init() {
-      let attempts = 0;
-      while (!window.getCurrentStudent() && attempts < 20) {
-        await new Promise(r => setTimeout(r, 150));
-        attempts++;
-      }
-      await loadDashboard();
-      const prog = await window.loadSavedProgress();
-      setupCounselor(prog?.counselor || null);
-    }
-    init();
+    loadDashboard();
   </script>
 </body>
 </html>
