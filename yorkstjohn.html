@@ -2134,6 +2134,19 @@ Return ONLY valid JSON, no other text:
             else newFail++;
             newStatus[qId]=true;
           }
+          // Restore answer text into textarea permanently
+          if(data.answer){
+            const qShortId=qId.replace('YSJ_','');
+            const ta=document.getElementById('ans-'+qShortId);
+            if(ta && !ta.value) ta.value=data.answer;
+            // Show pass/fail badge on the question card
+            const btn=document.getElementById('btn-'+qShortId);
+            if(btn && score>=7){
+              btn.classList.remove('btn-primary');
+              btn.classList.add('btn-success');
+              btn.innerHTML='<span class="material-symbols-outlined text-sm" style="font-variation-settings: \'FILL\' 1;">check_circle</span> Passed';
+            }
+          }
         }
         passN=newPass; failN=newFail; totN=newPass+newFail; questionStatus=newStatus;
         updScore();
