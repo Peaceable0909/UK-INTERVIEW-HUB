@@ -375,84 +375,119 @@
     }
 
     // ================== LIVE SESSION SCHEDULER ==================
-    const SCHEDULED_SESSIONS = [
-      {
-        startTime: "2026-04-13T12:00:00",
-        zoomLink: "https://us06web.zoom.us/j/123456789?pwd=abc123",
-        title: "UKVI Interview Prep"
-      },
-      {
-        startTime: "2026-04-13T12:00:00",
-        zoomLink: "https://zoom.us/j/987654321",
-        title: "Mock Interview - Regent College"
-      }
-    ];
-    const SESSION_DURATION_MINUTES = 90;
+   // ================== EASY TO EDIT: SCHEDULED ZOOM SESSIONS ==================
+// Just add or remove objects below. Format: "YYYY-MM-DDTHH:MM:SS" (your local time)
+const SCHEDULED_SESSIONS = [
+  {
+    startTime: "2026-04-13T12:00:00",     // Year-Month-DayTHour:Minute:Second
+    zoomLink: "https://us06web.zoom.us/j/123456789?pwd=abc123",
+    title: "UKVI Interview Prep"
+  },
+  {
+    startTime: "2026-04-13T15:30:00",
+    zoomLink: "https://zoom.us/j/987654321",
+    title: "Mock Interview - Regent College"
+  }
+];
+// How long (in minutes) the "Join Now" button stays active after start time
+const SESSION_DURATION_MINUTES = 90;
 
-    function updateLiveSessionUI() {
-      const container = document.getElementById('liveSessionContainer');
-      if (!container) return;
-      const now = new Date();
-      let activeSession = null;
-      let upcomingSession = null;
-      for (const sess of SCHEDULED_SESSIONS) {
-        const start = new Date(sess.startTime);
-        const end = new Date(start.getTime() + SESSION_DURATION_MINUTES * 60000);
-        if (now >= start && now <= end) {
-          activeSession = sess;
-          break;
-        }
-      }
-      if (!activeSession) {
-        const future = SCHEDULED_SESSIONS.filter(s => new Date(s.startTime) > now);
-        if (future.length) {
-          future.sort((a,b) => new Date(a.startTime) - new Date(b.startTime));
-          upcomingSession = future[0];
-        }
-      }
-      if (activeSession) {
-        const startDate = new Date(activeSession.startTime);
-        const endDate = new Date(startDate.getTime() + SESSION_DURATION_MINUTES * 60000);
-        const timeStr = startDate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) + ' – ' + endDate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-        container.innerHTML = `
-          <div class="bg-red-50 rounded-xl p-4 border-l-4 border-red-500">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="material-symbols-outlined text-red-500 animate-pulse">fiber_manual_record</span>
-              <span class="font-label text-xs font-bold text-red-600 uppercase tracking-wider">LIVE NOW</span>
-            </div>
-            <p class="font-headline font-bold text-base text-primary">${escapeHtml(activeSession.title || 'Interview Training')}</p>
-            <p class="font-body text-xs text-on-surface-variant mt-1">${timeStr}</p>
-            <a href="${activeSession.zoomLink}" target="_blank" rel="noopener noreferrer" class="btn-live-pulse mt-3 flex items-center justify-center gap-2 w-full py-3 bg-red-600 text-white rounded-xl font-label text-sm font-bold uppercase tracking-wider transition-all active:scale-95">
-              <span class="material-symbols-outlined text-base">videocam</span> Join Zoom Training
-            </a>
-          </div>
-        `;
-      } else if (upcomingSession) {
-        const startDate = new Date(upcomingSession.startTime);
-        const formattedDate = startDate.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
-        const formattedTime = startDate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-        container.innerHTML = `
-          <div class="bg-surface-container-low rounded-xl p-4">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="material-symbols-outlined text-primary">event</span>
-              <span class="font-label text-xs font-bold text-primary uppercase tracking-wider">Next Session</span>
-            </div>
-            <p class="font-headline font-bold text-base text-primary">${escapeHtml(upcomingSession.title || 'Interview Training')}</p>
-            <p class="font-body text-sm text-on-surface-variant mt-1">${formattedDate} at ${formattedTime}</p>
-            <div class="mt-3 text-center text-slate-400 text-xs font-body">Zoom link will appear when session starts</div>
-          </div>
-        `;
-      } else {
-        container.innerHTML = `
-          <div class="bg-surface-container-low rounded-xl p-4 text-center">
-            <span class="material-symbols-outlined text-slate-400 text-3xl">event_busy</span>
-            <p class="font-body text-sm text-on-surface-variant mt-2">No upcoming training sessions scheduled</p>
-            <p class="font-body text-xs text-slate-400 mt-1">Check back later</p>
-          </div>
-        `;
-      }
+// ================== LIVE SESSION UI (pulsing Join Now button) ==================
+function updateLiveSessionUI() {
+  const container = document.getElementById('liveSessionContainer');
+  if (!container) return;
+
+  const now = new Date();
+  let activeSession = null;
+  let upcomingSession = null;
+
+  // Find active session (start <= now <= start+duration)
+  for (const sess of SCHEDULED_SESSIONS) {
+    const start = new Date(sess.startTime);
+    const end = new Date(start.getTime() + SESSION_DURATION_MINUTES * 60000);
+    if (now >= start && now <= end) {
+      activeSession = sess;
+      break;
     }
-    setInterval(updateLiveSessionUI, 30000);
+  }
+
+  // If no active, find next upcoming session
+  if (!activeSession) {
+    const future = SCHEDULED_SESSIONS.filter(s => new Date(s.startTime) > now);
+    if (future.length) {
+      future.sort((a,b) => new Date(a.startTime) - new Date(b.startTime));
+      upcomingSession = future[0];
+    }
+  }
+
+  // Clear container
+  container.innerHTML = '';
+
+  if (activeSession) {
+    // Active session – show pulsing "Join Now" button
+    const startDate = new Date(activeSession.startTime);
+    const endDate = new Date(startDate.getTime() + SESSION_DURATION_MINUTES * 60000);
+    const timeRange = `${startDate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} – ${endDate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+
+    container.innerHTML = `
+      <div class="bg-gradient-to-r from-red-50 to-red-100 rounded-2xl p-5 border-2 border-red-400 shadow-lg">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+            </span>
+            <span class="font-label text-xs font-black uppercase tracking-wider text-red-700">LIVE NOW</span>
+          </div>
+          <span class="font-label text-[10px] font-bold text-red-600 bg-red-200 px-2 py-1 rounded-full">${timeRange}</span>
+        </div>
+        <p class="font-headline font-bold text-lg text-primary mb-1">${escapeHtml(activeSession.title || 'Interview Training')}</p>
+        <p class="font-body text-xs text-on-surface-variant mb-4">Session in progress – click below to join</p>
+        <a href="${activeSession.zoomLink}" target="_blank" rel="noopener noreferrer" class="btn-live-pulse flex items-center justify-center gap-2 w-full py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-label font-bold text-sm uppercase tracking-wider transition-all active:scale-95 shadow-md">
+          <span class="material-symbols-outlined text-lg">videocam</span> Join Now
+        </a>
+      </div>
+    `;
+  } 
+  else if (upcomingSession) {
+    // Upcoming session – show countdown style
+    const startDate = new Date(upcomingSession.startTime);
+    const formattedDateTime = startDate.toLocaleString(undefined, { 
+      weekday: 'short', 
+      day: 'numeric', 
+      month: 'short', 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+    container.innerHTML = `
+      <div class="bg-surface-container-low rounded-2xl p-5 border border-outline-variant/30">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="material-symbols-outlined text-primary">event</span>
+          <span class="font-label text-xs font-bold uppercase tracking-wider text-primary">Next Session</span>
+        </div>
+        <p class="font-headline font-bold text-base text-primary">${escapeHtml(upcomingSession.title || 'Interview Training')}</p>
+        <p class="font-body text-sm text-on-surface-variant mt-1">${formattedDateTime}</p>
+        <div class="mt-4 flex items-center justify-center gap-2 text-xs text-slate-500 bg-white/50 rounded-full py-2 px-3">
+          <span class="material-symbols-outlined text-sm">schedule</span>
+          <span>Zoom link will appear when session starts</span>
+        </div>
+      </div>
+    `;
+  } 
+  else {
+    // No sessions scheduled
+    container.innerHTML = `
+      <div class="bg-surface-container-low rounded-2xl p-5 text-center">
+        <span class="material-symbols-outlined text-slate-300 text-4xl mb-2 block">event_busy</span>
+        <p class="font-body text-sm text-on-surface-variant">No upcoming training sessions</p>
+        <p class="font-body text-xs text-slate-400 mt-1">Check back later for live interview practice</p>
+      </div>
+    `;
+  }
+}
+
+// Check every 30 seconds
+setInterval(updateLiveSessionUI, 30000);
 
     // ================== QUESTION LABELS ==================
     const QUESTION_LABELS = {
