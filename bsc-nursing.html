@@ -144,7 +144,11 @@
         .side-panel { display: none !important; }
         .main-offset { margin-left: 0 !important; }
         .mobile-tab-bar { display: flex !important; }
-        .tc { padding-top: 116px !important; }
+        .tc { padding-top: 116px !important; padding-left: 20px !important; padding-right: 20px !important; }
+        .display { font-size: 1.8rem !important; }
+        .panel { padding: 20px !important; }
+        table { font-size: 12px; }
+        th, td { padding: 8px 4px !important; }
       }
       .tab-btn {
         font-size: 10px;
@@ -301,203 +305,82 @@
       .filter-btn {
         font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
         text-transform: uppercase; padding: 6px 14px; border-radius: 100px;
-        background: var(--bg-surface-mid); border: none;
-        color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+        background: var(--bg-surface-mid); border: none; color: var(--text-muted);
+        cursor: pointer; transition: all 0.2s;
       }
-      .filter-btn:hover { background: var(--bg-surface-low); color: var(--text-primary); }
       .filter-btn.active { background: var(--teal-800); color: #fff; }
 
-      /* ===== CHECKLIST ===== */
-      .check-item {
-        border-bottom: 1px solid var(--border-default);
-      }
-      .check-item:last-child { border-bottom: none; }
-      .check-box {
-        width: 22px; height: 22px;
-        border: 2px solid var(--border-strong);
-        border-radius: 6px;
-        cursor: pointer;
-        display: flex; align-items: center; justify-content: center;
-        flex-shrink: 0; transition: all 0.15s; margin-top: 2px;
-      }
-      .check-box:hover { border-color: var(--teal-700); }
-      .check-box.done { background: var(--teal-800); border-color: var(--teal-800); }
-      .check-box.done::after { content: "✓"; color: #fff; font-size: 12px; font-weight: 900; }
+      /* ===== TABLES ===== */
+      table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+      th { text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); padding: 12px 16px; border-bottom: 1.5px solid var(--border-default); }
+      td { padding: 14px 16px; border-bottom: 1px solid var(--border-default); font-size: 13px; vertical-align: top; }
+      tr:last-child td { border-bottom: none; }
 
       /* ===== PROGRESS BAR ===== */
-      .progress-track {
-        background: var(--border-default); border-radius: 100px; height: 8px; overflow: hidden;
-      }
-      .progress-fill {
-        height: 100%; background: var(--gradient-progress); border-radius: 100px;
-        transition: width 0.5s ease; position: relative;
-      }
-      .progress-fill::after {
-        content: ""; position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-        animation: sweep 2.5s infinite;
-      }
-      @keyframes sweep { to { left: 200%; } }
+      .progress-track { height: 6px; background: var(--bg-surface-mid); border-radius: 100px; overflow: hidden; }
+      .progress-fill { height: 100%; background: var(--gradient-progress); transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
 
-      /* ===== FEEDBACK ===== */
-      .fb-pass {
-        background: var(--bg-feedback-pass);
-        border-left: 4px solid var(--green-600);
-        border-radius: 0 12px 12px 0;
+      /* ===== CHECKLIST ===== */
+      .check-item { cursor: pointer; transition: background 0.2s; border-radius: 12px; }
+      .check-item:hover { background: var(--bg-surface-low); }
+      .check-box {
+        width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--border-strong);
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        transition: all 0.2s; background: var(--bg-surface);
       }
-      .fb-fail {
-        background: var(--bg-feedback-fail);
-        border-left: 4px solid var(--red-500);
-        border-radius: 0 12px 12px 0;
-      }
-      .fb-loading {
-        background: var(--bg-feedback-loading);
-        border-left: 4px solid var(--teal-700);
-        border-radius: 0 12px 12px 0;
-      }
-      .score-num {
-        font-family: 'Playfair Display', serif;
-        font-size: 2.2rem; font-weight: 900;
+      .check-box.done { background: var(--teal-700); border-color: var(--teal-700); }
+      .check-box.done::after {
+        content: 'check'; font-family: 'Material Symbols Outlined';
+        font-size: 14px; color: #fff; font-weight: 900;
       }
 
       /* ===== BUTTONS ===== */
       .btn-primary {
-        background: var(--gradient-primary);
-        color: #fff; font-weight: 700; border: none;
-        cursor: pointer; transition: all 0.2s;
+        background: var(--teal-800); color: #fff; border: none;
+        padding: 10px 20px; border-radius: 10px; font-weight: 700;
+        cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
       }
-      .btn-primary:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: var(--shadow-hover); }
-      .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+      .btn-primary:hover { background: var(--teal-900); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(15,118,110,0.2); }
+      .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-      /* ===== TEXTAREA ===== */
-      textarea.sim-input {
-        background: var(--bg-body); border: none;
-        border-bottom: 2px solid var(--border-default);
-        color: var(--text-primary); font-family: 'DM Sans', sans-serif;
-        font-size: 14px; outline: none;
-        transition: border-color 0.2s; resize: vertical; padding: 12px 0; width: 100%;
-      }
-      textarea.sim-input:focus { border-bottom-color: var(--teal-700); }
-      textarea.sim-input::placeholder { color: var(--text-muted); opacity: 0.7; }
+      /* ===== FEEDBACK ===== */
+      .fb-pass { background: var(--bg-feedback-pass); border: 1.5px solid #6ee7b7; border-radius: 16px; padding: 24px; }
+      .fb-fail { background: var(--bg-feedback-fail); border: 1.5px solid #fca5a5; border-radius: 16px; padding: 24px; }
+      .scenario-badge { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
+      .badge-nmc { background: #7c3aed; color: #fff; }
+      .badge-safety { background: var(--red-500); color: #fff; }
+      .badge-ethics { background: var(--blue-600); color: #fff; }
+
+      /* ===== UTILS ===== */
+      .hidden { display: none; }
+      .year-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--teal-800); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 100px; margin-bottom: 12px; }
+      .nmc-pillar { background: var(--bg-surface); border: 1.5px solid var(--border-default); border-radius: 12px; padding: 16px; transition: all 0.2s; }
+      .nmc-pillar:hover { border-color: var(--teal-400); transform: translateY(-2px); }
+      .stage-item { display: flex; gap: 16px; margin-bottom: 16px; }
+      .stage-dot { width: 24px; height: 24px; border-radius: 50%; background: var(--teal-100); color: var(--teal-800); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
+      .stage-line { width: 2px; flex: 1; background: var(--border-default); margin: 4px 0; }
 
       /* ===== SPINNER ===== */
-      .spinner {
-        display: inline-block; width: 14px; height: 14px;
-        border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
-        border-radius: 50%; animation: spin 0.7s linear infinite;
-      }
+      .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; }
       @keyframes spin { to { transform: rotate(360deg); } }
-
-      /* ===== NMC PILLARS ===== */
-      .nmc-pillar {
-        background: var(--bg-surface); border: 2px solid var(--border-teal);
-        border-radius: 14px; padding: 20px; text-align: center;
-        transition: all 0.2s;
-      }
-      .nmc-pillar:hover { border-color: var(--teal-700); transform: translateY(-2px); box-shadow: var(--shadow-hover); }
-
-      /* ===== RESOURCE CARD ===== */
-      .res-card {
-        display: flex; align-items: flex-start; gap: 14px;
-        background: var(--bg-card); border: 1.5px solid var(--border-default);
-        border-radius: 14px; padding: 18px; text-decoration: none;
-        color: var(--text-primary); transition: all 0.2s;
-      }
-      .res-card:hover { border-color: var(--teal-700); box-shadow: var(--shadow-hover); transform: translateY(-2px); }
-      .res-sub { display: block; font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 400; }
-
-      /* ===== WARNING BOX ===== */
-      .warning-box {
-        background: #fff7ed; border: 2px solid #fed7aa;
-        border-radius: 12px; padding: 14px 18px;
-        color: #9a3412; font-size: 13px; display: none;
-      }
-      [data-theme="dark"] .warning-box { background: #2c1a06; border-color: #7c3c0a; color: #fdba74; }
-
-      /* ===== STAGE TIMELINE ===== */
-      .stage-item {
-        display: flex; gap: 16px; align-items: flex-start; margin-bottom: 20px;
-      }
-      .stage-dot {
-        width: 36px; height: 36px; border-radius: 50%;
-        background: var(--gradient-primary); color: #fff;
-        display: flex; align-items: center; justify-content: center;
-        font-weight: 900; font-size: 13px; flex-shrink: 0;
-      }
-      .stage-line {
-        width: 2px; height: 20px; background: var(--border-teal);
-        margin: 0 auto; margin-top: -4px;
-      }
-
-      /* ===== MODULE YEAR BADGE ===== */
-      .year-badge {
-        display: inline-flex; align-items: center; gap: 8px;
-        background: var(--gradient-primary); color: #fff;
-        font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-        text-transform: uppercase; padding: 5px 14px; border-radius: 100px; margin-bottom: 14px;
-      }
-
-      /* ===== TABLE ===== */
-      table { width: 100%; border-collapse: collapse; font-size: 13px; }
-      th {
-        background: var(--teal-800); color: #fff;
-        padding: 10px 14px; text-align: left; font-size: 11px;
-        font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
-      }
-      th:first-child { border-radius: 10px 0 0 0; }
-      th:last-child { border-radius: 0 10px 0 0; }
-      td { padding: 10px 14px; border-bottom: 1px solid var(--border-default); vertical-align: top; }
-      tr:last-child td { border-bottom: none; }
-      tr:nth-child(even) td { background: var(--bg-surface-low); }
-
-      /* ===== ACCESSIBILITY ===== */
-      button:focus-visible { outline: 2px solid var(--teal-700); outline-offset: 2px; }
-      @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-      }
-
-      /* ===== SCENARIO BADGE ===== */
-      .scenario-badge {
-        display: inline-flex; align-items: center; gap: 6px;
-        font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-        padding: 4px 12px; border-radius: 100px;
-      }
-      .badge-nmc { background: var(--teal-100); color: var(--teal-900); }
-      .badge-safety { background: #fce7f3; color: #9d174d; }
-      .badge-ethics { background: #ede9fe; color: #4c1d95; }
-
-      /* ===== COLLAPSIBLE SAMPLE ===== */
-      .sample-card { cursor: pointer; }
-      .sample-body { display: none; }
-      .sample-card.open .sample-body { display: block; }
-      .sample-card.open .sample-arrow { transform: rotate(180deg); }
-      .sample-arrow { transition: transform 0.2s; }
     </style>
   </head>
   <body>
     <!-- ===== TOP NAV ===== -->
-    <header class="top-nav fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 h-14">
+    <header class="top-nav" style="height:56px;position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:50;">
       <div style="display:flex;align-items:center;gap:12px;">
-        <a href="index.html" style="text-decoration:none;">
-          <button class="btn-back">
-            <span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span> All Courses
-          </button>
-        </a>
+        <button class="btn-back" onclick="window.location.href='index.html'">
+          <span class="material-symbols-outlined" style="font-size:18px;">arrow_back</span>
+          <span class="mobile-hide">Back</span>
+        </button>
         <div style="width:1px;height:20px;background:var(--border-default);"></div>
-        <div>
-          <div style="font-weight:700;font-size:14px;color:var(--text-primary);">BSc (Hons) Adult Nursing</div>
-          <div style="font-size:11px;color:var(--teal-700);font-weight:600;">London Waterloo · SE1 9NN</div>
+        <div class="nav-badge">
+          <span class="material-symbols-outlined" style="font-size:14px;">medical_services</span>
+          BSc Adult Nursing
         </div>
       </div>
-      <div class="nav-badge" style="display:none;" id="navBadge">
-        <span class="material-symbols-outlined" style="font-size:14px;">vaccines</span>
-        NMC Approved
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <div class="nav-badge" style="display:flex;" id="navBadgeDesktop">
-          <span class="material-symbols-outlined" style="font-size:14px;">vaccines</span>
-          NMC Approved
-        </div>
+
+      <div style="display:flex;align-items:center;gap:12px;">
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
           <span class="material-symbols-outlined" style="font-size:18px;" id="themeIcon">dark_mode</span>
         </button>
@@ -674,131 +557,38 @@
                 <p style="font-size:11px;color:var(--text-muted);margin-top:6px;">Raise concerns, escalate, follow infection control and safeguarding protocols.</p>
               </div>
               <div class="nmc-pillar">
-                <span class="material-symbols-outlined" style="color:var(--teal-700);font-size:28px;margin-bottom:8px;display:block;">workspace_premium</span>
+                <span class="material-symbols-outlined" style="color:var(--teal-700);font-size:28px;margin-bottom:8px;display:block;">handshake</span>
                 <p style="font-weight:800;font-size:13px;color:var(--teal-800);">Promote Trust</p>
-                <p style="font-size:11px;color:var(--text-muted);margin-top:6px;">Uphold professionalism, revalidate every 3 years, maintain fitness to practise.</p>
+                <p style="font-size:11px;color:var(--text-muted);margin-top:6px;">Professionalism, honesty, integrity, and upholding the reputation of nursing.</p>
               </div>
             </div>
           </div>
-
-          <!-- Preparation Strategy -->
-          <div class="panel" style="padding:28px;margin-bottom:24px;">
-            <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);">tips_and_updates</span>
-              Nursing-Specific Preparation Strategy
-            </h2>
-            <div style="display:flex;flex-direction:column;gap:16px;">
-              <div class="panel-teal" style="padding:18px;">
-                <p style="font-weight:700;font-size:14px;margin-bottom:8px;">Research BPP's Adult Nursing Programme Deeply</p>
-                <ul style="list-style:none;font-size:13px;color:var(--text-muted);display:flex;flex-direction:column;gap:6px;">
-                  <li style="display:flex;gap:8px;"><span style="color:var(--teal-700);">→</span> Campus: London Waterloo (SE1 9NN) — simulation labs, clinical skills suites, VR scenarios</li>
-                  <li style="display:flex;gap:8px;"><span style="color:var(--teal-700);">→</span> Year 1: Anatomy, Communication, Person-Centred Care · Year 2: Acute Care, Leadership, Medicines · Year 3: Complex Care, Research, Preceptorship</li>
-                  <li style="display:flex;gap:8px;"><span style="color:var(--teal-700);">→</span> Placements: 50% of course time across NHS hospitals, community teams, mental health settings in London</li>
-                  <li style="display:flex;gap:8px;"><span style="color:var(--teal-700);">→</span> Assessment: OSCEs, reflective portfolios, essays, Practice Assessment Documents (PADs)</li>
-                </ul>
-              </div>
-              <div class="panel-amber" style="padding:18px;">
-                <p style="font-weight:700;font-size:14px;margin-bottom:10px;">Craft a Compelling "Why Nursing?" Narrative</p>
-                <div style="display:flex;gap:10px;font-size:13px;margin-bottom:8px;">
-                  <span style="color:var(--red-500);font-weight:700;flex-shrink:0;">✗ Avoid:</span>
-                  <span style="color:var(--text-muted);font-style:italic;">"I want to help people."</span>
-                </div>
-                <div style="display:flex;gap:10px;font-size:13px;">
-                  <span style="color:var(--green-600);font-weight:700;flex-shrink:0;">✓ Use:</span>
-                  <span style="color:var(--text-muted);font-style:italic;">"I am drawn to nursing's blend of clinical expertise, advocacy, and holistic care — values enshrined in the NMC Code. My experience taught me [skill], which I will apply to [nursing context]."</span>
-                </div>
-              </div>
-              <div class="panel-teal" style="padding:18px;">
-                <p style="font-weight:700;font-size:14px;margin-bottom:10px;">Master Your CAS & Visa Details</p>
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;font-size:13px;color:var(--text-muted);">
-                  <div>📋 Course code, start date, tuition fees</div>
-                  <div>🔤 IELTS Academic 7.0 (no band below 7.0) or OET Grade B</div>
-                  <div>💷 £1,334/month × 9 months = £12,006 for London living costs</div>
-                  <div>🎓 Graduate Route visa (2 years) + NMC registration pathway (CBT/OSCE)</div>
-                </div>
-              </div>
-              <div class="panel-green" style="padding:18px;">
-                <p style="font-weight:700;font-size:14px;margin-bottom:10px;">Practice Scenarios Using STAR + NMC Lens</p>
-                <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text-muted);background:rgba(255,255,255,0.4);padding:14px;border-radius:8px;line-height:1.8;">
-                  <strong style="color:var(--text-primary);">Situation:</strong> A patient refuses essential medication<br>
-                  <strong style="color:var(--text-primary);">Task:</strong> Ensure safety while respecting autonomy<br>
-                  <strong style="color:var(--text-primary);">Action:</strong> Assess capacity (Mental Capacity Act 2005) · Explore concerns empathetically · Involve senior nurse if needed · Document thoroughly<br>
-                  <strong style="color:var(--text-primary);">Result:</strong> Patient feels heard, safety maintained, escalation follows protocol<br>
-                  <strong style="color:var(--teal-700);">NMC Link:</strong> "This aligns with Prioritising People and Preserving Safety."
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn-primary" style="padding:14px 28px;border-radius:12px;font-size:14px;font-weight:700;width:100%;max-width:300px;" onclick="showTab('questions','sl-questions')">
-            Continue to All Questions →
-          </button>
         </div>
 
         <!-- ==================== WHAT TO KNOW TAB ==================== -->
         <div class="tc" id="tab-know" style="padding:32px 40px 60px;max-width:900px;padding-top:72px;">
-          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);display:block;margin-bottom:8px;">Module 2 — Knowledge</span>
-          <h1 class="display" style="font-size:2.2rem;margin-bottom:6px;">What to Know</h1>
-          <p style="color:var(--text-muted);font-size:15px;margin-bottom:32px;">Core knowledge about BPP, the NHS, modules, costs, and competitor universities.</p>
+          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);display:block;margin-bottom:8px;">Module 2 — Knowledge Base</span>
+          <h1 class="display" style="font-size:2.2rem;margin-bottom:6px;">Essential Knowledge</h1>
+          <p style="color:var(--text-muted);font-size:15px;margin-bottom:32px;">Key facts about BPP, the NHS, and UK nursing regulations.</p>
 
-          <!-- About BPP Nursing -->
+          <!-- Key Legislation -->
           <div class="panel" style="padding:28px;margin-bottom:24px;">
             <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px;">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);">apartment</span>
-              About BPP University — Nursing Focus
+              <span class="material-symbols-outlined" style="color:var(--teal-700);">gavel</span>
+              Key UK Healthcare Legislation
             </h2>
-            <div style="overflow-x:auto;">
-              <table>
-                <thead><tr><th>Feature</th><th>Detail</th></tr></thead>
-                <tbody>
-                  <tr><td style="font-weight:600;">NMC Approval</td><td>All nursing programmes approved by Nursing & Midwifery Council — graduates eligible for RN (Adult) registration</td></tr>
-                  <tr><td style="font-weight:600;">Teaching Approach</td><td>Blended learning: online theory + in-person simulation + supervised clinical placements</td></tr>
-                  <tr><td style="font-weight:600;">Facilities</td><td>Waterloo campus: high-fidelity manikins, VR scenarios, medication calculation labs, debrief rooms</td></tr>
-                  <tr><td style="font-weight:600;">NHS Partnerships</td><td>Guy's & St Thomas', King's College Hospital, Central London Community Healthcare</td></tr>
-                  <tr><td style="font-weight:600;">Student Support</td><td>Dedicated nursing personal tutors, clinical mentorship, wellbeing services, academic skills workshops</td></tr>
-                  <tr><td style="font-weight:600;">Graduate Outcomes</td><td>100% of eligible graduates progress to NMC registration; strong employment across acute, community, specialist settings</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- UK Healthcare System -->
-          <div class="panel" style="padding:28px;margin-bottom:24px;">
-            <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px;">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);">local_hospital</span>
-              The UK Healthcare System
-            </h2>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:16px;">
-              <div class="panel-teal" style="padding:16px;">
-                <p style="font-weight:700;font-size:13px;margin-bottom:6px;">NHS Structure</p>
-                <p style="font-size:12px;color:var(--text-muted);">Publicly funded, free at point of use. Organised into Integrated Care Systems (ICSs).</p>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div style="padding:14px;background:var(--bg-surface-low);border-radius:12px;display:flex;gap:12px;align-items:center;">
+                <span style="font-weight:800;color:var(--teal-800);font-size:13px;width:120px;flex-shrink:0;">Health & Social Care Act</span>
+                <span style="color:var(--text-muted);font-size:13px;">2012 · Established the "No decision about me, without me" principle</span>
               </div>
-              <div class="panel-teal" style="padding:16px;">
-                <p style="font-weight:700;font-size:13px;margin-bottom:6px;">Nursing Roles</p>
-                <p style="font-size:12px;color:var(--text-muted);">Adult Nurses work across hospitals, GP practices, community teams, mental health, prisons, schools.</p>
+              <div style="padding:14px;background:var(--bg-surface-low);border-radius:12px;display:flex;gap:12px;align-items:center;">
+                <span style="font-weight:800;color:var(--teal-800);font-size:13px;width:120px;flex-shrink:0;">Mental Capacity Act</span>
+                <span style="color:var(--text-muted);font-size:13px;">2005 · Governs decision-making for patients who lack capacity</span>
               </div>
-              <div class="panel-teal" style="padding:16px;">
-                <p style="font-weight:700;font-size:13px;margin-bottom:6px;">MDT Working</p>
-                <p style="font-size:12px;color:var(--text-muted);">Collaborate with doctors, physios, OTs, social workers, pharmacists daily.</p>
-              </div>
-            </div>
-            <p style="font-weight:700;font-size:13px;margin-bottom:10px;">Key Frameworks to Know:</p>
-            <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;">
-              <div style="display:flex;gap:10px;align-items:flex-start;">
-                <span style="background:var(--teal-800);color:#fff;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px;">NMC Code</span>
-                <span style="color:var(--text-muted);">4 pillars · Revalidation every 3 years · Fitness to practise procedures</span>
-              </div>
-              <div style="display:flex;gap:10px;align-items:flex-start;">
-                <span style="background:var(--blue-600);color:#fff;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px;">NHS Constitution</span>
-                <span style="color:var(--text-muted);">Rights, responsibilities, pledges for patients and staff</span>
-              </div>
-              <div style="display:flex;gap:10px;align-items:flex-start;">
-                <span style="background:#7c3aed;color:#fff;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px;">Safeguarding Acts</span>
-                <span style="color:var(--text-muted);">Legal duties to protect vulnerable adults and children under Care Act 2014</span>
-              </div>
-              <div style="display:flex;gap:10px;align-items:flex-start;">
-                <span style="background:var(--green-600);color:#fff;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px;">Mental Capacity Act</span>
-                <span style="color:var(--text-muted);">2005 · Governs decision-making for patients who lack capacity</span>
+              <div style="padding:14px;background:var(--bg-surface-low);border-radius:12px;display:flex;gap:12px;align-items:center;">
+                <span style="font-weight:800;color:var(--teal-800);font-size:13px;width:120px;flex-shrink:0;">Equality Act</span>
+                <span style="color:var(--text-muted);font-size:13px;">2010 · Protects against discrimination in healthcare delivery</span>
               </div>
             </div>
           </div>
@@ -885,35 +675,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Other Universities -->
-          <div class="panel" style="padding:28px;">
-            <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px;">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);">compare</span>
-              Other UK Universities Offering Adult Nursing
-            </h2>
-            <div style="overflow-x:auto;margin-bottom:16px;">
-              <table>
-                <thead><tr><th>University</th><th>Location</th><th>Key Strengths</th><th>Entry Requirements</th></tr></thead>
-                <tbody>
-                  <tr><td style="font-weight:600;">King's College London</td><td>London</td><td>World-ranked; Guy's Hospital placements</td><td>ABB; IELTS 7.0</td></tr>
-                  <tr><td style="font-weight:600;">University of Manchester</td><td>Manchester</td><td>Large NHS partnerships; simulation centre</td><td>BBB; IELTS 7.0</td></tr>
-                  <tr><td style="font-weight:600;">University of Edinburgh</td><td>Edinburgh</td><td>Integrated curriculum; research-led</td><td>ABB; IELTS 7.0</td></tr>
-                  <tr><td style="font-weight:600;">City, University of London</td><td>London</td><td>Central placements; diverse cohort</td><td>BBC; IELTS 7.0</td></tr>
-                  <tr><td style="font-weight:600; color:var(--teal-800);">BPP University ★</td><td>London Waterloo</td><td>Simulation-intensive; employer-focused; NHS links</td><td>Relevant experience; IELTS 7.0; credibility interview</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="panel-teal" style="padding:16px;">
-              <p style="font-weight:700;font-size:13px;margin-bottom:10px;">Why BPP Stands Out for Nursing:</p>
-              <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text-muted);">
-                <div style="display:flex;gap:8px;"><span style="color:var(--teal-700);font-weight:700;">→</span>Faster progression for career-changers or those with prior healthcare experience</div>
-                <div style="display:flex;gap:8px;"><span style="color:var(--teal-700);font-weight:700;">→</span>Intensive simulation training builds confidence before first placement</div>
-                <div style="display:flex;gap:8px;"><span style="color:var(--teal-700);font-weight:700;">→</span>NMC Code integrated throughout the curriculum — not just at the end</div>
-                <div style="display:flex;gap:8px;"><span style="color:var(--teal-700);font-weight:700;">→</span>Central London location = diverse clinical settings and networking</div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- ==================== QUESTIONS TAB ==================== -->
@@ -939,21 +700,21 @@
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num">P1</span><span style="font-weight:600;font-size:14px;">Tell me about yourself and why you're pursuing nursing now.</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus on authentic narrative, transferable skills, and values alignment with the NMC Code. Avoid vague statements — give a real story.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Authentic narrative, transferable skills, values alignment with NMC Code.</p></div>
             </div>
             <div class="acc-item" data-cat="personal">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num">P2</span><span style="font-weight:600;font-size:14px;">You have a background in [law/business/etc.] — why switch to nursing?</span></div>
+                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num">P2</span><span style="font-weight:600;font-size:14px;">You have a background in [law/business/etc.] – why switch to nursing?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Show purposeful transition. Explain how prior skills (advocacy, documentation, ethics) enhance your nursing practice. This is a strength, not a weakness.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Purposeful transition, how prior skills enhance nursing practice (e.g., advocacy, documentation, ethics).</p></div>
             </div>
             <div class="acc-item" data-cat="personal">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num">P3</span><span style="font-weight:600;font-size:14px;">What does "compassion in nursing" mean to you? Give an example.</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Move beyond a dictionary definition. Link compassion to a real action — dignity, cultural humility, sitting with a patient when frightened. Keep it personal and specific.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Move beyond dictionary definition – link to action, dignity, cultural humility.</p></div>
             </div>
 
             <!-- COURSE -->
@@ -962,28 +723,28 @@
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num">C1</span><span style="font-weight:600;font-size:14px;">Why BPP's Adult Nursing programme over other UK universities?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Name specific features: simulation labs, NHS Trust partnerships (Guy's, King's College Hospital), Waterloo location, flexible structure, NMC Code integration throughout curriculum.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Specific features – simulation labs, NHS partnerships, Waterloo location, flexible structure.</p></div>
             </div>
             <div class="acc-item" data-cat="course">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num">C2</span><span style="font-weight:600;font-size:14px;">Which module are you most looking forward to, and how will it help your career?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Name a specific module and link it to a clinical interest. Example: "Acute & Critical Care aligns with my goal to work in A&E." Never say "all of them."</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Name module + link to clinical interest (e.g., "Acute Care" for A&E aspirations).</p></div>
             </div>
             <div class="acc-item" data-cat="course">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num">C3</span><span style="font-weight:600;font-size:14px;">How do you feel about spending 50% of your time on clinical placements?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Show realistic awareness: shift work, travel, learning from mistakes, mentorship value. Express enthusiasm without being naive about the challenges.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Realistic awareness of shift work, travel, learning from mistakes, mentorship value.</p></div>
             </div>
             <div class="acc-item" data-cat="course">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num">C4</span><span style="font-weight:600;font-size:14px;">How will you balance academic work, placements, and self-care?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Discuss time management strategies, support networks, and reflection practices. Acknowledge that nursing is demanding and show you've planned for this, not just hoped it works out.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Time management strategies, support networks, reflection practices.</p></div>
             </div>
 
             <!-- SCENARIO -->
@@ -992,40 +753,28 @@
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-scenario">S1</span><span style="font-weight:600;font-size:14px;">A patient is anxious before a procedure. How do you respond?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;">
-                <p style="font-size:13px;color:var(--text-muted);padding-left:36px;margin-bottom:8px;">Use calm presence, active listening, simple explanations. Involve family if appropriate. Escalate if anxiety is severe. Link to "Prioritise People" pillar.</p>
-                <div style="margin-left:36px;"><span class="scenario-badge badge-nmc">NMC: Prioritise People</span></div>
-              </div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Calm presence, active listening, simple explanations, involving family if appropriate, escalation if needed.</p></div>
             </div>
             <div class="acc-item" data-cat="scenario">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-scenario">S2</span><span style="font-weight:600;font-size:14px;">A patient shares confidential information about abuse. What do you do?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;">
-                <p style="font-size:13px;color:var(--text-muted);padding-left:36px;margin-bottom:8px;">Safeguarding duty: listen, reassure, do not promise absolute confidentiality. Document accurately using patient's words. Report to practice supervisor / safeguarding lead immediately.</p>
-                <div style="margin-left:36px;display:flex;gap:6px;"><span class="scenario-badge badge-safety">Safeguarding</span><span class="scenario-badge badge-nmc">NMC: Preserve Safety</span></div>
-              </div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Safeguarding duty – listen, reassure, document, report to mentor/safeguarding lead per policy.</p></div>
             </div>
             <div class="acc-item" data-cat="scenario">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-scenario">S3</span><span style="font-weight:600;font-size:14px;">You see a colleague skip hand hygiene. How do you handle it?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;">
-                <p style="font-size:13px;color:var(--text-muted);padding-left:36px;margin-bottom:8px;">Show professional courage: address respectfully in private, reference infection control policy. Escalate if the pattern continues. This is about patient safety, not conflict.</p>
-                <div style="margin-left:36px;"><span class="scenario-badge badge-nmc">NMC: Preserve Safety & Promote Trust</span></div>
-              </div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Professional courage – address respectfully in private, reference infection control policy, escalate if pattern continues.</p></div>
             </div>
             <div class="acc-item" data-cat="scenario">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-scenario">S4</span><span style="font-weight:600;font-size:14px;">A patient refuses care due to cultural beliefs. How do you proceed?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;">
-                <p style="font-size:13px;color:var(--text-muted);padding-left:36px;margin-bottom:8px;">Cultural humility: explore concerns, involve interpreter if needed, collaborate on acceptable alternatives, document decisions. Respect autonomy while advocating for safety.</p>
-                <div style="margin-left:36px;display:flex;gap:6px;"><span class="scenario-badge badge-ethics">Ethics</span><span class="scenario-badge badge-nmc">NMC: Prioritise People</span></div>
-              </div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Cultural humility – explore concerns, involve interpreter if needed, collaborate on acceptable alternatives, document.</p></div>
             </div>
 
             <!-- UK NURSING -->
@@ -1034,28 +783,28 @@
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-uk">U1</span><span style="font-weight:600;font-size:14px;">What do you know about the NMC Code?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Name all 4 pillars. Mention 10 standards covering consent, confidentiality, communication, record-keeping, raising concerns. Reference revalidation every 3 years: 450 practice hours + 35 CPD hours + reflective accounts.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: 4 pillars + 10 standards; revalidation every 3 years; fitness to practise procedures.</p></div>
             </div>
             <div class="acc-item" data-cat="uk">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-uk">U2</span><span style="font-weight:600;font-size:14px;">How does the NHS structure affect a nurse's daily work?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Discuss MDT working, referral pathways, CQC inspections, Integrated Care Systems, and how NHS staffing pressures affect workload. Show you understand real day-to-day nursing, not just theory.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Multidisciplinary teams, referral pathways, CQC inspections, health inequalities focus.</p></div>
             </div>
             <div class="acc-item" data-cat="uk">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-uk">U3</span><span style="font-weight:600;font-size:14px;">What are current challenges in UK adult nursing?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Workforce shortages, mental health demand, digital transformation (EPR systems), health inequalities, ageing population with multi-morbidity. Show you've read the news and understand the context you're entering.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Workforce shortages, mental health demand, digital transformation, health inequalities, ageing population.</p></div>
             </div>
             <div class="acc-item" data-cat="uk">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-uk">U4</span><span style="font-weight:600;font-size:14px;">How would you promote equality, diversity, and inclusion in practice?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Person-centred care, challenging your own bias, accessible communication, using interpreters, advocating for marginalised patients. Reference cultural humility as a continuous practice, not a checklist.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Person-centred care, challenging bias, accessible communication, advocating for marginalised patients.</p></div>
             </div>
 
             <!-- FINANCE -->
@@ -1064,21 +813,21 @@
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-finance">F1</span><span style="font-weight:600;font-size:14px;">How will you fund tuition and living costs in London?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Name specific sources: personal savings, family support, NHS Learning Support Fund (£5,000 grant + travel). Give realistic monthly budget figures. Mention part-time work within 20-hour visa limit.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Specific sources (savings, family, NHSLSF), realistic budget, contingency planning.</p></div>
             </div>
             <div class="acc-item" data-cat="finance">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-finance">F2</span><span style="font-weight:600;font-size:14px;">Nursing placements may require early starts or travel across London. How will you manage?</span></div>
+                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-finance">F2</span><span style="font-weight:600;font-size:14px;">Nursing placements may require early starts or travel across London. How will you manage this?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Transport planning using Oyster/Contactless, NHS Learning Support Fund travel reimbursements, time management, building a self-care routine to sustain energy across demanding shifts.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Transport planning, budgeting for fares, time management, self-care strategies.</p></div>
             </div>
             <div class="acc-item" data-cat="finance">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-finance">F3</span><span style="font-weight:600;font-size:14px;">What will you do if your visa is delayed and you miss the course start?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Proactive communication with BPP admissions team, explore deferral options, maintain readiness through online prep, English practice, and staying updated on nursing news. Show you are solution-focused.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Proactive communication with BPP, deferral options, maintaining readiness (online prep, English practice).</p></div>
             </div>
 
             <!-- CAREER -->
@@ -1087,416 +836,154 @@
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-career">G1</span><span style="font-weight:600;font-size:14px;">Where do you see yourself 5 years after qualifying as a nurse?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Realistic progression: Band 5 staff nurse → preceptorship year → specialist training or leadership role. Name a specific clinical area of interest. Show ambition grounded in realism.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Realistic progression – Band 5 staff nurse → specialist training/preceptorship → potential leadership/education role.</p></div>
             </div>
             <div class="acc-item" data-cat="career">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-career">G2</span><span style="font-weight:600;font-size:14px;">How will you maintain your NMC registration after qualifying?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Revalidation every 3 years: 450 practice hours, 35 CPD hours, 5 reflective accounts, 5 written confirmations, health and character declaration, professional indemnity. Demonstrates long-term professional commitment.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Revalidation process – 450 practice hours, 35 CPD hours, reflective accounts, professional indemnity, health declaration.</p></div>
             </div>
             <div class="acc-item" data-cat="career">
               <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
                 <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-career">G3</span><span style="font-weight:600;font-size:14px;">What area of nursing interests you most long-term, and why?</span></div>
                 <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Choose a genuine interest: critical care, community nursing, mental health liaison, oncology. Explain why and show awareness of required post-qualifying training for that speciality.</p></div>
+              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Genuine interest (e.g., critical care, community, mental health liaison) + awareness of required post-qualifying training.</p></div>
             </div>
-          </div>
-        </div>
-
-        <!-- ==================== SAMPLE ANSWERS TAB ==================== -->
-        <div class="tc" id="tab-samples" style="padding:32px 40px 60px;max-width:900px;padding-top:72px;">
-          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);display:block;margin-bottom:8px;">Module 4 — Examples</span>
-          <h1 class="display" style="font-size:2.2rem;margin-bottom:6px;">Sample Answers</h1>
-          <p style="color:var(--text-muted);font-size:15px;margin-bottom:32px;">Strong nursing-specific answers. Click each card to expand. Use as inspiration — always personalise.</p>
-
-          <div style="display:flex;flex-direction:column;gap:12px;">
-
-            <!-- Sample B1 -->
-            <div class="panel sample-card" style="overflow:hidden;" onclick="this.classList.toggle('open')">
-              <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
-                <div style="display:flex;align-items:flex-start;gap:12px;">
-                  <span class="q-num">C1</span>
-                  <div>
-                    <p style="font-weight:700;font-size:14px;">Why BPP for Adult Nursing?</p>
-                    <p style="font-size:12px;color:var(--teal-700);font-weight:600;margin-top:2px;">Course-specific · Strong</p>
-                  </div>
-                </div>
-                <span class="material-symbols-outlined sample-arrow" style="color:var(--text-muted);">expand_more</span>
-              </div>
-              <div class="sample-body" style="padding:0 24px 24px;">
-                <div style="background:var(--bg-surface-low);border:1px solid var(--border-default);border-radius:12px;padding:18px;font-size:14px;line-height:1.8;font-style:italic;color:var(--text-primary);margin-bottom:12px;">
-                  "I chose BPP's Adult Nursing programme because it uniquely blends rigorous academic preparation with intensive simulation training before clinical placements — this builds confidence and competence safely. I'm particularly excited by modules like Acute & Critical Care and Medicines Management, which align with my goal to work in acute hospital settings. BPP's partnerships with NHS Trusts across London — including Guy's & St Thomas' and King's College Hospital — mean I'll gain diverse placement experience, from busy A&E departments to community teams. As someone with a background in law, I value BPP's emphasis on professionalism, ethics, and accountability — core to both fields. The Waterloo campus's central location also offers excellent transport links for placements across the city."
-                </div>
-                <div style="display:flex;flex-direction:column;gap:6px;">
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>Specific modules named (Acute & Critical Care, Medicines Management)</div>
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>NHS partnership hospitals named specifically</div>
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>Transferable skills from prior background linked to nursing values</div>
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>Location awareness shows practical planning</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Sample S2 -->
-            <div class="panel sample-card" style="overflow:hidden;" onclick="this.classList.toggle('open')">
-              <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
-                <div style="display:flex;align-items:flex-start;gap:12px;">
-                  <span class="q-num-scenario">S2</span>
-                  <div>
-                    <p style="font-weight:700;font-size:14px;">Patient shares confidential information about abuse</p>
-                    <p style="font-size:12px;color:var(--blue-600);font-weight:600;margin-top:2px;">Scenario · Safeguarding</p>
-                  </div>
-                </div>
-                <span class="material-symbols-outlined sample-arrow" style="color:var(--text-muted);">expand_more</span>
-              </div>
-              <div class="sample-body" style="padding:0 24px 24px;">
-                <div style="background:var(--bg-surface-low);border:1px solid var(--border-default);border-radius:12px;padding:18px;font-size:14px;line-height:1.8;font-style:italic;color:var(--text-primary);margin-bottom:12px;">
-                  "First, I would listen calmly and reassure the patient they've done the right thing by speaking up. I would not promise absolute confidentiality, as I have a safeguarding duty under the Care Act 2014 and NMC Code. I would document the disclosure accurately, using the patient's words where possible, and immediately inform my practice supervisor or the trust's safeguarding lead. I would continue to support the patient, involving them in next steps where safe and appropriate. My priority is their safety, dignity, and empowerment — balancing confidentiality with my professional responsibility to protect vulnerable adults."
-                </div>
-                <div style="display:flex;flex-direction:column;gap:6px;">
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>Care Act 2014 referenced correctly</div>
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>NMC Code alignment stated explicitly</div>
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>Practical escalation steps are clear and correct</div>
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>Patient-centred focus maintained throughout</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Sample F1 -->
-            <div class="panel sample-card" style="overflow:hidden;" onclick="this.classList.toggle('open')">
-              <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
-                <div style="display:flex;align-items:flex-start;gap:12px;">
-                  <span class="q-num-finance">F1</span>
-                  <div>
-                    <p style="font-weight:700;font-size:14px;">Funding plan for London studies</p>
-                    <p style="font-size:12px;color:var(--green-600);font-weight:600;margin-top:2px;">Finance · Specific budget</p>
-                  </div>
-                </div>
-                <span class="material-symbols-outlined sample-arrow" style="color:var(--text-muted);">expand_more</span>
-              </div>
-              <div class="sample-body" style="padding:0 24px 24px;">
-                <div style="background:var(--bg-surface-low);border:1px solid var(--border-default);border-radius:12px;padding:18px;font-size:14px;line-height:1.8;font-style:italic;color:var(--text-primary);margin-bottom:12px;">
-                  "I have secured £25,000 in personal savings for tuition fees, verified in my financial evidence. For living costs, I've budgeted £1,400 per month: £950 for accommodation in a student residence near Waterloo, £300 for food and essentials, £100 for transport, and £50 for study and personal costs. I'm eligible for the NHS Learning Support Fund — the £5,000 annual grant plus travel reimbursements — which I will apply for upon enrolment. I also plan to work part-time within my 20-hour visa limit, ideally in a healthcare support role to complement my learning. I've researched affordable grocery options, student discounts, and free wellbeing resources to ensure my plan is sustainable."
-                </div>
-                <div style="display:flex;flex-direction:column;gap:6px;">
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>Specific figures given for all categories</div>
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>NHS Learning Support Fund mentioned correctly</div>
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>Visa work limit (20 hours) referenced — shows compliance awareness</div>
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>Practical cost-saving strategies show realistic planning</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Sample U1 -->
-            <div class="panel sample-card" style="overflow:hidden;" onclick="this.classList.toggle('open')">
-              <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
-                <div style="display:flex;align-items:flex-start;gap:12px;">
-                  <span class="q-num-uk">U1</span>
-                  <div>
-                    <p style="font-weight:700;font-size:14px;">What do you know about the NMC Code?</p>
-                    <p style="font-size:12px;color:#7c3aed;font-weight:600;margin-top:2px;">UK Nursing · Professional Knowledge</p>
-                  </div>
-                </div>
-                <span class="material-symbols-outlined sample-arrow" style="color:var(--text-muted);">expand_more</span>
-              </div>
-              <div class="sample-body" style="padding:0 24px 24px;">
-                <div style="background:var(--bg-surface-low);border:1px solid var(--border-default);border-radius:12px;padding:18px;font-size:14px;line-height:1.8;font-style:italic;color:var(--text-primary);margin-bottom:12px;">
-                  "The NMC Code is the professional standards framework for all nurses in the UK, built on four pillars: Prioritise People, Practise Effectively, Preserve Safety, and Promote Professionalism and Trust. It includes ten standards covering consent, confidentiality, communication, record-keeping, and raising concerns. As a student nurse, I understand that adherence to the Code begins now — not just after registration. For example, in placements I would uphold confidentiality by only discussing patient information with the direct care team, and I would raise concerns about unsafe practice through proper channels, as the Code requires. Revalidation every three years ensures nurses maintain competence, which reflects nursing's commitment to lifelong learning and public trust."
-                </div>
-                <div style="display:flex;flex-direction:column;gap:6px;">
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>All 4 pillars named correctly</div>
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>Revalidation requirements stated accurately</div>
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>Student perspective shown — applies Code to placement context</div>
-                  <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--green-600);"><span class="material-symbols-outlined" style="font-size:15px;flex-shrink:0;">check_circle</span>Shows professional awareness beyond basic knowledge</div>
-                </div>
-              </div>
-            </div>
-
           </div>
         </div>
 
         <!-- ==================== SCENARIO SIMULATOR TAB ==================== -->
         <div class="tc" id="tab-scenario" style="padding:32px 40px 60px;max-width:900px;padding-top:72px;">
-          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);display:block;margin-bottom:8px;">Module 5 — Simulation</span>
+          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);display:block;margin-bottom:8px;">Module 5 — Simulator</span>
           <h1 class="display" style="font-size:2.2rem;margin-bottom:6px;">Scenario Simulator</h1>
-          <p style="color:var(--text-muted);font-size:15px;margin-bottom:32px;">Practice real nursing interview scenarios. Type your response and get AI-powered feedback on NMC alignment, safety, and structure.</p>
+          <p style="color:var(--text-muted);font-size:15px;margin-bottom:32px;">Practise your response to real-world nursing scenarios. AI will analyse your answer based on the NMC Code.</p>
 
-          <!-- Score Row -->
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;">
-            <div class="stat-pill"><div class="stat-num" id="sc-p" style="color:var(--green-600);">0</div><div class="stat-label">Passed</div></div>
-            <div class="stat-pill"><div class="stat-num" id="sc-f" style="color:var(--red-500);">0</div><div class="stat-label">Needs Work</div></div>
-            <div class="stat-pill"><div class="stat-num" id="sc-t">0</div><div class="stat-label">Attempted</div></div>
-          </div>
-          <div class="panel-teal" style="padding:12px 16px;margin-bottom:28px;font-size:13px;color:var(--text-muted);" id="sc-msg">Select a scenario below and type your response to begin.</div>
+          <div style="display:grid;grid-template-columns:1fr 300px;gap:24px;">
+            <div>
+              <div class="panel" style="padding:24px;margin-bottom:20px;">
+                <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);margin-bottom:12px;">Current Scenario</p>
+                <h3 id="scenario-text" style="font-size:1.1rem;font-weight:700;margin-bottom:16px;line-height:1.5;">Loading scenario...</h3>
+                <div id="scenario-checks" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;"></div>
 
-          <!-- Scenario Selector -->
-          <div class="panel" style="padding:24px;margin-bottom:24px;">
-            <h3 style="font-weight:700;font-size:15px;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);">medical_services</span>
-              Choose a Nursing Scenario
-            </h3>
-            <div style="display:flex;flex-direction:column;gap:8px;" id="scenario-list">
-              <div class="acc-item" id="sc-btn-0" style="cursor:pointer;border-color:var(--teal-700);" onclick="loadScenario(0)">
-                <div style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;">
-                  <div style="display:flex;align-items:center;gap:10px;">
-                    <span class="q-num-scenario">SC1</span>
-                    <span style="font-weight:600;font-size:13px;">Patient with dementia becomes agitated during personal care</span>
-                  </div>
-                  <span class="material-symbols-outlined" style="color:var(--teal-700);font-size:18px;">play_circle</span>
+                <textarea id="nursing-answer" placeholder="Type your response here (e.g., using STAR method)..." style="width:100%;height:180px;padding:16px;border-radius:12px;border:1.5px solid var(--border-default);background:var(--bg-surface-low);color:var(--text-primary);font-family:inherit;font-size:14px;resize:none;margin-bottom:16px;"></textarea>
+
+                <div id="nursing-warning" class="panel-red" style="padding:12px 16px;margin-bottom:16px;display:none;">
+                  <p style="font-size:12px;color:var(--red-500);font-weight:700;display:flex;align-items:center;gap:6px;">
+                    <span class="material-symbols-outlined" style="font-size:18px;">warning</span>
+                    Red Flag Detected: Ensure you mention escalation and patient safety.
+                  </p>
                 </div>
-              </div>
-              <div class="acc-item" id="sc-btn-1" onclick="loadScenario(1)" style="cursor:pointer;">
-                <div style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;">
-                  <div style="display:flex;align-items:center;gap:10px;">
-                    <span class="q-num-scenario">SC2</span>
-                    <span style="font-weight:600;font-size:13px;">You're unsure about a medication dose. What steps do you take?</span>
-                  </div>
-                  <span class="material-symbols-outlined" style="color:var(--text-muted);font-size:18px;">play_circle</span>
-                </div>
-              </div>
-              <div class="acc-item" id="sc-btn-2" onclick="loadScenario(2)" style="cursor:pointer;">
-                <div style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;">
-                  <div style="display:flex;align-items:center;gap:10px;">
-                    <span class="q-num-scenario">SC3</span>
-                    <span style="font-weight:600;font-size:13px;">A family member demands patient information without consent</span>
-                  </div>
-                  <span class="material-symbols-outlined" style="color:var(--text-muted);font-size:18px;">play_circle</span>
-                </div>
-              </div>
-              <div class="acc-item" id="sc-btn-3" onclick="loadScenario(3)" style="cursor:pointer;">
-                <div style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;">
-                  <div style="display:flex;align-items:center;gap:10px;">
-                    <span class="q-num-scenario">SC4</span>
-                    <span style="font-weight:600;font-size:13px;">A patient refuses their essential medication</span>
-                  </div>
-                  <span class="material-symbols-outlined" style="color:var(--text-muted);font-size:18px;">play_circle</span>
-                </div>
-              </div>
-              <div class="acc-item" id="sc-btn-4" onclick="loadScenario(4)" style="cursor:pointer;">
-                <div style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;">
-                  <div style="display:flex;align-items:center;gap:10px;">
-                    <span class="q-num-scenario">SC5</span>
-                    <span style="font-weight:600;font-size:13px;">Why is reflective practice important in nursing?</span>
-                  </div>
-                  <span class="material-symbols-outlined" style="color:var(--text-muted);font-size:18px;">play_circle</span>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <!-- Scenario Answer Area -->
-          <div class="panel" style="padding:24px;" id="scenario-answer-area">
-            <div id="scenario-display" style="margin-bottom:20px;">
-              <div class="panel-teal" style="padding:16px;margin-bottom:8px;">
-                <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--teal-700);margin-bottom:6px;">Current Scenario</p>
-                <p style="font-weight:600;font-size:14px;" id="scenario-text">Select a scenario above to begin.</p>
+                <button class="btn-primary" id="analyseBtn" onclick="analyseNursing()" style="width:100%;justify-content:center;padding:14px;">
+                  <span class="material-symbols-outlined" style="font-size:18px;">auto_awesome</span>
+                  Analyse Response
+                </button>
               </div>
-              <div style="font-size:12px;color:var(--text-muted);display:flex;gap:8px;flex-wrap:wrap;" id="scenario-checks"></div>
-            </div>
 
-            <div id="nursing-warning" class="warning-box" style="margin-bottom:16px;">
-              <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">warning</span>
-              <strong> Red Flag Detected:</strong> This response may raise serious concern in a nursing interview. Phrases like "ignore", "force", or "leave the patient" suggest unsafe practice.
-            </div>
-
-            <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:8px;">Your Response</p>
-            <textarea class="sim-input" id="nursing-answer" rows="5" placeholder="Type your response here. Aim for 60-90 seconds when spoken aloud. Use STAR: Situation → Task → Action → Result, then link to NMC Code..."></textarea>
-            <p style="font-size:11px;color:var(--text-muted);margin-top:6px;">Tip: Use structure — "First I would… then… ensuring I… This aligns with the NMC Code pillar of…"</p>
-
-            <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;">
-              <button class="btn-primary" id="analyseBtn" style="padding:12px 24px;border-radius:10px;font-size:13px;font-weight:700;" onclick="analyseNursing()">
-                <span class="material-symbols-outlined" style="font-size:15px;vertical-align:middle;">auto_awesome</span> Analyse Response
-              </button>
-              <button onclick="document.getElementById('nursing-answer').value='';document.getElementById('nursing-feedback').classList.add('hidden');document.getElementById('nursing-warning').style.display='none';" style="padding:12px 20px;border-radius:10px;font-size:13px;font-weight:700;background:transparent;border:1.5px solid var(--border-default);color:var(--text-muted);cursor:pointer;">Reset</button>
-            </div>
-          </div>
-
-          <!-- Feedback Area -->
-          <div id="nursing-feedback" class="hidden" style="margin-top:20px;">
-            <div id="nursing-fb-loading" class="fb-loading" style="padding:16px 20px;display:none;align-items:center;gap:12px;">
-              <div class="spinner" style="border-top-color:var(--teal-700);border-color:rgba(15,118,110,0.2);"></div>
-              <span style="font-size:14px;color:var(--text-muted);">Analysing against NMC standards...</span>
-            </div>
-            <div id="nursing-fb-result">
-              <div id="nursing-fb-card" class="fb-pass" style="padding:20px;margin-bottom:16px;">
-                <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
-                  <span class="material-symbols-outlined" style="font-size:28px;color:var(--green-600);" id="nfb-icon">verified</span>
-                  <div>
-                    <div class="score-num" id="nfb-score" style="color:var(--green-600);">8/10</div>
-                    <div style="font-weight:700;font-size:14px;" id="nfb-title">Strong Response</div>
-                  </div>
+              <!-- Feedback Result -->
+              <div id="nursing-feedback" class="hidden">
+                <div id="nursing-fb-loading" style="display:flex;flex-direction:column;align-items:center;padding:40px;gap:16px;">
+                  <div class="spinner" style="width:32px;height:32px;border-width:3px;border-top-color:var(--teal-700);"></div>
+                  <p style="font-weight:600;color:var(--text-muted);">AI Examiner is reviewing your answer...</p>
                 </div>
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;font-size:13px;">
-                  <div>
-                    <p style="font-weight:700;margin-bottom:6px;">NMC Alignment</p>
-                    <ul style="color:var(--text-muted);display:flex;flex-direction:column;gap:4px;" id="nfb-nmc"></ul>
-                  </div>
-                  <div>
-                    <p style="font-weight:700;margin-bottom:6px;">Strengths</p>
-                    <ul style="color:var(--text-muted);display:flex;flex-direction:column;gap:4px;" id="nfb-strengths"></ul>
-                  </div>
-                  <div>
-                    <p style="font-weight:700;margin-bottom:6px;">Suggestions</p>
-                    <ul style="color:var(--text-muted);display:flex;flex-direction:column;gap:4px;" id="nfb-suggestions"></ul>
+
+                <div id="nursing-fb-result" style="display:none;">
+                  <div id="nursing-fb-card" class="fb-pass">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;">
+                      <div>
+                        <h3 id="nfb-title" style="font-size:1.2rem;font-weight:800;margin-bottom:4px;">Strong Response</h3>
+                        <p style="font-size:13px;color:var(--text-muted);">Based on NMC Code & BPP Standards</p>
+                      </div>
+                      <div style="text-align:right;">
+                        <div id="nfb-score" style="font-size:2rem;font-weight:900;color:var(--green-600);line-height:1;">8/10</div>
+                        <span id="nfb-icon" class="material-symbols-outlined" style="font-size:24px;color:var(--green-600);margin-top:4px;">verified</span>
+                      </div>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                      <div>
+                        <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">NMC Alignment</p>
+                        <ul id="nfb-nmc" style="list-style:none;font-size:13px;display:flex;flex-direction:column;gap:6px;"></ul>
+                      </div>
+                      <div>
+                        <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Strengths</p>
+                        <ul id="nfb-strengths" style="list-style:none;font-size:13px;display:flex;flex-direction:column;gap:6px;"></ul>
+                      </div>
+                    </div>
+                    <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(0,0,0,0.05);">
+                      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Suggestions for 10/10</p>
+                      <ul id="nfb-suggestions" style="list-style:none;font-size:13px;display:flex;flex-direction:column;gap:6px;"></ul>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div style="margin-top:16px;padding:12px 16px;background:var(--teal-50);border:1px solid var(--border-teal);border-radius:10px;font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:8px;">
-            <span class="material-symbols-outlined" style="color:var(--teal-700);font-size:16px;">info</span>
-            AI feedback analyses keyword presence, NMC alignment, safety language, and response structure. Feedback is generated by GPT-4o-mini via Puter.js.
-          </div>
-
-          <!-- AI Feedback Criteria -->
-          <div class="panel" style="padding:24px;margin-top:20px;">
-            <h3 style="font-weight:700;font-size:15px;margin-bottom:16px;">AI Feedback Criteria</h3>
-            <div style="overflow-x:auto;">
-              <table>
-                <thead><tr><th>Criteria</th><th>What a Good Response Looks Like</th></tr></thead>
-                <tbody>
-                  <tr><td style="font-weight:600;">Clarity & Structure</td><td>Uses STAR or similar; concise 60-90 sec; logical flow</td></tr>
-                  <tr><td style="font-weight:600;">NMC Alignment</td><td>References Code pillars, standards, or professional values</td></tr>
-                  <tr><td style="font-weight:600;">Practical Actions</td><td>Specific, safe, patient-centred steps; knows limits and escalation path</td></tr>
-                  <tr><td style="font-weight:600;">Professional Tone</td><td>Empathetic but boundaried; avoids jargon; culturally humble</td></tr>
-                  <tr><td style="font-weight:600;">Self-Awareness</td><td>Acknowledges learning needs; shows growth mindset</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==================== RESOURCES TAB ==================== -->
-        <div class="tc" id="tab-resources" style="padding:32px 40px 60px;max-width:900px;padding-top:72px;">
-          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);display:block;margin-bottom:8px;">Module 6 — Support</span>
-          <h1 class="display" style="font-size:2.2rem;margin-bottom:6px;">Essential Resources</h1>
-          <p style="color:var(--text-muted);font-size:15px;margin-bottom:32px;">Curated links for nursing applicants. Always verify directly with official sources.</p>
-
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:24px;">
-            <a href="https://www.nmc.org.uk/standards/code" target="_blank" class="res-card">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);font-size:22px;flex-shrink:0;">shield</span>
-              <div><span style="font-weight:700;font-size:14px;">NMC Code</span><span class="res-sub">4 pillars, 10 standards — master these before any nursing interview</span></div>
-            </a>
-            <a href="https://www.bpp.com/nursing" target="_blank" class="res-card">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);font-size:22px;flex-shrink:0;">school</span>
-              <div><span style="font-weight:700;font-size:14px;">BPP Nursing Programme</span><span class="res-sub">Course specs, module handbooks, placement info, entry requirements</span></div>
-            </a>
-            <a href="https://www.nhsbsa.nhs.uk/learning-support-fund" target="_blank" class="res-card">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);font-size:22px;flex-shrink:0;">payments</span>
-              <div><span style="font-weight:700;font-size:14px;">NHS Learning Support Fund</span><span class="res-sub">£5,000 grant + £1,000 parental support + travel reimbursements</span></div>
-            </a>
-            <a href="https://www.gov.uk/student-visa" target="_blank" class="res-card">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);font-size:22px;flex-shrink:0;">account_balance</span>
-              <div><span style="font-weight:700;font-size:14px;">UKVI Student Visa</span><span class="res-sub">Official rules: work rights, dependants, reporting duties</span></div>
-            </a>
-            <a href="https://www.nmc.org.uk/registration" target="_blank" class="res-card">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);font-size:22px;flex-shrink:0;">badge</span>
-              <div><span style="font-weight:700;font-size:14px;">NMC Registration Pathway</span><span class="res-sub">Steps for international nurses: CBT, OSCE, portfolio — plan ahead</span></div>
-            </a>
-            <a href="https://www.gov.uk/government/publications/the-nhs-constitution-for-england" target="_blank" class="res-card">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);font-size:22px;flex-shrink:0;">menu_book</span>
-              <div><span style="font-weight:700;font-size:14px;">NHS Constitution</span><span class="res-sub">Patient rights, staff responsibilities, NHS values</span></div>
-            </a>
-            <a href="https://www.studentminds.org.uk" target="_blank" class="res-card">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);font-size:22px;flex-shrink:0;">favorite</span>
-              <div><span style="font-weight:700;font-size:14px;">Mental Health Support</span><span class="res-sub">Free, confidential support for nursing students — use it</span></div>
-            </a>
-            <a href="https://www.visitlondon.com" target="_blank" class="res-card">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);font-size:22px;flex-shrink:0;">location_city</span>
-              <div><span style="font-weight:700;font-size:14px;">London Living Guide</span><span class="res-sub">Transport, culture, safety, student discounts in London</span></div>
-            </a>
-            <a href="https://www.bpp.com/study/international-students" target="_blank" class="res-card">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);font-size:22px;flex-shrink:0;">support_agent</span>
-              <div><span style="font-weight:700;font-size:14px;">BPP International Support</span><span class="res-sub">Pre-arrival, accommodation, wellbeing, visa queries</span></div>
-            </a>
-          </div>
-
-          <div class="panel" style="padding:24px;">
-            <h3 style="font-weight:700;font-size:15px;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);">contact_support</span>
-              Need More Help?
-            </h3>
-            <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px;">Contact BPP's International Student Team directly for personalised support:</p>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
-              <div style="display:flex;align-items:center;gap:10px;font-size:14px;">
-                <span class="material-symbols-outlined" style="color:var(--teal-700);">email</span>
-                <a href="mailto:international@bpp.com" style="color:var(--text-link);">international@bpp.com</a>
+            <div id="scenario-list" style="display:flex;flex-direction:column;gap:10px;">
+              <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:4px;">Select Scenario</p>
+              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(0)">
+                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-weight:600;font-size:13px;">1. Anxious Patient</span>
+                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
+                </div>
               </div>
-              <div style="display:flex;align-items:center;gap:10px;font-size:14px;">
-                <span class="material-symbols-outlined" style="color:var(--teal-700);">phone</span>
-                <span>+44 (0) 330 123 1234</span>
+              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(1)">
+                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-weight:600;font-size:13px;">2. Safeguarding Disclosure</span>
+                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
+                </div>
               </div>
-              <div style="display:flex;align-items:center;gap:10px;font-size:14px;">
-                <span class="material-symbols-outlined" style="color:var(--teal-700);">language</span>
-                <a href="https://www.bpp.com/study/international-students" target="_blank" style="color:var(--text-link);">bpp.com/international</a>
+              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(2)">
+                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-weight:600;font-size:13px;">3. Hand Hygiene Challenge</span>
+                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
+                </div>
+              </div>
+              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(3)">
+                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-weight:600;font-size:13px;">4. Cultural Refusal</span>
+                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
+                </div>
+              </div>
+
+              <div class="panel-teal" style="padding:20px;margin-top:10px;">
+                <p style="font-weight:700;font-size:13px;margin-bottom:12px;">Your Progress</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                  <div class="stat-pill" style="padding:12px;">
+                    <div id="sc-p" class="stat-num" style="font-size:1.5rem;">0</div>
+                    <div class="stat-label" style="font-size:9px;">Passed</div>
+                  </div>
+                  <div class="stat-pill" style="padding:12px;">
+                    <div id="sc-f" class="stat-num" style="font-size:1.5rem;color:var(--red-500);">0</div>
+                    <div class="stat-label" style="font-size:9px;">Failed</div>
+                  </div>
+                </div>
+                <p id="sc-msg" style="font-size:11px;color:var(--text-muted);margin-top:12px;line-height:1.5;">Select a scenario above and type your response to begin.</p>
               </div>
             </div>
-          </div>
-
-          <div class="panel-amber" style="padding:16px;margin-top:20px;">
-            <p style="font-size:13px;font-weight:700;margin-bottom:6px;">Disclaimer</p>
-            <p style="font-size:12px;color:var(--text-muted);">This is an unofficial study aid created for educational purposes only. It is not affiliated with BPP University, the NMC, or UKVI. Always verify course details, visa requirements, and professional standards directly with BPP, the NMC, and the UK Government.</p>
           </div>
         </div>
 
         <!-- ==================== CHECKLIST TAB ==================== -->
         <div class="tc" id="tab-checklist" style="padding:32px 40px 60px;max-width:900px;padding-top:72px;">
-          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);display:block;margin-bottom:8px;">Module 7 — Final Prep</span>
-          <h1 class="display" style="font-size:2.2rem;margin-bottom:6px;">Pre-Interview Checklist</h1>
-          <p style="color:var(--text-muted);font-size:15px;margin-bottom:24px;">BSc (Hons) Adult Nursing · 20 items to complete before your interview</p>
+          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);display:block;margin-bottom:8px;">Module 7 — Final Review</span>
+          <h1 class="display" style="font-size:2.2rem;margin-bottom:6px;">Interview Readiness Checklist</h1>
+          <p style="color:var(--text-muted);font-size:15px;margin-bottom:32px;">Complete these items to ensure you are 100% ready for your BPP Nursing interview.</p>
 
-          <div class="panel" style="padding:24px;margin-bottom:20px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-              <span style="font-weight:700;">Your Progress</span>
-              <span style="font-weight:900;font-size:18px;color:var(--teal-800);" id="progress-text">0/20</span>
-            </div>
-            <div class="progress-track" style="margin-bottom:10px;">
-              <div class="progress-fill" id="progress-bar" style="width:0%;"></div>
-            </div>
-            <p style="font-size:12px;color:var(--text-muted);">Complete all items to maximise your interview readiness</p>
-          </div>
-
-          <div class="panel" style="padding:8px 0;margin-bottom:16px;">
-            <div style="padding:12px 20px;background:var(--teal-50);border-bottom:1px solid var(--border-default);">
-              <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);">Knowledge & Research</p>
-            </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_0">
-              <div class="check-box"></div>
-              <div>
-                <p style="font-weight:600;font-size:14px;">Reviewed BPP Adult Nursing module handbook and NMC standards</p>
-                <p style="font-size:12px;color:var(--text-muted);">Know module names, year structure, and all 4 NMC Code pillars</p>
+          <div class="panel" style="padding:24px;margin-bottom:24px;display:flex;align-items:center;gap:20px;">
+            <div style="flex:1;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                <span style="font-size:13px;font-weight:700;">Overall Completion</span>
+                <span id="progress-text" style="font-size:13px;font-weight:700;color:var(--teal-800);">0/20</span>
               </div>
+              <div class="progress-track"><div id="progress-bar" class="progress-fill" style="width:0%;"></div></div>
             </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_1">
-              <div class="check-box"></div>
-              <div>
-                <p style="font-weight:600;font-size:14px;">Researched London Waterloo campus</p>
-                <p style="font-size:12px;color:var(--text-muted);">Facilities: simulation labs, VR scenarios, clinical skills suites, debrief rooms</p>
-              </div>
-            </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_2">
-              <div class="check-box"></div>
-              <div>
-                <p style="font-weight:600;font-size:14px;">Understood NHS structure and MDT working</p>
-                <p style="font-size:12px;color:var(--text-muted);">Primary/secondary care, Integrated Care Systems, CQC regulation, referral pathways</p>
-              </div>
-            </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_3">
-              <div class="check-box"></div>
-              <div>
-                <p style="font-weight:600;font-size:14px;">Prepared 3+ STAR examples from personal experience</p>
-                <p style="font-size:12px;color:var(--text-muted);">Cover: compassion, teamwork, handling a safety concern, cultural sensitivity</p>
-              </div>
-            </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_4">
-              <div class="check-box"></div>
-              <div>
-                <p style="font-weight:600;font-size:14px;">Researched 2 other UK nursing universities for informed comparison</p>
-                <p style="font-size:12px;color:var(--text-muted);">King's College London, Manchester, Edinburgh — know entry requirements and differences</p>
-              </div>
+            <div class="stat-pill" style="padding:12px 20px;min-width:100px;">
+              <div id="readiness-label" class="stat-num" style="font-size:1.2rem;">0%</div>
+              <div class="stat-label" style="font-size:9px;">Ready</div>
             </div>
           </div>
 
@@ -1504,39 +991,39 @@
             <div style="padding:12px 20px;background:var(--teal-50);border-bottom:1px solid var(--border-default);">
               <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);">Personal Preparation</p>
             </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_5">
+            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_1">
               <div class="check-box"></div>
               <div>
                 <p style="font-weight:600;font-size:14px;">Crafted "Why Nursing?" answer linking values to NMC Code pillars</p>
                 <p style="font-size:12px;color:var(--text-muted);">Specific, personal, and connected to prior experience — not "I want to help people"</p>
               </div>
             </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_6">
+            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_2">
               <div class="check-box"></div>
               <div>
                 <p style="font-weight:600;font-size:14px;">Prepared "Why BPP?" with specific modules, NHS partnerships, and location</p>
                 <p style="font-size:12px;color:var(--text-muted);">Name: Acute & Critical Care, Medicines Management, Guy's & St Thomas', King's College Hospital</p>
               </div>
             </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_7">
+            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_3">
               <div class="check-box"></div>
               <div>
                 <p style="font-weight:600;font-size:14px;">Practised scenario responses aloud</p>
                 <p style="font-size:12px;color:var(--text-muted);">Cover: patient anxiety, safeguarding disclosure, hand hygiene challenge, cultural refusal</p>
               </div>
             </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_8">
+            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_4">
               <div class="check-box"></div>
               <div>
                 <p style="font-weight:600;font-size:14px;">Reflected on transferable skills from prior experience</p>
                 <p style="font-size:12px;color:var(--text-muted);">Communication, ethics, documentation, problem-solving — all transfer into nursing</p>
               </div>
             </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_9">
+            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_5">
               <div class="check-box"></div>
               <div>
                 <p style="font-weight:600;font-size:14px;">Prepared thoughtful questions to ask the interviewer</p>
-                <p style="font-size:12px;color:var(--text-muted);">Example: "How does BPP support students during challenging placements?" or "What types of NHS Trusts are most common for placements?"</p>
+                <p style="font-size:12px;color:var(--text-muted);">Example: "How does BPP support students during challenging placements?"</p>
               </div>
             </div>
           </div>
@@ -1545,28 +1032,28 @@
             <div style="padding:12px 20px;background:var(--teal-50);border-bottom:1px solid var(--border-default);">
               <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);">Documents & Logistics</p>
             </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_10">
+            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_6">
               <div class="check-box"></div>
               <div>
                 <p style="font-weight:600;font-size:14px;">Passport, CAS, IELTS/OET certificate organised for screen sharing</p>
                 <p style="font-size:12px;color:var(--text-muted);">IELTS 7.0 (no band below 7.0) or OET Grade B required</p>
               </div>
             </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_11">
+            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_7">
               <div class="check-box"></div>
               <div>
                 <p style="font-weight:600;font-size:14px;">Financial evidence ready</p>
                 <p style="font-size:12px;color:var(--text-muted);">Bank statements, sponsorship letters, NHS Learning Support Fund eligibility check</p>
               </div>
             </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_12">
+            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_8">
               <div class="check-box"></div>
               <div>
                 <p style="font-weight:600;font-size:14px;">Noted occupational health and DBS clearance requirements</p>
                 <p style="font-size:12px;color:var(--text-muted);">These are post-offer next steps — be aware they are coming</p>
               </div>
             </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_13">
+            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_9">
               <div class="check-box"></div>
               <div>
                 <p style="font-weight:600;font-size:14px;">Printed backup copies of key documents</p>
@@ -1579,52 +1066,25 @@
             <div style="padding:12px 20px;background:var(--teal-50);border-bottom:1px solid var(--border-default);">
               <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);">Tech & Environment</p>
             </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_14">
+            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_10">
               <div class="check-box"></div>
               <div>
                 <p style="font-weight:600;font-size:14px;">Tested Microsoft Teams: camera, mic, internet stability</p>
                 <p style="font-size:12px;color:var(--text-muted);">Good camera angle, clear lighting on face, no echo on mic</p>
               </div>
             </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_15">
+            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_11">
               <div class="check-box"></div>
               <div>
                 <p style="font-weight:600;font-size:14px;">Chose quiet, neutral background with no interruptions</p>
                 <p style="font-size:12px;color:var(--text-muted);">Phone on silent, door sign if needed, minimal background distractions</p>
               </div>
             </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_16">
+            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_12">
               <div class="check-box"></div>
               <div>
                 <p style="font-weight:600;font-size:14px;">Plan to log in 10 minutes early</p>
                 <p style="font-size:12px;color:var(--text-muted);">Test audio/video again and settle calmly before the call starts</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="panel" style="padding:8px 0;margin-bottom:16px;">
-            <div style="padding:12px 20px;background:var(--teal-50);border-bottom:1px solid var(--border-default);">
-              <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);">Mindset & Professionalism</p>
-            </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_17">
-              <div class="check-box"></div>
-              <div>
-                <p style="font-weight:600;font-size:14px;">Planned smart-casual, professional attire</p>
-                <p style="font-size:12px;color:var(--text-muted);">Solid colours, minimal distractions — project professionalism on camera</p>
-              </div>
-            </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_18">
-              <div class="check-box"></div>
-              <div>
-                <p style="font-weight:600;font-size:14px;">Practised calm breathing techniques for nerves</p>
-                <p style="font-size:12px;color:var(--text-muted);">4-7-8 breathing or box breathing before the call</p>
-              </div>
-            </div>
-            <div class="check-item" style="display:flex;align-items:flex-start;gap:12px;padding:14px 20px;" id="nrs_chk_19">
-              <div class="check-box"></div>
-              <div>
-                <p style="font-weight:600;font-size:14px;">Rested well, hydrated, and had a light meal pre-interview</p>
-                <p style="font-size:12px;color:var(--text-muted);">Nursing is a demanding profession — your wellbeing starts here</p>
               </div>
             </div>
           </div>
@@ -1651,51 +1111,50 @@
       // ===== SCENARIOS DATA =====
       const scenarios = [
         {
-          text: "A patient with dementia becomes agitated during personal care. How do you respond?",
-          checks: ["de-escalation", "person-centred approach", "safety", "documentation"],
-          keywords: ["calm","de-escalat","person-centred","dignity","environment","music","distract","support","safe","mentor","document","report","NMC","pillar","prioritis"]
+          text: "A patient is anxious before a procedure. How do you respond?",
+          checks: ["calm presence", "active listening", "simple explanations", "escalation"],
+          keywords: ["calm","listen","explain","anxious","procedure","family","escalat","NMC","prioritis","people"]
         },
         {
-          text: "You're unsure about a medication dose. What steps do you take?",
-          checks: ["5 Rights of medicines", "escalation pathway", "professional humility"],
-          keywords: ["check","clarif","senior","pharmacist","escalat","5 rights","prescrib","document","safe","NMC","refuse","unsure","confirm","supervisor","BNF"]
+          text: "A patient shares confidential information about abuse. What do you do?",
+          checks: ["safeguarding duty", "listen & reassure", "document", "report"],
+          keywords: ["safeguard","abuse","listen","reassure","document","report","mentor","supervisor","NMC","safety"]
         },
         {
-          text: "A family member demands information about a patient's condition. The patient hasn't consented to share. What do you do?",
-          checks: ["confidentiality", "Mental Capacity Act", "communication skills", "advocacy"],
-          keywords: ["confiden","consent","patient","right","cannot","capacity","mental capacity","privacy","NMC","explain","apologise","document","inform","respect"]
+          text: "You see a colleague skip hand hygiene. How do you handle it?",
+          checks: ["professional courage", "respectful address", "policy reference", "escalation"],
+          keywords: ["hand hygiene","colleague","respectful","private","policy","infection","escalat","NMC","trust","safety"]
         },
         {
-          text: "A patient refuses their essential medication. What do you do?",
-          checks: ["patient autonomy", "Mental Capacity Act", "escalation", "NMC alignment"],
-          keywords: ["autonomy","right","capacity","mental capacity","explore","understand","concern","inform","escalat","senior","document","NMC","prioritis","listen","empath"]
-        },
-        {
-          text: "Why is reflective practice important in nursing?",
-          checks: ["NMC revalidation link", "learning from experience", "improving care quality"],
-          keywords: ["reflect","revalidat","NMC","improve","learn","CPD","practise","quality","Gibbs","evidence","develop","accountability","error","growth","patient"]
+          text: "A patient refuses care due to cultural beliefs. How do you proceed?",
+          checks: ["cultural humility", "explore concerns", "interpreter", "alternatives"],
+          keywords: ["cultural","refuse","explore","concern","interpreter","alternative","document","NMC","people","autonomy"]
         }
       ];
+
       let currentScenario = 0;
-      let passCount = 0, failCount = 0, totalCount = 0;
+      let passCount = 0;
+      let failCount = 0;
+      let totalCount = 0;
 
       // ===== THEME =====
-      let currentTheme = localStorage.getItem('nursing-theme') || 'light';
       function initTheme() {
-        document.documentElement.setAttribute('data-theme', currentTheme);
-        updateThemeIcon();
+        const theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        updateThemeIcon(theme);
         document.getElementById('themeToggle').addEventListener('click', () => {
-          currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-          document.documentElement.setAttribute('data-theme', currentTheme);
-          localStorage.setItem('nursing-theme', currentTheme);
-          updateThemeIcon();
+          const current = document.documentElement.getAttribute('data-theme');
+          const next = current === 'light' ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', next);
+          localStorage.setItem('theme', next);
+          updateThemeIcon(next);
         });
       }
-      function updateThemeIcon() {
-        document.getElementById('themeIcon').textContent = currentTheme === 'light' ? 'dark_mode' : 'light_mode';
+      function updateThemeIcon(theme) {
+        document.getElementById('themeIcon').textContent = theme === 'light' ? 'dark_mode' : 'light_mode';
       }
 
-      // ===== TAB SWITCHING =====
+      // ===== NAVIGATION =====
       function showTab(tabId, linkId, isMobile = false) {
         document.querySelectorAll('.tc').forEach(el => el.classList.remove('active'));
         document.getElementById('tab-' + tabId).classList.add('active');
@@ -1726,32 +1185,48 @@
       }
 
       // ===== CHECKLIST =====
-      const TOTAL_ITEMS = 20;
+      const TOTAL_ITEMS = 12;
       function updateProgress() {
         const done = document.querySelectorAll('.check-box.done').length;
-        const pct = (done / TOTAL_ITEMS) * 100;
+        const pct = Math.round((done / TOTAL_ITEMS) * 100);
         document.getElementById('progress-bar').style.width = pct + '%';
         document.getElementById('progress-text').textContent = done + '/' + TOTAL_ITEMS;
         document.getElementById('sidebar-progress').style.width = pct + '%';
         document.getElementById('sidebar-progress-text').textContent = done + '/' + TOTAL_ITEMS + ' complete';
+        document.getElementById('readiness-label').textContent = pct + '%';
       }
-      function initChecklist() {
-        document.querySelectorAll('.check-box').forEach((cb, i) => {
+
+      async function initChecklist() {
+        // Load from Supabase first
+        let savedStatus = {};
+        if (typeof window.loadSavedProgress === 'function') {
+          const progress = await window.loadSavedProgress();
+          if (progress?.checklist_status) {
+            savedStatus = progress.checklist_status;
+          }
+        }
+
+        document.querySelectorAll('.check-box').forEach((cb) => {
           const item = cb.closest('.check-item');
-          const savedKey = item?.id || 'nrs_chk_' + i;
-          const saved = localStorage.getItem('nursing_chk_' + savedKey);
-          if (saved === 'done') {
+          const p = item?.querySelector('p:first-of-type');
+          const itemText = p?.textContent.trim();
+          
+          if (savedStatus[itemText] === true) {
             cb.classList.add('done');
-            const p = item?.querySelector('p.font-\\[600\\], p:first-of-type') || item?.querySelector('p');
             if (p) { p.style.textDecoration = 'line-through'; p.style.opacity = '0.6'; }
           }
-          cb.addEventListener('click', () => {
+
+          cb.addEventListener('click', async () => {
             cb.classList.toggle('done');
             const isDone = cb.classList.contains('done');
-            const p = item?.querySelector('p');
             if (p) { p.style.textDecoration = isDone ? 'line-through' : ''; p.style.opacity = isDone ? '0.6' : ''; }
-            localStorage.setItem('nursing_chk_' + savedKey, isDone ? 'done' : '');
+            
             updateProgress();
+            
+            // Save to Supabase
+            if (typeof window.saveChecklistItem === 'function') {
+              await window.saveChecklistItem(item.id, isDone, itemText);
+            }
           });
         });
         updateProgress();
@@ -1797,7 +1272,6 @@
 
         try {
           const prompt = `You are a strict nursing credibility interview examiner at BPP University UK.
-
 Scenario: "${sc.text}"
 Student answer: "${answer}"
 
@@ -1862,7 +1336,7 @@ Return ONLY valid JSON:
 
           // Save to Supabase if available
           if (typeof window.saveAIResponse === 'function') {
-            try { await window.saveAIResponse('NRS_SC' + currentScenario, answer, fb.score, fb.strengths?.[0] || ''); } catch(e) {}
+            try { await window.saveAIResponse('NRS_SC' + currentScenario, answer, fb.score, fb.strengths?.[0] || '', sc.text); } catch(e) {}
           }
 
         } catch(err) {
@@ -1894,7 +1368,6 @@ Return ONLY valid JSON:
       function updateScoreDisplay() {
         document.getElementById('sc-p').textContent = passCount;
         document.getElementById('sc-f').textContent = failCount;
-        document.getElementById('sc-t').textContent = totalCount;
         const pct = totalCount ? Math.round((passCount / totalCount) * 100) : 0;
         let msg = 'Select a scenario below and type your response to begin.';
         if (totalCount > 0 && pct === 100) msg = 'Perfect score! Your responses are NMC-aligned and interview-ready.';
@@ -1912,26 +1385,31 @@ Return ONLY valid JSON:
         btn.addEventListener('click', async () => {
           btn.disabled = true;
           btn.innerHTML = '<span class="spinner"></span> Sending...';
-          const pct = totalCount ? Math.round((passCount / totalCount) * 100) : 0;
-          const checkedCount = document.querySelectorAll('.check-box.done').length;
+          
+          // Load latest progress from Supabase to ensure we have everything
+          let progress = { ai_scores: {}, checklist_status: {} };
+          if (typeof window.loadSavedProgress === 'function') {
+            progress = await window.loadSavedProgress() || progress;
+          }
 
           if (typeof window.sendReadyEmail === 'function') {
             try {
-              const res = await window.sendReadyEmail({}, {}, pct, 'BSc Nursing Student Ready');
+              const res = await window.sendReadyEmail(progress.ai_scores || {}, progress.checklist_status || {}, 0, 'BSc Nursing Student Ready');
               if (res?.success) {
-                const emoji = pct >= 70 ? '✅' : '⚠️';
-                status.textContent = emoji + ' Report sent! ' + checkedCount + '/20 checklist items completed.';
-                status.style.color = pct >= 70 ? 'var(--green-600)' : 'var(--amber-500)';
+                status.textContent = '✅ Report sent successfully! Your counselor will review it shortly.';
+                status.style.color = 'var(--green-600)';
                 btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">verified</span> Report Sent';
                 return;
               }
-            } catch(e) {}
+            } catch(e) {
+              console.error('Ready button error:', e);
+            }
           }
 
-          // Fallback
-          status.textContent = '✅ ' + checkedCount + '/20 checklist complete · ' + passCount + ' scenarios passed. Keep going!';
-          status.style.color = 'var(--teal-700)';
-          btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">check_circle</span> Progress Saved';
+          status.textContent = '❌ Failed to send report. Please try again later.';
+          status.style.color = 'var(--red-500)';
+          btn.disabled = false;
+          btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:17px;vertical-align:middle;">send</span> I\'m Ready — Send Report';
         });
       }
 
