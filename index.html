@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
@@ -135,12 +135,123 @@
     .uni-soon h3{font-size:16px;font-weight:700;color:var(--navy);}
     .uni-soon p{font-size:12px;color:var(--muted);}
 
-    /* CTA */
-    .cta-banner{background:var(--navy);border-radius:24px;padding:40px 28px;text-align:center;color:white;margin-bottom:48px;position:relative;overflow:hidden;}
-    .cta-banner h2{font-size:26px;font-weight:900;margin-bottom:10px;}
-    .cta-banner p{font-size:14px;opacity:0.75;margin-bottom:24px;line-height:1.6;}
-    .btn-cta{background:var(--red);color:white;border:none;padding:14px 32px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;}
-    .btn-cta:hover{background:#b91c1c;transform:scale(1.03);}
+    /* ========== REDESIGNED CTA BANNER (STEP JOURNEY, NO EMOJI) ========== */
+    .cta-banner {
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 2.5rem 2rem;
+      margin-bottom: 48px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+      transition: all 0.2s ease;
+    }
+    .cta-steps-container {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    .cta-banner h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+      font-family: 'Manrope', sans-serif;
+    }
+    .cta-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      border-left: 3px solid var(--red);
+      padding-left: 1rem;
+      font-weight: 450;
+    }
+    .steps-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+      counter-reset: step-counter;
+    }
+    .step {
+      background: var(--surface);
+      border-radius: 1.2rem;
+      padding: 1rem 1rem 1rem 1.4rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: var(--navy);
+      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+      border: 1px solid #eef2f9;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+      counter-increment: step-counter;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    /* elegant numeric prefix (no emoji) */
+    .step::before {
+      content: counter(step-counter) ".";
+      font-weight: 800;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, var(--navy), #1e4a76);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      flex-shrink: 0;
+      letter-spacing: -0.5px;
+    }
+    .step:hover {
+      transform: translateY(-3px);
+      border-color: #cbdffc;
+      box-shadow: 0 12px 20px -10px rgba(0,32,69,0.12);
+      background: white;
+    }
+    .btn-cta {
+      background: var(--red);
+      color: white;
+      border: none;
+      padding: 0.9rem 1.8rem;
+      border-radius: 40px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: auto;
+      margin-top: 0.5rem;
+      font-family: 'Inter', sans-serif;
+      box-shadow: 0 4px 8px rgba(211,47,47,0.2);
+    }
+    .btn-cta:hover {
+      background: #b91c1c;
+      transform: scale(1.02);
+      box-shadow: 0 8px 16px rgba(211,47,47,0.25);
+    }
+    /* responsive fine-tune */
+    @media (max-width: 640px) {
+      .cta-banner {
+        padding: 1.8rem 1.2rem;
+      }
+      .cta-banner h2 {
+        font-size: 1.5rem;
+      }
+      .steps-list {
+        grid-template-columns: 1fr;
+        gap: 0.9rem;
+      }
+      .step {
+        padding: 0.85rem 1rem;
+        font-size: 0.9rem;
+      }
+      .btn-cta {
+        width: 100%;
+        padding: 0.85rem;
+      }
+    }
 
     /* FOOTER */
     footer{background:white;border-top:1px solid var(--border);padding:32px 24px 40px;}
@@ -362,11 +473,22 @@
     </div>
   </section>
 
-  <!-- CTA -->
+  <!-- ========== NEW REDESIGNED CTA BANNER – NO EMOJI, CLEAN STEP LIST ========== -->
   <section class="cta-banner">
-    <h2>Ready to Ace Your Interview?</h2>
-    <p>Join thousands of successful students who secured their dream spot in the UK.</p>
-    <button id="ctaGetStartedBtn" class="btn-cta">Get Started Free</button>
+    <div class="cta-steps-container">
+      <h2>Your structured path to success</h2>
+      <p class="cta-sub">Follow these steps to master your interview, track feedback, and stay ahead</p>
+      <div class="steps-list">
+        <div class="step">Login</div>
+        <div class="step">Choose your country / university</div>
+        <div class="step">Start practice</div>
+        <div class="step">Answer questions</div>
+        <div class="step">Check feedback</div>
+        <div class="step">Track progress in dashboard</div>
+        <div class="step">Join live sessions when available</div>
+      </div>
+      <button id="ctaGetStartedBtn" class="btn-cta">Get Started Free</button>
+    </div>
   </section>
 </main>
 
@@ -557,7 +679,6 @@
       const s = window.getCurrentStudent?.();
       if (s) { updateUI(s); }
     }, 1000);
-    // Stop polling after 10s regardless
     setTimeout(() => clearInterval(poll), 10000);
   })();
 
@@ -570,7 +691,9 @@
     }
   }
   document.getElementById('getStartedBtn').addEventListener('click', handleGetStarted);
-  document.getElementById('ctaGetStartedBtn').addEventListener('click', handleGetStarted);
+  // ctaGetStartedBtn still works (new button inside redesigned banner)
+  const ctaBtn = document.getElementById('ctaGetStartedBtn');
+  if (ctaBtn) ctaBtn.addEventListener('click', handleGetStarted);
   document.getElementById('loginBtn').addEventListener('click', openLoginModal);
 
   // ===== BOTTOM NAV =====
