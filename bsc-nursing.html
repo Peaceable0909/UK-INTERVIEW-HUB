@@ -380,7 +380,16 @@
         </div>
       </div>
 
-      <div style="display:flex;align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <a href="index.html"
+          class="btn-back"
+          style="text-decoration:none;display:flex;align-items:center;gap:6px;"
+          title="Back to Hub"
+        ><span class="material-symbols-outlined" style="font-size:18px;">home</span><span class="mobile-hide">Hub</span></a>
+        <a href="dashboard.html"
+          style="text-decoration:none;display:flex;align-items:center;gap:6px;background:var(--teal-700,#0f766e);color:#fff;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;"
+          title="View Dashboard"
+        ><span class="material-symbols-outlined" style="font-size:18px;">dashboard</span><span class="mobile-hide">Dashboard</span></a>
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
           <span class="material-symbols-outlined" style="font-size:18px;" id="themeIcon">dark_mode</span>
         </button>
@@ -1789,6 +1798,15 @@ Return ONLY valid JSON:
 
       // ===== INIT =====
       document.addEventListener('DOMContentLoaded', () => {
+        const THIS_SCHOOL = 'nursing';
+        const _lastSchool = localStorage.getItem('last_school');
+        if (_lastSchool && _lastSchool !== THIS_SCHOOL) {
+          console.log('Cross-school switch — resetting progress');
+          localStorage.removeItem('last_course');
+          if (typeof window.resetAllProgress === 'function') window.resetAllProgress();
+        }
+        localStorage.setItem('last_school', THIS_SCHOOL);
+
         initTheme();
         initChecklist();
         loadScenario(0);
