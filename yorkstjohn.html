@@ -540,8 +540,18 @@
           class="font-label text-xs font-bold uppercase tracking-widest text-muted"
           >UK Visa Interview Prep</span
         >
+      
+        <div class="flex items-center gap-2">
+          <a href="index.html"
+            class="btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+            style="text-decoration:none"
+          ><span class="material-symbols-outlined text-sm">home</span><span class="hidden sm:inline">Hub</span></a>
+          <a href="dashboard.html"
+            class="btn-primary flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+            style="text-decoration:none"
+          ><span class="material-symbols-outlined text-sm">dashboard</span><span class="hidden sm:inline">Dashboard</span></a>
+        </div>
       </div>
-
       <div
         class="pt-14 flex flex-col items-center px-6 py-16 max-w-4xl mx-auto"
       >
@@ -816,6 +826,11 @@
             <span class="material-symbols-outlined text-sm">arrow_back</span
             >Change
           </button>
+          <a href="index.html"
+            class="btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+            style="text-decoration:none"
+            title="Back to Hub"
+          ><span class="material-symbols-outlined text-sm">home</span><span class="hidden sm:inline">Hub</span></a>
           <div class="w-px h-5 bg-border"></div>
           <div>
             <div
@@ -832,7 +847,12 @@
           class="font-headline font-black text-primary text-base tracking-tight hidden md:block"
           >YSJ Prep</span
         >
-        <div class="w-32 hidden md:block"></div>
+        <div class="flex items-center gap-2">
+          <a href="dashboard.html"
+            class="btn-primary flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+            style="text-decoration:none"
+          ><span class="material-symbols-outlined text-sm">dashboard</span><span class="hidden sm:inline">Dashboard</span></a>
+        </div>
       </header>
 
       <div class="flex pt-14">
@@ -1962,6 +1982,7 @@
         }
         course = COURSES[id];
         localStorage.setItem('last_course', id); // save for auto-reload
+        localStorage.setItem('last_school', 'yorkstjohn');
         document.getElementById("s-select").classList.remove("active");
         document.getElementById("s-main").classList.add("active");
         document.getElementById("tb-name").textContent = course.name;
@@ -2191,6 +2212,16 @@ Return ONLY valid JSON, no other text:
         updScore();
       }
       document.addEventListener("DOMContentLoaded", async ()=>{
+
+        // ===== CROSS-SCHOOL RESET =====
+        const THIS_SCHOOL = 'yorkstjohn';
+        const lastSchool = localStorage.getItem('last_school');
+        if (lastSchool && lastSchool !== THIS_SCHOOL) {{
+          console.log('Cross-school switch: ' + lastSchool + ' -> ' + THIS_SCHOOL + ' — resetting');
+          localStorage.removeItem('last_course');
+          if (typeof window.resetAllProgress === 'function') window.resetAllProgress();
+        }}
+        localStorage.setItem('last_school', THIS_SCHOOL);
         // auto-select last course if any
         const lastCourse=localStorage.getItem('last_course');
         if(lastCourse && !course) selectCourse(lastCourse);
