@@ -698,16 +698,24 @@
           class="font-label text-xs font-bold uppercase tracking-widest text-muted"
           >UK Student Visa Credibility Interview</span
         >
-        <button
-          class="theme-toggle"
-          id="themeToggle"
-          aria-label="Toggle dark mode"
-          title="Toggle dark mode"
-        >
-          <span class="material-symbols-outlined text-lg" id="themeIcon"
-            >dark_mode</span
+        <div class="flex items-center gap-2">
+          <a href="index.html"
+            class="btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+            style="text-decoration:none"
+          ><span class="material-symbols-outlined text-sm">home</span><span class="hidden sm:inline">Hub</span></a>
+          <a href="dashboard.html"
+            class="btn-primary flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+            style="text-decoration:none"
+          ><span class="material-symbols-outlined text-sm">dashboard</span><span class="hidden sm:inline">Dashboard</span></a>
+          <button
+            class="theme-toggle"
+            id="themeToggle"
+            aria-label="Toggle dark mode"
+            title="Toggle dark mode"
           >
-        </button>
+            <span class="material-symbols-outlined text-lg" id="themeIcon">dark_mode</span>
+          </button>
+        </div>
       </div>
 
       <div
@@ -1032,6 +1040,11 @@
             <span class="material-symbols-outlined text-sm">arrow_back</span
             >Change
           </button>
+          <a href="index.html"
+            class="btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+            style="text-decoration:none"
+            title="Back to Hub"
+          ><span class="material-symbols-outlined text-sm">home</span><span class="hidden sm:inline">Hub</span></a>
           <div class="w-px h-5 bg-border"></div>
           <div>
             <div
@@ -1048,16 +1061,20 @@
           <span class="material-symbols-outlined text-sm">shield</span>
           BPP University
         </div>
-        <button
-          class="theme-toggle"
-          id="themeToggleMain"
-          aria-label="Toggle dark mode"
-          title="Toggle dark mode"
-        >
-          <span class="material-symbols-outlined text-lg" id="themeIconMain"
-            >dark_mode</span
+        <div class="flex items-center gap-2">
+          <a href="dashboard.html"
+            class="btn-primary flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+            style="text-decoration:none"
+          ><span class="material-symbols-outlined text-sm">dashboard</span><span class="hidden sm:inline">Dashboard</span></a>
+          <button
+            class="theme-toggle"
+            id="themeToggleMain"
+            aria-label="Toggle dark mode"
+            title="Toggle dark mode"
           >
-        </button>
+            <span class="material-symbols-outlined text-lg" id="themeIconMain">dark_mode</span>
+          </button>
+        </div>
       </header>
 
       <div class="flex pt-14">
@@ -2574,6 +2591,7 @@
         }
         currentCourse = courseData[courseId];
         localStorage.setItem('last_course', courseId); // save for auto-reload
+        localStorage.setItem('last_school', 'bpp');
         document.getElementById("tb-name").textContent = currentCourse.name;
         document.getElementById("tb-campus").textContent = currentCourse.campus;
         document.getElementById("s-select").classList.remove("active");
@@ -2810,6 +2828,21 @@ Return ONLY valid JSON, no other text:
 
       // ===== INIT =====
       document.addEventListener("DOMContentLoaded", async function () {
+        // ===== CROSS-SCHOOL RESET =====
+        const THIS_SCHOOL = 'bpp';
+        const lastSchool = localStorage.getItem('last_school');
+        if (lastSchool && lastSchool !== THIS_SCHOOL) {{
+          // Student came from a different school — wipe progress silently
+          console.log('School changed from', lastSchool, 'to', THIS_SCHOOL, '— resetting progress');
+          localStorage.removeItem('last_course');
+          if (typeof window.resetAllProgress === 'function') {{
+            window.resetAllProgress().then(() => {{
+              console.log('Cross-school reset complete');
+            }});
+          }}
+        }}
+        localStorage.setItem('last_school', THIS_SCHOOL);
+
         initTheme();
         updateProgress();
         // Keyboard shortcut
