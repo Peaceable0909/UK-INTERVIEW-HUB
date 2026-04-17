@@ -475,9 +475,13 @@ window.resetAllProgress = async () => {
   try {
     const { error } = await supabaseClient
       .from('student_progress')
-      .update({ ai_scores: {}, practice_responses: {}, checklist_status: {}, updated_at: new Date().toISOString() })
+      .update({ ai_scores: {}, practice_responses: {}, checklist_status: {}, selected_university: null, updated_at: new Date().toISOString() })
       .eq('user_id', student.id);
     if (error) return { error: error.message };
+    // Clear school tracking from localStorage too
+    localStorage.removeItem('last_course');
+    localStorage.removeItem('last_school');
+    localStorage.removeItem('selected_university');
     return { success: true };
   } catch (err) { return { error: err.message }; }
 };
