@@ -845,7 +845,16 @@
           class="font-label text-xs font-bold uppercase tracking-widest text-muted"
           >IND Student Residence Permit • MVV/VVR</span
         >
-        <button
+        <div class="flex items-center gap-2">
+          <a href="index.html"
+            class="btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+            style="text-decoration:none"
+          ><span class="material-symbols-outlined text-sm">home</span><span class="hidden sm:inline">Hub</span></a>
+          <a href="dashboard.html"
+            class="btn-primary flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+            style="text-decoration:none"
+          ><span class="material-symbols-outlined text-sm">dashboard</span><span class="hidden sm:inline">Dashboard</span></a>
+          <button
           class="theme-toggle"
           id="themeToggle"
           aria-label="Toggle dark mode"
@@ -855,6 +864,7 @@
             >dark_mode</span
           >
         </button>
+        </div>
       </div>
 
       <div
@@ -1040,6 +1050,11 @@
             <span class="material-symbols-outlined text-sm">arrow_back</span
             >Change
           </button>
+          <a href="index.html"
+            class="btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+            style="text-decoration:none"
+            title="Back to Hub"
+          ><span class="material-symbols-outlined text-sm">home</span><span class="hidden sm:inline">Hub</span></a>
           <div class="w-px h-5 bg-border"></div>
           <div>
             <div
@@ -1057,7 +1072,12 @@
           </div>
         </div>
         <div class="nl-badge hidden md:flex">NL Prep</div>
-        <button
+        <div class="flex items-center gap-2">
+          <a href="dashboard.html"
+            class="btn-primary flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+            style="text-decoration:none"
+          ><span class="material-symbols-outlined text-sm">dashboard</span><span class="hidden sm:inline">Dashboard</span></a>
+          <button
           class="theme-toggle"
           id="themeToggleMain"
           aria-label="Toggle dark mode"
@@ -1067,6 +1087,7 @@
             >dark_mode</span
           >
         </button>
+        </div>
       </header>
 
       <div class="flex pt-14">
@@ -2817,6 +2838,7 @@
       // ===== PREP SELECTION =====
       function selectPrep(prepId) {
         currentPrep = prepId;
+        localStorage.setItem('last_school', 'netherlands');
         document.getElementById("s-select").classList.remove("active");
         document.getElementById("s-main").classList.add("active");
 
@@ -3046,6 +3068,18 @@ Return ONLY valid JSON, no other text:
 
       // ===== INIT =====
       document.addEventListener("DOMContentLoaded", async function () {
+        // ===== CROSS-SCHOOL RESET =====
+        const THIS_SCHOOL = 'netherlands';
+        const lastSchool = localStorage.getItem('last_school');
+        if (lastSchool && lastSchool !== THIS_SCHOOL) {{
+          console.log('School changed from', lastSchool, 'to', THIS_SCHOOL, '— resetting progress');
+          localStorage.removeItem('last_course');
+          if (typeof window.resetAllProgress === 'function') {{
+            window.resetAllProgress().then(() => console.log('Cross-school reset complete'));
+          }}
+        }}
+        localStorage.setItem('last_school', THIS_SCHOOL);
+
         initTheme();
         updateProgress();
         loadNLQuestion(0);
