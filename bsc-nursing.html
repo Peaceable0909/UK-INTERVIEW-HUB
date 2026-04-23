@@ -687,12 +687,12 @@
         </div>
 
         <!-- ==================== QUESTIONS TAB ==================== -->
-        <div class="tc" id="tab-questions" style="padding:32px 40px 60px;max-width:900px;padding-top:72px;">
+        <div class="tc" id="tab-questions" style="padding:32px 40px 60px;max-width:1100px;padding-top:72px;">
           <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);display:block;margin-bottom:8px;">Module 3 — Question Bank</span>
           <h1 class="display" style="font-size:2.2rem;margin-bottom:6px;">All Interview Questions</h1>
-          <p style="color:var(--text-muted);font-size:15px;margin-bottom:24px;">Nursing-specific questions organised by category. Click to expand guidance.</p>
+          <p style="color:var(--text-muted);font-size:15px;margin-bottom:24px;">Nursing-specific questions organised by category. Click any card to reveal guidance.</p>
 
-          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;">
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px;">
             <button class="filter-btn active" onclick="filterQ('all',this)">All</button>
             <button class="filter-btn" onclick="filterQ('personal',this)">Personal</button>
             <button class="filter-btn" onclick="filterQ('course',this)">Course</button>
@@ -702,164 +702,332 @@
             <button class="filter-btn" onclick="filterQ('career',this)">Career</button>
           </div>
 
-          <div id="q-container" style="display:flex;flex-direction:column;gap:8px;">
+          <div id="q-container" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
             <!-- PERSONAL -->
-            <div class="acc-item" data-cat="personal">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num">P1</span><span style="font-weight:600;font-size:14px;">Tell me about yourself and why you're pursuing nursing now.</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="personal" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num" style="margin-top:0;">P1</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">Tell me about yourself and why you're pursuing nursing now.</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Authentic narrative, transferable skills, values alignment with NMC Code.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--teal-700);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--teal-700);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Authentic narrative, transferable skills, values alignment with NMC Code.</p></div>
             </div>
-            <div class="acc-item" data-cat="personal">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num">P2</span><span style="font-weight:600;font-size:14px;">You have a background in [law/business/etc.] – why switch to nursing?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="personal" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num" style="margin-top:0;">P2</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">You have a background in [law/business/etc.] – why switch to nursing?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Purposeful transition, how prior skills enhance nursing practice (e.g., advocacy, documentation, ethics).</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--teal-700);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--teal-700);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Purposeful transition, how prior skills enhance nursing practice (e.g., advocacy, documentation, ethics).</p></div>
             </div>
-            <div class="acc-item" data-cat="personal">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num">P3</span><span style="font-weight:600;font-size:14px;">What does "compassion in nursing" mean to you? Give an example.</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="personal" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num" style="margin-top:0;">P3</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">What does "compassion in nursing" mean to you? Give an example.</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Move beyond dictionary definition – link to action, dignity, cultural humility.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--teal-700);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--teal-700);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Move beyond dictionary definition – link to action, dignity, cultural humility.</p></div>
             </div>
 
             <!-- COURSE -->
-            <div class="acc-item" data-cat="course">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num">C1</span><span style="font-weight:600;font-size:14px;">Why BPP's Adult Nursing programme over other UK universities?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="course" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num" style="margin-top:0;">C1</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">Why BPP's Adult Nursing programme over other UK universities?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Specific features – simulation labs, NHS partnerships, Waterloo location, flexible structure.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--teal-700);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--teal-700);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Specific features – simulation labs, NHS partnerships, Waterloo location, flexible structure.</p></div>
             </div>
-            <div class="acc-item" data-cat="course">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num">C2</span><span style="font-weight:600;font-size:14px;">Which module are you most looking forward to, and how will it help your career?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="course" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num" style="margin-top:0;">C2</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">Which module are you most looking forward to, and how will it help your career?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Name module + link to clinical interest (e.g., "Acute Care" for A&E aspirations).</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--teal-700);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--teal-700);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Name module + link to clinical interest (e.g., "Acute Care" for A&E aspirations).</p></div>
             </div>
-            <div class="acc-item" data-cat="course">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num">C3</span><span style="font-weight:600;font-size:14px;">How do you feel about spending 50% of your time on clinical placements?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="course" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num" style="margin-top:0;">C3</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">How do you feel about spending 50% of your time on clinical placements?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Realistic awareness of shift work, travel, learning from mistakes, mentorship value.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--teal-700);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--teal-700);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Realistic awareness of shift work, travel, learning from mistakes, mentorship value.</p></div>
             </div>
-            <div class="acc-item" data-cat="course">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num">C4</span><span style="font-weight:600;font-size:14px;">How will you balance academic work, placements, and self-care?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="course" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num" style="margin-top:0;">C4</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">How will you balance academic work, placements, and self-care?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Time management strategies, support networks, reflection practices.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--teal-700);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--teal-700);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Time management strategies, support networks, reflection practices.</p></div>
             </div>
 
             <!-- SCENARIO -->
-            <div class="acc-item" data-cat="scenario">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-scenario">S1</span><span style="font-weight:600;font-size:14px;">A patient is anxious before a procedure. How do you respond?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="scenario" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num-scenario" style="margin-top:0;">S1</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">A patient is anxious before a procedure. How do you respond?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Calm presence, active listening, simple explanations, involving family if appropriate, escalation if needed.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--blue-600);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--blue-600);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Calm presence, active listening, simple explanations, involving family if appropriate, escalation if needed.</p></div>
             </div>
-            <div class="acc-item" data-cat="scenario">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-scenario">S2</span><span style="font-weight:600;font-size:14px;">A patient shares confidential information about abuse. What do you do?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="scenario" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num-scenario" style="margin-top:0;">S2</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">A patient shares confidential information about abuse. What do you do?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Safeguarding duty – listen, reassure, document, report to mentor/safeguarding lead per policy.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--blue-600);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--blue-600);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Safeguarding duty – listen, reassure, document, report to mentor/safeguarding lead per policy.</p></div>
             </div>
-            <div class="acc-item" data-cat="scenario">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-scenario">S3</span><span style="font-weight:600;font-size:14px;">You see a colleague skip hand hygiene. How do you handle it?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="scenario" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num-scenario" style="margin-top:0;">S3</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">You see a colleague skip hand hygiene. How do you handle it?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Professional courage – address respectfully in private, reference infection control policy, escalate if pattern continues.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--blue-600);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--blue-600);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Professional courage – address respectfully in private, reference infection control policy, escalate if pattern continues.</p></div>
             </div>
-            <div class="acc-item" data-cat="scenario">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-scenario">S4</span><span style="font-weight:600;font-size:14px;">A patient refuses care due to cultural beliefs. How do you proceed?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="scenario" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num-scenario" style="margin-top:0;">S4</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">A patient refuses care due to cultural beliefs. How do you proceed?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Cultural humility – explore concerns, involve interpreter if needed, collaborate on acceptable alternatives, document.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--blue-600);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--blue-600);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Cultural humility – explore concerns, involve interpreter if needed, collaborate on acceptable alternatives, document.</p></div>
             </div>
 
             <!-- UK NURSING -->
-            <div class="acc-item" data-cat="uk">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-uk">U1</span><span style="font-weight:600;font-size:14px;">What do you know about the NMC Code?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="uk" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num-uk" style="margin-top:0;">U1</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">What do you know about the NMC Code?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: 4 pillars + 10 standards; revalidation every 3 years; fitness to practise procedures.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:#7c3aed;font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:#7c3aed;transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: 4 pillars + 10 standards; revalidation every 3 years; fitness to practise procedures.</p></div>
             </div>
-            <div class="acc-item" data-cat="uk">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-uk">U2</span><span style="font-weight:600;font-size:14px;">How does the NHS structure affect a nurse's daily work?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="uk" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num-uk" style="margin-top:0;">U2</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">How does the NHS structure affect a nurse's daily work?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Multidisciplinary teams, referral pathways, CQC inspections, health inequalities focus.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:#7c3aed;font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:#7c3aed;transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Multidisciplinary teams, referral pathways, CQC inspections, health inequalities focus.</p></div>
             </div>
-            <div class="acc-item" data-cat="uk">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-uk">U3</span><span style="font-weight:600;font-size:14px;">What are current challenges in UK adult nursing?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="uk" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num-uk" style="margin-top:0;">U3</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">What are current challenges in UK adult nursing?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Workforce shortages, mental health demand, digital transformation, health inequalities, ageing population.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:#7c3aed;font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:#7c3aed;transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Workforce shortages, mental health demand, digital transformation, health inequalities, ageing population.</p></div>
             </div>
-            <div class="acc-item" data-cat="uk">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-uk">U4</span><span style="font-weight:600;font-size:14px;">How would you promote equality, diversity, and inclusion in practice?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="uk" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num-uk" style="margin-top:0;">U4</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">How would you promote equality, diversity, and inclusion in practice?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Person-centred care, challenging bias, accessible communication, advocating for marginalised patients.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:#7c3aed;font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:#7c3aed;transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Person-centred care, challenging bias, accessible communication, advocating for marginalised patients.</p></div>
             </div>
 
             <!-- FINANCE -->
-            <div class="acc-item" data-cat="finance">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-finance">F1</span><span style="font-weight:600;font-size:14px;">How will you fund tuition and living costs in London?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="finance" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num-finance" style="margin-top:0;">F1</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">How will you fund tuition and living costs in London?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Specific sources (savings, family, NHSLSF), realistic budget, contingency planning.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--green-600);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--green-600);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Specific sources (savings, family, NHSLSF), realistic budget, contingency planning.</p></div>
             </div>
-            <div class="acc-item" data-cat="finance">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-finance">F2</span><span style="font-weight:600;font-size:14px;">Nursing placements may require early starts or travel across London. How will you manage this?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="finance" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num-finance" style="margin-top:0;">F2</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">Nursing placements may require early starts or travel across London. How will you manage this?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Transport planning, budgeting for fares, time management, self-care strategies.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--green-600);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--green-600);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Transport planning, budgeting for fares, time management, self-care strategies.</p></div>
             </div>
-            <div class="acc-item" data-cat="finance">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-finance">F3</span><span style="font-weight:600;font-size:14px;">What will you do if your visa is delayed and you miss the course start?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="finance" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num-finance" style="margin-top:0;">F3</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">What will you do if your visa is delayed and you miss the course start?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Proactive communication with BPP, deferral options, maintaining readiness (online prep, English practice).</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--green-600);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--green-600);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Proactive communication with BPP, deferral options, maintaining readiness (online prep, English practice).</p></div>
             </div>
 
             <!-- CAREER -->
-            <div class="acc-item" data-cat="career">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-career">G1</span><span style="font-weight:600;font-size:14px;">Where do you see yourself 5 years after qualifying as a nurse?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="career" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num-career" style="margin-top:0;">G1</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">Where do you see yourself 5 years after qualifying as a nurse?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Realistic progression – Band 5 staff nurse → specialist training/preceptorship → potential leadership/education role.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--amber-500);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--amber-500);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Realistic progression – Band 5 staff nurse → specialist training/preceptorship → potential leadership/education role.</p></div>
             </div>
-            <div class="acc-item" data-cat="career">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-career">G2</span><span style="font-weight:600;font-size:14px;">How will you maintain your NMC registration after qualifying?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="career" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num-career" style="margin-top:0;">G2</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">How will you maintain your NMC registration after qualifying?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Revalidation process – 450 practice hours, 35 CPD hours, reflective accounts, professional indemnity, health declaration.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--amber-500);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--amber-500);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Revalidation process – 450 practice hours, 35 CPD hours, reflective accounts, professional indemnity, health declaration.</p></div>
             </div>
-            <div class="acc-item" data-cat="career">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;" onclick="toggleAcc(this)">
-                <div style="display:flex;align-items:flex-start;gap:10px;"><span class="q-num-career">G3</span><span style="font-weight:600;font-size:14px;">What area of nursing interests you most long-term, and why?</span></div>
-                <span class="material-symbols-outlined acc-arrow" style="color:var(--text-muted);">expand_more</span>
+            <div class="q-card" data-cat="career" onclick="toggleQCard(this)" style="background:var(--bg-card);border:1.5px solid var(--border-default);border-radius:16px;cursor:pointer;transition:all 0.2s;overflow:hidden;">
+              <div style="padding:20px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+                  <span class="q-num-career" style="margin-top:0;">G3</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.5;flex:1;">What area of nursing interests you most long-term, and why?</p>
+                </div>
+                <div class="q-card-hint" style="display:none;padding-top:12px;border-top:1px solid var(--border-default);margin-top:4px;">
+                  <p style="font-size:13px;color:var(--text-muted);line-height:1.6;">Focus: Genuine interest (e.g., critical care, community, mental health liaison) + awareness of required post-qualifying training.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+                  <span style="font-size:11px;color:var(--amber-500);font-weight:600;">Tap to reveal guidance</span>
+                  <span class="material-symbols-outlined q-card-arrow" style="font-size:16px;color:var(--amber-500);transition:transform 0.2s;">expand_more</span>
+                </div>
               </div>
-              <div class="acc-body" style="padding:0 16px 16px;"><p style="font-size:13px;color:var(--text-muted);padding-left:36px;">Focus: Genuine interest (e.g., critical care, community, mental health liaison) + awareness of required post-qualifying training.</p></div>
             </div>
           </div>
         </div>
@@ -984,186 +1152,109 @@
         </div>
 
         <!-- ==================== SCENARIO SIMULATOR TAB ==================== -->
-        <div class="tc" id="tab-scenario" style="padding:32px 40px 60px;max-width:900px;padding-top:72px;">
+        <div class="tc" id="tab-scenario" style="padding:32px 40px 60px;max-width:760px;padding-top:72px;">
           <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);display:block;margin-bottom:8px;">Module 5 — Simulator</span>
           <h1 class="display" style="font-size:2.2rem;margin-bottom:6px;">Scenario Simulator</h1>
-          <p style="color:var(--text-muted);font-size:15px;margin-bottom:32px;">Practise your response to real-world nursing scenarios. AI will analyse your answer based on the NMC Code.</p>
+          <p style="color:var(--text-muted);font-size:15px;margin-bottom:28px;">Work through each scenario in order. AI will score your answer based on the NMC Code.</p>
 
-          <div style="display:grid;grid-template-columns:1fr 300px;gap:24px;">
-            <div>
-              <div class="panel" style="padding:24px;margin-bottom:20px;">
-                <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal-700);margin-bottom:12px;">Current Scenario</p>
-                <h3 id="scenario-text" style="font-size:1.1rem;font-weight:700;margin-bottom:16px;line-height:1.5;">Loading scenario...</h3>
-                <div id="scenario-checks" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;"></div>
+          <!-- ── SCORE SUMMARY (top) ── -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:28px;">
+            <div class="stat-pill">
+              <div id="sc-p" class="stat-num">0</div>
+              <div class="stat-label">Passed</div>
+            </div>
+            <div class="stat-pill">
+              <div id="sc-f" class="stat-num" style="color:var(--red-500);">0</div>
+              <div class="stat-label">Failed</div>
+            </div>
+            <div class="stat-pill">
+              <div id="sc-total" class="stat-num" style="color:var(--text-muted);">0/15</div>
+              <div class="stat-label">Completed</div>
+            </div>
+          </div>
 
-                <textarea id="nursing-answer" placeholder="Type your response here (e.g., using STAR method)..." style="width:100%;height:180px;padding:16px;border-radius:12px;border:1.5px solid var(--border-default);background:var(--bg-surface-low);color:var(--text-primary);font-family:inherit;font-size:14px;resize:none;margin-bottom:16px;"></textarea>
+          <!-- ── QUESTION CARD ── -->
+          <div class="panel" style="padding:28px;margin-bottom:20px;">
 
-                <div id="nursing-warning" class="panel-red" style="padding:12px 16px;margin-bottom:16px;display:none;">
-                  <p style="font-size:12px;color:var(--red-500);font-weight:700;display:flex;align-items:center;gap:6px;">
-                    <span class="material-symbols-outlined" style="font-size:18px;">warning</span>
-                    Red Flag Detected: Ensure you mention escalation and patient safety.
-                  </p>
-                </div>
-
-                <button class="btn-primary" id="analyseBtn" onclick="analyseNursing()" style="width:100%;justify-content:center;padding:14px;">
-                  <span class="material-symbols-outlined" style="font-size:18px;">auto_awesome</span>
-                  Analyse Response
-                </button>
-              </div>
-
-              <!-- Feedback Result -->
-              <div id="nursing-feedback" class="hidden">
-                <div id="nursing-fb-loading" style="display:flex;flex-direction:column;align-items:center;padding:40px;gap:16px;">
-                  <div class="spinner" style="width:32px;height:32px;border-width:3px;border-top-color:var(--teal-700);"></div>
-                  <p style="font-weight:600;color:var(--text-muted);">AI Examiner is reviewing your answer...</p>
-                </div>
-
-                <div id="nursing-fb-result" style="display:none;">
-                  <div id="nursing-fb-card" class="fb-pass">
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;">
-                      <div>
-                        <h3 id="nfb-title" style="font-size:1.2rem;font-weight:800;margin-bottom:4px;">Strong Response</h3>
-                        <p style="font-size:13px;color:var(--text-muted);">Based on NMC Code & BPP Standards</p>
-                      </div>
-                      <div style="text-align:right;">
-                        <div id="nfb-score" style="font-size:2rem;font-weight:900;color:var(--green-600);line-height:1;">8/10</div>
-                        <span id="nfb-icon" class="material-symbols-outlined" style="font-size:24px;color:var(--green-600);margin-top:4px;">verified</span>
-                      </div>
-                    </div>
-
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
-                      <div>
-                        <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">NMC Alignment</p>
-                        <ul id="nfb-nmc" style="list-style:none;font-size:13px;display:flex;flex-direction:column;gap:6px;"></ul>
-                      </div>
-                      <div>
-                        <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Strengths</p>
-                        <ul id="nfb-strengths" style="list-style:none;font-size:13px;display:flex;flex-direction:column;gap:6px;"></ul>
-                      </div>
-                    </div>
-                    <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(0,0,0,0.05);">
-                      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Suggestions for 10/10</p>
-                      <ul id="nfb-suggestions" style="list-style:none;font-size:13px;display:flex;flex-direction:column;gap:6px;"></ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <!-- Question counter + nav -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+              <button onclick="prevScenario()" id="prevBtn" style="display:flex;align-items:center;gap:6px;background:var(--bg-surface-mid);border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;color:var(--text-muted);cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-muted)'">
+                <span class="material-symbols-outlined" style="font-size:18px;">arrow_back</span> Previous
+              </button>
+              <span id="sc-counter" style="font-size:13px;font-weight:700;color:var(--text-muted);">Question 1 of 15</span>
+              <button onclick="nextScenario()" id="nextBtn" style="display:flex;align-items:center;gap:6px;background:var(--teal-800);border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='var(--teal-900)'" onmouseout="this.style.background='var(--teal-800)'">
+                Next <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+              </button>
             </div>
 
-            <div id="scenario-list" style="display:flex;flex-direction:column;gap:10px;">
-              <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:4px;">Select Scenario</p>
-              <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:8px;">Personal & Motivation</p>
-              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(0)">
-                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-weight:600;font-size:13px;">1. Tell me about yourself</span>
-                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </div>
-              </div>
-              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(1)">
-                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-weight:600;font-size:13px;">2. Career transition</span>
-                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </div>
-              </div>
-              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(2)">
-                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-weight:600;font-size:13px;">3. Compassion in nursing</span>
-                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </div>
-              </div>
-              <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-top:16px;margin-bottom:8px;">Course & BPP Specific</p>
-              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(3)">
-                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-weight:600;font-size:13px;">4. Why BPP?</span>
-                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </div>
-              </div>
-              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(4)">
-                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-weight:600;font-size:13px;">5. Module interests</span>
-                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </div>
-              </div>
-              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(5)">
-                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-weight:600;font-size:13px;">6. Clinical placements</span>
-                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </div>
-              </div>
-              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(6)">
-                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-weight:600;font-size:13px;">7. Work-life balance</span>
-                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </div>
-              </div>
-              <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-top:16px;margin-bottom:8px;">Patient Care Scenarios</p>
-              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(7)">
-                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-weight:600;font-size:13px;">8. Anxious patient</span>
-                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </div>
-              </div>
-              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(8)">
-                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-weight:600;font-size:13px;">9. Safeguarding disclosure</span>
-                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </div>
-              </div>
-              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(9)">
-                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-weight:600;font-size:13px;">10. Hand hygiene challenge</span>
-                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </div>
-              </div>
-              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(10)">
-                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-weight:600;font-size:13px;">11. Cultural refusal</span>
-                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </div>
-              </div>
-              <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-top:16px;margin-bottom:8px;">UK Nursing Knowledge</p>
-              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(11)">
-                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-weight:600;font-size:13px;">12. NMC Code knowledge</span>
-                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </div>
-              </div>
-              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(12)">
-                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-weight:600;font-size:13px;">13. NHS structure</span>
-                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </div>
-              </div>
-              <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-top:16px;margin-bottom:8px;">Finances & Logistics</p>
-              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(13)">
-                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-weight:600;font-size:13px;">14. Funding & costs</span>
-                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </div>
-              </div>
-              <div class="acc-item" style="cursor:pointer;" onclick="loadScenario(14)">
-                <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-weight:600;font-size:13px;">15. Visa delays</span>
-                  <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
-                </div>
-              </div>
+            <!-- Progress bar for question progress -->
+            <div class="progress-track" style="margin-bottom:24px;">
+              <div id="sc-progress-bar" class="progress-fill" style="width:6.67%;"></div>
+            </div>
 
-              <div class="panel-teal" style="padding:20px;margin-top:10px;">
-                <p style="font-weight:700;font-size:13px;margin-bottom:12px;">Your Progress</p>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                  <div class="stat-pill" style="padding:12px;">
-                    <div id="sc-p" class="stat-num" style="font-size:1.5rem;">0</div>
-                    <div class="stat-label" style="font-size:9px;">Passed</div>
+            <!-- Scenario question -->
+            <div style="background:var(--teal-50);border:1.5px solid var(--border-teal);border-radius:12px;padding:20px 24px;margin-bottom:20px;">
+              <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--teal-700);margin-bottom:8px;" id="sc-category-label">Personal &amp; Motivation</p>
+              <h3 id="scenario-text" style="font-size:1.1rem;font-weight:700;line-height:1.6;color:var(--text-primary);">Loading scenario...</h3>
+            </div>
+
+            <div id="scenario-checks" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;"></div>
+
+            <!-- Answer box -->
+            <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);display:block;margin-bottom:8px;">Your Response <span style="font-weight:400;text-transform:none;letter-spacing:0;">(use STAR method)</span></label>
+            <textarea id="nursing-answer" placeholder="Situation → Task → Action → Result..." style="width:100%;height:160px;padding:16px;border-radius:12px;border:1.5px solid var(--border-default);background:var(--bg-surface-low);color:var(--text-primary);font-family:inherit;font-size:14px;resize:vertical;margin-bottom:16px;line-height:1.6;"></textarea>
+
+            <div id="nursing-warning" class="panel-red" style="padding:12px 16px;margin-bottom:16px;display:none;">
+              <p style="font-size:12px;color:var(--red-500);font-weight:700;display:flex;align-items:center;gap:6px;">
+                <span class="material-symbols-outlined" style="font-size:18px;">warning</span>
+                Red Flag Detected: Ensure you mention escalation and patient safety.
+              </p>
+            </div>
+
+            <button class="btn-primary" id="analyseBtn" onclick="analyseNursing()" style="width:100%;justify-content:center;padding:14px;font-size:15px;">
+              <span class="material-symbols-outlined" style="font-size:18px;">auto_awesome</span>
+              Analyse Response
+            </button>
+          </div>
+
+          <!-- ── FEEDBACK RESULT ── -->
+          <div id="nursing-feedback" class="hidden">
+            <div id="nursing-fb-loading" style="display:flex;flex-direction:column;align-items:center;padding:40px;gap:16px;">
+              <div class="spinner" style="width:32px;height:32px;border-width:3px;border-top-color:var(--teal-700);"></div>
+              <p style="font-weight:600;color:var(--text-muted);">AI Examiner is reviewing your answer...</p>
+            </div>
+            <div id="nursing-fb-result" style="display:none;">
+              <div id="nursing-fb-card" class="fb-pass">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;">
+                  <div>
+                    <h3 id="nfb-title" style="font-size:1.2rem;font-weight:800;margin-bottom:4px;">Strong Response</h3>
+                    <p style="font-size:13px;color:var(--text-muted);">Based on NMC Code & BPP Standards</p>
                   </div>
-                  <div class="stat-pill" style="padding:12px;">
-                    <div id="sc-f" class="stat-num" style="font-size:1.5rem;color:var(--red-500);">0</div>
-                    <div class="stat-label" style="font-size:9px;">Failed</div>
+                  <div style="text-align:right;">
+                    <div id="nfb-score" style="font-size:2rem;font-weight:900;color:var(--green-600);line-height:1;">8/10</div>
+                    <span id="nfb-icon" class="material-symbols-outlined" style="font-size:24px;color:var(--green-600);margin-top:4px;">verified</span>
                   </div>
                 </div>
-                <p id="sc-msg" style="font-size:11px;color:var(--text-muted);margin-top:12px;line-height:1.5;">Select a scenario above and type your response to begin.</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                  <div>
+                    <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">NMC Alignment</p>
+                    <ul id="nfb-nmc" style="list-style:none;font-size:13px;display:flex;flex-direction:column;gap:6px;"></ul>
+                  </div>
+                  <div>
+                    <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Strengths</p>
+                    <ul id="nfb-strengths" style="list-style:none;font-size:13px;display:flex;flex-direction:column;gap:6px;"></ul>
+                  </div>
+                </div>
+                <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(0,0,0,0.05);">
+                  <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Suggestions for 10/10</p>
+                  <ul id="nfb-suggestions" style="list-style:none;font-size:13px;display:flex;flex-direction:column;gap:6px;"></ul>
+                </div>
               </div>
             </div>
           </div>
+
+          <!-- Status message -->
+          <p id="sc-msg" style="font-size:12px;color:var(--text-muted);line-height:1.5;margin-top:16px;text-align:center;">Type your response and click Analyse to get AI feedback.</p>
         </div>
 
         <!-- ==================== RESOURCES TAB ==================== -->
@@ -1172,100 +1263,215 @@
           <h1 class="display" style="font-size:2.2rem;margin-bottom:6px;">Essential Resources & Links</h1>
           <p style="color:var(--text-muted);font-size:15px;margin-bottom:32px;">10 official and professional resources to support your interview preparation and long-term nursing career.</p>
 
-          <div style="overflow-x:auto;margin-bottom:24px;">
-            <table style="width:100%;border-collapse:collapse;">
-              <thead>
-                <tr style="background:var(--bg-surface-low);border-bottom:2px solid var(--border-default);">
-                  <th style="padding:14px;text-align:left;font-weight:700;font-size:13px;color:var(--text-primary);">Resource</th>
-                  <th style="padding:14px;text-align:left;font-weight:700;font-size:13px;color:var(--text-primary);">Link</th>
-                  <th style="padding:14px;text-align:left;font-weight:700;font-size:13px;color:var(--text-primary);">Purpose</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr style="border-bottom:1px solid var(--border-default);">
-                  <td style="padding:14px;font-weight:600;font-size:13px;">BPP University — Nursing Programmes</td>
-                  <td style="padding:14px;font-size:13px;"><a href="https://bpp.com/nursing" style="color:var(--text-link);text-decoration:none;font-weight:600;">bpp.com/nursing</a></td>
-                  <td style="padding:14px;font-size:13px;color:var(--text-muted);">Course details, entry requirements, module specs, campus info for BSc (Hons) Adult Nursing</td>
-                </tr>
-                <tr style="border-bottom:1px solid var(--border-default);">
-                  <td style="padding:14px;font-weight:600;font-size:13px;">Nursing & Midwifery Council (NMC) Code</td>
-                  <td style="padding:14px;font-size:13px;"><a href="https://nmc.org.uk/standards/code" style="color:var(--text-link);text-decoration:none;font-weight:600;">nmc.org.uk/standards/code</a></td>
-                  <td style="padding:14px;font-size:13px;color:var(--text-muted);">Master the 4 pillars: Prioritise People, Practise Effectively, Preserve Safety, Promote Trust — essential for interview answers</td>
-                </tr>
-                <tr style="border-bottom:1px solid var(--border-default);">
-                  <td style="padding:14px;font-weight:600;font-size:13px;">UK Government: Student Visa Guidance</td>
-                  <td style="padding:14px;font-size:13px;"><a href="https://gov.uk/student-visa" style="color:var(--text-link);text-decoration:none;font-weight:600;">gov.uk/student-visa</a></td>
-                  <td style="padding:14px;font-size:13px;color:var(--text-muted);">Official rules on visa application, financial requirements, work rights, and Graduate Route visa</td>
-                </tr>
-                <tr style="border-bottom:1px solid var(--border-default);">
-                  <td style="padding:14px;font-weight:600;font-size:13px;">NHS Learning Support Fund</td>
-                  <td style="padding:14px;font-size:13px;"><a href="https://nhsbsa.nhs.uk/learning-support-fund" style="color:var(--text-link);text-decoration:none;font-weight:600;">nhsbsa.nhs.uk/lsf</a></td>
-                  <td style="padding:14px;font-size:13px;color:var(--text-muted);"£5,000 grant + travel reimbursements for nursing students in England — know your funding options</td>
-                </tr>
-                <tr style="border-bottom:1px solid var(--border-default);">
-                  <td style="padding:14px;font-weight:600;font-size:13px;">BPP International Student Support</td>
-                  <td style="padding:14px;font-size:13px;"><a href="https://bpp.com/international" style="color:var(--text-link);text-decoration:none;font-weight:600;">bpp.com/international</a></td>
-                  <td style="padding:14px;font-size:13px;color:var(--text-muted);">Pre-arrival guidance, accommodation advice, visa support, and orientation for overseas students</td>
-                </tr>
-                <tr style="border-bottom:1px solid var(--border-default);">
-                  <td style="padding:14px;font-weight:600;font-size:13px;">NMC Registration: International Nurses</td>
-                  <td style="padding:14px;font-size:13px;"><a href="https://nmc.org.uk/registration/joining-the-register/internationally-educated-nurses" style="color:var(--text-link);text-decoration:none;font-weight:600;">nmc.org.uk/registration</a></td>
-                  <td style="padding:14px;font-size:13px;color:var(--text-muted);">Pathway to UK registration: CBT, OSCE, portfolio requirements — critical for post-study planning</td>
-                </tr>
-                <tr style="border-bottom:1px solid var(--border-default);">
-                  <td style="padding:14px;font-weight:600;font-size:13px;">The NHS Constitution for England</td>
-                  <td style="padding:14px;font-size:13px;"><a href="https://gov.uk/government/publications/the-nhs-constitution-for-england" style="color:var(--text-link);text-decoration:none;font-weight:600;">gov.uk/nhs-constitution</a></td>
-                  <td style="padding:14px;font-size:13px;color:var(--text-muted);">Understand NHS values, patient rights, and staff responsibilities — shows systemic awareness in interviews</td>
-                </tr>
-                <tr style="border-bottom:1px solid var(--border-default);">
-                  <td style="padding:14px;font-weight:600;font-size:13px;">BPP Course Specifications Database</td>
-                  <td style="padding:14px;font-size:13px;"><a href="https://bpp.com/study/subjects" style="color:var(--text-link);text-decoration:none;font-weight:600;">bpp.com/study/subjects</a></td>
-                  <td style="padding:14px;font-size:13px;color:var(--text-muted);">Search "Adult Nursing" for official module lists, learning outcomes, and assessment methods</td>
-                </tr>
-                <tr style="border-bottom:1px solid var(--border-default);">
-                  <td style="padding:14px;font-weight:600;font-size:13px;">Student Minds — Mental Health Support</td>
-                  <td style="padding:14px;font-size:13px;"><a href="https://studentminds.org.uk" style="color:var(--text-link);text-decoration:none;font-weight:600;">studentminds.org.uk</a></td>
-                  <td style="padding:14px;font-size:13px;color:var(--text-muted);">Free, confidential mental health resources for UK students — nursing is demanding; self-care matters</td>
-                </tr>
-                <tr>
-                  <td style="padding:14px;font-weight:600;font-size:13px;">Visit London — Student Living Guide</td>
-                  <td style="padding:14px;font-size:13px;"><a href="https://visitlondon.com/traveller-information/planning-your-trip/moving-to-london" style="color:var(--text-link);text-decoration:none;font-weight:600;">visitlondon.com</a></td>
-                  <td style="padding:14px;font-size:13px;color:var(--text-muted);">Practical advice on accommodation, transport (Oyster/Contactless), costs, and cultural tips for London life</td>
-                </tr>
-              </tbody>
-            </table>
+          <!-- Resource Cards Grid -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:32px;">
+
+            <!-- BPP Nursing -->
+            <div class="panel" style="padding:22px;display:flex;flex-direction:column;gap:12px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='var(--shadow-hover)'" onmouseout="this.style.boxShadow=''">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:var(--teal-100);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <span class="material-symbols-outlined" style="color:var(--teal-800);font-size:20px;">school</span>
+                </div>
+                <div>
+                  <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--teal-700);">BPP · Course</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.3;margin-top:2px;">BPP Nursing Programmes</p>
+                </div>
+              </div>
+              <p style="font-size:13px;color:var(--text-muted);line-height:1.6;flex:1;">Course details, entry requirements, module specs, and campus info for BSc (Hons) Adult Nursing.</p>
+              <a href="https://bpp.com/nursing" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-link);font-size:12px;font-weight:700;text-decoration:none;">
+                bpp.com/nursing <span class="material-symbols-outlined" style="font-size:14px;">open_in_new</span>
+              </a>
+            </div>
+
+            <!-- NMC Code -->
+            <div class="panel" style="padding:22px;display:flex;flex-direction:column;gap:12px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='var(--shadow-hover)'" onmouseout="this.style.boxShadow=''">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:#ede9fe;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <span class="material-symbols-outlined" style="color:#7c3aed;font-size:20px;">verified</span>
+                </div>
+                <div>
+                  <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#7c3aed;">NMC · Essential</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.3;margin-top:2px;">NMC Code of Conduct</p>
+                </div>
+              </div>
+              <p style="font-size:13px;color:var(--text-muted);line-height:1.6;flex:1;">Master the 4 pillars: Prioritise People, Practise Effectively, Preserve Safety, Promote Trust.</p>
+              <a href="https://nmc.org.uk/standards/code" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-link);font-size:12px;font-weight:700;text-decoration:none;">
+                nmc.org.uk/standards/code <span class="material-symbols-outlined" style="font-size:14px;">open_in_new</span>
+              </a>
+            </div>
+
+            <!-- Student Visa -->
+            <div class="panel" style="padding:22px;display:flex;flex-direction:column;gap:12px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='var(--shadow-hover)'" onmouseout="this.style.boxShadow=''">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:var(--blue-600);opacity:0.12;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;">
+                  <span class="material-symbols-outlined" style="color:var(--blue-600);font-size:20px;position:absolute;">passport</span>
+                </div>
+                <div>
+                  <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--blue-600);">UKVI · Visa</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.3;margin-top:2px;">Student Visa Guidance</p>
+                </div>
+              </div>
+              <p style="font-size:13px;color:var(--text-muted);line-height:1.6;flex:1;">Official rules on visa application, financial requirements, work rights, and the Graduate Route.</p>
+              <a href="https://gov.uk/student-visa" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-link);font-size:12px;font-weight:700;text-decoration:none;">
+                gov.uk/student-visa <span class="material-symbols-outlined" style="font-size:14px;">open_in_new</span>
+              </a>
+            </div>
+
+            <!-- NHS Learning Support Fund -->
+            <div class="panel" style="padding:22px;display:flex;flex-direction:column;gap:12px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='var(--shadow-hover)'" onmouseout="this.style.boxShadow=''">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:var(--green-100);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <span class="material-symbols-outlined" style="color:var(--green-600);font-size:20px;">payments</span>
+                </div>
+                <div>
+                  <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--green-600);">NHS · Funding</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.3;margin-top:2px;">NHS Learning Support Fund</p>
+                </div>
+              </div>
+              <p style="font-size:13px;color:var(--text-muted);line-height:1.6;flex:1;">£5,000 grant + travel reimbursements for nursing students in England. Know your entitlements.</p>
+              <a href="https://nhsbsa.nhs.uk/learning-support-fund" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-link);font-size:12px;font-weight:700;text-decoration:none;">
+                nhsbsa.nhs.uk/lsf <span class="material-symbols-outlined" style="font-size:14px;">open_in_new</span>
+              </a>
+            </div>
+
+            <!-- BPP International -->
+            <div class="panel" style="padding:22px;display:flex;flex-direction:column;gap:12px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='var(--shadow-hover)'" onmouseout="this.style.boxShadow=''">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:var(--teal-100);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <span class="material-symbols-outlined" style="color:var(--teal-800);font-size:20px;">public</span>
+                </div>
+                <div>
+                  <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--teal-700);">BPP · International</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.3;margin-top:2px;">BPP International Support</p>
+                </div>
+              </div>
+              <p style="font-size:13px;color:var(--text-muted);line-height:1.6;flex:1;">Pre-arrival guidance, accommodation advice, visa support, and orientation for overseas students.</p>
+              <a href="https://bpp.com/international" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-link);font-size:12px;font-weight:700;text-decoration:none;">
+                bpp.com/international <span class="material-symbols-outlined" style="font-size:14px;">open_in_new</span>
+              </a>
+            </div>
+
+            <!-- NMC International Registration -->
+            <div class="panel" style="padding:22px;display:flex;flex-direction:column;gap:12px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='var(--shadow-hover)'" onmouseout="this.style.boxShadow=''">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:#ede9fe;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <span class="material-symbols-outlined" style="color:#7c3aed;font-size:20px;">how_to_reg</span>
+                </div>
+                <div>
+                  <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#7c3aed;">NMC · Registration</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.3;margin-top:2px;">International Nurse Registration</p>
+                </div>
+              </div>
+              <p style="font-size:13px;color:var(--text-muted);line-height:1.6;flex:1;">CBT, OSCE, and portfolio pathway to UK registration — essential for post-study career planning.</p>
+              <a href="https://nmc.org.uk/registration/joining-the-register/internationally-educated-nurses" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-link);font-size:12px;font-weight:700;text-decoration:none;">
+                nmc.org.uk/registration <span class="material-symbols-outlined" style="font-size:14px;">open_in_new</span>
+              </a>
+            </div>
+
+            <!-- NHS Constitution -->
+            <div class="panel" style="padding:22px;display:flex;flex-direction:column;gap:12px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='var(--shadow-hover)'" onmouseout="this.style.boxShadow=''">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:var(--red-100);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <span class="material-symbols-outlined" style="color:var(--red-500);font-size:20px;">gavel</span>
+                </div>
+                <div>
+                  <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--red-500);">NHS · Policy</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.3;margin-top:2px;">NHS Constitution</p>
+                </div>
+              </div>
+              <p style="font-size:13px;color:var(--text-muted);line-height:1.6;flex:1;">NHS values, patient rights, and staff responsibilities — demonstrates systemic awareness in interviews.</p>
+              <a href="https://gov.uk/government/publications/the-nhs-constitution-for-england" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-link);font-size:12px;font-weight:700;text-decoration:none;">
+                gov.uk/nhs-constitution <span class="material-symbols-outlined" style="font-size:14px;">open_in_new</span>
+              </a>
+            </div>
+
+            <!-- BPP Course Specs -->
+            <div class="panel" style="padding:22px;display:flex;flex-direction:column;gap:12px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='var(--shadow-hover)'" onmouseout="this.style.boxShadow=''">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:var(--teal-100);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <span class="material-symbols-outlined" style="color:var(--teal-800);font-size:20px;">menu_book</span>
+                </div>
+                <div>
+                  <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--teal-700);">BPP · Modules</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.3;margin-top:2px;">BPP Course Specifications</p>
+                </div>
+              </div>
+              <p style="font-size:13px;color:var(--text-muted);line-height:1.6;flex:1;">Search "Adult Nursing" for official module lists, learning outcomes, and assessment methods.</p>
+              <a href="https://bpp.com/study/subjects" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-link);font-size:12px;font-weight:700;text-decoration:none;">
+                bpp.com/study/subjects <span class="material-symbols-outlined" style="font-size:14px;">open_in_new</span>
+              </a>
+            </div>
+
+            <!-- Student Minds -->
+            <div class="panel" style="padding:22px;display:flex;flex-direction:column;gap:12px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='var(--shadow-hover)'" onmouseout="this.style.boxShadow=''">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:var(--amber-100);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <span class="material-symbols-outlined" style="color:var(--amber-500);font-size:20px;">favorite</span>
+                </div>
+                <div>
+                  <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--amber-500);">Wellbeing · Support</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.3;margin-top:2px;">Student Minds</p>
+                </div>
+              </div>
+              <p style="font-size:13px;color:var(--text-muted);line-height:1.6;flex:1;">Free mental health resources for UK students — nursing is demanding, and self-care is part of safe practice.</p>
+              <a href="https://studentminds.org.uk" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-link);font-size:12px;font-weight:700;text-decoration:none;">
+                studentminds.org.uk <span class="material-symbols-outlined" style="font-size:14px;">open_in_new</span>
+              </a>
+            </div>
+
+            <!-- Visit London -->
+            <div class="panel" style="padding:22px;display:flex;flex-direction:column;gap:12px;transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='var(--shadow-hover)'" onmouseout="this.style.boxShadow=''">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:var(--green-100);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <span class="material-symbols-outlined" style="color:var(--green-600);font-size:20px;">location_city</span>
+                </div>
+                <div>
+                  <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--green-600);">London · Living</span>
+                  <p style="font-weight:700;font-size:14px;line-height:1.3;margin-top:2px;">Visit London — Student Guide</p>
+                </div>
+              </div>
+              <p style="font-size:13px;color:var(--text-muted);line-height:1.6;flex:1;">Practical tips on accommodation, transport (Oyster/Contactless), costs, and settling into London life.</p>
+              <a href="https://visitlondon.com/traveller-information/planning-your-trip/moving-to-london" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-link);font-size:12px;font-weight:700;text-decoration:none;">
+                visitlondon.com <span class="material-symbols-outlined" style="font-size:14px;">open_in_new</span>
+              </a>
+            </div>
+
           </div>
 
-          <div class="panel" style="padding:28px;margin-bottom:24px;">
-            <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px;">
-              <span class="material-symbols-outlined" style="color:var(--teal-700);">lightbulb</span>
-              How to Use These Resources
-            </h2>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;">
-              <div class="panel-teal" style="padding:16px;">
-                <p style="font-weight:700;font-size:13px;margin-bottom:8px;color:var(--teal-800);">Before the Interview</p>
-                <ul style="font-size:12px;color:var(--text-muted);line-height:1.8;margin-left:16px;">
-                  <li>Review the NMC Code and memorise the 4 pillars — reference them naturally in answers</li>
-                  <li>Read the BPP Nursing page to name specific modules, placements, or facilities confidently</li>
-                  <li>Check UKVI visa rules to answer finance/work questions accurately</li>
-                </ul>
+          <!-- How to Use strip -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:8px;">
+            <div class="panel-teal" style="padding:20px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span class="material-symbols-outlined" style="color:var(--teal-700);font-size:18px;">event</span>
+                <p style="font-weight:700;font-size:13px;color:var(--teal-800);">Before the Interview</p>
               </div>
-              <div class="panel-green" style="padding:16px;">
-                <p style="font-weight:700;font-size:13px;margin-bottom:8px;color:var(--green-600);">During Preparation</p>
-                <ul style="font-size:12px;color:var(--text-muted);line-height:1.8;margin-left:16px;">
-                  <li>Use the NHS Learning Support Fund page to discuss funding knowledgeably</li>
-                  <li>Reference the NHS Constitution to show understanding of UK healthcare values</li>
-                  <li>Explore Student Minds to prepare thoughtful answers about wellbeing and resilience</li>
-                </ul>
+              <ul style="font-size:12px;color:var(--text-muted);line-height:1.8;padding-left:16px;">
+                <li>Memorise the NMC Code's 4 pillars — use them naturally in answers</li>
+                <li>Name specific BPP modules and NHS Trust partners with confidence</li>
+                <li>Check UKVI rules to answer finance and work-right questions accurately</li>
+              </ul>
+            </div>
+            <div class="panel-green" style="padding:20px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span class="material-symbols-outlined" style="color:var(--green-600);font-size:18px;">menu_book</span>
+                <p style="font-weight:700;font-size:13px;color:var(--green-600);">During Preparation</p>
               </div>
-              <div class="panel-amber" style="padding:16px;">
-                <p style="font-weight:700;font-size:13px;margin-bottom:8px;color:var(--amber-500);">For Long-Term Planning</p>
-                <ul style="font-size:12px;color:var(--text-muted);line-height:1.8;margin-left:16px;">
-                  <li>Bookmark the NMC International Registration page for post-graduation steps</li>
-                  <li>Use Visit London to budget realistically and plan accommodation near Waterloo</li>
-                  <li>Keep BPP International Support contact details for ongoing guidance</li>
-                </ul>
+              <ul style="font-size:12px;color:var(--text-muted);line-height:1.8;padding-left:16px;">
+                <li>Reference the NHS Learning Support Fund when discussing finances</li>
+                <li>Read the NHS Constitution to show systemic healthcare awareness</li>
+                <li>Explore Student Minds to craft thoughtful wellbeing and resilience answers</li>
+              </ul>
+            </div>
+            <div class="panel-amber" style="padding:20px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span class="material-symbols-outlined" style="color:var(--amber-500);font-size:18px;">rocket_launch</span>
+                <p style="font-weight:700;font-size:13px;color:var(--amber-500);">Long-Term Planning</p>
               </div>
+              <ul style="font-size:12px;color:var(--text-muted);line-height:1.8;padding-left:16px;">
+                <li>Bookmark the NMC International Registration page for post-graduation steps</li>
+                <li>Use Visit London to plan accommodation near Waterloo realistically</li>
+                <li>Save BPP International Support contacts for ongoing guidance</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -1559,11 +1765,21 @@
       function toggleAcc(el) { el.parentElement.classList.toggle('open'); }
 
       // ===== FILTER QUESTIONS =====
+      function toggleQCard(card) {
+        const hint = card.querySelector('.q-card-hint');
+        const arrow = card.querySelector('.q-card-arrow');
+        const isOpen = hint.style.display === 'block';
+        hint.style.display = isOpen ? 'none' : 'block';
+        arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+        card.style.borderColor = isOpen ? 'var(--border-default)' : 'var(--border-teal)';
+        card.style.boxShadow = isOpen ? 'none' : 'var(--shadow-card)';
+      }
+
       function filterQ(cat, btn) {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        document.querySelectorAll('#q-container .acc-item').forEach(item => {
-          item.style.display = (cat === 'all' || item.dataset.cat === cat) ? 'block' : 'none';
+        document.querySelectorAll('#q-container .q-card').forEach(item => {
+          item.style.display = (cat === 'all' || item.dataset.cat === cat) ? '' : 'none';
         });
       }
 
@@ -1615,19 +1831,44 @@
         updateProgress();
       }
 
+      // ===== SCENARIO CATEGORIES =====
+      const scenarioCategories = [
+        'Personal & Motivation', 'Personal & Motivation', 'Personal & Motivation',
+        'Course & BPP', 'Course & BPP', 'Course & BPP', 'Course & BPP',
+        'Patient Care', 'Patient Care', 'Patient Care', 'Patient Care',
+        'UK Nursing Knowledge', 'UK Nursing Knowledge',
+        'Finances & Logistics', 'Finances & Logistics'
+      ];
+
       // ===== LOAD SCENARIO =====
       function loadScenario(idx) {
+        const total = scenarios.length;
         currentScenario = idx;
-        document.querySelectorAll('#scenario-list .acc-item').forEach((el, i) => {
-          el.style.borderColor = i === idx ? 'var(--teal-700)' : 'var(--border-default)';
-          el.querySelector('.material-symbols-outlined').style.color = i === idx ? 'var(--teal-700)' : 'var(--text-muted)';
-        });
         const sc = scenarios[idx];
+
         document.getElementById('scenario-text').textContent = sc.text;
-        document.getElementById('scenario-checks').innerHTML = sc.checks.map(c => `<span style="background:var(--teal-100);color:var(--teal-900);padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;">✓ Checks: ${c}</span>`).join('');
+        document.getElementById('sc-category-label').textContent = scenarioCategories[idx] || 'Scenario';
+        document.getElementById('scenario-checks').innerHTML = sc.checks.map(c => `<span style="background:var(--teal-100);color:var(--teal-900);padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;">✓ ${c}</span>`).join('');
         document.getElementById('nursing-answer').value = '';
         document.getElementById('nursing-feedback').classList.add('hidden');
         document.getElementById('nursing-warning').style.display = 'none';
+
+        // Update counter + progress bar
+        document.getElementById('sc-counter').textContent = `Question ${idx + 1} of ${total}`;
+        document.getElementById('sc-progress-bar').style.width = `${((idx + 1) / total) * 100}%`;
+
+        // Disable prev/next at boundaries
+        document.getElementById('prevBtn').disabled = idx === 0;
+        document.getElementById('prevBtn').style.opacity = idx === 0 ? '0.4' : '1';
+        document.getElementById('nextBtn').disabled = idx === total - 1;
+        document.getElementById('nextBtn').style.opacity = idx === total - 1 ? '0.4' : '1';
+      }
+
+      function prevScenario() {
+        if (currentScenario > 0) loadScenario(currentScenario - 1);
+      }
+      function nextScenario() {
+        if (currentScenario < scenarios.length - 1) loadScenario(currentScenario + 1);
       }
 
       // ===== RED FLAG DETECTION =====
@@ -1751,9 +1992,10 @@ Return ONLY valid JSON:
       function updateScoreDisplay() {
         document.getElementById('sc-p').textContent = passCount;
         document.getElementById('sc-f').textContent = failCount;
+        document.getElementById('sc-total').textContent = totalCount + '/' + scenarios.length;
         const pct = totalCount ? Math.round((passCount / totalCount) * 100) : 0;
-        let msg = 'Select a scenario below and type your response to begin.';
-        if (totalCount > 0 && pct === 100) msg = 'Perfect score! Your responses are NMC-aligned and interview-ready.';
+        let msg = 'Type your response and click Analyse to get AI feedback.';
+        if (totalCount > 0 && pct === 100) msg = '🎉 Perfect score! Your responses are NMC-aligned and interview-ready.';
         else if (pct >= 70) msg = pct + '% pass rate — review the scenarios you struggled with.';
         else if (pct >= 40) msg = pct + '% pass rate — keep practising NMC Code references.';
         else if (totalCount > 0) msg = pct + '% pass rate — focus on patient safety and NMC alignment in each answer.';
