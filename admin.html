@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <base href="/UK-INTERVIEW-HUB/">
+  <title>Admin Portal | UK Interview Prep</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root {
+      --navy: #0d1b3e;
+      --navy-mid: #162a5c;
+      --red: #e8192c;
+      --red-dark: #c0121f;
+      --surface: #f4f6fa;
+      --white: #ffffff;
+      --border: #e2e6ed;
+      --muted: #6b7280;
+      --shadow-sm: 0 1px 4px rgba(13,27,62,0.07);
+      --shadow-md: 0 4px 24px rgba(13,27,62,0.10);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--surface); color: var(--navy); min-height: 100dvh; }
+    header {
+      background: var(--white); border-bottom: 1px solid var(--border);
+      height: 64px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 20px; color: var(--navy); }
+    .logo span { color: var(--red); }
+    .container { max-width: 1200px; margin: 24px auto; padding: 0 24px; }
+    .card { background: var(--white); border-radius: 12px; padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+    .card-title { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th { text-align: left; padding: 12px; border-bottom: 2px solid var(--surface); color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; }
+    td { padding: 16px 12px; border-bottom: 1px solid var(--surface); font-size: 14px; }
+    tr:hover { background: #f8fafc; }
+    
+    .badge { padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+    .badge-uni { background: #e0e7ff; color: #4338ca; }
+    
+    .btn { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-primary { background: var(--navy); color: white; }
+    .btn-primary:hover { background: var(--navy-mid); }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--navy); }
+    .btn-outline:hover { background: var(--surface); }
+    
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
+    .modal-content { background: white; padding: 24px; border-radius: 16px; width: 100%; max-width: 400px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .form-group input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; }
+    
+    #loading { text-align: center; padding: 40px; }
+    .spinner { width: 30px; height: 30px; border: 3px solid var(--border); border-top-color: var(--navy); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">WHITE <span>ROCK</span> ADMIN</div>
+    <div id="adminUser"></div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-title">
+        <span class="material-symbols-outlined">group</span>
+        Student Management
+      </div>
+      <div id="loading"><div class="spinner"></div>Loading students...</div>
+      <div id="tableContainer" style="display:none;">
+        <table>
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Student ID</th>
+              <th>University</th>
+              <th>Interview Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="studentTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="dateModal" class="modal">
+    <div class="modal-content">
+      <h3 style="margin-bottom:16px;">Set Interview Date</h3>
+      <input type="hidden" id="targetUserId">
+      <div class="form-group">
+        <label>Interview Date & Time</label>
+        <input type="datetime-local" id="interviewDateInput">
+      </div>
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveDate()">Save Date</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function loadStudents() {
+      const { data, error } = await supabase
+        .from('student_progress')
+        .select('*')
+        .order('updated_at', { ascending: false });
+
+      if (error) {
+        console.error('Error loading students:', error);
+        return;
+      }
+
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('tableContainer').style.display = 'block';
+      
+      const tbody = document.getElementById('studentTableBody');
+      tbody.innerHTML = '';
+
+      data.forEach(student => {
+        const tr = document.createElement('tr');
+        const dateStr = student.interview_date ? new Date(student.interview_date).toLocaleString() : 'Not Set';
+        
+        tr.innerHTML = `
+          <td>
+            <div style="font-weight:600;">${student.full_name}</div>
+            <div style="font-size:12px; color:var(--muted);">${student.email}</div>
+          </td>
+          <td>${student.student_id || 'N/A'}</td>
+          <td><span class="badge badge-uni">${student.selected_university || 'Not Selected'}</span></td>
+          <td>${dateStr}</td>
+          <td>
+            <button class="btn btn-outline" onclick="openDateModal('${student.user_id}', '${student.interview_date || ''}')">
+              <span class="material-symbols-outlined" style="font-size:18px">calendar_month</span>
+              Set Date
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function openDateModal(userId, currentDate) {
+      document.getElementById('targetUserId').value = userId;
+      if (currentDate) {
+        const date = new Date(currentDate);
+        date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+        document.getElementById('interviewDateInput').value = date.toISOString().slice(0, 16);
+      } else {
+        document.getElementById('interviewDateInput').value = '';
+      }
+      document.getElementById('dateModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('dateModal').style.display = 'none';
+    }
+
+    async function saveDate() {
+      const userId = document.getElementById('targetUserId').value;
+      const date = document.getElementById('interviewDateInput').value;
+      
+      if (!date) {
+        alert('Please select a date');
+        return;
+      }
+
+      const { error } = await supabase
+        .from('student_progress')
+        .update({ interview_date: new Date(date).toISOString() })
+        .eq('user_id', userId);
+
+      if (error) {
+        alert('Error saving date: ' + error.message);
+      } else {
+        closeModal();
+        loadStudents();
+      }
+    }
+
+    loadStudents();
+  </script>
+</body>
+</html>

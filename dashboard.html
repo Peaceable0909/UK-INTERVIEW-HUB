@@ -262,7 +262,11 @@
             <div>
               <div class="profile-name" id="studentName">Aisha Khan</div>
               <div class="profile-email" id="studentEmail">aisha@example.com</div>
-              <span class="profile-id" id="studentId">ID: STU-2024-0587</span>
+             <div class="profile-id" id="studentId">ID: —</div>
+            <div id="interviewDateDisplay" style="margin-top: 8px; font-size: 12px; font-weight: 700; color: var(--red); display: none;">
+              <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: text-bottom;">calendar_month</span>
+              Interview: <span id="interviewDateValue"></span>
+            </div>
             </div>
           </div>
           <div class="profile-actions">
@@ -876,6 +880,13 @@
     document.getElementById('avatarInitials').textContent = initials;
     updateEnrollmentDisplay();
     const progress = await window.loadSavedProgress();
+    
+    // Display Interview Date
+    if (progress?.interview_date) {
+      const date = new Date(progress.interview_date);
+      document.getElementById('interviewDateValue').textContent = date.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+      document.getElementById('interviewDateDisplay').style.display = 'block';
+    }
     const checklist = progress?.checklist_status || {};
     allAiScores = progress?.ai_scores || {};
     updateStats(allAiScores);
