@@ -289,7 +289,7 @@
       <label>Password</label>
       <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password"/>
     </div>
-    <button class="btn-login-submit" id="loginSubmitBtn" onclick="adminLogin()">Sign In to Admin Portal</button>
+    <button class="btn-login-submit" id="loginSubmitBtn" >Sign In to Admin Portal</button>
     <p id="loginError"></p>
 
     <div style="margin-top:20px;text-align:center;">
@@ -310,7 +310,7 @@
       <a href="index.html" style="display:flex;align-items:center;gap:6px;text-decoration:none;background:var(--surface);border:1.5px solid var(--border);color:var(--navy);padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;transition:all 0.15s;">
         <span class="material-symbols-outlined" style="font-size:16px;">home</span> Hub
       </a>
-      <button class="btn-signout" onclick="adminSignOut()">
+      <button class="btn-signout" id="adminSignOutBtn">
         <span class="material-symbols-outlined" style="font-size:16px;">logout</span> Sign Out
       </button>
     </div>
@@ -348,9 +348,9 @@
         <div class="toolbar">
           <div class="search-box">
             <span class="material-symbols-outlined" style="font-size:18px;color:var(--muted);">search</span>
-            <input type="text" id="searchInput" placeholder="Search by name, email, ID…" oninput="filterTable()"/>
+            <input type="text" id="searchInput" placeholder="Search by name, email, ID…" />
           </div>
-          <select class="filter-select" id="uniFilter" onchange="filterTable()">
+          <select class="filter-select" id="uniFilter" >
             <option value="">All Schools</option>
             <option value="regent">Regent</option>
             <option value="bpp">BPP</option>
@@ -358,13 +358,13 @@
             <option value="netherlands">Netherlands</option>
             <option value="ukvi">UKVI</option>
           </select>
-          <select class="filter-select" id="dateFilter" onchange="filterTable()">
+          <select class="filter-select" id="dateFilter" >
             <option value="">All Dates</option>
             <option value="set">Date Set</option>
             <option value="unset">No Date</option>
             <option value="upcoming">Upcoming (7d)</option>
           </select>
-          <button class="btn-refresh" onclick="loadStudents()">
+          <button class="btn-refresh" id="refreshBtn">
             <span class="material-symbols-outlined" style="font-size:16px;">refresh</span> Refresh
           </button>
         </div>
@@ -409,7 +409,7 @@
 <!-- ===== DATE MODAL ===== -->
 <div id="dateModal" class="modal-overlay">
   <div class="modal-box">
-    <button class="modal-close" onclick="closeModal('dateModal')">✕</button>
+    <button class="modal-close" id="dateModalClose">✕</button>
     <div class="modal-title">📅 Set Interview Date</div>
     <p class="modal-sub" id="dateModalSubtitle">Set a credibility interview date for this student.</p>
     <input type="hidden" id="targetUserId"/>
@@ -422,8 +422,8 @@
       <input type="text" id="interviewNotes" placeholder="e.g. Online via Teams, Room 3B…"/>
     </div>
     <div class="modal-actions">
-      <button class="btn-modal-cancel" onclick="closeModal('dateModal')">Cancel</button>
-      <button class="btn-modal-primary" onclick="saveDate()">Save Interview Date</button>
+      <button class="btn-modal-cancel" id="dateModalCancel">Cancel</button>
+      <button class="btn-modal-primary" id="saveDateBtn">Save Interview Date</button>
     </div>
   </div>
 </div>
@@ -431,13 +431,13 @@
 <!-- ===== DETAIL MODAL ===== -->
 <div id="detailModal" class="modal-overlay">
   <div class="modal-box" style="max-width:520px;">
-    <button class="modal-close" onclick="closeModal('detailModal')">✕</button>
+    <button class="modal-close" id="detailModalClose">✕</button>
     <div class="modal-title" id="detailName">Student Details</div>
     <p class="modal-sub" id="detailEmail">—</p>
     <div id="detailContent"></div>
     <div class="modal-actions">
-      <button class="btn-modal-cancel" onclick="closeModal('detailModal')" style="flex:1;">Close</button>
-      <button class="btn-modal-primary" onclick="openDateFromDetail()" id="detailSetDateBtn">Set Interview Date</button>
+      <button class="btn-modal-cancel" id="detailModalCancel" style="flex:1;">Close</button>
+      <button class="btn-modal-primary"  id="detailSetDateBtn">Set Interview Date</button>
     </div>
   </div>
 </div>
@@ -445,13 +445,13 @@
 <!-- ===== DELETE CONFIRM MODAL ===== -->
 <div id="deleteModal" class="modal-overlay">
   <div class="modal-box">
-    <button class="modal-close" onclick="closeModal('deleteModal')">✕</button>
+    <button class="modal-close" id="deleteModalClose">✕</button>
     <div class="modal-title" style="color:var(--red);">⚠️ Delete Student</div>
     <p class="modal-sub" id="deleteModalSub">This will permanently delete all progress data for this student. This cannot be undone.</p>
     <input type="hidden" id="deleteTargetId"/>
     <div class="modal-actions">
-      <button class="btn-modal-cancel" onclick="closeModal('deleteModal')">Cancel</button>
-      <button class="btn-danger-confirm" onclick="confirmDelete()">Yes, Delete Permanently</button>
+      <button class="btn-modal-cancel" id="deleteModalCancel">Cancel</button>
+      <button class="btn-danger-confirm" id="confirmDeleteBtn">Yes, Delete Permanently</button>
     </div>
   </div>
 </div>
@@ -460,20 +460,41 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  document.addEventListener('DOMContentLoaded', () => {
+    // CDN Fallback Check
+    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+      const errEl = document.getElementById('loginError');
+      if (errEl) errEl.textContent = 'Critical: Supabase library not loaded. Please disable ad blocker or reload.';
+      console.error('Supabase missing');
+      return;
+    }
+
+    const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ===== ADMIN WHITELIST =====
+    const ADMIN_EMAILS = [
+      'myinkscriber@gmail.com',
+      'femiolaniyi36@gmail.com',
+      'peaceableolaniyi@gmail.com',
+      'peaceable.whiterock@gmail.com'
+    ];
+
+    let allStudents = [];
+    let currentDetailUserId = null;
+
+    // --- Paste original functions here, but remove the supabase/ADMIN_EMAILS/allStudents/currentDetailUserId declarations from them if they exist ---
+
+  
+  
+  
 
   // ===== ADMIN WHITELIST =====
-  const ADMIN_EMAILS = [
-    'myinkscriber@gmail.com',
-    'femiolaniyi36@gmail.com',
-    'peaceableolaniyi@gmail.com',
-    'peaceable.whiterock@gmail.com'
-  ];
+  
 
-  let allStudents = [];
-  let currentDetailUserId = null;
+  
+  
 
   // ===== TOAST =====
   function showToast(msg, type = 'success') {
@@ -540,11 +561,7 @@
   }
 
   // Allow Enter key to submit login
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
-      adminLogin();
-    }
-  });
+  
 
   function showAdminScreen(user) {
     document.getElementById('loginScreen').style.display = 'none';
@@ -677,7 +694,7 @@
         <td style="color:var(--muted);font-size:12px;">${lastActive}</td>
         <td>
           <div class="action-btns">
-            <button class="btn-icon view" onclick="viewStudent('${s.user_id}')" title="View Details">
+            <button class="btn-icon view" data-action="view" data-id="${s.user_id}" title="View Details">
               <span class="material-symbols-outlined">open_in_new</span>
             </button>
             <button class="btn-icon calendar" onclick="openDateModal('${s.user_id}', '${escHtml(s.full_name || '')}', '${s.interview_date || ''}')" title="Set Interview Date">
@@ -856,7 +873,74 @@
   }
 
   // ===== INIT =====
-  checkAuth();
+  
+
+    // ===== EVENT LISTENERS =====
+    const loginBtn = document.getElementById('loginSubmitBtn');
+    if (loginBtn) loginBtn.addEventListener('click', adminLogin);
+
+    document.getElementById('loginPassword').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') adminLogin();
+    });
+
+    const signOutBtn = document.getElementById('adminSignOutBtn');
+    if (signOutBtn) signOutBtn.addEventListener('click', adminSignOut);
+
+    const refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) refreshBtn.addEventListener('click', loadStudents);
+
+    // Modal controls
+    const setupModalClose = (btnId, modalId) => {
+      const btn = document.getElementById(btnId);
+      if (btn) btn.addEventListener('click', () => closeModal(modalId));
+    };
+    setupModalClose('dateModalClose', 'dateModal');
+    setupModalClose('dateModalCancel', 'dateModal');
+    setupModalClose('detailModalClose', 'detailModal');
+    setupModalClose('detailModalCancel', 'detailModal');
+    setupModalClose('deleteModalClose', 'deleteModal');
+    setupModalClose('deleteModalCancel', 'deleteModal');
+
+    const saveDateBtn = document.getElementById('saveDateBtn');
+    if (saveDateBtn) saveDateBtn.addEventListener('click', saveDate);
+
+    const detailSetDateBtn = document.getElementById('detailSetDateBtn');
+    if (detailSetDateBtn) detailSetDateBtn.addEventListener('click', openDateFromDetail);
+
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    if (confirmDeleteBtn) confirmDeleteBtn.addEventListener('click', confirmDelete);
+
+    // Filters
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.addEventListener('input', filterTable);
+    
+    const uniFilter = document.getElementById('uniFilter');
+    if (uniFilter) uniFilter.addEventListener('change', filterTable);
+    
+    const dateFilter = document.getElementById('dateFilter');
+    if (dateFilter) dateFilter.addEventListener('change', filterTable);
+
+    // Table Event Delegation
+    const tableBody = document.getElementById('studentTableBody');
+    if (tableBody) {
+      tableBody.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const action = btn.dataset.action;
+        const id = btn.dataset.id;
+        if (action === 'view') viewStudent(id);
+        else if (action === 'date') {
+          openDateModal(id, btn.dataset.name, btn.dataset.date);
+        }
+        else if (action === 'delete') {
+          openDeleteModal(id, btn.dataset.name);
+        }
+      });
+    }
+
+    // Initialize
+    checkAuth();
+  });
 </script>
 </body>
 </html>
