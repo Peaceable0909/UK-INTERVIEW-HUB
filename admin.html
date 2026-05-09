@@ -7,6 +7,8 @@
   <title>Admin Portal | UK Interview Prep</title>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <!-- SheetJS for Excel export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     :root {
       --navy: #0d1b3e;
@@ -27,278 +29,182 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', sans-serif; background: var(--surface); color: var(--navy); min-height: 100dvh; }
 
-    /* ===== LOGIN SCREEN ===== */
-    #loginScreen {
-      min-height: 100dvh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #0a1530 0%, #162d6a 60%, #0d1b3e 100%);
-      padding: 20px;
-    }
-    .login-card {
-      background: white;
-      border-radius: 20px;
-      padding: 40px;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.3);
-    }
-    .login-logo { font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 22px; color: var(--navy); margin-bottom: 6px; }
-    .login-logo span { color: var(--red); }
-    .login-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
-    .login-title { font-family: 'Manrope', sans-serif; font-size: 26px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+    /* LOGIN */
+    #loginScreen { min-height:100dvh; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#0a1530 0%,#162d6a 60%,#0d1b3e 100%); padding:20px; }
+    .login-card { background:white; border-radius:20px; padding:40px; width:100%; max-width:420px; box-shadow:0 24px 64px rgba(0,0,0,0.3); }
+    .login-logo { font-family:'Manrope',sans-serif; font-weight:900; font-size:22px; color:var(--navy); margin-bottom:6px; }
+    .login-logo span { color:var(--red); }
+    .login-subtitle { font-size:13px; color:var(--muted); margin-bottom:28px; }
+    .login-title { font-family:'Manrope',sans-serif; font-size:26px; font-weight:800; color:var(--navy); margin-bottom:4px; }
+    .form-group { margin-bottom:16px; }
+    .form-group label { display:block; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:6px; }
+    .form-group input { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:14px; outline:none; transition:border 0.15s; }
+    .form-group input:focus { border-color:var(--navy); }
+    .btn-login-submit { width:100%; background:var(--navy); color:white; border:none; padding:13px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s; font-family:inherit; margin-top:4px; }
+    .btn-login-submit:hover { background:var(--navy-mid); }
+    .btn-login-submit:disabled { opacity:0.6; cursor:not-allowed; }
+    #loginError { color:var(--red); font-size:13px; text-align:center; margin-top:10px; min-height:18px; }
 
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 6px; }
-    .form-group input {
-      width: 100%; padding: 12px 14px; border: 1.5px solid var(--border);
-      border-radius: 10px; font-family: inherit; font-size: 14px;
-      outline: none; transition: border 0.15s;
-    }
-    .form-group input:focus { border-color: var(--navy); }
+    /* ADMIN */
+    #adminScreen { display:none; }
+    header { background:rgba(255,255,255,0.97); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); height:64px; padding:0 24px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:var(--shadow-sm); }
+    .logo { font-family:'Manrope',sans-serif; font-weight:900; font-size:20px; color:var(--navy); }
+    .logo span { color:var(--red); }
+    .header-right { display:flex; align-items:center; gap:12px; }
+    .admin-badge { background:#fee2e2; color:var(--red); font-size:11px; font-weight:700; padding:4px 10px; border-radius:6px; text-transform:uppercase; letter-spacing:0.05em; }
+    .btn-signout { background:none; border:1.5px solid var(--border); color:var(--muted); padding:7px 14px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all 0.15s; }
+    .btn-signout:hover { border-color:var(--red); color:var(--red); }
 
-    .btn-login-submit {
-      width: 100%; background: var(--navy); color: white; border: none;
-      padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700;
-      cursor: pointer; transition: all 0.2s; font-family: inherit; margin-top: 4px;
-    }
-    .btn-login-submit:hover { background: var(--navy-mid); }
-    .btn-login-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+    .container { max-width:1200px; margin:0 auto; padding:24px; }
 
-    #loginError { color: var(--red); font-size: 13px; text-align: center; margin-top: 10px; min-height: 18px; }
+    /* STATS */
+    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+    .stat-card { background:white; border-radius:14px; padding:20px; box-shadow:var(--shadow-sm); }
+    .stat-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin-bottom:8px; }
+    .stat-value { font-family:'Manrope',sans-serif; font-size:32px; font-weight:900; color:var(--navy); line-height:1; }
+    .stat-value.green { color:var(--green); }
+    .stat-value.red { color:var(--red); }
+    .stat-value.amber { color:var(--amber); }
 
-    /* ===== MAIN ADMIN ===== */
-    #adminScreen { display: none; }
+    /* CARD */
+    .card { background:white; border-radius:16px; padding:24px; box-shadow:var(--shadow-sm); margin-bottom:24px; }
+    .card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+    .card-title { font-family:'Manrope',sans-serif; font-size:18px; font-weight:800; display:flex; align-items:center; gap:8px; }
+    .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; vertical-align:middle; }
 
-    header {
-      background: rgba(255,255,255,0.97);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      height: 64px; padding: 0 24px;
-      display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; z-index: 100;
-      box-shadow: var(--shadow-sm);
-    }
-    .logo { font-family: 'Manrope', sans-serif; font-weight: 900; font-size: 20px; color: var(--navy); }
-    .logo span { color: var(--red); }
-    .header-right { display: flex; align-items: center; gap: 12px; }
-    .admin-badge {
-      background: #fee2e2; color: var(--red);
-      font-size: 11px; font-weight: 700; padding: 4px 10px;
-      border-radius: 6px; text-transform: uppercase; letter-spacing: 0.05em;
-    }
-    .btn-signout {
-      background: none; border: 1.5px solid var(--border);
-      color: var(--muted); padding: 7px 14px; border-radius: 8px;
-      font-size: 13px; font-weight: 600; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; transition: all 0.15s;
-    }
-    .btn-signout:hover { border-color: var(--red); color: var(--red); }
+    /* TOOLBAR */
+    .toolbar { display:flex; gap:10px; flex-wrap:wrap; }
+    .search-box { display:flex; align-items:center; gap:8px; background:var(--surface); border:1.5px solid var(--border); border-radius:10px; padding:8px 14px; flex:1; min-width:200px; }
+    .search-box input { border:none; background:none; outline:none; font-family:inherit; font-size:13px; width:100%; }
+    .filter-select { border:1.5px solid var(--border); border-radius:10px; padding:8px 14px; font-family:inherit; font-size:13px; background:white; cursor:pointer; outline:none; }
+    .btn-toolbar { display:flex; align-items:center; gap:6px; border:none; padding:8px 16px; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s; white-space:nowrap; }
+    .btn-navy { background:var(--navy); color:white; }
+    .btn-navy:hover { background:var(--navy-mid); }
+    .btn-green { background:#15803d; color:white; }
+    .btn-green:hover { background:#166534; }
+    .btn-amber { background:#b45309; color:white; }
+    .btn-amber:hover { background:#92400e; }
 
-    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    /* TABLE */
+    .table-wrap { overflow-x:auto; border-radius:12px; border:1px solid var(--border); }
+    table { width:100%; border-collapse:collapse; min-width:800px; }
+    thead { background:var(--surface); }
+    th { text-align:left; padding:12px 16px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); border-bottom:1px solid var(--border); white-space:nowrap; }
+    td { padding:14px 16px; border-bottom:1px solid var(--border); font-size:13px; vertical-align:middle; }
+    tr:last-child td { border-bottom:none; }
+    tbody tr:hover { background:#f8fafc; }
+    .name-cell strong { display:block; font-weight:700; font-size:14px; color:var(--navy); }
+    .name-cell span { font-size:12px; color:var(--muted); }
+    .badge { display:inline-block; padding:3px 9px; border-radius:6px; font-size:11px; font-weight:700; }
+    .badge-school-regent { background:#ccfbf1; color:#065f46; }
+    .badge-school-bpp { background:#ede9fe; color:#5b21b6; }
+    .badge-school-yorkstjohn { background:#fee2e2; color:#991b1b; }
+    .badge-school-netherlands { background:#fef3c7; color:#92400e; }
+    .badge-school-ukvi { background:#dbeafe; color:#1e40af; }
+    .badge-none { background:var(--surface); color:var(--muted); }
+    .score-pill { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:100px; font-size:11px; font-weight:700; }
+    .score-high { background:var(--green-light); color:var(--green); }
+    .score-mid { background:var(--amber-light); color:var(--amber); }
+    .score-low { background:#fee2e2; color:var(--red); }
+    .date-cell { font-size:12px; }
+    .date-unset { color:var(--muted); }
+    .date-upcoming { color:var(--green); font-weight:700; }
+    .date-past { color:var(--muted); text-decoration:line-through; }
 
-    /* ===== STAT CARDS ===== */
-    .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px; }
-    .stat-card { background: white; border-radius: 14px; padding: 20px; box-shadow: var(--shadow-sm); }
-    .stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 8px; }
-    .stat-value { font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 900; color: var(--navy); line-height: 1; }
-    .stat-value.green { color: var(--green); }
-    .stat-value.red { color: var(--red); }
-    .stat-value.amber { color: var(--amber); }
+    /* ROW CHECKBOX */
+    .row-check { width:16px; height:16px; cursor:pointer; accent-color:var(--navy); }
 
-    /* ===== MAIN CARD ===== */
-    .card { background: white; border-radius: 16px; padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
-    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-    .card-title { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; vertical-align: middle; }
+    /* ACTIONS */
+    .action-btns { display:flex; align-items:center; gap:6px; }
+    .btn-icon { width:32px; height:32px; border-radius:8px; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.15s; }
+    .btn-icon.calendar { background:#e0e7ff; color:#4338ca; }
+    .btn-icon.calendar:hover { background:#c7d2fe; }
+    .btn-icon.view { background:var(--surface); color:var(--muted); }
+    .btn-icon.view:hover { background:var(--border); color:var(--navy); }
+    .btn-icon.delete { background:#fee2e2; color:var(--red); }
+    .btn-icon.delete:hover { background:#fecaca; }
+    .btn-icon .material-symbols-outlined { font-size:17px; }
 
-    /* ===== SEARCH & FILTER ===== */
-    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; }
-    .search-box {
-      display: flex; align-items: center; gap: 8px;
-      background: var(--surface); border: 1.5px solid var(--border);
-      border-radius: 10px; padding: 8px 14px; flex: 1; min-width: 200px;
-    }
-    .search-box input { border: none; background: none; outline: none; font-family: inherit; font-size: 13px; width: 100%; }
-    .filter-select {
-      border: 1.5px solid var(--border); border-radius: 10px;
-      padding: 8px 14px; font-family: inherit; font-size: 13px;
-      background: white; cursor: pointer; outline: none;
-    }
-    .btn-refresh {
-      display: flex; align-items: center; gap: 6px;
-      background: var(--navy); color: white; border: none;
-      padding: 8px 16px; border-radius: 10px; font-size: 13px;
-      font-weight: 600; cursor: pointer; transition: all 0.15s;
-    }
-    .btn-refresh:hover { background: var(--navy-mid); }
+    /* SELECTION BAR */
+    #selectionBar { display:none; background:var(--navy); color:white; padding:12px 24px; position:sticky; top:64px; z-index:90; align-items:center; gap:16px; flex-wrap:wrap; }
+    #selectionBar.active { display:flex; }
+    .sel-info { font-size:13px; font-weight:600; flex:1; }
+    .btn-sel { background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.3); color:white; padding:7px 14px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all 0.15s; }
+    .btn-sel:hover { background:rgba(255,255,255,0.25); }
+    .btn-sel.danger { background:rgba(232,25,44,0.3); border-color:rgba(232,25,44,0.5); }
 
-    /* ===== TABLE ===== */
-    .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
-    table { width: 100%; border-collapse: collapse; min-width: 800px; }
-    thead { background: var(--surface); }
-    th {
-      text-align: left; padding: 12px 16px; font-size: 11px;
-      font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
-      color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap;
-    }
-    td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: middle; }
-    tr:last-child td { border-bottom: none; }
-    tbody tr:hover { background: #f8fafc; }
-
-    .name-cell strong { display: block; font-weight: 700; font-size: 14px; color: var(--navy); }
-    .name-cell span { font-size: 12px; color: var(--muted); }
-
-    .badge { display: inline-block; padding: 3px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; }
-    .badge-uni { background: #e0e7ff; color: #4338ca; }
-    .badge-school-regent { background: #ccfbf1; color: #065f46; }
-    .badge-school-bpp { background: #ede9fe; color: #5b21b6; }
-    .badge-school-yorkstjohn { background: #fee2e2; color: #991b1b; }
-    .badge-school-netherlands { background: #fef3c7; color: #92400e; }
-    .badge-school-ukvi { background: #dbeafe; color: #1e40af; }
-    .badge-none { background: var(--surface); color: var(--muted); }
-
-    .score-pill {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 3px 9px; border-radius: 100px; font-size: 11px; font-weight: 700;
-    }
-    .score-high { background: var(--green-light); color: var(--green); }
-    .score-mid { background: var(--amber-light); color: var(--amber); }
-    .score-low { background: #fee2e2; color: var(--red); }
-
-    .date-cell { font-size: 12px; }
-    .date-set { color: var(--navy); font-weight: 600; }
-    .date-unset { color: var(--muted); }
-    .date-upcoming { color: var(--green); font-weight: 700; }
-    .date-past { color: var(--muted); text-decoration: line-through; }
-
-    /* ===== ACTIONS ===== */
-    .action-btns { display: flex; align-items: center; gap: 6px; }
-    .btn-icon {
-      width: 32px; height: 32px; border-radius: 8px; border: none;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: all 0.15s;
-    }
-    .btn-icon.calendar { background: #e0e7ff; color: #4338ca; }
-    .btn-icon.calendar:hover { background: #c7d2fe; }
-    .btn-icon.view { background: var(--surface); color: var(--muted); }
-    .btn-icon.view:hover { background: var(--border); color: var(--navy); }
-    .btn-icon.delete { background: #fee2e2; color: var(--red); }
-    .btn-icon.delete:hover { background: #fecaca; }
-    .btn-icon .material-symbols-outlined { font-size: 17px; }
-
-    /* ===== MODAL ===== */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
-      z-index: 1000; align-items: center; justify-content: center; padding: 20px;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal-box {
-      background: white; border-radius: 20px; padding: 28px;
-      width: 100%; max-width: 440px; position: relative;
-      animation: slideUp 0.2s ease-out;
-    }
+    /* MODAL */
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:1000; align-items:center; justify-content:center; padding:20px; }
+    .modal-overlay.open { display:flex; }
+    .modal-box { background:white; border-radius:20px; padding:28px; width:100%; max-width:440px; position:relative; animation:slideUp 0.2s ease-out; }
     @keyframes slideUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-    .modal-close {
-      position: absolute; top: 16px; right: 16px; width: 32px; height: 32px;
-      border-radius: 50%; background: var(--surface); border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; color: var(--muted);
-      font-size: 18px;
-    }
-    .modal-close:hover { background: var(--border); }
-    .modal-title { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 4px; }
-    .modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+    .modal-close { position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:50%; background:var(--surface); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:18px; }
+    .modal-close:hover { background:var(--border); }
+    .modal-title { font-family:'Manrope',sans-serif; font-size:20px; font-weight:800; margin-bottom:4px; }
+    .modal-sub { font-size:13px; color:var(--muted); margin-bottom:20px; }
+    .modal .form-group { margin-bottom:16px; }
+    .modal .form-group label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:6px; }
+    .modal .form-group input, .modal .form-group select, .modal .form-group textarea { width:100%; padding:11px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:14px; outline:none; transition:border 0.15s; }
+    .modal .form-group input:focus, .modal .form-group select:focus { border-color:var(--navy); }
+    .modal-actions { display:flex; gap:10px; margin-top:20px; }
+    .btn-modal-primary { flex:1; background:var(--navy); color:white; border:none; padding:12px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.15s; font-family:inherit; }
+    .btn-modal-primary:hover { background:var(--navy-mid); }
+    .btn-modal-cancel { background:var(--surface); border:none; padding:12px 18px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; color:var(--navy); transition:all 0.15s; }
+    .btn-modal-cancel:hover { background:var(--border); }
+    .btn-danger-confirm { flex:1; background:var(--red); color:white; border:none; padding:12px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; }
 
-    .modal .form-group { margin-bottom: 16px; }
-    .modal .form-group label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 6px; }
-    .modal .form-group input, .modal .form-group select {
-      width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
-      border-radius: 10px; font-family: inherit; font-size: 14px; outline: none; transition: border 0.15s;
-    }
-    .modal .form-group input:focus, .modal .form-group select:focus { border-color: var(--navy); }
+    /* DETAIL MODAL */
+    .detail-section { margin-bottom:16px; }
+    .detail-section-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:8px; }
+    .detail-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--surface); font-size:13px; }
+    .detail-row:last-child { border-bottom:none; }
+    .detail-key { color:var(--muted); }
+    .detail-val { font-weight:600; color:var(--navy); text-align:right; max-width:60%; }
 
-    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-    .btn-modal-primary {
-      flex: 1; background: var(--navy); color: white; border: none;
-      padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 700;
-      cursor: pointer; transition: all 0.15s; font-family: inherit;
-    }
-    .btn-modal-primary:hover { background: var(--navy-mid); }
-    .btn-modal-cancel {
-      background: var(--surface); border: none; padding: 12px 18px;
-      border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer;
-      font-family: inherit; color: var(--navy); transition: all 0.15s;
-    }
-    .btn-modal-cancel:hover { background: var(--border); }
-    .btn-danger-confirm {
-      flex: 1; background: var(--red); color: white; border: none;
-      padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 700;
-      cursor: pointer; font-family: inherit;
-    }
+    /* BULK DATE OPTIONS */
+    .radio-group { display:flex; flex-direction:column; gap:10px; margin-bottom:4px; }
+    .radio-option { display:flex; align-items:center; gap:10px; padding:10px 14px; border:1.5px solid var(--border); border-radius:10px; cursor:pointer; transition:all 0.15s; }
+    .radio-option:hover { border-color:var(--navy); background:var(--surface); }
+    .radio-option input[type="radio"] { accent-color:var(--navy); width:16px; height:16px; }
+    .radio-option label { font-size:13px; font-weight:600; cursor:pointer; }
+    .radio-option small { font-size:11px; color:var(--muted); display:block; }
 
-    /* ===== DETAIL MODAL ===== */
-    .detail-section { margin-bottom: 16px; }
-    .detail-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 8px; }
-    .detail-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--surface); font-size: 13px; }
-    .detail-row:last-child { border-bottom: none; }
-    .detail-key { color: var(--muted); }
-    .detail-val { font-weight: 600; color: var(--navy); text-align: right; max-width: 60%; }
+    /* PROGRESS MODAL */
+    .progress-bar-wrap { background:var(--surface); border-radius:100px; height:8px; overflow:hidden; margin:12px 0; }
+    .progress-bar-fill { height:100%; background:var(--navy); border-radius:100px; transition:width 0.3s; }
 
-    /* ===== LOADING & EMPTY ===== */
-    #tableLoading { text-align: center; padding: 48px; }
-    .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 12px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    #emptyState { text-align: center; padding: 48px; display: none; }
-    #emptyState .material-symbols-outlined { font-size: 40px; color: var(--border); display: block; margin-bottom: 8px; }
+    /* LOADING & EMPTY */
+    #tableLoading { text-align:center; padding:48px; }
+    .spinner { width:32px; height:32px; border:3px solid var(--border); border-top-color:var(--navy); border-radius:50%; animation:spin 0.7s linear infinite; margin:0 auto 12px; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    #emptyState { text-align:center; padding:48px; display:none; }
+    #emptyState .material-symbols-outlined { font-size:40px; color:var(--border); display:block; margin-bottom:8px; }
 
-    /* ===== TOAST ===== */
-    #toast {
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      background: var(--navy); color: white; padding: 10px 20px;
-      border-radius: 100px; font-size: 13px; font-weight: 600; z-index: 9999;
-      display: none; white-space: nowrap; box-shadow: var(--shadow-md);
-      transition: opacity 0.3s;
-    }
+    /* TOAST */
+    #toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--navy); color:white; padding:10px 20px; border-radius:100px; font-size:13px; font-weight:600; z-index:9999; display:none; white-space:nowrap; box-shadow:var(--shadow-md); transition:opacity 0.3s; }
 
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 900px) {
-      .stats-grid { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 560px) {
-      .stats-grid { grid-template-columns: 1fr 1fr; }
-      .container { padding: 16px; }
-    }
+    @media (max-width:900px) { .stats-grid { grid-template-columns:1fr 1fr; } }
+    @media (max-width:560px) { .stats-grid { grid-template-columns:1fr 1fr; } .container { padding:16px; } }
   </style>
 </head>
 <body>
 
-<!-- ===== LOGIN SCREEN ===== -->
+<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-card">
     <div class="login-logo">WHITE <span>ROCK</span></div>
     <p class="login-subtitle">Admin Portal — Authorized Access Only</p>
     <h2 class="login-title">Sign In</h2>
     <p style="font-size:13px;color:var(--muted);margin-bottom:24px;">Enter your administrator credentials to continue.</p>
-
-    <div class="form-group">
-      <label>Email Address</label>
-      <input type="email" id="loginEmail" placeholder="admin@whiterock.com" autocomplete="email"/>
-    </div>
-    <div class="form-group">
-      <label>Password</label>
-      <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password"/>
-    </div>
-    <button class="btn-login-submit" id="loginSubmitBtn" >Sign In to Admin Portal</button>
+    <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="admin@whiterock.com" autocomplete="email"/></div>
+    <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password"/></div>
+    <button class="btn-login-submit" id="loginSubmitBtn">Sign In to Admin Portal</button>
     <p id="loginError"></p>
-
-    <div style="margin-top:20px;text-align:center;">
-      <a href="index.html" style="font-size:12px;color:var(--muted);text-decoration:none;">← Back to Student Hub</a>
-    </div>
+    <div style="margin-top:20px;text-align:center;"><a href="index.html" style="font-size:12px;color:var(--muted);text-decoration:none;">← Back to Student Hub</a></div>
   </div>
 </div>
 
-<!-- ===== ADMIN SCREEN ===== -->
+<!-- ADMIN -->
 <div id="adminScreen">
   <header>
     <div style="display:flex;align-items:center;gap:12px;">
@@ -307,7 +213,7 @@
     </div>
     <div class="header-right">
       <span id="adminUserDisplay" style="font-size:13px;font-weight:600;color:var(--muted);"></span>
-      <a href="index.html" style="display:flex;align-items:center;gap:6px;text-decoration:none;background:var(--surface);border:1.5px solid var(--border);color:var(--navy);padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;transition:all 0.15s;">
+      <a href="index.html" style="display:flex;align-items:center;gap:6px;text-decoration:none;background:var(--surface);border:1.5px solid var(--border);color:var(--navy);padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;">
         <span class="material-symbols-outlined" style="font-size:16px;">home</span> Hub
       </a>
       <button class="btn-signout" id="adminSignOutBtn">
@@ -316,29 +222,27 @@
     </div>
   </header>
 
-  <div class="container">
+  <!-- SELECTION BAR -->
+  <div id="selectionBar">
+    <span class="sel-info" id="selInfo">0 students selected</span>
+    <button class="btn-sel" id="bulkDateSelBtn">
+      <span class="material-symbols-outlined" style="font-size:15px;">calendar_month</span> Set Interview Date
+    </button>
+    <button class="btn-sel danger" id="bulkDeselectBtn">
+      <span class="material-symbols-outlined" style="font-size:15px;">close</span> Deselect All
+    </button>
+  </div>
 
-    <!-- Stats -->
+  <div class="container">
+    <!-- STATS -->
     <div class="stats-grid" id="statsGrid">
-      <div class="stat-card">
-        <div class="stat-label">Total Students</div>
-        <div class="stat-value" id="stat-total">—</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Interviews Set</div>
-        <div class="stat-value green" id="stat-dated">—</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Upcoming (7 days)</div>
-        <div class="stat-value amber" id="stat-upcoming">—</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Avg Score</div>
-        <div class="stat-value" id="stat-avg">—</div>
-      </div>
+      <div class="stat-card"><div class="stat-label">Total Students</div><div class="stat-value" id="stat-total">—</div></div>
+      <div class="stat-card"><div class="stat-label">Interviews Set</div><div class="stat-value green" id="stat-dated">—</div></div>
+      <div class="stat-card"><div class="stat-label">Upcoming (7 days)</div><div class="stat-value amber" id="stat-upcoming">—</div></div>
+      <div class="stat-card"><div class="stat-label">Avg Score</div><div class="stat-value" id="stat-avg">—</div></div>
     </div>
 
-    <!-- Student Table -->
+    <!-- STUDENT TABLE -->
     <div class="card">
       <div class="card-header">
         <div class="card-title">
@@ -350,7 +254,7 @@
             <span class="material-symbols-outlined" style="font-size:18px;color:var(--muted);">search</span>
             <input type="text" id="searchInput" placeholder="Search by name, email, ID…" />
           </div>
-          <select class="filter-select" id="uniFilter" >
+          <select class="filter-select" id="uniFilter">
             <option value="">All Schools</option>
             <option value="regent">Regent</option>
             <option value="bpp">BPP</option>
@@ -358,33 +262,34 @@
             <option value="netherlands">Netherlands</option>
             <option value="ukvi">UKVI</option>
           </select>
-          <select class="filter-select" id="dateFilter" >
+          <select class="filter-select" id="dateFilter">
             <option value="">All Dates</option>
             <option value="set">Date Set</option>
             <option value="unset">No Date</option>
             <option value="upcoming">Upcoming (7d)</option>
           </select>
-          <button class="btn-refresh" id="refreshBtn">
+          <!-- NEW BULK BUTTONS -->
+          <button class="btn-toolbar btn-amber" id="bulkDateAllBtn" title="Set interview date for all students at once">
+            <span class="material-symbols-outlined" style="font-size:16px;">event</span> Bulk Set Date
+          </button>
+          <button class="btn-toolbar btn-green" id="exportExcelBtn" title="Download all student data as Excel">
+            <span class="material-symbols-outlined" style="font-size:16px;">download</span> Export Excel
+          </button>
+          <button class="btn-toolbar btn-navy" id="refreshBtn">
             <span class="material-symbols-outlined" style="font-size:16px;">refresh</span> Refresh
           </button>
         </div>
       </div>
 
-      <div id="tableLoading">
-        <div class="spinner"></div>
-        <p style="color:var(--muted);font-size:14px;">Loading students…</p>
-      </div>
-
-      <div id="emptyState">
-        <span class="material-symbols-outlined">inbox</span>
-        <p style="color:var(--muted);font-size:14px;">No students found matching your filters.</p>
-      </div>
+      <div id="tableLoading"><div class="spinner"></div><p style="color:var(--muted);font-size:14px;">Loading students…</p></div>
+      <div id="emptyState"><span class="material-symbols-outlined">inbox</span><p style="color:var(--muted);font-size:14px;">No students found matching your filters.</p></div>
 
       <div id="tableContainer" style="display:none;">
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
+                <th style="width:40px;"><input type="checkbox" id="selectAll" class="row-check" title="Select all visible students"></th>
                 <th>Student</th>
                 <th>Student ID</th>
                 <th>School</th>
@@ -402,29 +307,70 @@
         <div style="padding:12px 16px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);" id="tableFooter"></div>
       </div>
     </div>
-
   </div>
 </div>
 
-<!-- ===== DATE MODAL ===== -->
+<!-- ===== DATE MODAL (single student) ===== -->
 <div id="dateModal" class="modal-overlay">
   <div class="modal-box">
     <button class="modal-close" id="dateModalClose">✕</button>
     <div class="modal-title">📅 Set Interview Date</div>
     <p class="modal-sub" id="dateModalSubtitle">Set a credibility interview date for this student.</p>
     <input type="hidden" id="targetUserId"/>
-    <div class="form-group">
-      <label>Interview Date & Time</label>
-      <input type="datetime-local" id="interviewDateInput"/>
-    </div>
-    <div class="form-group">
-      <label>Notes (optional)</label>
-      <input type="text" id="interviewNotes" placeholder="e.g. Online via Teams, Room 3B…"/>
-    </div>
+    <div class="form-group"><label>Interview Date & Time</label><input type="datetime-local" id="interviewDateInput"/></div>
+    <div class="form-group"><label>Notes (optional)</label><input type="text" id="interviewNotes" placeholder="e.g. Online via Teams, Room 3B…"/></div>
     <div class="modal-actions">
       <button class="btn-modal-cancel" id="dateModalCancel">Cancel</button>
       <button class="btn-modal-primary" id="saveDateBtn">Save Interview Date</button>
     </div>
+  </div>
+</div>
+
+<!-- ===== BULK DATE MODAL ===== -->
+<div id="bulkDateModal" class="modal-overlay">
+  <div class="modal-box" style="max-width:480px;">
+    <button class="modal-close" id="bulkDateModalClose">✕</button>
+    <div class="modal-title">📅 Bulk Set Interview Date</div>
+    <p class="modal-sub" id="bulkDateModalSub">Apply one interview date to multiple students at once.</p>
+
+    <div class="form-group">
+      <label>Apply To</label>
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="bulkTarget" value="all" checked>
+          <div><span>All students</span><small id="bulkCountAll">— students total</small></div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="bulkTarget" value="unset">
+          <div><span>Only students without a date</span><small id="bulkCountUnset">— students have no date yet</small></div>
+        </label>
+        <label class="radio-option" id="bulkSelectedOption" style="display:none;">
+          <input type="radio" name="bulkTarget" value="selected">
+          <div><span>Selected students only</span><small id="bulkCountSelected">— students selected</small></div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="bulkTarget" value="filtered">
+          <div><span>Currently visible / filtered students</span><small id="bulkCountFiltered">— students in current view</small></div>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-group"><label>Interview Date & Time</label><input type="datetime-local" id="bulkDateInput"/></div>
+    <div class="form-group"><label>Notes (optional)</label><input type="text" id="bulkNotes" placeholder="e.g. Online via Microsoft Teams link"/></div>
+
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" id="bulkDateModalCancel">Cancel</button>
+      <button class="btn-modal-primary" id="saveBulkDateBtn">Apply to Students</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROGRESS MODAL ===== -->
+<div id="progressModal" class="modal-overlay">
+  <div class="modal-box" style="max-width:400px;">
+    <div class="modal-title" id="progressTitle">Updating students…</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBarFill" style="width:0%"></div></div>
+    <p id="progressText" style="font-size:13px;color:var(--muted);text-align:center;margin-top:8px;">0 / 0 updated</p>
   </div>
 </div>
 
@@ -437,12 +383,12 @@
     <div id="detailContent"></div>
     <div class="modal-actions">
       <button class="btn-modal-cancel" id="detailModalCancel" style="flex:1;">Close</button>
-      <button class="btn-modal-primary"  id="detailSetDateBtn">Set Interview Date</button>
+      <button class="btn-modal-primary" id="detailSetDateBtn">Set Interview Date</button>
     </div>
   </div>
 </div>
 
-<!-- ===== DELETE CONFIRM MODAL ===== -->
+<!-- ===== DELETE MODAL ===== -->
 <div id="deleteModal" class="modal-overlay">
   <div class="modal-box">
     <button class="modal-close" id="deleteModalClose">✕</button>
@@ -460,41 +406,22 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // CDN Fallback Check
-    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
-      const errEl = document.getElementById('loginError');
-      if (errEl) errEl.textContent = 'Critical: Supabase library not loaded. Please disable ad blocker or reload.';
-      console.error('Supabase missing');
-      return;
-    }
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+    document.getElementById('loginError').textContent = 'Critical: Supabase library not loaded. Please reload.';
+    return;
+  }
 
-    const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // ===== ADMIN WHITELIST =====
-    const ADMIN_EMAILS = [
-      'myinkscriber@gmail.com',
-      'femiolaniyi36@gmail.com',
-      'peaceableolaniyi@gmail.com',
-      'peaceable.whiterock@gmail.com'
-    ];
+  const ADMIN_EMAILS = ['myinkscriber@gmail.com','femiolaniyi36@gmail.com','peaceableolaniyi@gmail.com','peaceable.whiterock@gmail.com','adeolaisaiah01@gmail.com','jwill.whiterock@gmail.com','abraham.whiterock@gmail.com','cherish.whiterock@gmail.com','ideyewhiterock@gmail.com','bakinremi.whiterock@gmail.com','praisewhiterock27@gmail.com'];
 
-    let allStudents = [];
-    let currentDetailUserId = null;
-
-    // --- Paste original functions here, but remove the supabase/ADMIN_EMAILS/allStudents/currentDetailUserId declarations from them if they exist ---
-
-  
-  
-  
-
-  // ===== ADMIN WHITELIST =====
-  
-
-  
-  
+  let allStudents = [];
+  let filteredStudents = [];
+  let selectedIds = new Set();
+  let currentDetailUserId = null;
 
   // ===== TOAST =====
   function showToast(msg, type = 'success') {
@@ -503,23 +430,23 @@
     t.style.background = type === 'error' ? '#991b1b' : type === 'info' ? '#1e40af' : 'var(--navy)';
     t.style.display = 'block'; t.style.opacity = '1';
     clearTimeout(window._toastT);
-    window._toastT = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.style.display = 'none', 300); }, 3000);
+    window._toastT = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.style.display = 'none', 300); }, 3500);
   }
 
   // ===== AUTH =====
   async function checkAuth() {
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) {
-      if (!ADMIN_EMAILS.includes(session.user.email)) {
-        await supabase.auth.signOut();
-        document.getElementById('loginScreen').style.display = 'flex';
-        document.getElementById('loginError').textContent = 'Access denied. This account is not authorised.';
-        return;
-      }
+      if (!ADMIN_EMAILS.includes(session.user.email)) { await supabase.auth.signOut(); showLoginError('Access denied.'); return; }
       showAdminScreen(session.user);
     } else {
       document.getElementById('loginScreen').style.display = 'flex';
     }
+  }
+
+  function showLoginError(msg) {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('loginError').textContent = msg;
   }
 
   async function adminLogin() {
@@ -528,40 +455,13 @@
     const btn = document.getElementById('loginSubmitBtn');
     const errEl = document.getElementById('loginError');
     errEl.textContent = '';
-
-    if (!email || !password) { errEl.textContent = 'Please enter your email and password.'; return; }
-
-    // Check whitelist before even hitting Supabase
-    if (!ADMIN_EMAILS.includes(email)) {
-      errEl.textContent = 'Access denied. This email is not authorised to access the admin portal.';
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = 'Signing in…';
-
+    if (!email || !password) { errEl.textContent = 'Please enter email and password.'; return; }
+    if (!ADMIN_EMAILS.includes(email)) { errEl.textContent = 'Access denied. Not an authorised admin email.'; return; }
+    btn.disabled = true; btn.textContent = 'Signing in…';
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      errEl.textContent = error.message || 'Sign-in failed. Check your credentials.';
-      btn.disabled = false;
-      btn.textContent = 'Sign In to Admin Portal';
-      return;
-    }
-
-    // Double-check whitelist after auth
-    if (!ADMIN_EMAILS.includes(data.user.email)) {
-      await supabase.auth.signOut();
-      errEl.textContent = 'Access denied. This account is not authorised.';
-      btn.disabled = false;
-      btn.textContent = 'Sign In to Admin Portal';
-      return;
-    }
-
+    if (error) { errEl.textContent = error.message; btn.disabled = false; btn.textContent = 'Sign In to Admin Portal'; return; }
     showAdminScreen(data.user);
   }
-
-  // Allow Enter key to submit login
-  
 
   function showAdminScreen(user) {
     document.getElementById('loginScreen').style.display = 'none';
@@ -575,138 +475,35 @@
     document.getElementById('adminScreen').style.display = 'none';
     document.getElementById('loginScreen').style.display = 'flex';
     document.getElementById('loginPassword').value = '';
-    document.getElementById('loginError').textContent = '';
-    allStudents = [];
+    allStudents = []; selectedIds.clear(); updateSelectionBar();
   }
 
-  // ===== LOAD STUDENTS =====
+  // ===== LOAD =====
   async function loadStudents() {
     document.getElementById('tableLoading').style.display = 'block';
     document.getElementById('tableContainer').style.display = 'none';
     document.getElementById('emptyState').style.display = 'none';
+    selectedIds.clear(); updateSelectionBar();
 
-    const { data, error } = await supabase
-      .from('student_progress')
-      .select('*')
-      .order('updated_at', { ascending: false });
-
+    const { data, error } = await supabase.from('student_progress').select('*').order('updated_at', { ascending: false });
     document.getElementById('tableLoading').style.display = 'none';
-
-    if (error) {
-      showToast('Error loading data: ' + error.message, 'error');
-      return;
-    }
-
+    if (error) { showToast('Error loading data: ' + error.message, 'error'); return; }
     allStudents = data || [];
     updateStats(allStudents);
-    renderTable(allStudents);
+    filterTable();
   }
 
   // ===== STATS =====
   function updateStats(students) {
-    const total = students.length;
+    const now = new Date(), in7 = new Date(now.getTime() + 7*24*60*60*1000);
     const dated = students.filter(s => s.interview_date).length;
-    const now = new Date();
-    const in7 = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    const upcoming = students.filter(s => {
-      if (!s.interview_date) return false;
-      const d = new Date(s.interview_date);
-      return d >= now && d <= in7;
-    }).length;
-
-    const scores = students.flatMap(s => {
-      if (!s.ai_scores) return [];
-      return Object.values(s.ai_scores).map(q => q.score).filter(n => typeof n === 'number');
-    });
-    const avg = scores.length ? (scores.reduce((a,b) => a+b, 0) / scores.length).toFixed(1) : '—';
-
-    document.getElementById('stat-total').textContent = total;
+    const upcoming = students.filter(s => { if (!s.interview_date) return false; const d = new Date(s.interview_date); return d >= now && d <= in7; }).length;
+    const scores = students.flatMap(s => s.ai_scores ? Object.values(s.ai_scores).map(q => q.score).filter(n => typeof n === 'number') : []);
+    const avg = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1) : '—';
+    document.getElementById('stat-total').textContent = students.length;
     document.getElementById('stat-dated').textContent = dated;
     document.getElementById('stat-upcoming').textContent = upcoming;
     document.getElementById('stat-avg').textContent = avg === '—' ? '—' : avg + '/10';
-  }
-
-  // ===== RENDER TABLE =====
-  function renderTable(students) {
-    const tbody = document.getElementById('studentTableBody');
-    const container = document.getElementById('tableContainer');
-    const emptyState = document.getElementById('emptyState');
-    const footer = document.getElementById('tableFooter');
-
-    if (students.length === 0) {
-      container.style.display = 'none';
-      emptyState.style.display = 'block';
-      return;
-    }
-
-    emptyState.style.display = 'none';
-    container.style.display = 'block';
-    footer.textContent = `Showing ${students.length} of ${allStudents.length} student${allStudents.length !== 1 ? 's' : ''}`;
-
-    tbody.innerHTML = students.map(s => {
-      const school = s.selected_university || '';
-      const schoolBadgeClass = school ? `badge-school-${school}` : 'badge-none';
-      const schoolLabel = school
-        ? { regent:'Regent', bpp:'BPP', yorkstjohn:'York St John', netherlands:'Netherlands', ukvi:'UKVI' }[school] || school
-        : 'Not Selected';
-
-      // Scores
-      const scoreValues = s.ai_scores ? Object.values(s.ai_scores).map(q => q.score).filter(n => typeof n === 'number') : [];
-      const avgScore = scoreValues.length ? (scoreValues.reduce((a,b) => a+b, 0) / scoreValues.length) : null;
-      const scorePillClass = avgScore === null ? '' : avgScore >= 7 ? 'score-high' : avgScore >= 5 ? 'score-mid' : 'score-low';
-      const scoreText = avgScore !== null ? avgScore.toFixed(1) + '/10' : '—';
-
-      const qCount = scoreValues.length;
-
-      // Checklist
-      const checklistItems = s.checklist_status ? Object.values(s.checklist_status) : [];
-      const checkDone = checklistItems.filter(v => v === true).length;
-      const checkTotal = checklistItems.length;
-      const checkPct = checkTotal ? Math.round((checkDone / checkTotal) * 100) : null;
-
-      // Interview Date
-      let dateHtml = '<span class="date-unset">Not Set</span>';
-      if (s.interview_date) {
-        const d = new Date(s.interview_date);
-        const now = new Date();
-        const formatted = d.toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-        if (d > now) {
-          dateHtml = `<span class="date-upcoming">▶ ${formatted}</span>`;
-        } else {
-          dateHtml = `<span class="date-past">${formatted}</span>`;
-        }
-      }
-
-      // Last active
-      const lastActive = s.updated_at ? new Date(s.updated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '—';
-
-      return `<tr>
-        <td class="name-cell">
-          <strong>${escHtml(s.full_name || 'Unknown')}</strong>
-          <span>${escHtml(s.email || '')}</span>
-        </td>
-        <td style="font-family:monospace;font-size:12px;">${escHtml(s.student_id || '—')}</td>
-        <td><span class="badge ${schoolBadgeClass}">${schoolLabel}</span></td>
-        <td>${avgScore !== null ? `<span class="score-pill ${scorePillClass}">${scoreText}</span>` : '<span style="color:var(--muted);font-size:12px;">No data</span>'}</td>
-        <td><span style="font-weight:600;">${qCount}</span> <span style="color:var(--muted);font-size:12px;">answered</span></td>
-        <td>${checkTotal > 0 ? `<span style="font-weight:600;${checkPct >= 80 ? 'color:var(--green)' : ''}">${checkPct}%</span> <span style="color:var(--muted);font-size:12px;">(${checkDone}/${checkTotal})</span>` : '<span style="color:var(--muted);font-size:12px;">—</span>'}</td>
-        <td class="date-cell">${dateHtml}</td>
-        <td style="color:var(--muted);font-size:12px;">${lastActive}</td>
-        <td>
-          <div class="action-btns">
-            <button class="btn-icon view" data-action="view" data-id="${s.user_id}" title="View Details">
-              <span class="material-symbols-outlined">open_in_new</span>
-            </button>
-            <button class="btn-icon calendar" onclick="openDateModal('${s.user_id}', '${escHtml(s.full_name || '')}', '${s.interview_date || ''}')" title="Set Interview Date">
-              <span class="material-symbols-outlined">calendar_month</span>
-            </button>
-            <button class="btn-icon delete" onclick="openDeleteModal('${s.user_id}', '${escHtml(s.full_name || '')}')" title="Delete Student">
-              <span class="material-symbols-outlined">delete</span>
-            </button>
-          </div>
-        </td>
-      </tr>`;
-    }).join('');
   }
 
   // ===== FILTER =====
@@ -714,111 +511,107 @@
     const q = document.getElementById('searchInput').value.toLowerCase();
     const uni = document.getElementById('uniFilter').value;
     const dateF = document.getElementById('dateFilter').value;
-    const now = new Date();
-    const in7 = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-
-    const filtered = allStudents.filter(s => {
-      const matchQ = !q || (s.full_name||'').toLowerCase().includes(q) || (s.email||'').toLowerCase().includes(q) || (s.student_id||'').toLowerCase().includes(q);
+    const now = new Date(), in7 = new Date(now.getTime() + 7*24*60*60*1000);
+    filteredStudents = allStudents.filter(s => {
+      const matchQ = !q || (s.full_name||'').toLowerCase().includes(q)||(s.email||'').toLowerCase().includes(q)||(s.student_id||'').toLowerCase().includes(q);
       const matchUni = !uni || s.selected_university === uni;
       let matchDate = true;
       if (dateF === 'set') matchDate = !!s.interview_date;
       else if (dateF === 'unset') matchDate = !s.interview_date;
-      else if (dateF === 'upcoming') {
-        if (!s.interview_date) matchDate = false;
-        else { const d = new Date(s.interview_date); matchDate = d >= now && d <= in7; }
-      }
+      else if (dateF === 'upcoming') { if (!s.interview_date) matchDate = false; else { const d = new Date(s.interview_date); matchDate = d >= now && d <= in7; } }
       return matchQ && matchUni && matchDate;
     });
-
-    renderTable(filtered);
+    renderTable(filteredStudents);
   }
 
-  // ===== VIEW STUDENT =====
-  function viewStudent(userId) {
-    const s = allStudents.find(x => x.user_id === userId);
-    if (!s) return;
-    currentDetailUserId = userId;
+  // ===== RENDER TABLE =====
+  function renderTable(students) {
+    const tbody = document.getElementById('studentTableBody');
+    const container = document.getElementById('tableContainer');
+    const emptyState = document.getElementById('emptyState');
+    if (students.length === 0) { container.style.display = 'none'; emptyState.style.display = 'block'; return; }
+    emptyState.style.display = 'none'; container.style.display = 'block';
+    document.getElementById('tableFooter').textContent = `Showing ${students.length} of ${allStudents.length} student${allStudents.length !== 1 ? 's' : ''}`;
 
-    document.getElementById('detailName').textContent = s.full_name || 'Unknown Student';
-    document.getElementById('detailEmail').textContent = s.email || '';
+    tbody.innerHTML = students.map(s => {
+      const school = s.selected_university || '';
+      const schoolLabel = school ? ({regent:'Regent',bpp:'BPP',yorkstjohn:'York St John',netherlands:'Netherlands',ukvi:'UKVI'}[school]||school) : 'Not Selected';
+      const schoolClass = school ? 'badge-school-' + school : 'badge-none';
+      const scoreValues = s.ai_scores ? Object.values(s.ai_scores).map(q=>q.score).filter(n=>typeof n==='number') : [];
+      const avgScore = scoreValues.length ? scoreValues.reduce((a,b)=>a+b,0)/scoreValues.length : null;
+      const scorePillClass = avgScore===null ? '' : avgScore>=7 ? 'score-high' : avgScore>=5 ? 'score-mid' : 'score-low';
+      const checklistItems = s.checklist_status ? Object.values(s.checklist_status) : [];
+      const checkDone = checklistItems.filter(v=>v===true).length;
+      const checkTotal = checklistItems.length;
+      const checkPct = checkTotal ? Math.round((checkDone/checkTotal)*100) : null;
+      let dateHtml = '<span class="date-unset">Not Set</span>';
+      if (s.interview_date) {
+        const d = new Date(s.interview_date);
+        const formatted = d.toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+        dateHtml = d > new Date() ? `<span class="date-upcoming">▶ ${formatted}</span>` : `<span class="date-past">${formatted}</span>`;
+      }
+      const lastActive = s.updated_at ? new Date(s.updated_at).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '—';
+      const isChecked = selectedIds.has(s.user_id);
+      return `<tr class="${isChecked ? 'selected-row' : ''}">
+        <td><input type="checkbox" class="row-check student-check" data-id="${s.user_id}" ${isChecked ? 'checked' : ''}></td>
+        <td class="name-cell"><strong>${escHtml(s.full_name||'Unknown')}</strong><span>${escHtml(s.email||'')}</span></td>
+        <td style="font-family:monospace;font-size:12px;">${escHtml(s.student_id||'—')}</td>
+        <td><span class="badge ${schoolClass}">${schoolLabel}</span></td>
+        <td>${avgScore!==null ? `<span class="score-pill ${scorePillClass}">${avgScore.toFixed(1)}/10</span>` : '<span style="color:var(--muted);font-size:12px;">No data</span>'}</td>
+        <td><span style="font-weight:600;">${scoreValues.length}</span> <span style="color:var(--muted);font-size:12px;">answered</span></td>
+        <td>${checkTotal>0 ? `<span style="font-weight:600;${checkPct>=80?'color:var(--green)':''}">${checkPct}%</span> <span style="color:var(--muted);font-size:12px;">(${checkDone}/${checkTotal})</span>` : '<span style="color:var(--muted);font-size:12px;">—</span>'}</td>
+        <td class="date-cell">${dateHtml}</td>
+        <td style="color:var(--muted);font-size:12px;">${lastActive}</td>
+        <td>
+          <div class="action-btns">
+            <button class="btn-icon view" data-action="view" data-id="${s.user_id}" title="View Details"><span class="material-symbols-outlined">open_in_new</span></button>
+            <button class="btn-icon calendar" data-action="date" data-id="${s.user_id}" data-name="${escHtml(s.full_name||'')}" data-date="${s.interview_date||''}" title="Set Interview Date"><span class="material-symbols-outlined">calendar_month</span></button>
+            <button class="btn-icon delete" data-action="delete" data-id="${s.user_id}" data-name="${escHtml(s.full_name||'')}" title="Delete Student"><span class="material-symbols-outlined">delete</span></button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
 
-    const scoreValues = s.ai_scores ? Object.values(s.ai_scores).map(q => q.score).filter(n => typeof n === 'number') : [];
-    const avgScore = scoreValues.length ? (scoreValues.reduce((a,b) => a+b, 0) / scoreValues.length).toFixed(1) : '—';
-    const passCount = scoreValues.filter(sc => sc >= 7).length;
-
-    const checklistItems = s.checklist_status ? Object.values(s.checklist_status) : [];
-    const checkDone = checklistItems.filter(v => v === true).length;
-    const checkTotal = checklistItems.length;
-
-    const school = s.selected_university
-      ? { regent:'Regent College London', bpp:'BPP University', yorkstjohn:'York St John University', netherlands:'Netherlands', ukvi:'UKVI Universal Prep' }[s.selected_university] || s.selected_university
-      : 'Not selected';
-
-    const interviewDate = s.interview_date
-      ? new Date(s.interview_date).toLocaleString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-      : 'Not set';
-
-    const lastActive = s.updated_at
-      ? new Date(s.updated_at).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-      : '—';
-
-    // Top question scores
-    let topQHtml = '';
-    if (s.ai_scores && Object.keys(s.ai_scores).length > 0) {
-      const entries = Object.entries(s.ai_scores).slice(0, 5);
-      topQHtml = entries.map(([qId, data]) => {
-        const label = (data.questionText || qId).substring(0, 45) + (data.questionText?.length > 45 ? '…' : '');
-        const sc = typeof data.score === 'number' ? data.score : '—';
-        const color = typeof sc === 'number' ? (sc >= 7 ? 'var(--green)' : sc >= 5 ? 'var(--amber)' : 'var(--red)') : 'var(--muted)';
-        return `<div class="detail-row"><span class="detail-key">${label}</span><span class="detail-val" style="color:${color};font-weight:700;">${sc}/10</span></div>`;
-      }).join('');
-    } else {
-      topQHtml = '<p style="color:var(--muted);font-size:13px;padding:8px 0;">No practice attempts yet.</p>';
-    }
-
-    document.getElementById('detailContent').innerHTML = `
-      <div class="detail-section">
-        <div class="detail-section-title">Student Info</div>
-        <div class="detail-row"><span class="detail-key">Student ID</span><span class="detail-val">${escHtml(s.student_id || '—')}</span></div>
-        <div class="detail-row"><span class="detail-key">School</span><span class="detail-val">${school}</span></div>
-        <div class="detail-row"><span class="detail-key">Interview Date</span><span class="detail-val" style="${s.interview_date ? 'color:var(--green)' : 'color:var(--muted)'}">${interviewDate}</span></div>
-        <div class="detail-row"><span class="detail-key">Last Active</span><span class="detail-val">${lastActive}</span></div>
-      </div>
-      <div class="detail-section">
-        <div class="detail-section-title">Progress Summary</div>
-        <div class="detail-row"><span class="detail-key">Questions Answered</span><span class="detail-val">${scoreValues.length}</span></div>
-        <div class="detail-row"><span class="detail-key">Questions Passed (≥7)</span><span class="detail-val" style="color:var(--green)">${passCount}</span></div>
-        <div class="detail-row"><span class="detail-key">Average Score</span><span class="detail-val">${avgScore}/10</span></div>
-        <div class="detail-row"><span class="detail-key">Checklist Completion</span><span class="detail-val">${checkTotal > 0 ? `${checkDone}/${checkTotal} (${Math.round(checkDone/checkTotal*100)}%)` : '—'}</span></div>
-      </div>
-      <div class="detail-section">
-        <div class="detail-section-title">Recent Practice Scores</div>
-        ${topQHtml}
-      </div>
-    `;
-
-    openModal('detailModal');
+    // re-bind checkboxes
+    document.querySelectorAll('.student-check').forEach(cb => {
+      cb.addEventListener('change', (e) => {
+        const id = e.target.dataset.id;
+        if (e.target.checked) selectedIds.add(id); else selectedIds.delete(id);
+        updateSelectionBar();
+        e.target.closest('tr').classList.toggle('selected-row', e.target.checked);
+      });
+    });
   }
 
-  let _detailUserId = null;
-  function openDateFromDetail() {
-    closeModal('detailModal');
-    const s = allStudents.find(x => x.user_id === currentDetailUserId);
-    if (s) openDateModal(s.user_id, s.full_name || '', s.interview_date || '');
+  // ===== SELECTION BAR =====
+  function updateSelectionBar() {
+    const bar = document.getElementById('selectionBar');
+    const n = selectedIds.size;
+    if (n > 0) { bar.classList.add('active'); document.getElementById('selInfo').textContent = `${n} student${n!==1?'s':''} selected`; }
+    else { bar.classList.remove('active'); }
+    document.getElementById('selectAll').indeterminate = n > 0 && n < filteredStudents.length;
+    document.getElementById('selectAll').checked = n > 0 && n === filteredStudents.length;
   }
 
-  // ===== DATE MODAL =====
+  // Select all checkbox
+  document.getElementById('selectAll').addEventListener('change', (e) => {
+    filteredStudents.forEach(s => { if (e.target.checked) selectedIds.add(s.user_id); else selectedIds.delete(s.user_id); });
+    renderTable(filteredStudents);
+    updateSelectionBar();
+  });
+
+  // Deselect all
+  document.getElementById('bulkDeselectBtn').addEventListener('click', () => { selectedIds.clear(); renderTable(filteredStudents); updateSelectionBar(); });
+
+  // ===== SINGLE DATE MODAL =====
   function openDateModal(userId, name, currentDate) {
     document.getElementById('targetUserId').value = userId;
     document.getElementById('dateModalSubtitle').textContent = `Setting interview for: ${name}`;
     document.getElementById('interviewNotes').value = '';
     if (currentDate) {
-      const d = new Date(currentDate);
-      d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-      document.getElementById('interviewDateInput').value = d.toISOString().slice(0, 16);
-    } else {
-      document.getElementById('interviewDateInput').value = '';
-    }
+      const d = new Date(currentDate); d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+      document.getElementById('interviewDateInput').value = d.toISOString().slice(0,16);
+    } else { document.getElementById('interviewDateInput').value = ''; }
     openModal('dateModal');
   }
 
@@ -826,22 +619,204 @@
     const userId = document.getElementById('targetUserId').value;
     const date = document.getElementById('interviewDateInput').value;
     if (!date) { showToast('Please select a date and time', 'error'); return; }
-
-    const { error } = await supabase
-      .from('student_progress')
-      .update({ interview_date: new Date(date).toISOString(), updated_at: new Date().toISOString() })
-      .eq('user_id', userId);
-
-    if (error) {
-      showToast('Error saving: ' + error.message, 'error');
-    } else {
-      showToast('Interview date saved');
-      closeModal('dateModal');
-      await loadStudents();
-    }
+    const { error } = await supabase.from('student_progress').update({ interview_date: new Date(date).toISOString(), updated_at: new Date().toISOString() }).eq('user_id', userId);
+    if (error) { showToast('Error saving: ' + error.message, 'error'); } else { showToast('Interview date saved'); closeModal('dateModal'); await loadStudents(); }
   }
 
-  // ===== DELETE MODAL =====
+  // ===== BULK DATE MODAL =====
+  function openBulkDateModal(fromSelection = false) {
+    const unsetCount = allStudents.filter(s => !s.interview_date).length;
+    document.getElementById('bulkCountAll').textContent = `${allStudents.length} students total`;
+    document.getElementById('bulkCountUnset').textContent = `${unsetCount} students have no date yet`;
+    document.getElementById('bulkCountFiltered').textContent = `${filteredStudents.length} students in current view`;
+
+    const selOpt = document.getElementById('bulkSelectedOption');
+    const selCount = selectedIds.size;
+    if (selCount > 0) {
+      selOpt.style.display = 'flex';
+      document.getElementById('bulkCountSelected').textContent = `${selCount} students selected`;
+      selOpt.querySelector('input').checked = true;
+    } else {
+      selOpt.style.display = 'none';
+      document.querySelector('input[name="bulkTarget"][value="unset"]').checked = true;
+    }
+    document.getElementById('bulkDateInput').value = '';
+    document.getElementById('bulkNotes').value = '';
+    openModal('bulkDateModal');
+  }
+
+  async function saveBulkDate() {
+    const date = document.getElementById('bulkDateInput').value;
+    if (!date) { showToast('Please select a date and time', 'error'); return; }
+    const target = document.querySelector('input[name="bulkTarget"]:checked').value;
+    let targetStudents = [];
+    if (target === 'all') targetStudents = allStudents;
+    else if (target === 'unset') targetStudents = allStudents.filter(s => !s.interview_date);
+    else if (target === 'selected') targetStudents = allStudents.filter(s => selectedIds.has(s.user_id));
+    else if (target === 'filtered') targetStudents = filteredStudents;
+
+    if (targetStudents.length === 0) { showToast('No students match the selection', 'info'); return; }
+
+    closeModal('bulkDateModal');
+
+    // Show progress modal
+    document.getElementById('progressTitle').textContent = `Setting dates for ${targetStudents.length} students…`;
+    document.getElementById('progressBarFill').style.width = '0%';
+    document.getElementById('progressText').textContent = `0 / ${targetStudents.length} updated`;
+    openModal('progressModal');
+
+    const isoDate = new Date(date).toISOString();
+    let done = 0, errors = 0;
+
+    // Process in batches of 10
+    const batchSize = 10;
+    for (let i = 0; i < targetStudents.length; i += batchSize) {
+      const batch = targetStudents.slice(i, i + batchSize);
+      const ids = batch.map(s => s.user_id);
+      const { error } = await supabase.from('student_progress').update({ interview_date: isoDate, updated_at: new Date().toISOString() }).in('user_id', ids);
+      if (error) errors += batch.length; else done += batch.length;
+      const pct = Math.round((done / targetStudents.length) * 100);
+      document.getElementById('progressBarFill').style.width = pct + '%';
+      document.getElementById('progressText').textContent = `${done} / ${targetStudents.length} updated`;
+      await new Promise(r => setTimeout(r, 100));
+    }
+
+    closeModal('progressModal');
+    if (errors === 0) showToast(`✅ Interview date set for ${done} students`);
+    else showToast(`Done with ${errors} error(s). ${done} updated.`, 'error');
+    selectedIds.clear();
+    await loadStudents();
+  }
+
+  // ===== EXCEL EXPORT =====
+  function exportToExcel() {
+    if (!allStudents.length) { showToast('No students to export', 'info'); return; }
+
+    const rows = allStudents.map(s => {
+      const scoreValues = s.ai_scores ? Object.values(s.ai_scores).map(q => q.score).filter(n => typeof n === 'number') : [];
+      const avgScore = scoreValues.length ? (scoreValues.reduce((a,b)=>a+b,0)/scoreValues.length).toFixed(1) : '';
+      const passCount = scoreValues.filter(sc => sc >= 7).length;
+      const checklistItems = s.checklist_status ? Object.values(s.checklist_status) : [];
+      const checkDone = checklistItems.filter(v=>v===true).length;
+      const checkTotal = checklistItems.length;
+      const checkPct = checkTotal ? Math.round((checkDone/checkTotal)*100) + '%' : '';
+      const schoolMap = {regent:'Regent College London',bpp:'BPP University',yorkstjohn:'York St John University',netherlands:'Netherlands',ukvi:'UKVI'};
+      const now = new Date();
+      let dateStatus = '';
+      if (s.interview_date) {
+        const d = new Date(s.interview_date);
+        dateStatus = d > now ? 'Upcoming' : 'Past';
+      }
+
+      return {
+        'Full Name': s.full_name || '',
+        'Email': s.email || '',
+        'Student ID': s.student_id || '',
+        'School / University': schoolMap[s.selected_university] || s.selected_university || 'Not Selected',
+        'Interview Date': s.interview_date ? new Date(s.interview_date).toLocaleString('en-GB') : 'Not Set',
+        'Interview Status': dateStatus || (s.interview_date ? 'Set' : 'Not Set'),
+        'Avg Score (/10)': avgScore,
+        'Questions Answered': scoreValues.length,
+        'Questions Passed (≥7)': passCount,
+        'Checklist Items Done': checkDone,
+        'Checklist Total': checkTotal,
+        'Checklist %': checkPct,
+        'Last Active': s.updated_at ? new Date(s.updated_at).toLocaleString('en-GB') : '',
+        'User ID': s.user_id || ''
+      };
+    });
+
+    // Question scores — add one column per unique question
+    const allQuestionIds = new Set();
+    allStudents.forEach(s => { if (s.ai_scores) Object.keys(s.ai_scores).forEach(k => allQuestionIds.add(k)); });
+    allStudents.forEach((s, idx) => {
+      if (s.ai_scores) {
+        allQuestionIds.forEach(qId => {
+          const score = s.ai_scores[qId];
+          rows[idx][qId] = score ? score.score : '';
+        });
+      }
+    });
+
+    const ws = XLSX.utils.json_to_sheet(rows);
+
+    // Column widths
+    const wscols = Object.keys(rows[0] || {}).map(k => ({ wch: Math.max(k.length, 14) }));
+    ws['!cols'] = wscols;
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Students');
+
+    // Summary sheet
+    const now = new Date();
+    const in7 = new Date(now.getTime() + 7*24*60*60*1000);
+    const summaryData = [
+      { Metric: 'Total Students', Value: allStudents.length },
+      { Metric: 'Students with Interview Date', Value: allStudents.filter(s => s.interview_date).length },
+      { Metric: 'Students WITHOUT Interview Date', Value: allStudents.filter(s => !s.interview_date).length },
+      { Metric: 'Upcoming Interviews (7 days)', Value: allStudents.filter(s => { if (!s.interview_date) return false; const d = new Date(s.interview_date); return d >= now && d <= in7; }).length },
+      { Metric: 'Export Date', Value: now.toLocaleString('en-GB') }
+    ];
+    const wsSummary = XLSX.utils.json_to_sheet(summaryData);
+    wsSummary['!cols'] = [{ wch: 35 }, { wch: 20 }];
+    XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary');
+
+    const dateStr = now.toISOString().slice(0,10);
+    XLSX.writeFile(wb, `WhiteRock_Students_${dateStr}.xlsx`);
+    showToast(`Excel exported — ${allStudents.length} students`);
+  }
+
+  // ===== VIEW STUDENT =====
+  function viewStudent(userId) {
+    const s = allStudents.find(x => x.user_id === userId);
+    if (!s) return;
+    currentDetailUserId = userId;
+    document.getElementById('detailName').textContent = s.full_name || 'Unknown Student';
+    document.getElementById('detailEmail').textContent = s.email || '';
+    const scoreValues = s.ai_scores ? Object.values(s.ai_scores).map(q=>q.score).filter(n=>typeof n==='number') : [];
+    const avgScore = scoreValues.length ? (scoreValues.reduce((a,b)=>a+b,0)/scoreValues.length).toFixed(1) : '—';
+    const passCount = scoreValues.filter(sc => sc >= 7).length;
+    const checklistItems = s.checklist_status ? Object.values(s.checklist_status) : [];
+    const checkDone = checklistItems.filter(v=>v===true).length;
+    const checkTotal = checklistItems.length;
+    const school = s.selected_university ? ({regent:'Regent College London',bpp:'BPP University',yorkstjohn:'York St John University',netherlands:'Netherlands',ukvi:'UKVI Universal Prep'}[s.selected_university]||s.selected_university) : 'Not selected';
+    const interviewDate = s.interview_date ? new Date(s.interview_date).toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}) : 'Not set';
+    const lastActive = s.updated_at ? new Date(s.updated_at).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
+    let topQHtml = '';
+    if (s.ai_scores && Object.keys(s.ai_scores).length > 0) {
+      topQHtml = Object.entries(s.ai_scores).slice(0,5).map(([qId,data]) => {
+        const label = (data.questionText||qId).substring(0,45) + (data.questionText?.length>45?'…':'');
+        const sc = typeof data.score==='number' ? data.score : '—';
+        const color = typeof sc==='number' ? (sc>=7?'var(--green)':sc>=5?'var(--amber)':'var(--red)') : 'var(--muted)';
+        return `<div class="detail-row"><span class="detail-key">${label}</span><span class="detail-val" style="color:${color};font-weight:700;">${sc}/10</span></div>`;
+      }).join('');
+    } else { topQHtml = '<p style="color:var(--muted);font-size:13px;padding:8px 0;">No practice attempts yet.</p>'; }
+    document.getElementById('detailContent').innerHTML = `
+      <div class="detail-section">
+        <div class="detail-section-title">Student Info</div>
+        <div class="detail-row"><span class="detail-key">Student ID</span><span class="detail-val">${escHtml(s.student_id||'—')}</span></div>
+        <div class="detail-row"><span class="detail-key">School</span><span class="detail-val">${school}</span></div>
+        <div class="detail-row"><span class="detail-key">Interview Date</span><span class="detail-val" style="${s.interview_date?'color:var(--green)':'color:var(--muted)'}">${interviewDate}</span></div>
+        <div class="detail-row"><span class="detail-key">Last Active</span><span class="detail-val">${lastActive}</span></div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-title">Progress Summary</div>
+        <div class="detail-row"><span class="detail-key">Questions Answered</span><span class="detail-val">${scoreValues.length}</span></div>
+        <div class="detail-row"><span class="detail-key">Questions Passed (≥7)</span><span class="detail-val" style="color:var(--green)">${passCount}</span></div>
+        <div class="detail-row"><span class="detail-key">Average Score</span><span class="detail-val">${avgScore}/10</span></div>
+        <div class="detail-row"><span class="detail-key">Checklist Completion</span><span class="detail-val">${checkTotal>0?`${checkDone}/${checkTotal} (${Math.round(checkDone/checkTotal*100)}%)`:'—'}</span></div>
+      </div>
+      <div class="detail-section"><div class="detail-section-title">Recent Practice Scores</div>${topQHtml}</div>`;
+    openModal('detailModal');
+  }
+
+  function openDateFromDetail() {
+    closeModal('detailModal');
+    const s = allStudents.find(x => x.user_id === currentDetailUserId);
+    if (s) openDateModal(s.user_id, s.full_name||'', s.interview_date||'');
+  }
+
+  // ===== DELETE =====
   function openDeleteModal(userId, name) {
     document.getElementById('deleteTargetId').value = userId;
     document.getElementById('deleteModalSub').textContent = `This will permanently delete all data for "${name}". This cannot be undone.`;
@@ -851,96 +826,54 @@
   async function confirmDelete() {
     const userId = document.getElementById('deleteTargetId').value;
     const { error } = await supabase.from('student_progress').delete().eq('user_id', userId);
-    if (error) {
-      showToast('Error deleting: ' + error.message, 'error');
-    } else {
-      showToast('Student record deleted');
-      closeModal('deleteModal');
-      await loadStudents();
-    }
+    if (error) { showToast('Error deleting: ' + error.message, 'error'); }
+    else { showToast('Student record deleted'); closeModal('deleteModal'); await loadStudents(); }
   }
 
   // ===== MODAL HELPERS =====
   function openModal(id) { document.getElementById(id).classList.add('open'); }
   function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-  document.querySelectorAll('.modal-overlay').forEach(overlay => {
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
-  });
+  document.querySelectorAll('.modal-overlay').forEach(overlay => { overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); }); });
 
   // ===== UTILS =====
-  function escHtml(str) {
-    return String(str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  }
+  function escHtml(str) { return String(str||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-  // ===== INIT =====
-  
+  // ===== EVENT LISTENERS =====
+  document.getElementById('loginSubmitBtn').addEventListener('click', adminLogin);
+  document.getElementById('loginPassword').addEventListener('keypress', (e) => { if (e.key === 'Enter') adminLogin(); });
+  document.getElementById('adminSignOutBtn').addEventListener('click', adminSignOut);
+  document.getElementById('refreshBtn').addEventListener('click', loadStudents);
+  document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
+  document.getElementById('bulkDateAllBtn').addEventListener('click', () => openBulkDateModal(false));
+  document.getElementById('bulkDateSelBtn').addEventListener('click', () => openBulkDateModal(true));
+  document.getElementById('saveBulkDateBtn').addEventListener('click', saveBulkDate);
+  document.getElementById('saveDateBtn').addEventListener('click', saveDate);
+  document.getElementById('detailSetDateBtn').addEventListener('click', openDateFromDetail);
+  document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
 
-    // ===== EVENT LISTENERS =====
-    const loginBtn = document.getElementById('loginSubmitBtn');
-    if (loginBtn) loginBtn.addEventListener('click', adminLogin);
-
-    document.getElementById('loginPassword').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') adminLogin();
-    });
-
-    const signOutBtn = document.getElementById('adminSignOutBtn');
-    if (signOutBtn) signOutBtn.addEventListener('click', adminSignOut);
-
-    const refreshBtn = document.getElementById('refreshBtn');
-    if (refreshBtn) refreshBtn.addEventListener('click', loadStudents);
-
-    // Modal controls
-    const setupModalClose = (btnId, modalId) => {
-      const btn = document.getElementById(btnId);
-      if (btn) btn.addEventListener('click', () => closeModal(modalId));
-    };
-    setupModalClose('dateModalClose', 'dateModal');
-    setupModalClose('dateModalCancel', 'dateModal');
-    setupModalClose('detailModalClose', 'detailModal');
-    setupModalClose('detailModalCancel', 'detailModal');
-    setupModalClose('deleteModalClose', 'deleteModal');
-    setupModalClose('deleteModalCancel', 'deleteModal');
-
-    const saveDateBtn = document.getElementById('saveDateBtn');
-    if (saveDateBtn) saveDateBtn.addEventListener('click', saveDate);
-
-    const detailSetDateBtn = document.getElementById('detailSetDateBtn');
-    if (detailSetDateBtn) detailSetDateBtn.addEventListener('click', openDateFromDetail);
-
-    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-    if (confirmDeleteBtn) confirmDeleteBtn.addEventListener('click', confirmDelete);
-
-    // Filters
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) searchInput.addEventListener('input', filterTable);
-    
-    const uniFilter = document.getElementById('uniFilter');
-    if (uniFilter) uniFilter.addEventListener('change', filterTable);
-    
-    const dateFilter = document.getElementById('dateFilter');
-    if (dateFilter) dateFilter.addEventListener('change', filterTable);
-
-    // Table Event Delegation
-    const tableBody = document.getElementById('studentTableBody');
-    if (tableBody) {
-      tableBody.addEventListener('click', (e) => {
-        const btn = e.target.closest('button');
-        if (!btn) return;
-        const action = btn.dataset.action;
-        const id = btn.dataset.id;
-        if (action === 'view') viewStudent(id);
-        else if (action === 'date') {
-          openDateModal(id, btn.dataset.name, btn.dataset.date);
-        }
-        else if (action === 'delete') {
-          openDeleteModal(id, btn.dataset.name);
-        }
-      });
-    }
-
-    // Initialize
-    checkAuth();
+  // Modal close buttons
+  [['dateModalClose','dateModal'],['dateModalCancel','dateModal'],['bulkDateModalClose','bulkDateModal'],['bulkDateModalCancel','bulkDateModal'],['detailModalClose','detailModal'],['detailModalCancel','detailModal'],['deleteModalClose','deleteModal'],['deleteModalCancel','deleteModal']].forEach(([btnId, modalId]) => {
+    document.getElementById(btnId).addEventListener('click', () => closeModal(modalId));
   });
+
+  // Filters
+  document.getElementById('searchInput').addEventListener('input', filterTable);
+  document.getElementById('uniFilter').addEventListener('change', filterTable);
+  document.getElementById('dateFilter').addEventListener('change', filterTable);
+
+  // Table delegation
+  document.getElementById('studentTableBody').addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const { action, id, name, date } = btn.dataset;
+    if (action === 'view') viewStudent(id);
+    else if (action === 'date') openDateModal(id, name, date);
+    else if (action === 'delete') openDeleteModal(id, name);
+  });
+
+  // Init
+  checkAuth();
+});
 </script>
 </body>
 </html>
