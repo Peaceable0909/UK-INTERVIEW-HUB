@@ -587,7 +587,7 @@
   let readIds = new Set();
 
   async function loadNotifications() {
-    const student = window.getCurrentStudent?.();
+    const student = window.getCurrentStudent?.() || JSON.parse(localStorage.getItem('student') || 'null');
     if (!student?.id) return;
     const db = getDB();
 
@@ -687,7 +687,7 @@
   let qaQuestions = [];
 
   async function loadQuestions() {
-    const student = window.getCurrentStudent?.();
+    const student = window.getCurrentStudent?.() || JSON.parse(localStorage.getItem('student') || 'null');
     if (!student?.id) return;
     const db = getDB();
     const { data } = await db
@@ -1017,8 +1017,27 @@
 
   // ================== LOAD DASHBOARD ==================
   async function loadDashboard() {
-    const student = window.getCurrentStudent();
-    if (!student) { window.location.href = 'index.html'; return; }
+    let student = window.getCurrentStudent();
+
+    // If not in localStorage yet, fall back to live Supabase session
+    if (!student?.id) {
+      const db = getDB();
+      const { data: { session } } = await db.auth.getSession();
+      if (session?.user) {
+        // Load profile from DB
+        const { data: profile } = await db
+          .from('student_progress')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .single();
+        if (profile) {
+          student = { id: profile.user_id, name: profile.full_name, student_id: profile.student_id, email: profile.email };
+          localStorage.setItem('student', JSON.stringify(student));
+        }
+      }
+    }
+
+    if (!student?.id) { window.location.href = 'index.html'; return; }
     document.getElementById('studentName').textContent = student.name || 'Student';
     document.getElementById('studentEmail').textContent = student.email || '';
     document.getElementById('studentId').textContent = `ID: ${student.student_id || '—'}`;
@@ -1072,12 +1091,9 @@
     document.getElementById('viewAllResponsesBtn').style.display = 'none';
   });
 
-  async function init() {
-    let attempts = 0;
-    while (!window.getCurrentStudent() && attempts < 20) { await new Promise(r => setTimeout(r, 150)); attempts++; }
-    await loadDashboard();
-  }
-  init();
+  // Give app.js a moment to run, then load dashboard
+  // loadDashboard handles its own session fallback via Supabase
+  setTimeout(() => loadDashboard(), 400);
 </script>
 </body>
 </html>
