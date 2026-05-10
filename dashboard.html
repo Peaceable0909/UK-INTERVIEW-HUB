@@ -48,6 +48,34 @@
     .btn-signout { background: none; border: 1.5px solid var(--border); color: var(--muted); padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
     .btn-signout:hover { border-color: var(--red); color: var(--red); }
 
+    /* NOTIFICATION BELL */
+    .notif-btn { position: relative; width: 36px; height: 36px; border-radius: 50%; background: var(--surface); border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; color: var(--navy); }
+    .notif-btn:hover { background: var(--border); }
+    .notif-badge { position: absolute; top: -4px; right: -4px; background: var(--red); color: white; font-size: 9px; font-weight: 800; width: 17px; height: 17px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; display: none; }
+    .notif-badge.show { display: flex; }
+
+    /* NOTIFICATION PANEL */
+    .notif-panel { position: fixed; top: 65px; right: 16px; width: 340px; max-height: 480px; background: white; border-radius: 16px; box-shadow: var(--shadow-lg); border: 1px solid var(--border); z-index: 300; display: none; flex-direction: column; overflow: hidden; }
+    .notif-panel.open { display: flex; }
+    .notif-panel-header { padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .notif-panel-title { font-size: 14px; font-weight: 800; color: var(--navy); }
+    .notif-mark-all { font-size: 12px; color: var(--navy); font-weight: 600; cursor: pointer; background: none; border: none; }
+    .notif-mark-all:hover { color: var(--red); }
+    .notif-list { overflow-y: auto; flex: 1; }
+    .notif-item { padding: 14px 18px; border-bottom: 1px solid var(--surface); display: flex; gap: 12px; align-items: flex-start; transition: background 0.15s; }
+    .notif-item.unread { background: #f0f4ff; }
+    .notif-item:hover { background: var(--surface); }
+    .notif-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+    .notif-dot.info { background: #3b82f6; }
+    .notif-dot.success { background: var(--green); }
+    .notif-dot.warning { background: var(--orange); }
+    .notif-dot.read { background: var(--border); }
+    .notif-text { flex: 1; }
+    .notif-title-text { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .notif-msg { font-size: 12px; color: var(--muted); line-height: 1.45; }
+    .notif-time { font-size: 10px; color: var(--muted); margin-top: 4px; }
+    .notif-empty { padding: 32px; text-align: center; color: var(--muted); font-size: 13px; }
+
     /* PAGE */
     .page { padding-top: 72px; max-width: 720px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
     .card { background: var(--white); border-radius: 20px; padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid rgba(255,255,255,0.8); margin-bottom: 14px; }
@@ -59,7 +87,6 @@
 
     /* PROFILE CARD */
     .profile-card { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .profile-left {}
     .profile-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
     .profile-avatar { width: 64px; height: 64px; border-radius: 18px; background: var(--navy); color: white; font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .profile-name { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 2px; }
@@ -70,7 +97,6 @@
     .btn-action:hover { background: var(--surface); }
     .btn-action.dark { background: var(--navy); color: white; border-color: var(--navy); }
     .btn-action.dark:hover { background: var(--navy-mid); }
-
     .profile-right { background: var(--surface); border-radius: 14px; padding: 14px; }
     .prep-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
     .btn-change { background: none; border: none; color: var(--navy); font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: color 0.15s; }
@@ -160,8 +186,6 @@
     .btn-view-all:hover { background: var(--surface); }
 
     /* PRACTICE RESPONSES */
-    .responses-header { display: flex; align-items: center; gap: 6px; }
-    .responses-header .material-symbols-outlined { font-size: 20px; color: #1d4ed8; background: #dbeafe; padding: 6px; border-radius: 10px; }
     .responses-tools { display: flex; gap: 6px; }
     .icon-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--surface); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; color: var(--navy); }
     .icon-btn:hover { background: var(--border); }
@@ -170,7 +194,6 @@
     #searchBox input:focus { border-color: var(--navy); background: white; }
     .response-item { background: var(--surface); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
     .response-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
-    .response-left {}
     .response-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; background: #dbeafe; color: #1d4ed8; }
     .response-tag.bpp { background: #fef3c7; color: #92400e; }
     .response-tag.ukvi { background: #ede9fe; color: #5b21b6; }
@@ -183,7 +206,6 @@
     .score-num { font-size: 18px; font-weight: 900; color: var(--navy); font-family: 'Manrope', sans-serif; }
     .score-num.pass { color: var(--green); }
     .score-num.fail { color: var(--orange); }
-    .response-arrow { display: flex; align-items: center; justify-content: flex-end; color: var(--muted); margin-top: 4px; }
     .response-expand { font-size: 11px; font-weight: 700; color: var(--muted); cursor: pointer; display: flex; align-items: center; gap: 3px; margin-top: 6px; background: none; border: none; padding: 0; }
     .response-expand:hover { color: var(--navy); }
     .response-detail { margin-top: 10px; display: none; }
@@ -213,24 +235,51 @@
     .empty-state p { font-size: 13px; color: var(--muted); }
     .empty-state button { margin-top: 10px; background: var(--surface); border: 1.5px solid var(--border); padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; color: var(--navy); }
 
+    /* ===== Q&A SECTION ===== */
+    .qa-section { margin-bottom: 14px; }
+    .qa-input-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .qa-input { flex: 1; border: 1.5px solid var(--border); border-radius: 12px; padding: 11px 14px; font-size: 13px; outline: none; font-family: 'Inter', sans-serif; background: var(--surface); resize: none; min-height: 44px; max-height: 120px; transition: border 0.15s; }
+    .qa-input:focus { border-color: var(--navy); background: white; }
+    .qa-send-btn { background: var(--navy); color: white; border: none; border-radius: 12px; padding: 0 18px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; white-space: nowrap; }
+    .qa-send-btn:hover { background: var(--navy-mid); }
+    .qa-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .qa-thread { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; padding-right: 4px; }
+    .qa-thread::-webkit-scrollbar { width: 3px; }
+    .qa-thread::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+    .qa-bubble { border-radius: 14px; padding: 12px 14px; }
+    .qa-bubble.question { background: #e0e7ff; border-bottom-right-radius: 4px; align-self: flex-end; max-width: 90%; }
+    .qa-bubble.reply { background: #f0fdf4; border: 1.5px solid #bbf7d0; border-bottom-left-radius: 4px; align-self: flex-start; max-width: 90%; }
+    .qa-bubble.pending { background: var(--surface); border: 1.5px dashed var(--border); }
+    .qa-bubble-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .qa-bubble.question .qa-bubble-label { color: #4338ca; }
+    .qa-bubble.reply .qa-bubble-label { color: var(--green); }
+    .qa-bubble.pending .qa-bubble-label { color: var(--muted); }
+    .qa-bubble-text { font-size: 13px; color: var(--navy); line-height: 1.5; }
+    .qa-bubble-time { font-size: 10px; color: var(--muted); margin-top: 5px; }
+    .qa-status-pill { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; margin-top: 4px; }
+    .qa-status-pill.pending { background: #fef3c7; color: #92400e; }
+    .qa-status-pill.answered { background: #dcfce7; color: var(--green); }
+    .qa-empty { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; }
+
     /* BOTTOM NAV */
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.97); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0 max(10px, env(safe-area-inset-bottom)); z-index: 100; }
     .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--muted); background: none; border: none; cursor: pointer; transition: all 0.15s; flex: 1; text-decoration: none; }
     .nav-item.active { color: var(--navy); }
-    .nav-item.active .nav-icon-wrap { background: #dbeafe; border-radius: 12px; padding: 4px 16px; }
     .nav-item.active .material-symbols-outlined { font-variation-settings: 'FILL' 1,'wght' 600,'GRAD' 0,'opsz' 24; }
     .nav-item .material-symbols-outlined { font-size: 22px; }
     .nav-icon-wrap { padding: 4px 16px; }
+    .nav-item.active .nav-icon-wrap { background: #dbeafe; border-radius: 12px; }
     .nav-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
 
     /* TOAST */
-    #toast { display: none; position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: var(--navy); color: white; padding: 10px 20px; border-radius: 999px; font-size: 13px; font-weight: 600; z-index: 9999; box-shadow: var(--shadow-lg); white-space: nowrap; transition: opacity 0.3s; }
+    #toast { display: none; position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: var(--navy); color: white; padding: 10px 20px; border-radius: 100px; font-size: 13px; font-weight: 600; z-index: 9999; box-shadow: var(--shadow-lg); white-space: nowrap; transition: opacity 0.3s; }
 
     /* RESPONSIVE */
     @media (max-width: 560px) {
       .profile-card { grid-template-columns: 1fr; }
       .two-col { grid-template-columns: 1fr; }
       .stats-grid { grid-template-columns: 1fr 1fr; }
+      .notif-panel { right: 8px; left: 8px; width: auto; }
     }
   </style>
 </head>
@@ -242,10 +291,28 @@
     <a href="index.html" class="back-btn"><span class="material-symbols-outlined">arrow_back_ios_new</span></a>
     <span class="header-title">Prep Hub</span>
   </div>
-  <button id="logoutBtn" class="btn-signout">
-    <span class="material-symbols-outlined" style="font-size:16px">logout</span> Sign Out
-  </button>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <!-- NOTIFICATION BELL -->
+    <button class="notif-btn" id="notifBtn" title="Notifications">
+      <span class="material-symbols-outlined" style="font-size:20px;">notifications</span>
+      <span class="notif-badge" id="notifBadge">0</span>
+    </button>
+    <button id="logoutBtn" class="btn-signout">
+      <span class="material-symbols-outlined" style="font-size:16px">logout</span> Sign Out
+    </button>
+  </div>
 </header>
+
+<!-- NOTIFICATION PANEL -->
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-panel-header">
+    <span class="notif-panel-title">Notifications</span>
+    <button class="notif-mark-all" id="markAllBtn">Mark all read</button>
+  </div>
+  <div class="notif-list" id="notifList">
+    <div class="notif-empty">No notifications yet</div>
+  </div>
+</div>
 
 <main class="page">
   <!-- LOADING -->
@@ -260,13 +327,13 @@
           <div class="profile-top">
             <div class="profile-avatar" id="avatarInitials">AC</div>
             <div>
-              <div class="profile-name" id="studentName">Aisha Khan</div>
-              <div class="profile-email" id="studentEmail">aisha@example.com</div>
-             <div class="profile-id" id="studentId">ID: —</div>
-            <div id="interviewDateDisplay" style="margin-top: 8px; font-size: 12px; font-weight: 700; color: var(--red); display: none;">
-              <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: text-bottom;">calendar_month</span>
-              Interview: <span id="interviewDateValue"></span>
-            </div>
+              <div class="profile-name" id="studentName">Student</div>
+              <div class="profile-email" id="studentEmail">—</div>
+              <div class="profile-id" id="studentId">ID: —</div>
+              <div id="interviewDateDisplay" style="margin-top: 8px; font-size: 12px; font-weight: 700; color: var(--red); display: none;">
+                <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: text-bottom;">calendar_month</span>
+                Interview: <span id="interviewDateValue"></span>
+              </div>
             </div>
           </div>
           <div class="profile-actions">
@@ -298,8 +365,6 @@
 
     <!-- LIVE TRAINING + COUNSELOR -->
     <div class="two-col">
-
-      <!-- LIVE TRAINING -->
       <div class="card">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
           <span class="material-symbols-outlined" style="font-size:20px;color:var(--red);background:#fee2e2;padding:7px;border-radius:10px;">videocam</span>
@@ -312,8 +377,6 @@
           </div>
         </div>
       </div>
-
-      <!-- COUNSELOR -->
       <div class="card">
         <div class="counselor-header">
           <div class="counselor-header-left">
@@ -395,10 +458,8 @@
       </div>
     </div>
 
-    <!-- CHECKLIST + RESPONSES (two col on large) -->
+    <!-- CHECKLIST + RESPONSES -->
     <div class="two-col" style="align-items:start;">
-
-      <!-- CHECKLIST -->
       <div class="card">
         <div class="section-header">
           <div class="section-title-row">
@@ -409,11 +470,10 @@
         </div>
         <div class="checklist-scroll" id="checklistContainer"></div>
         <button class="btn-view-all" onclick="document.getElementById('checklistContainer').style.maxHeight='none';this.style.display='none'">
-          View All Checklist Items <span class="material-symbols-outlined" style="font-size:16px">chevron_right</span>
+          View All <span class="material-symbols-outlined" style="font-size:16px">chevron_right</span>
         </button>
       </div>
 
-      <!-- PRACTICE RESPONSES -->
       <div class="card">
         <div class="section-header">
           <div class="section-title-row">
@@ -422,18 +482,41 @@
           </div>
           <div class="responses-tools">
             <button id="searchBtn" class="icon-btn"><span class="material-symbols-outlined" style="font-size:18px">search</span></button>
-            <button id="filterBtn" class="icon-btn"><span class="material-symbols-outlined" style="font-size:18px">tune</span></button>
           </div>
         </div>
-        <div id="searchBox"><input type="text" placeholder="Search by question, university..."/></div>
+        <div id="searchBox"><input type="text" placeholder="Search responses..."/></div>
         <div id="responsesContainer"></div>
-        <div id="noResponsesMsg">No practice responses yet. Start practising on any university page!</div>
+        <div id="noResponsesMsg">No practice responses yet. Start practising!</div>
         <button class="btn-view-all" id="viewAllResponsesBtn">
-          View All Responses <span class="material-symbols-outlined" style="font-size:16px">chevron_right</span>
+          View All <span class="material-symbols-outlined" style="font-size:16px">chevron_right</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== Q&A WITH COUNSELOR ===== -->
+    <div class="card qa-section">
+      <div class="section-header" style="margin-bottom:16px;">
+        <div class="section-title-row">
+          <span class="material-symbols-outlined" style="font-size:20px;color:#0d9488;background:#ccfbf1;padding:7px;border-radius:10px;">chat</span>
+          <span class="section-title">Ask Your Counselor</span>
+        </div>
+        <span style="font-size:11px;color:var(--muted);font-weight:600;">We reply within 24h</span>
+      </div>
+
+      <div class="qa-input-row">
+        <textarea class="qa-input" id="qaInput" placeholder="Type your question here..." rows="1"
+          oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+        <button class="qa-send-btn" id="qaSendBtn">
+          <span class="material-symbols-outlined" style="font-size:18px;">send</span>
+          Send
         </button>
       </div>
 
+      <div class="qa-thread" id="qaThread">
+        <div class="qa-empty" id="qaEmpty">No questions yet. Ask anything about your interview!</div>
+      </div>
     </div>
+
   </div><!-- end dashboardContent -->
 </main>
 
@@ -441,7 +524,7 @@
 <nav class="bottom-nav">
   <a href="index.html" class="nav-item">
     <div class="nav-icon-wrap"><span class="material-symbols-outlined">home</span></div>
-    <span class="nav-label">Dashboard</span>
+    <span class="nav-label">Home</span>
   </a>
   <a href="index.html" class="nav-item">
     <div class="nav-icon-wrap"><span class="material-symbols-outlined">checklist</span></div>
@@ -464,6 +547,9 @@
 <script src="app.js"></script>
 
 <script>
+  const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+
   // ================== TOAST ==================
   function showToast(msg, type = 'success') {
     const t = document.getElementById('toast');
@@ -473,6 +559,216 @@
     clearTimeout(window._toastTimer);
     window._toastTimer = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.style.display = 'none', 300); }, 3000);
   }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+  }
+
+  function timeAgo(dateStr) {
+    if (!dateStr) return '';
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return `${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h ago`;
+    return `${Math.floor(hrs/24)}d ago`;
+  }
+
+  // ================== SUPABASE CLIENT ==================
+  function getDB() {
+    if (!window._db) window._db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    return window._db;
+  }
+
+  // ================== NOTIFICATIONS ==================
+  let allNotifications = [];
+  let readIds = new Set();
+
+  async function loadNotifications() {
+    const student = window.getCurrentStudent?.();
+    if (!student?.id) return;
+    const db = getDB();
+
+    // Load all notifications targeted to this student
+    const { data: notifs } = await db
+      .from('student_notifications')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    // Load which ones this student has read
+    const { data: reads } = await db
+      .from('notification_reads')
+      .select('notification_id')
+      .eq('user_id', student.id);
+
+    readIds = new Set((reads || []).map(r => r.notification_id));
+
+    // Filter notifications for this student
+    const uni = localStorage.getItem('selected_university') || '';
+    allNotifications = (notifs || []).filter(n => {
+      if (n.target === 'all') return true;
+      if (n.target === uni) return true;
+      if (n.target === student.id) return true;
+      return false;
+    });
+
+    renderNotifications();
+  }
+
+  function renderNotifications() {
+    const list = document.getElementById('notifList');
+    const badge = document.getElementById('notifBadge');
+    const unreadCount = allNotifications.filter(n => !readIds.has(n.id)).length;
+
+    badge.textContent = unreadCount;
+    badge.classList.toggle('show', unreadCount > 0);
+
+    if (allNotifications.length === 0) {
+      list.innerHTML = '<div class="notif-empty">No notifications yet</div>';
+      return;
+    }
+
+    list.innerHTML = allNotifications.map(n => {
+      const isRead = readIds.has(n.id);
+      return `<div class="notif-item ${isRead ? '' : 'unread'}" data-id="${n.id}">
+        <div class="notif-dot ${isRead ? 'read' : n.type}"></div>
+        <div class="notif-text">
+          <div class="notif-title-text">${escapeHtml(n.title)}</div>
+          <div class="notif-msg">${escapeHtml(n.message)}</div>
+          <div class="notif-time">${timeAgo(n.created_at)}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Click to mark as read
+    list.querySelectorAll('.notif-item').forEach(item => {
+      item.addEventListener('click', () => markNotifRead(item.dataset.id));
+    });
+  }
+
+  async function markNotifRead(notifId) {
+    if (readIds.has(notifId)) return;
+    const student = window.getCurrentStudent?.();
+    if (!student?.id) return;
+    const db = getDB();
+    await db.from('notification_reads').upsert({ user_id: student.id, notification_id: notifId });
+    readIds.add(notifId);
+    renderNotifications();
+  }
+
+  async function markAllRead() {
+    const student = window.getCurrentStudent?.();
+    if (!student?.id) return;
+    const db = getDB();
+    const unread = allNotifications.filter(n => !readIds.has(n.id));
+    if (unread.length === 0) return;
+    const rows = unread.map(n => ({ user_id: student.id, notification_id: n.id }));
+    await db.from('notification_reads').upsert(rows);
+    unread.forEach(n => readIds.add(n.id));
+    renderNotifications();
+    showToast('All notifications marked as read');
+  }
+
+  // Toggle notification panel
+  document.getElementById('notifBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.getElementById('notifPanel').classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    const panel = document.getElementById('notifPanel');
+    const btn = document.getElementById('notifBtn');
+    if (!panel.contains(e.target) && !btn.contains(e.target)) panel.classList.remove('open');
+  });
+  document.getElementById('markAllBtn').addEventListener('click', markAllRead);
+
+  // ================== Q&A ==================
+  let qaQuestions = [];
+
+  async function loadQuestions() {
+    const student = window.getCurrentStudent?.();
+    if (!student?.id) return;
+    const db = getDB();
+    const { data } = await db
+      .from('student_questions')
+      .select('*')
+      .eq('student_user_id', student.id)
+      .order('created_at', { ascending: true });
+    qaQuestions = data || [];
+    renderQA();
+  }
+
+  function renderQA() {
+    const thread = document.getElementById('qaThread');
+    const empty = document.getElementById('qaEmpty');
+    if (qaQuestions.length === 0) {
+      empty.style.display = 'block';
+      thread.innerHTML = '';
+      thread.appendChild(empty);
+      return;
+    }
+    empty.style.display = 'none';
+    thread.innerHTML = qaQuestions.map(q => {
+      const questionBubble = `
+        <div class="qa-bubble question">
+          <div class="qa-bubble-label">You asked</div>
+          <div class="qa-bubble-text">${escapeHtml(q.question_text)}</div>
+          <div class="qa-bubble-time">${timeAgo(q.created_at)}</div>
+        </div>`;
+
+      const replyBubble = q.admin_reply
+        ? `<div class="qa-bubble reply">
+            <div class="qa-bubble-label">✅ Counselor replied</div>
+            <div class="qa-bubble-text">${escapeHtml(q.admin_reply)}</div>
+            <div class="qa-bubble-time">${timeAgo(q.replied_at)}</div>
+          </div>`
+        : `<div class="qa-bubble pending">
+            <div class="qa-bubble-label">⏳ Awaiting reply</div>
+            <div class="qa-bubble-text" style="color:var(--muted);">Your counselor will respond within 24 hours.</div>
+          </div>`;
+
+      return questionBubble + replyBubble;
+    }).join('');
+
+    // Scroll to bottom
+    thread.scrollTop = thread.scrollHeight;
+  }
+
+  async function sendQuestion() {
+    const input = document.getElementById('qaInput');
+    const btn = document.getElementById('qaSendBtn');
+    const text = input.value.trim();
+    if (!text) return;
+    const student = window.getCurrentStudent?.();
+    if (!student?.id) { showToast('Please log in to send questions', 'error'); return; }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;animation:spin 0.7s linear infinite">progress_activity</span>';
+
+    const db = getDB();
+    const { error } = await db.from('student_questions').insert({
+      student_user_id: student.id,
+      student_name: student.name || 'Student',
+      student_email: student.email || '',
+      question_text: text
+    });
+
+    btn.disabled = false;
+    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">send</span> Send';
+
+    if (error) { showToast('Could not send question. Try again.', 'error'); return; }
+
+    input.value = '';
+    input.style.height = 'auto';
+    showToast('Question sent! We\'ll reply within 24h.');
+    await loadQuestions();
+  }
+
+  document.getElementById('qaSendBtn').addEventListener('click', sendQuestion);
+  document.getElementById('qaInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendQuestion(); }
+  });
 
   // ================== LIVE SESSION ==================
   const SCHEDULED_SESSIONS = [
@@ -498,47 +794,18 @@
     if (activeSession) {
       const start = new Date(activeSession.startTime);
       const end = new Date(start.getTime() + SESSION_DURATION_MINUTES * 60000);
-      const timeStr = start.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) + ' – ' + end.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) + ' (90 min)';
-      container.innerHTML = `
-        <div class="live-badge"><div class="live-dot"></div> LIVE NOW</div>
-        <div class="live-title">${escapeHtml(activeSession.title)}</div>
-        <div class="live-time">${timeStr}</div>
-        <a href="${activeSession.zoomLink}" target="_blank" rel="noopener noreferrer" class="btn-zoom">
-          <span class="material-symbols-outlined" style="font-size:18px">videocam</span> Join Zoom Training
-        </a>
-        <div class="live-students">
-          <div class="student-avatars">
-            <img src="https://i.pravatar.cc/40?img=1" alt=""/>
-            <img src="https://i.pravatar.cc/40?img=2" alt=""/>
-            <img src="https://i.pravatar.cc/40?img=3" alt=""/>
-            <img src="https://i.pravatar.cc/40?img=4" alt=""/>
-          </div>
-          <span class="live-count">24 students are live</span>
-        </div>`;
+      const timeStr = start.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) + ' – ' + end.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+      container.innerHTML = `<div class="live-badge"><div class="live-dot"></div> LIVE NOW</div><div class="live-title">${escapeHtml(activeSession.title)}</div><div class="live-time">${timeStr}</div><a href="${activeSession.zoomLink}" target="_blank" rel="noopener noreferrer" class="btn-zoom"><span class="material-symbols-outlined" style="font-size:18px">videocam</span> Join Zoom Training</a><div class="live-students"><div class="student-avatars"><img src="https://i.pravatar.cc/40?img=1" alt=""/><img src="https://i.pravatar.cc/40?img=2" alt=""/><img src="https://i.pravatar.cc/40?img=3" alt=""/></div><span class="live-count">24 students are live</span></div>`;
     } else if (upcomingSession) {
       const start = new Date(upcomingSession.startTime);
-      container.innerHTML = `
-        <div class="session-upcoming">
-          <span class="material-symbols-outlined">event</span>
-          <p style="font-weight:700;color:var(--navy);margin-bottom:3px;">${escapeHtml(upcomingSession.title)}</p>
-          <p>${start.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'})} at ${start.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</p>
-          <p style="font-size:11px;margin-top:6px;">Zoom link appears when session starts</p>
-        </div>`;
+      container.innerHTML = `<div class="session-upcoming"><span class="material-symbols-outlined">event</span><p style="font-weight:700;color:var(--navy);margin-bottom:3px;">${escapeHtml(upcomingSession.title)}</p><p>${start.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'})} at ${start.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</p><p style="font-size:11px;margin-top:6px;">Zoom link appears when session starts</p></div>`;
     } else {
       container.innerHTML = `<div class="session-upcoming"><span class="material-symbols-outlined">event_busy</span><p>No upcoming sessions scheduled</p></div>`;
     }
   }
-  setInterval(updateLiveSessionUI, 30000);
 
   // ================== HELPERS ==================
-  const QUESTION_LABELS = {
-    'UKVI_Q1':'Why study in the UK?','UKVI_Q2':'Why this specific university?','UKVI_Q3':'Plans after your studies?',
-    'UKVI_Q4':'How will you fund your studies?','UKVI_Q5':'Your academic background','UKVI_Q6':'Course name and duration',
-    'UKVI_Q7':'Why study this subject?','UKVI_Q8':'Ties to your home country?',
-    'NL_Q1':'Why study in the Netherlands?','NL_Q2':'Why this Dutch university?','NL_Q3':'Plans after your studies?',
-    'NL_Q4':'How will you fund your studies?','NL_Q5':'Language of instruction?','NL_Q6':'Course name and duration',
-    'NL_Q7':'Connections in the Netherlands?','NL_Q8':'Ties to your home country?','BPP_Q1':'Why study at BPP University?',
-  };
+  const QUESTION_LABELS = { 'BPP_Q1':'Why study at BPP University?', 'UKVI_Q1':'Why study in the UK?', 'NL_Q1':'Why study in the Netherlands?' };
   function getQuestionLabel(qId, data) {
     if (data?.questionText && !data.questionText.match(/^(REGENT|YSJ|UKVI|BPP|NL)_/)) return data.questionText;
     if (QUESTION_LABELS[qId]) return QUESTION_LABELS[qId];
@@ -553,19 +820,10 @@
     return 'Practice';
   }
   function getCategoryClass(cat) {
-    const map = {'BPP':'bpp','UKVI':'ukvi','Netherlands':'netherlands','York St John':'yorkstjohn'};
-    return map[cat] || '';
-  }
-  function formatChecklistKey(key) {
-    if (/^(bpp|regent|ysj|nl|ukvi)_chk_\d+/.test(key)) return 'Checklist item ' + key.replace(/^.*_chk_/, '#');
-    return key || 'Checklist item';
-  }
-  function escapeHtml(str) {
-    if (!str) return '';
-    return String(str).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+    return {'BPP':'bpp','UKVI':'ukvi','Netherlands':'netherlands','York St John':'yorkstjohn'}[cat] || '';
   }
 
-  let allAiScores = {}, searchQuery = '', filterCategory = 'all', searchVisible = false;
+  let allAiScores = {}, searchQuery = '', filterCategory = 'all';
 
   // ================== CHECKLIST ==================
   function renderChecklist(checklistStatus) {
@@ -590,109 +848,55 @@
           <div class="check-circle ${done ? 'done' : 'pending'}">
             <span class="material-symbols-outlined">${done ? 'check' : 'radio_button_unchecked'}</span>
           </div>
-          <span class="check-label">${escapeHtml(formatChecklistKey(key))}</span>
+          <span class="check-label">${escapeHtml(key.length > 50 ? key.substring(0,50)+'…' : key)}</span>
         </div>
         <div class="check-status ${done ? 'done' : 'pending'}">
           <span class="material-symbols-outlined">${done ? 'check_circle' : 'pending'}</span>
           ${done ? 'DONE' : 'PENDING'}
         </div>
-      </div>
-    `).join('');
+      </div>`).join('');
   }
 
   // ================== RESPONSES ==================
-  function renderResponses(aiScores, query = '', category = 'all') {
+  function renderResponses(aiScores, query = '') {
     const container = document.getElementById('responsesContainer');
     const noMsg = document.getElementById('noResponsesMsg');
     const viewAllBtn = document.getElementById('viewAllResponsesBtn');
     if (!aiScores || Object.keys(aiScores).length === 0) {
-      container.innerHTML = '';
-      noMsg.style.display = 'block';
-      if (viewAllBtn) viewAllBtn.style.display = 'none';
-      return;
+      container.innerHTML = ''; noMsg.style.display = 'block';
+      if (viewAllBtn) viewAllBtn.style.display = 'none'; return;
     }
     let entries = Object.entries(aiScores);
-    if (category !== 'all') entries = entries.filter(([qId]) => getCategoryFromId(qId).toLowerCase().includes(category.toLowerCase()));
     if (query.trim()) {
       const q = query.toLowerCase();
-      entries = entries.filter(([qId, data]) => getQuestionLabel(qId,data).toLowerCase().includes(q) || (data.answer||'').toLowerCase().includes(q) || getCategoryFromId(qId).toLowerCase().includes(q));
+      entries = entries.filter(([qId, data]) => getQuestionLabel(qId,data).toLowerCase().includes(q) || (data.answer||'').toLowerCase().includes(q));
     }
     if (entries.length === 0) {
-      container.innerHTML = '';
-      noMsg.textContent = 'No responses match your search.';
-      noMsg.style.display = 'block';
-      if (viewAllBtn) viewAllBtn.style.display = 'none';
-      return;
+      container.innerHTML = ''; noMsg.textContent = 'No responses match your search.'; noMsg.style.display = 'block';
+      if (viewAllBtn) viewAllBtn.style.display = 'none'; return;
     }
     noMsg.style.display = 'none';
-    entries.sort((a,b) => { const dA = a[1]?.date ? new Date(a[1].date) : 0; const dB = b[1]?.date ? new Date(b[1].date) : 0; return dB - dA; });
-    const shown = entries.slice(0, 3);
-    const hasMore = entries.length > 3;
+    entries.sort((a,b) => { const dA = a[1]?.date?new Date(a[1].date):0; const dB = b[1]?.date?new Date(b[1].date):0; return dB-dA; });
+    const shown = entries.slice(0,3);
     container.innerHTML = shown.map(([qId, data]) => {
       const score = typeof data.score === 'number' ? data.score : 0;
       const pass = score >= 7;
       const label = getQuestionLabel(qId, data);
       const cat = getCategoryFromId(qId);
       const catClass = getCategoryClass(cat);
-      const feedback = data.feedback || data.summary || 'No feedback available';
-      const answer = data.answer ? (data.answer.length > 120 ? data.answer.substring(0,120)+'…' : data.answer) : 'No answer saved';
-      const dateStr = data.date ? new Date(data.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
-      return `
-        <div class="response-item">
-          <div class="response-top">
-            <div class="response-left">
-              <div class="response-tag ${catClass}">${escapeHtml(cat)}</div>
-              <div class="response-question">${escapeHtml(label)}</div>
-              <div class="response-meta">
-                ${dateStr ? escapeHtml(dateStr) + ' · ' : ''}
-                <span class="${pass ? '' : 'needs-work'}">${pass ? 'Reviewed' : 'Needs Work'}</span>
-              </div>
-            </div>
-            <div class="response-score">
-              <div class="score-num ${pass ? 'pass' : 'fail'}">${score.toFixed(1)}/10</div>
-            </div>
+      const dateStr = data.date ? new Date(data.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '';
+      return `<div class="response-item">
+        <div class="response-top">
+          <div>
+            <div class="response-tag ${catClass}">${escapeHtml(cat)}</div>
+            <div class="response-question">${escapeHtml(label)}</div>
+            <div class="response-meta">${dateStr ? escapeHtml(dateStr)+' · ' : ''}<span class="${pass?'':'needs-work'}">${pass?'Reviewed':'Needs Work'}</span></div>
           </div>
-          <button class="response-expand" onclick="toggleDetail(this)">
-            <span class="material-symbols-outlined" style="font-size:14px">expand_more</span> Review
-          </button>
-          <div class="response-detail">
-            <div class="detail-box"><div class="detail-box-label">Your Answer</div><div class="detail-box-text">${escapeHtml(answer)}</div></div>
-            <div class="detail-box" style="border-left:3px solid ${pass?'var(--green)':'var(--orange)'};">
-              <div class="detail-box-label">AI Feedback</div>
-              <div class="detail-box-text">${escapeHtml(feedback.length>250?feedback.substring(0,250)+'…':feedback)}</div>
-            </div>
-            <button class="btn-delete-resp" onclick="deleteResponse('${escapeHtml(qId)}')">
-              <span class="material-symbols-outlined" style="font-size:14px">delete</span> Remove this response
-            </button>
-          </div>
-        </div>`;
+          <div class="response-score"><div class="score-num ${pass?'pass':'fail'}">${score.toFixed(1)}/10</div></div>
+        </div>
+      </div>`;
     }).join('');
-    if (viewAllBtn) viewAllBtn.style.display = hasMore ? 'flex' : 'none';
-  }
-
-  function toggleDetail(btn) {
-    const detail = btn.nextElementSibling;
-    const isOpen = detail.classList.contains('open');
-    detail.classList.toggle('open', !isOpen);
-    btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:14px">${isOpen?'expand_more':'expand_less'}</span> ${isOpen?'Review':'Close'}`;
-  }
-
-  async function deleteResponse(qId) {
-    if (!confirm('Remove this response from your record?')) return;
-    const student = window.getCurrentStudent();
-    if (!student?.id) return;
-    const progress = await window.loadSavedProgress();
-    const scores = progress?.ai_scores || {};
-    const responses = progress?.practice_responses || {};
-    delete scores[qId]; delete responses[qId]; delete allAiScores[qId];
-    const { createClient } = supabase;
-    const sc = window._supabaseClient || createClient('https://okshteetxmmphgjgvrwt.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8');
-    window._supabaseClient = sc;
-    const { error } = await sc.from('student_progress').update({ ai_scores: scores, practice_responses: responses, updated_at: new Date().toISOString() }).eq('user_id', student.id);
-    if (error) { showToast('Could not remove response', 'error'); return; }
-    showToast('Response removed');
-    renderResponses(allAiScores, searchQuery, filterCategory);
-    updateStats(allAiScores);
+    if (viewAllBtn) viewAllBtn.style.display = entries.length > 3 ? 'flex' : 'none';
   }
 
   function updateStats(aiScores) {
@@ -705,60 +909,6 @@
     document.getElementById('totalResponses').textContent = total;
     document.getElementById('avgScore').innerHTML = `${avg}<span style="font-size:14px;font-weight:600;color:var(--green);opacity:0.6;">/10</span>`;
     document.getElementById('passRate').innerHTML = `${passRate}<span style="font-size:14px;font-weight:600;color:var(--green);opacity:0.6;">%</span>`;
-  }
-
-  function setupSearchFilter() {
-    const searchBtn = document.getElementById('searchBtn');
-    const filterBtn = document.getElementById('filterBtn');
-    const searchBox = document.getElementById('searchBox');
-    searchBtn.addEventListener('click', () => {
-      searchVisible = !searchVisible;
-      searchBox.style.display = searchVisible ? 'block' : 'none';
-      if (searchVisible) searchBox.querySelector('input').focus();
-    });
-    searchBox.querySelector('input').addEventListener('input', e => { searchQuery = e.target.value; renderResponses(allAiScores, searchQuery, filterCategory); });
-    const categories = ['all','Regent','YSJ','BPP','UKVI','Netherlands'];
-    let catIndex = 0;
-    filterBtn.addEventListener('click', () => {
-      catIndex = (catIndex + 1) % categories.length;
-      filterCategory = categories[catIndex];
-      filterBtn.querySelector('span').textContent = filterCategory === 'all' ? 'tune' : 'filter_alt';
-      renderResponses(allAiScores, searchQuery, filterCategory);
-    });
-    document.getElementById('viewAllResponsesBtn')?.addEventListener('click', () => {
-      renderResponsesAll(allAiScores);
-      document.getElementById('viewAllResponsesBtn').style.display = 'none';
-    });
-  }
-
-  function renderResponsesAll(aiScores) {
-    const entries = Object.entries(aiScores).sort((a,b) => { const dA = a[1]?.date?new Date(a[1].date):0; const dB = b[1]?.date?new Date(b[1].date):0; return dB-dA; });
-    const container = document.getElementById('responsesContainer');
-    container.innerHTML = entries.map(([qId, data]) => {
-      const score = typeof data.score === 'number' ? data.score : 0;
-      const pass = score >= 7;
-      const label = getQuestionLabel(qId, data);
-      const cat = getCategoryFromId(qId);
-      const catClass = getCategoryClass(cat);
-      const feedback = data.feedback || data.summary || 'No feedback available';
-      const answer = data.answer ? (data.answer.length>120?data.answer.substring(0,120)+'…':data.answer) : 'No answer saved';
-      const dateStr = data.date ? new Date(data.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
-      return `<div class="response-item">
-        <div class="response-top">
-          <div class="response-left">
-            <div class="response-tag ${catClass}">${escapeHtml(cat)}</div>
-            <div class="response-question">${escapeHtml(label)}</div>
-            <div class="response-meta">${dateStr?escapeHtml(dateStr)+' · ':''}<span class="${pass?'':'needs-work'}">${pass?'Reviewed':'Needs Work'}</span></div>
-          </div>
-          <div class="response-score"><div class="score-num ${pass?'pass':'fail'}">${score.toFixed(1)}/10</div></div>
-        </div>
-        <button class="response-expand" onclick="toggleDetail(this)"><span class="material-symbols-outlined" style="font-size:14px">expand_more</span> Review</button>
-        <div class="response-detail">
-          <div class="detail-box"><div class="detail-box-label">Your Answer</div><div class="detail-box-text">${escapeHtml(answer)}</div></div>
-          <div class="detail-box" style="border-left:3px solid ${pass?'var(--green)':'var(--orange)'};"><div class="detail-box-label">AI Feedback</div><div class="detail-box-text">${escapeHtml(feedback.length>250?feedback.substring(0,250)+'…':feedback)}</div></div>
-          <button class="btn-delete-resp" onclick="deleteResponse('${escapeHtml(qId)}')"><span class="material-symbols-outlined" style="font-size:14px">delete</span> Remove</button>
-        </div></div>`;
-    }).join('');
   }
 
   // ================== COUNSELOR ==================
@@ -800,10 +950,8 @@
       errorEl.style.display='none'; saveBtn.disabled=true; saveBtn.textContent='Saving...';
       const student = window.getCurrentStudent();
       if (student?.id) {
-        const { createClient } = supabase;
-        const sc = window._supabaseClient || createClient('https://okshteetxmmphgjgvrwt.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8');
-        window._supabaseClient = sc;
-        await sc.from('student_progress').update({ counselor: counselorData, updated_at: new Date().toISOString() }).eq('user_id', student.id);
+        const db = getDB();
+        await db.from('student_progress').update({ counselor: counselorData, updated_at: new Date().toISOString() }).eq('user_id', student.id);
       }
       current = counselorData; renderCounselorCard(current);
       saveBtn.disabled=false; saveBtn.textContent='Save Counselor';
@@ -827,7 +975,7 @@
     const btn = document.getElementById('changeCourseBtn');
     btn.disabled = true; btn.textContent = 'Resetting...';
     if (typeof window.resetAllProgress === 'function') await window.resetAllProgress();
-    localStorage.removeItem('selected_university'); localStorage.removeItem('last_course'); localStorage.removeItem('counselor');
+    localStorage.removeItem('selected_university'); localStorage.removeItem('last_course');
     showToast('Progress reset. Redirecting...');
     setTimeout(() => window.location.href = 'index.html', 1500);
   }
@@ -843,8 +991,7 @@
     const checklist = progress?.checklist_status || {};
     const scores = Object.values(responses).map(s=>s.score).filter(n=>typeof n==='number');
     const avg = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1) : 'N/A';
-    const message = `Student: ${student.name} (ID: ${student.student_id||'N/A'})\nEmail: ${student.email}\nDate: ${new Date().toLocaleString()}\nTotal responses: ${scores.length}\nAverage score: ${avg}/10\nChecklist: ${Object.values(checklist).filter(v=>v===true).length}/${Object.keys(checklist).length} done`;
-    const result = await window.sendReadyEmail(responses, checklist, avg, message);
+    const result = await window.sendReadyEmail(responses, checklist, avg, 'Dashboard report request');
     btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px">mail</span> Email Report';
     if (result?.success) showToast('Report sent to your tutor'); else showToast('Failed to send report', 'error');
   }
@@ -855,21 +1002,20 @@
     const data = { student, progress, exportedAt: new Date().toISOString() };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = `interview_progress_${student?.student_id||'student'}.json`;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-    showToast('Data exported');
+    const a = document.createElement('a'); a.href = url;
+    a.download = `interview_progress_${student?.student_id||'student'}.json`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url); showToast('Data exported');
   }
 
   async function logout() {
-    const { createClient } = supabase;
-    const sc = window._supabaseClient || createClient('https://okshteetxmmphgjgvrwt.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8');
-    await sc.auth.signOut();
+    const db = getDB();
+    await db.auth.signOut();
     localStorage.removeItem('student'); localStorage.removeItem('selected_university'); localStorage.removeItem('last_course');
     window.location.href = 'index.html';
   }
 
-  // ================== LOAD ==================
+  // ================== LOAD DASHBOARD ==================
   async function loadDashboard() {
     const student = window.getCurrentStudent();
     if (!student) { window.location.href = 'index.html'; return; }
@@ -880,8 +1026,6 @@
     document.getElementById('avatarInitials').textContent = initials;
     updateEnrollmentDisplay();
     const progress = await window.loadSavedProgress();
-    
-    // Display Interview Date
     if (progress?.interview_date) {
       const date = new Date(progress.interview_date);
       document.getElementById('interviewDateValue').textContent = date.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
@@ -900,6 +1044,9 @@
     renderResponses(allAiScores);
     await setupCounselor(progress?.counselor || null);
     updateLiveSessionUI();
+    // Load Q&A and notifications
+    await loadQuestions();
+    await loadNotifications();
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('dashboardContent').style.display = 'block';
   }
@@ -909,7 +1056,21 @@
   document.getElementById('emailReportBtn').addEventListener('click', sendReport);
   document.getElementById('exportJsonBtn').addEventListener('click', exportJson);
   document.getElementById('changeCourseBtn').addEventListener('click', resetAndChangeCourse);
-  setupSearchFilter();
+
+  document.getElementById('searchBtn').addEventListener('click', () => {
+    const box = document.getElementById('searchBox');
+    const visible = box.style.display === 'block';
+    box.style.display = visible ? 'none' : 'block';
+    if (!visible) box.querySelector('input').focus();
+  });
+  document.getElementById('searchBox').querySelector('input').addEventListener('input', e => {
+    searchQuery = e.target.value;
+    renderResponses(allAiScores, searchQuery);
+  });
+  document.getElementById('viewAllResponsesBtn')?.addEventListener('click', () => {
+    renderResponses(allAiScores, searchQuery);
+    document.getElementById('viewAllResponsesBtn').style.display = 'none';
+  });
 
   async function init() {
     let attempts = 0;
