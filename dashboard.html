@@ -81,9 +81,10 @@
     .card { background: var(--white); border-radius: 20px; padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid rgba(255,255,255,0.8); margin-bottom: 14px; }
 
     /* LOADING */
-    #loadingState { display: flex; justify-content: center; align-items: center; padding: 80px 0; }
+    #loadingState { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 80px 0; gap: 16px; }
     .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
+    #loadingState p { font-size: 13px; color: var(--muted); }
 
     /* PROFILE CARD */
     .profile-card { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -206,15 +207,6 @@
     .score-num { font-size: 18px; font-weight: 900; color: var(--navy); font-family: 'Manrope', sans-serif; }
     .score-num.pass { color: var(--green); }
     .score-num.fail { color: var(--orange); }
-    .response-expand { font-size: 11px; font-weight: 700; color: var(--muted); cursor: pointer; display: flex; align-items: center; gap: 3px; margin-top: 6px; background: none; border: none; padding: 0; }
-    .response-expand:hover { color: var(--navy); }
-    .response-detail { margin-top: 10px; display: none; }
-    .response-detail.open { display: block; }
-    .detail-box { background: white; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; }
-    .detail-box-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 4px; }
-    .detail-box-text { font-size: 12px; color: var(--navy); line-height: 1.55; }
-    .btn-delete-resp { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: var(--muted); background: none; border: none; cursor: pointer; padding: 0; margin-top: 4px; transition: color 0.15s; }
-    .btn-delete-resp:hover { color: var(--red); }
     #noResponsesMsg { text-align: center; padding: 32px 0; color: var(--muted); font-size: 14px; display: none; }
 
     /* COUNSELOR EDIT FORM */
@@ -235,7 +227,7 @@
     .empty-state p { font-size: 13px; color: var(--muted); }
     .empty-state button { margin-top: 10px; background: var(--surface); border: 1.5px solid var(--border); padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; color: var(--navy); }
 
-    /* ===== Q&A SECTION ===== */
+    /* Q&A SECTION */
     .qa-section { margin-bottom: 14px; }
     .qa-input-row { display: flex; gap: 8px; margin-bottom: 16px; }
     .qa-input { flex: 1; border: 1.5px solid var(--border); border-radius: 12px; padding: 11px 14px; font-size: 13px; outline: none; font-family: 'Inter', sans-serif; background: var(--surface); resize: none; min-height: 44px; max-height: 120px; transition: border 0.15s; }
@@ -256,9 +248,6 @@
     .qa-bubble.pending .qa-bubble-label { color: var(--muted); }
     .qa-bubble-text { font-size: 13px; color: var(--navy); line-height: 1.5; }
     .qa-bubble-time { font-size: 10px; color: var(--muted); margin-top: 5px; }
-    .qa-status-pill { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; margin-top: 4px; }
-    .qa-status-pill.pending { background: #fef3c7; color: #92400e; }
-    .qa-status-pill.answered { background: #dcfce7; color: var(--green); }
     .qa-empty { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; }
 
     /* BOTTOM NAV */
@@ -292,7 +281,6 @@
     <span class="header-title">Prep Hub</span>
   </div>
   <div style="display:flex;align-items:center;gap:8px;">
-    <!-- NOTIFICATION BELL -->
     <button class="notif-btn" id="notifBtn" title="Notifications">
       <span class="material-symbols-outlined" style="font-size:20px;">notifications</span>
       <span class="notif-badge" id="notifBadge">0</span>
@@ -316,7 +304,10 @@
 
 <main class="page">
   <!-- LOADING -->
-  <div id="loadingState"><div class="spinner"></div></div>
+  <div id="loadingState">
+    <div class="spinner"></div>
+    <p id="loadingMsg">Loading your dashboard…</p>
+  </div>
 
   <div id="dashboardContent" style="display:none;">
 
@@ -493,7 +484,7 @@
       </div>
     </div>
 
-    <!-- ===== Q&A WITH COUNSELOR ===== -->
+    <!-- Q&A WITH COUNSELOR -->
     <div class="card qa-section">
       <div class="section-header" style="margin-bottom:16px;">
         <div class="section-title-row">
@@ -502,7 +493,6 @@
         </div>
         <span style="font-size:11px;color:var(--muted);font-weight:600;">We reply within 24h</span>
       </div>
-
       <div class="qa-input-row">
         <textarea class="qa-input" id="qaInput" placeholder="Type your question here..." rows="1"
           oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
@@ -511,7 +501,6 @@
           Send
         </button>
       </div>
-
       <div class="qa-thread" id="qaThread">
         <div class="qa-empty" id="qaEmpty">No questions yet. Ask anything about your interview!</div>
       </div>
@@ -590,30 +579,11 @@
     const student = window.getCurrentStudent?.() || JSON.parse(localStorage.getItem('student') || 'null');
     if (!student?.id) return;
     const db = getDB();
-
-    // Load all notifications targeted to this student
-    const { data: notifs } = await db
-      .from('student_notifications')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    // Load which ones this student has read
-    const { data: reads } = await db
-      .from('notification_reads')
-      .select('notification_id')
-      .eq('user_id', student.id);
-
+    const { data: notifs } = await db.from('student_notifications').select('*').order('created_at', { ascending: false });
+    const { data: reads } = await db.from('notification_reads').select('notification_id').eq('user_id', student.id);
     readIds = new Set((reads || []).map(r => r.notification_id));
-
-    // Filter notifications for this student
     const uni = localStorage.getItem('selected_university') || '';
-    allNotifications = (notifs || []).filter(n => {
-      if (n.target === 'all') return true;
-      if (n.target === uni) return true;
-      if (n.target === student.id) return true;
-      return false;
-    });
-
+    allNotifications = (notifs || []).filter(n => n.target === 'all' || n.target === uni || n.target === student.id);
     renderNotifications();
   }
 
@@ -621,15 +591,9 @@
     const list = document.getElementById('notifList');
     const badge = document.getElementById('notifBadge');
     const unreadCount = allNotifications.filter(n => !readIds.has(n.id)).length;
-
     badge.textContent = unreadCount;
     badge.classList.toggle('show', unreadCount > 0);
-
-    if (allNotifications.length === 0) {
-      list.innerHTML = '<div class="notif-empty">No notifications yet</div>';
-      return;
-    }
-
+    if (allNotifications.length === 0) { list.innerHTML = '<div class="notif-empty">No notifications yet</div>'; return; }
     list.innerHTML = allNotifications.map(n => {
       const isRead = readIds.has(n.id);
       return `<div class="notif-item ${isRead ? '' : 'unread'}" data-id="${n.id}">
@@ -641,8 +605,6 @@
         </div>
       </div>`;
     }).join('');
-
-    // Click to mark as read
     list.querySelectorAll('.notif-item').forEach(item => {
       item.addEventListener('click', () => markNotifRead(item.dataset.id));
     });
@@ -652,8 +614,7 @@
     if (readIds.has(notifId)) return;
     const student = window.getCurrentStudent?.();
     if (!student?.id) return;
-    const db = getDB();
-    await db.from('notification_reads').upsert({ user_id: student.id, notification_id: notifId });
+    await getDB().from('notification_reads').upsert({ user_id: student.id, notification_id: notifId });
     readIds.add(notifId);
     renderNotifications();
   }
@@ -661,17 +622,14 @@
   async function markAllRead() {
     const student = window.getCurrentStudent?.();
     if (!student?.id) return;
-    const db = getDB();
     const unread = allNotifications.filter(n => !readIds.has(n.id));
     if (unread.length === 0) return;
-    const rows = unread.map(n => ({ user_id: student.id, notification_id: n.id }));
-    await db.from('notification_reads').upsert(rows);
+    await getDB().from('notification_reads').upsert(unread.map(n => ({ user_id: student.id, notification_id: n.id })));
     unread.forEach(n => readIds.add(n.id));
     renderNotifications();
     showToast('All notifications marked as read');
   }
 
-  // Toggle notification panel
   document.getElementById('notifBtn').addEventListener('click', (e) => {
     e.stopPropagation();
     document.getElementById('notifPanel').classList.toggle('open');
@@ -689,12 +647,7 @@
   async function loadQuestions() {
     const student = window.getCurrentStudent?.() || JSON.parse(localStorage.getItem('student') || 'null');
     if (!student?.id) return;
-    const db = getDB();
-    const { data } = await db
-      .from('student_questions')
-      .select('*')
-      .eq('student_user_id', student.id)
-      .order('created_at', { ascending: true });
+    const { data } = await getDB().from('student_questions').select('*').eq('student_user_id', student.id).order('created_at', { ascending: true });
     qaQuestions = data || [];
     renderQA();
   }
@@ -702,36 +655,15 @@
   function renderQA() {
     const thread = document.getElementById('qaThread');
     const empty = document.getElementById('qaEmpty');
-    if (qaQuestions.length === 0) {
-      empty.style.display = 'block';
-      thread.innerHTML = '';
-      thread.appendChild(empty);
-      return;
-    }
+    if (qaQuestions.length === 0) { empty.style.display = 'block'; thread.innerHTML = ''; thread.appendChild(empty); return; }
     empty.style.display = 'none';
     thread.innerHTML = qaQuestions.map(q => {
-      const questionBubble = `
-        <div class="qa-bubble question">
-          <div class="qa-bubble-label">You asked</div>
-          <div class="qa-bubble-text">${escapeHtml(q.question_text)}</div>
-          <div class="qa-bubble-time">${timeAgo(q.created_at)}</div>
-        </div>`;
-
+      const questionBubble = `<div class="qa-bubble question"><div class="qa-bubble-label">You asked</div><div class="qa-bubble-text">${escapeHtml(q.question_text)}</div><div class="qa-bubble-time">${timeAgo(q.created_at)}</div></div>`;
       const replyBubble = q.admin_reply
-        ? `<div class="qa-bubble reply">
-            <div class="qa-bubble-label">✅ Counselor replied</div>
-            <div class="qa-bubble-text">${escapeHtml(q.admin_reply)}</div>
-            <div class="qa-bubble-time">${timeAgo(q.replied_at)}</div>
-          </div>`
-        : `<div class="qa-bubble pending">
-            <div class="qa-bubble-label">⏳ Awaiting reply</div>
-            <div class="qa-bubble-text" style="color:var(--muted);">Your counselor will respond within 24 hours.</div>
-          </div>`;
-
+        ? `<div class="qa-bubble reply"><div class="qa-bubble-label">✅ Counselor replied</div><div class="qa-bubble-text">${escapeHtml(q.admin_reply)}</div><div class="qa-bubble-time">${timeAgo(q.replied_at)}</div></div>`
+        : `<div class="qa-bubble pending"><div class="qa-bubble-label">⏳ Awaiting reply</div><div class="qa-bubble-text" style="color:var(--muted);">Your counselor will respond within 24 hours.</div></div>`;
       return questionBubble + replyBubble;
     }).join('');
-
-    // Scroll to bottom
     thread.scrollTop = thread.scrollHeight;
   }
 
@@ -742,25 +674,18 @@
     if (!text) return;
     const student = window.getCurrentStudent?.();
     if (!student?.id) { showToast('Please log in to send questions', 'error'); return; }
-
     btn.disabled = true;
     btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;animation:spin 0.7s linear infinite">progress_activity</span>';
-
-    const db = getDB();
-    const { error } = await db.from('student_questions').insert({
+    const { error } = await getDB().from('student_questions').insert({
       student_user_id: student.id,
       student_name: student.name || 'Student',
       student_email: student.email || '',
       question_text: text
     });
-
     btn.disabled = false;
     btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">send</span> Send';
-
     if (error) { showToast('Could not send question. Try again.', 'error'); return; }
-
-    input.value = '';
-    input.style.height = 'auto';
+    input.value = ''; input.style.height = 'auto';
     showToast('Question sent! We\'ll reply within 24h.');
     await loadQuestions();
   }
@@ -805,10 +730,9 @@
   }
 
   // ================== HELPERS ==================
-  const QUESTION_LABELS = { 'BPP_Q1':'Why study at BPP University?', 'UKVI_Q1':'Why study in the UK?', 'NL_Q1':'Why study in the Netherlands?' };
   function getQuestionLabel(qId, data) {
     if (data?.questionText && !data.questionText.match(/^(REGENT|YSJ|UKVI|BPP|NL)_/)) return data.questionText;
-    if (QUESTION_LABELS[qId]) return QUESTION_LABELS[qId];
+    if (window.QUESTION_TEXT_MAP?.[qId]) return window.QUESTION_TEXT_MAP[qId];
     return qId.replace(/^(REGENT|YSJ|UKVI|BPP|NL)_/,'').replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase());
   }
   function getCategoryFromId(qId) {
@@ -823,7 +747,7 @@
     return {'BPP':'bpp','UKVI':'ukvi','Netherlands':'netherlands','York St John':'yorkstjohn'}[cat] || '';
   }
 
-  let allAiScores = {}, searchQuery = '', filterCategory = 'all';
+  let allAiScores = {}, searchQuery = '';
 
   // ================== CHECKLIST ==================
   function renderChecklist(checklistStatus) {
@@ -832,8 +756,7 @@
     const subText = document.getElementById('checklistSubText');
     if (!checklistStatus || Object.keys(checklistStatus).length === 0) {
       container.innerHTML = '<div class="empty-state"><span class="material-symbols-outlined">checklist</span><p>No checklist items yet.</p></div>';
-      summarySpan.textContent = '0/0 COMPLETED';
-      return;
+      summarySpan.textContent = '0/0 COMPLETED'; return;
     }
     const items = Object.entries(checklistStatus);
     const doneCount = items.filter(([,done]) => done === true).length;
@@ -948,10 +871,9 @@
       if (!name) { errorEl.style.display='block'; return; }
       const counselorData = { name, role:document.getElementById('cRole').value.trim()||null, email:document.getElementById('cEmail').value.trim()||null, phone:document.getElementById('cPhone').value.trim()||null, notes:document.getElementById('cNotes').value.trim()||null };
       errorEl.style.display='none'; saveBtn.disabled=true; saveBtn.textContent='Saving...';
-      const student = window.getCurrentStudent();
+      const student = window.getCurrentStudent?.() || JSON.parse(localStorage.getItem('student') || 'null');
       if (student?.id) {
-        const db = getDB();
-        await db.from('student_progress').update({ counselor: counselorData, updated_at: new Date().toISOString() }).eq('user_id', student.id);
+        await getDB().from('student_progress').update({ counselor: counselorData, updated_at: new Date().toISOString() }).eq('user_id', student.id);
       }
       current = counselorData; renderCounselorCard(current);
       saveBtn.disabled=false; saveBtn.textContent='Save Counselor';
@@ -982,23 +904,23 @@
 
   // ================== EMAIL + EXPORT ==================
   async function sendReport() {
-    const student = window.getCurrentStudent();
+    const student = window.getCurrentStudent?.() || JSON.parse(localStorage.getItem('student') || 'null');
     if (!student) return;
     const btn = document.getElementById('emailReportBtn');
     btn.disabled = true; btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;animation:spin 0.7s linear infinite">progress_activity</span> Sending...';
-    const progress = await window.loadSavedProgress();
+    const progress = await window.loadSavedProgress?.();
     const responses = progress?.ai_scores || {};
     const checklist = progress?.checklist_status || {};
     const scores = Object.values(responses).map(s=>s.score).filter(n=>typeof n==='number');
     const avg = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1) : 'N/A';
-    const result = await window.sendReadyEmail(responses, checklist, avg, 'Dashboard report request');
+    const result = await window.sendReadyEmail?.(responses, checklist, avg, 'Dashboard report request');
     btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px">mail</span> Email Report';
     if (result?.success) showToast('Report sent to your tutor'); else showToast('Failed to send report', 'error');
   }
 
   async function exportJson() {
-    const student = window.getCurrentStudent();
-    const progress = await window.loadSavedProgress();
+    const student = window.getCurrentStudent?.() || JSON.parse(localStorage.getItem('student') || 'null');
+    const progress = await window.loadSavedProgress?.();
     const data = { student, progress, exportedAt: new Date().toISOString() };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -1009,22 +931,81 @@
   }
 
   async function logout() {
-    const db = getDB();
-    await db.auth.signOut();
+    await getDB().auth.signOut();
     localStorage.removeItem('student'); localStorage.removeItem('selected_university'); localStorage.removeItem('last_course');
     window.location.href = 'index.html';
   }
 
   // ================== LOAD DASHBOARD ==================
-  async function loadDashboard() {
-    let student = window.getCurrentStudent();
+  async function loadDashboard(student) {
+    // Populate profile
+    document.getElementById('studentName').textContent = student.name || 'Student';
+    document.getElementById('studentEmail').textContent = student.email || '';
+    document.getElementById('studentId').textContent = `ID: ${student.student_id || '—'}`;
+    const initials = (student.name || 'S').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+    document.getElementById('avatarInitials').textContent = initials;
+    updateEnrollmentDisplay();
 
-    // If not in localStorage yet, fall back to live Supabase session
+    // Load progress from DB
+    const db = getDB();
+    const { data: progress, error: progressErr } = await db
+      .from('student_progress')
+      .select('checklist_status, ai_scores, practice_responses, selected_university, counselor, interview_date')
+      .eq('user_id', student.id)
+      .single();
+
+    if (progressErr) console.warn('Progress load warning:', progressErr.message);
+
+    // Interview date
+    if (progress?.interview_date) {
+      const date = new Date(progress.interview_date);
+      document.getElementById('interviewDateValue').textContent = date.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+      document.getElementById('interviewDateDisplay').style.display = 'block';
+    }
+
+    const checklist = progress?.checklist_status || {};
+    allAiScores = progress?.ai_scores || {};
+
+    // Stats
+    updateStats(allAiScores);
+    const checklistEntries = Object.values(checklist);
+    const doneCount = checklistEntries.filter(v=>v===true).length;
+    const total = checklistEntries.length;
+    const percent = total ? Math.round((doneCount/total)*100) : 0;
+    document.getElementById('checklistPercent').innerHTML = `${percent}<span style="font-size:14px;font-weight:600;opacity:0.5;">%</span>`;
+    if (document.getElementById('checklistSubText')) document.getElementById('checklistSubText').textContent = `${doneCount} of ${total} completed`;
+
+    renderChecklist(checklist);
+    renderResponses(allAiScores);
+    await setupCounselor(progress?.counselor || null);
+    updateLiveSessionUI();
+    await loadQuestions();
+    await loadNotifications();
+
+    // Reveal dashboard
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('dashboardContent').style.display = 'block';
+  }
+
+  // ================== BOOT: wait → auth → load ==================
+  async function boot() {
+    // 1. Wait up to 6 s for app.js to define window.getCurrentStudent
+    document.getElementById('loadingMsg').textContent = 'Loading your dashboard…';
+    let waited = 0;
+    while (typeof window.getCurrentStudent !== 'function' && waited < 6000) {
+      await new Promise(r => setTimeout(r, 150));
+      waited += 150;
+    }
+
+    // 2. Try localStorage first (fastest)
+    let student = window.getCurrentStudent?.();
+
+    // 3. Fall back to live Supabase session (Google OAuth redirect users)
     if (!student?.id) {
+      document.getElementById('loadingMsg').textContent = 'Restoring your session…';
       const db = getDB();
       const { data: { session } } = await db.auth.getSession();
       if (session?.user) {
-        // Load profile from DB
         const { data: profile } = await db
           .from('student_progress')
           .select('*')
@@ -1037,40 +1018,30 @@
       }
     }
 
-    if (!student?.id) { window.location.href = 'index.html'; return; }
-    document.getElementById('studentName').textContent = student.name || 'Student';
-    document.getElementById('studentEmail').textContent = student.email || '';
-    document.getElementById('studentId').textContent = `ID: ${student.student_id || '—'}`;
-    const initials = (student.name || 'S').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-    document.getElementById('avatarInitials').textContent = initials;
-    updateEnrollmentDisplay();
-    const progress = await window.loadSavedProgress();
-    if (progress?.interview_date) {
-      const date = new Date(progress.interview_date);
-      document.getElementById('interviewDateValue').textContent = date.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
-      document.getElementById('interviewDateDisplay').style.display = 'block';
+    // 4. Still nothing → redirect to login
+    if (!student?.id) {
+      window.location.href = 'index.html';
+      return;
     }
-    const checklist = progress?.checklist_status || {};
-    allAiScores = progress?.ai_scores || {};
-    updateStats(allAiScores);
-    const checklistEntries = Object.values(checklist);
-    const doneCount = checklistEntries.filter(v=>v===true).length;
-    const total = checklistEntries.length;
-    const percent = total ? Math.round((doneCount/total)*100) : 0;
-    document.getElementById('checklistPercent').innerHTML = `${percent}<span style="font-size:14px;font-weight:600;opacity:0.5;">%</span>`;
-    if (document.getElementById('checklistSubText')) document.getElementById('checklistSubText').textContent = `${doneCount} of ${total} completed`;
-    renderChecklist(checklist);
-    renderResponses(allAiScores);
-    await setupCounselor(progress?.counselor || null);
-    updateLiveSessionUI();
-    // Load Q&A and notifications
-    await loadQuestions();
-    await loadNotifications();
-    document.getElementById('loadingState').style.display = 'none';
-    document.getElementById('dashboardContent').style.display = 'block';
+
+    // 5. Load with full error safety net
+    try {
+      await loadDashboard(student);
+    } catch (err) {
+      console.error('Dashboard error:', err);
+      document.getElementById('loadingState').innerHTML = `
+        <div style="text-align:center;padding:40px 20px;">
+          <span class="material-symbols-outlined" style="font-size:40px;color:var(--border);display:block;margin-bottom:12px;">error</span>
+          <p style="color:var(--red);font-weight:700;margin-bottom:8px;">Something went wrong loading your dashboard.</p>
+          <p style="color:var(--muted);font-size:13px;margin-bottom:16px;">${escapeHtml(err.message || 'Unknown error')}</p>
+          <a href="index.html" style="background:var(--navy);color:white;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">← Go back home</a>
+          &nbsp;
+          <button onclick="location.reload()" style="background:var(--surface);border:1.5px solid var(--border);padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">Retry</button>
+        </div>`;
+    }
   }
 
-  // ================== INIT ==================
+  // ================== WIRE UP EVENTS ==================
   document.getElementById('logoutBtn').addEventListener('click', logout);
   document.getElementById('emailReportBtn').addEventListener('click', sendReport);
   document.getElementById('exportJsonBtn').addEventListener('click', exportJson);
@@ -1091,9 +1062,8 @@
     document.getElementById('viewAllResponsesBtn').style.display = 'none';
   });
 
-  // Give app.js a moment to run, then load dashboard
-  // loadDashboard handles its own session fallback via Supabase
-  setTimeout(() => loadDashboard(), 400);
+  // Start
+  boot();
 </script>
 </body>
 </html>
