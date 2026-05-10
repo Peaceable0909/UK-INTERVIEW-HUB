@@ -7,24 +7,14 @@
   <title>Admin Portal | UK Interview Prep</title>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-  <!-- SheetJS for Excel export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     :root {
-      --navy: #0d1b3e;
-      --navy-mid: #162a5c;
-      --red: #e8192c;
-      --red-dark: #c0121f;
-      --surface: #f4f6fa;
-      --white: #ffffff;
-      --border: #e2e6ed;
-      --muted: #6b7280;
-      --green: #16a34a;
-      --green-light: #dcfce7;
-      --amber: #d97706;
-      --amber-light: #fef3c7;
-      --shadow-sm: 0 1px 4px rgba(13,27,62,0.07);
-      --shadow-md: 0 4px 24px rgba(13,27,62,0.10);
+      --navy: #0d1b3e; --navy-mid: #162a5c; --red: #e8192c; --red-dark: #c0121f;
+      --surface: #f4f6fa; --white: #ffffff; --border: #e2e6ed; --muted: #6b7280;
+      --green: #16a34a; --green-light: #dcfce7; --amber: #d97706; --amber-light: #fef3c7;
+      --purple: #7c3aed; --purple-light: #ede9fe;
+      --shadow-sm: 0 1px 4px rgba(13,27,62,0.07); --shadow-md: 0 4px 24px rgba(13,27,62,0.10);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', sans-serif; background: var(--surface); color: var(--navy); min-height: 100dvh; }
@@ -38,14 +28,15 @@
     .login-title { font-family:'Manrope',sans-serif; font-size:26px; font-weight:800; color:var(--navy); margin-bottom:4px; }
     .form-group { margin-bottom:16px; }
     .form-group label { display:block; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:6px; }
-    .form-group input { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:14px; outline:none; transition:border 0.15s; }
-    .form-group input:focus { border-color:var(--navy); }
+    .form-group input, .form-group textarea, .form-group select { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:14px; outline:none; transition:border 0.15s; }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color:var(--navy); }
+    .form-group textarea { resize:vertical; min-height:80px; }
     .btn-login-submit { width:100%; background:var(--navy); color:white; border:none; padding:13px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s; font-family:inherit; margin-top:4px; }
     .btn-login-submit:hover { background:var(--navy-mid); }
     .btn-login-submit:disabled { opacity:0.6; cursor:not-allowed; }
     #loginError { color:var(--red); font-size:13px; text-align:center; margin-top:10px; min-height:18px; }
 
-    /* ADMIN */
+    /* ADMIN SHELL */
     #adminScreen { display:none; }
     header { background:rgba(255,255,255,0.97); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); height:64px; padding:0 24px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:var(--shadow-sm); }
     .logo { font-family:'Manrope',sans-serif; font-weight:900; font-size:20px; color:var(--navy); }
@@ -55,16 +46,26 @@
     .btn-signout { background:none; border:1.5px solid var(--border); color:var(--muted); padding:7px 14px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all 0.15s; }
     .btn-signout:hover { border-color:var(--red); color:var(--red); }
 
+    /* TOP TABS */
+    .admin-tabs { display:flex; gap:4px; background:white; border-bottom:1px solid var(--border); padding:0 24px; }
+    .admin-tab { padding:16px 20px; font-size:13px; font-weight:700; color:var(--muted); border:none; background:none; cursor:pointer; border-bottom:3px solid transparent; transition:all 0.15s; display:flex; align-items:center; gap:7px; }
+    .admin-tab:hover { color:var(--navy); }
+    .admin-tab.active { color:var(--navy); border-bottom-color:var(--navy); }
+    .admin-tab .material-symbols-outlined { font-size:18px; }
+    .tab-badge { background:var(--red); color:white; font-size:10px; font-weight:800; padding:2px 7px; border-radius:999px; }
+
     .container { max-width:1200px; margin:0 auto; padding:24px; }
+
+    /* TAB PANELS */
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; }
 
     /* STATS */
     .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
     .stat-card { background:white; border-radius:14px; padding:20px; box-shadow:var(--shadow-sm); }
     .stat-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin-bottom:8px; }
     .stat-value { font-family:'Manrope',sans-serif; font-size:32px; font-weight:900; color:var(--navy); line-height:1; }
-    .stat-value.green { color:var(--green); }
-    .stat-value.red { color:var(--red); }
-    .stat-value.amber { color:var(--amber); }
+    .stat-value.green { color:var(--green); } .stat-value.red { color:var(--red); } .stat-value.amber { color:var(--amber); } .stat-value.purple { color:var(--purple); }
 
     /* CARD */
     .card { background:white; border-radius:16px; padding:24px; box-shadow:var(--shadow-sm); margin-bottom:24px; }
@@ -78,12 +79,11 @@
     .search-box input { border:none; background:none; outline:none; font-family:inherit; font-size:13px; width:100%; }
     .filter-select { border:1.5px solid var(--border); border-radius:10px; padding:8px 14px; font-family:inherit; font-size:13px; background:white; cursor:pointer; outline:none; }
     .btn-toolbar { display:flex; align-items:center; gap:6px; border:none; padding:8px 16px; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s; white-space:nowrap; }
-    .btn-navy { background:var(--navy); color:white; }
-    .btn-navy:hover { background:var(--navy-mid); }
-    .btn-green { background:#15803d; color:white; }
-    .btn-green:hover { background:#166534; }
-    .btn-amber { background:#b45309; color:white; }
-    .btn-amber:hover { background:#92400e; }
+    .btn-navy { background:var(--navy); color:white; } .btn-navy:hover { background:var(--navy-mid); }
+    .btn-green { background:#15803d; color:white; } .btn-green:hover { background:#166534; }
+    .btn-amber { background:#b45309; color:white; } .btn-amber:hover { background:#92400e; }
+    .btn-purple { background:var(--purple); color:white; } .btn-purple:hover { background:#6d28d9; }
+    .btn-red { background:var(--red); color:white; } .btn-red:hover { background:var(--red-dark); }
 
     /* TABLE */
     .table-wrap { overflow-x:auto; border-radius:12px; border:1px solid var(--border); }
@@ -102,27 +102,24 @@
     .badge-school-netherlands { background:#fef3c7; color:#92400e; }
     .badge-school-ukvi { background:#dbeafe; color:#1e40af; }
     .badge-none { background:var(--surface); color:var(--muted); }
+    .badge-pending { background:#fef3c7; color:#92400e; }
+    .badge-answered { background:#dcfce7; color:var(--green); }
     .score-pill { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:100px; font-size:11px; font-weight:700; }
     .score-high { background:var(--green-light); color:var(--green); }
     .score-mid { background:var(--amber-light); color:var(--amber); }
     .score-low { background:#fee2e2; color:var(--red); }
-    .date-cell { font-size:12px; }
     .date-unset { color:var(--muted); }
     .date-upcoming { color:var(--green); font-weight:700; }
     .date-past { color:var(--muted); text-decoration:line-through; }
-
-    /* ROW CHECKBOX */
     .row-check { width:16px; height:16px; cursor:pointer; accent-color:var(--navy); }
 
     /* ACTIONS */
     .action-btns { display:flex; align-items:center; gap:6px; }
     .btn-icon { width:32px; height:32px; border-radius:8px; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.15s; }
-    .btn-icon.calendar { background:#e0e7ff; color:#4338ca; }
-    .btn-icon.calendar:hover { background:#c7d2fe; }
-    .btn-icon.view { background:var(--surface); color:var(--muted); }
-    .btn-icon.view:hover { background:var(--border); color:var(--navy); }
-    .btn-icon.delete { background:#fee2e2; color:var(--red); }
-    .btn-icon.delete:hover { background:#fecaca; }
+    .btn-icon.calendar { background:#e0e7ff; color:#4338ca; } .btn-icon.calendar:hover { background:#c7d2fe; }
+    .btn-icon.reply { background:#dcfce7; color:var(--green); } .btn-icon.reply:hover { background:#bbf7d0; }
+    .btn-icon.view { background:var(--surface); color:var(--muted); } .btn-icon.view:hover { background:var(--border); color:var(--navy); }
+    .btn-icon.delete { background:#fee2e2; color:var(--red); } .btn-icon.delete:hover { background:#fecaca; }
     .btn-icon .material-symbols-outlined { font-size:17px; }
 
     /* SELECTION BAR */
@@ -136,16 +133,12 @@
     /* MODAL */
     .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:1000; align-items:center; justify-content:center; padding:20px; }
     .modal-overlay.open { display:flex; }
-    .modal-box { background:white; border-radius:20px; padding:28px; width:100%; max-width:440px; position:relative; animation:slideUp 0.2s ease-out; }
+    .modal-box { background:white; border-radius:20px; padding:28px; width:100%; max-width:480px; position:relative; animation:slideUp 0.2s ease-out; max-height:90vh; overflow-y:auto; }
     @keyframes slideUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
     .modal-close { position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:50%; background:var(--surface); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:18px; }
     .modal-close:hover { background:var(--border); }
     .modal-title { font-family:'Manrope',sans-serif; font-size:20px; font-weight:800; margin-bottom:4px; }
     .modal-sub { font-size:13px; color:var(--muted); margin-bottom:20px; }
-    .modal .form-group { margin-bottom:16px; }
-    .modal .form-group label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:6px; }
-    .modal .form-group input, .modal .form-group select, .modal .form-group textarea { width:100%; padding:11px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:inherit; font-size:14px; outline:none; transition:border 0.15s; }
-    .modal .form-group input:focus, .modal .form-group select:focus { border-color:var(--navy); }
     .modal-actions { display:flex; gap:10px; margin-top:20px; }
     .btn-modal-primary { flex:1; background:var(--navy); color:white; border:none; padding:12px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.15s; font-family:inherit; }
     .btn-modal-primary:hover { background:var(--navy-mid); }
@@ -153,38 +146,41 @@
     .btn-modal-cancel:hover { background:var(--border); }
     .btn-danger-confirm { flex:1; background:var(--red); color:white; border:none; padding:12px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; }
 
-    /* DETAIL MODAL */
-    .detail-section { margin-bottom:16px; }
-    .detail-section-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:8px; }
-    .detail-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--surface); font-size:13px; }
-    .detail-row:last-child { border-bottom:none; }
-    .detail-key { color:var(--muted); }
-    .detail-val { font-weight:600; color:var(--navy); text-align:right; max-width:60%; }
+    /* QUESTION THREAD */
+    .q-thread { background:var(--surface); border-radius:12px; padding:16px; margin-bottom:12px; }
+    .q-bubble { background:white; border:1.5px solid var(--border); border-radius:12px; padding:14px; margin-bottom:8px; }
+    .q-bubble.student { border-left:4px solid #4338ca; }
+    .q-bubble.admin { border-left:4px solid var(--green); background:#f0fdf4; }
+    .q-bubble-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin-bottom:5px; }
+    .q-bubble.student .q-bubble-label { color:#4338ca; }
+    .q-bubble.admin .q-bubble-label { color:var(--green); }
+    .q-bubble-text { font-size:13px; color:var(--navy); line-height:1.5; }
+    .q-bubble-time { font-size:11px; color:var(--muted); margin-top:4px; }
 
-    /* BULK DATE OPTIONS */
-    .radio-group { display:flex; flex-direction:column; gap:10px; margin-bottom:4px; }
+    /* NOTIFICATION TYPE PILLS */
+    .type-pill { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:100px; font-size:11px; font-weight:700; }
+    .type-info { background:#dbeafe; color:#1d4ed8; }
+    .type-success { background:var(--green-light); color:var(--green); }
+    .type-warning { background:var(--amber-light); color:var(--amber); }
+
+    /* RADIO GROUP */
+    .radio-group { display:flex; flex-direction:column; gap:8px; margin-bottom:4px; }
     .radio-option { display:flex; align-items:center; gap:10px; padding:10px 14px; border:1.5px solid var(--border); border-radius:10px; cursor:pointer; transition:all 0.15s; }
     .radio-option:hover { border-color:var(--navy); background:var(--surface); }
     .radio-option input[type="radio"] { accent-color:var(--navy); width:16px; height:16px; }
     .radio-option label { font-size:13px; font-weight:600; cursor:pointer; }
-    .radio-option small { font-size:11px; color:var(--muted); display:block; }
-
-    /* PROGRESS MODAL */
-    .progress-bar-wrap { background:var(--surface); border-radius:100px; height:8px; overflow:hidden; margin:12px 0; }
-    .progress-bar-fill { height:100%; background:var(--navy); border-radius:100px; transition:width 0.3s; }
 
     /* LOADING & EMPTY */
     #tableLoading { text-align:center; padding:48px; }
     .spinner { width:32px; height:32px; border:3px solid var(--border); border-top-color:var(--navy); border-radius:50%; animation:spin 0.7s linear infinite; margin:0 auto 12px; }
     @keyframes spin { to { transform:rotate(360deg); } }
-    #emptyState { text-align:center; padding:48px; display:none; }
-    #emptyState .material-symbols-outlined { font-size:40px; color:var(--border); display:block; margin-bottom:8px; }
+    .empty-state { text-align:center; padding:48px; }
+    .empty-state .material-symbols-outlined { font-size:40px; color:var(--border); display:block; margin-bottom:8px; }
 
     /* TOAST */
     #toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--navy); color:white; padding:10px 20px; border-radius:100px; font-size:13px; font-weight:600; z-index:9999; display:none; white-space:nowrap; box-shadow:var(--shadow-md); transition:opacity 0.3s; }
 
     @media (max-width:900px) { .stats-grid { grid-template-columns:1fr 1fr; } }
-    @media (max-width:560px) { .stats-grid { grid-template-columns:1fr 1fr; } .container { padding:16px; } }
   </style>
 </head>
 <body>
@@ -222,6 +218,20 @@
     </div>
   </header>
 
+  <!-- TOP TABS -->
+  <div class="admin-tabs">
+    <button class="admin-tab active" data-tab="students">
+      <span class="material-symbols-outlined">group</span> Students
+    </button>
+    <button class="admin-tab" data-tab="questions">
+      <span class="material-symbols-outlined">chat</span> Questions
+      <span class="tab-badge" id="questionsTabBadge" style="display:none;">0</span>
+    </button>
+    <button class="admin-tab" data-tab="notifications">
+      <span class="material-symbols-outlined">notifications</span> Notifications
+    </button>
+  </div>
+
   <!-- SELECTION BAR -->
   <div id="selectionBar">
     <span class="sel-info" id="selInfo">0 students selected</span>
@@ -234,83 +244,188 @@
   </div>
 
   <div class="container">
-    <!-- STATS -->
-    <div class="stats-grid" id="statsGrid">
-      <div class="stat-card"><div class="stat-label">Total Students</div><div class="stat-value" id="stat-total">—</div></div>
-      <div class="stat-card"><div class="stat-label">Interviews Set</div><div class="stat-value green" id="stat-dated">—</div></div>
-      <div class="stat-card"><div class="stat-label">Upcoming (7 days)</div><div class="stat-value amber" id="stat-upcoming">—</div></div>
-      <div class="stat-card"><div class="stat-label">Avg Score</div><div class="stat-value" id="stat-avg">—</div></div>
+
+    <!-- ===== STUDENTS TAB ===== -->
+    <div class="tab-panel active" id="panel-students">
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><div class="stat-label">Total Students</div><div class="stat-value" id="stat-total">—</div></div>
+        <div class="stat-card"><div class="stat-label">Interviews Set</div><div class="stat-value green" id="stat-dated">—</div></div>
+        <div class="stat-card"><div class="stat-label">Upcoming (7 days)</div><div class="stat-value amber" id="stat-upcoming">—</div></div>
+        <div class="stat-card"><div class="stat-label">Avg Score</div><div class="stat-value" id="stat-avg">—</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="material-symbols-outlined" style="color:var(--navy);">group</span>
+            Student Management
+          </div>
+          <div class="toolbar">
+            <div class="search-box">
+              <span class="material-symbols-outlined" style="font-size:18px;color:var(--muted);">search</span>
+              <input type="text" id="searchInput" placeholder="Search by name, email, ID…" />
+            </div>
+            <select class="filter-select" id="uniFilter">
+              <option value="">All Schools</option>
+              <option value="regent">Regent</option>
+              <option value="bpp">BPP</option>
+              <option value="yorkstjohn">York St John</option>
+              <option value="netherlands">Netherlands</option>
+              <option value="ukvi">UKVI</option>
+            </select>
+            <select class="filter-select" id="dateFilter">
+              <option value="">All Dates</option>
+              <option value="set">Date Set</option>
+              <option value="unset">No Date</option>
+              <option value="upcoming">Upcoming (7d)</option>
+            </select>
+            <button class="btn-toolbar btn-amber" id="bulkDateAllBtn">
+              <span class="material-symbols-outlined" style="font-size:16px;">event</span> Bulk Set Date
+            </button>
+            <button class="btn-toolbar btn-green" id="exportExcelBtn">
+              <span class="material-symbols-outlined" style="font-size:16px;">download</span> Export Excel
+            </button>
+            <button class="btn-toolbar btn-navy" id="refreshBtn">
+              <span class="material-symbols-outlined" style="font-size:16px;">refresh</span> Refresh
+            </button>
+          </div>
+        </div>
+
+        <div id="tableLoading"><div class="spinner"></div><p style="color:var(--muted);font-size:14px;">Loading students…</p></div>
+        <div id="emptyState" class="empty-state" style="display:none;">
+          <span class="material-symbols-outlined">inbox</span>
+          <p style="color:var(--muted);font-size:14px;">No students found matching your filters.</p>
+        </div>
+
+        <div id="tableContainer" style="display:none;">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:40px;"><input type="checkbox" id="selectAll" class="row-check"></th>
+                  <th>Student</th>
+                  <th>Student ID</th>
+                  <th>School</th>
+                  <th>Avg Score</th>
+                  <th>Questions</th>
+                  <th>Checklist</th>
+                  <th>Interview Date</th>
+                  <th>Last Active</th>
+                  <th style="width:120px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentTableBody"></tbody>
+            </table>
+          </div>
+          <div style="padding:12px 16px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);" id="tableFooter"></div>
+        </div>
+      </div>
     </div>
 
-    <!-- STUDENT TABLE -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <span class="material-symbols-outlined" style="color:var(--navy);">group</span>
-          Student Management
-        </div>
-        <div class="toolbar">
-          <div class="search-box">
-            <span class="material-symbols-outlined" style="font-size:18px;color:var(--muted);">search</span>
-            <input type="text" id="searchInput" placeholder="Search by name, email, ID…" />
+    <!-- ===== QUESTIONS TAB ===== -->
+    <div class="tab-panel" id="panel-questions">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="material-symbols-outlined" style="color:var(--navy);">chat</span>
+            Student Questions
           </div>
-          <select class="filter-select" id="uniFilter">
-            <option value="">All Schools</option>
-            <option value="regent">Regent</option>
-            <option value="bpp">BPP</option>
-            <option value="yorkstjohn">York St John</option>
-            <option value="netherlands">Netherlands</option>
-            <option value="ukvi">UKVI</option>
-          </select>
-          <select class="filter-select" id="dateFilter">
-            <option value="">All Dates</option>
-            <option value="set">Date Set</option>
-            <option value="unset">No Date</option>
-            <option value="upcoming">Upcoming (7d)</option>
-          </select>
-          <!-- NEW BULK BUTTONS -->
-          <button class="btn-toolbar btn-amber" id="bulkDateAllBtn" title="Set interview date for all students at once">
-            <span class="material-symbols-outlined" style="font-size:16px;">event</span> Bulk Set Date
-          </button>
-          <button class="btn-toolbar btn-green" id="exportExcelBtn" title="Download all student data as Excel">
-            <span class="material-symbols-outlined" style="font-size:16px;">download</span> Export Excel
-          </button>
-          <button class="btn-toolbar btn-navy" id="refreshBtn">
+          <div class="toolbar">
+            <select class="filter-select" id="qStatusFilter">
+              <option value="">All Questions</option>
+              <option value="pending">Pending Only</option>
+              <option value="answered">Answered</option>
+            </select>
+            <button class="btn-toolbar btn-navy" id="refreshQuestionsBtn">
+              <span class="material-symbols-outlined" style="font-size:16px;">refresh</span> Refresh
+            </button>
+          </div>
+        </div>
+
+        <div id="questionsLoading" style="text-align:center;padding:48px;">
+          <div class="spinner"></div>
+          <p style="color:var(--muted);font-size:14px;">Loading questions…</p>
+        </div>
+        <div id="questionsEmpty" class="empty-state" style="display:none;">
+          <span class="material-symbols-outlined">chat_bubble</span>
+          <p style="color:var(--muted);font-size:14px;">No questions from students yet.</p>
+        </div>
+        <div id="questionsContainer"></div>
+      </div>
+    </div>
+
+    <!-- ===== NOTIFICATIONS TAB ===== -->
+    <div class="tab-panel" id="panel-notifications">
+      <!-- Send New Notification -->
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-title" style="margin-bottom:20px;">
+          <span class="material-symbols-outlined" style="color:var(--purple);">add_alert</span>
+          Send New Notification
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="form-group">
+            <label>Title *</label>
+            <input type="text" id="notifTitle" placeholder="e.g. Interview dates have been set"/>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="form-group">
+              <label>Type</label>
+              <select id="notifType">
+                <option value="info">ℹ️ Info</option>
+                <option value="success">✅ Success</option>
+                <option value="warning">⚠️ Warning</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Send To</label>
+              <select id="notifTarget">
+                <option value="all">All Students</option>
+                <option value="regent">Regent Students</option>
+                <option value="bpp">BPP Students</option>
+                <option value="yorkstjohn">York St John</option>
+                <option value="netherlands">Netherlands</option>
+                <option value="ukvi">UKVI</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Message *</label>
+          <textarea id="notifMessage" placeholder="Write your notification message here..."></textarea>
+        </div>
+        <p id="notifError" style="color:var(--red);font-size:13px;display:none;margin-bottom:8px;">Please fill in title and message.</p>
+        <button class="btn-toolbar btn-purple" id="sendNotifBtn" style="padding:11px 24px;border-radius:10px;font-size:14px;">
+          <span class="material-symbols-outlined" style="font-size:18px;">send</span> Send Notification
+        </button>
+      </div>
+
+      <!-- Past Notifications -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="material-symbols-outlined" style="color:var(--navy);">history</span>
+            Sent Notifications
+          </div>
+          <button class="btn-toolbar btn-navy" id="refreshNotifBtn">
             <span class="material-symbols-outlined" style="font-size:16px;">refresh</span> Refresh
           </button>
         </div>
-      </div>
-
-      <div id="tableLoading"><div class="spinner"></div><p style="color:var(--muted);font-size:14px;">Loading students…</p></div>
-      <div id="emptyState"><span class="material-symbols-outlined">inbox</span><p style="color:var(--muted);font-size:14px;">No students found matching your filters.</p></div>
-
-      <div id="tableContainer" style="display:none;">
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:40px;"><input type="checkbox" id="selectAll" class="row-check" title="Select all visible students"></th>
-                <th>Student</th>
-                <th>Student ID</th>
-                <th>School</th>
-                <th>Avg Score</th>
-                <th>Questions</th>
-                <th>Checklist</th>
-                <th>Interview Date</th>
-                <th>Last Active</th>
-                <th style="width:120px;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="studentTableBody"></tbody>
-          </table>
+        <div id="notifHistoryLoading" style="text-align:center;padding:48px;">
+          <div class="spinner"></div>
+          <p style="color:var(--muted);font-size:14px;">Loading…</p>
         </div>
-        <div style="padding:12px 16px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);" id="tableFooter"></div>
+        <div id="notifHistoryEmpty" class="empty-state" style="display:none;">
+          <span class="material-symbols-outlined">notifications_none</span>
+          <p style="color:var(--muted);font-size:14px;">No notifications sent yet.</p>
+        </div>
+        <div id="notifHistoryContainer"></div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- ===== DATE MODAL (single student) ===== -->
+  </div><!-- end container -->
+</div><!-- end adminScreen -->
+
+<!-- ===== DATE MODAL ===== -->
 <div id="dateModal" class="modal-overlay">
   <div class="modal-box">
     <button class="modal-close" id="dateModalClose">✕</button>
@@ -328,36 +443,21 @@
 
 <!-- ===== BULK DATE MODAL ===== -->
 <div id="bulkDateModal" class="modal-overlay">
-  <div class="modal-box" style="max-width:480px;">
+  <div class="modal-box">
     <button class="modal-close" id="bulkDateModalClose">✕</button>
     <div class="modal-title">📅 Bulk Set Interview Date</div>
     <p class="modal-sub" id="bulkDateModalSub">Apply one interview date to multiple students at once.</p>
-
     <div class="form-group">
       <label>Apply To</label>
       <div class="radio-group">
-        <label class="radio-option">
-          <input type="radio" name="bulkTarget" value="all" checked>
-          <div><span>All students</span><small id="bulkCountAll">— students total</small></div>
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="bulkTarget" value="unset">
-          <div><span>Only students without a date</span><small id="bulkCountUnset">— students have no date yet</small></div>
-        </label>
-        <label class="radio-option" id="bulkSelectedOption" style="display:none;">
-          <input type="radio" name="bulkTarget" value="selected">
-          <div><span>Selected students only</span><small id="bulkCountSelected">— students selected</small></div>
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="bulkTarget" value="filtered">
-          <div><span>Currently visible / filtered students</span><small id="bulkCountFiltered">— students in current view</small></div>
-        </label>
+        <label class="radio-option"><input type="radio" name="bulkTarget" value="all" checked><div><span>All students</span><small id="bulkCountAll" style="display:block;font-size:11px;color:var(--muted);">—</small></div></label>
+        <label class="radio-option"><input type="radio" name="bulkTarget" value="unset"><div><span>Only students without a date</span><small id="bulkCountUnset" style="display:block;font-size:11px;color:var(--muted);">—</small></div></label>
+        <label class="radio-option" id="bulkSelectedOption" style="display:none;"><input type="radio" name="bulkTarget" value="selected"><div><span>Selected students only</span><small id="bulkCountSelected" style="display:block;font-size:11px;color:var(--muted);">—</small></div></label>
+        <label class="radio-option"><input type="radio" name="bulkTarget" value="filtered"><div><span>Currently visible / filtered students</span><small id="bulkCountFiltered" style="display:block;font-size:11px;color:var(--muted);">—</small></div></label>
       </div>
     </div>
-
     <div class="form-group"><label>Interview Date & Time</label><input type="datetime-local" id="bulkDateInput"/></div>
     <div class="form-group"><label>Notes (optional)</label><input type="text" id="bulkNotes" placeholder="e.g. Online via Microsoft Teams link"/></div>
-
     <div class="modal-actions">
       <button class="btn-modal-cancel" id="bulkDateModalCancel">Cancel</button>
       <button class="btn-modal-primary" id="saveBulkDateBtn">Apply to Students</button>
@@ -369,21 +469,26 @@
 <div id="progressModal" class="modal-overlay">
   <div class="modal-box" style="max-width:400px;">
     <div class="modal-title" id="progressTitle">Updating students…</div>
-    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBarFill" style="width:0%"></div></div>
+    <div style="background:var(--surface);border-radius:100px;height:8px;overflow:hidden;margin:12px 0;"><div id="progressBarFill" style="height:100%;background:var(--navy);border-radius:100px;transition:width 0.3s;width:0%"></div></div>
     <p id="progressText" style="font-size:13px;color:var(--muted);text-align:center;margin-top:8px;">0 / 0 updated</p>
   </div>
 </div>
 
-<!-- ===== DETAIL MODAL ===== -->
-<div id="detailModal" class="modal-overlay">
-  <div class="modal-box" style="max-width:520px;">
-    <button class="modal-close" id="detailModalClose">✕</button>
-    <div class="modal-title" id="detailName">Student Details</div>
-    <p class="modal-sub" id="detailEmail">—</p>
-    <div id="detailContent"></div>
+<!-- ===== REPLY MODAL ===== -->
+<div id="replyModal" class="modal-overlay">
+  <div class="modal-box" style="max-width:560px;">
+    <button class="modal-close" id="replyModalClose">✕</button>
+    <div class="modal-title">💬 Reply to Question</div>
+    <p class="modal-sub" id="replyStudentName">Student question</p>
+    <input type="hidden" id="replyQuestionId"/>
+    <div id="replyQuestionThread"></div>
+    <div class="form-group" style="margin-top:16px;">
+      <label>Your Reply</label>
+      <textarea id="replyText" placeholder="Type your reply here..." rows="4"></textarea>
+    </div>
     <div class="modal-actions">
-      <button class="btn-modal-cancel" id="detailModalCancel" style="flex:1;">Close</button>
-      <button class="btn-modal-primary" id="detailSetDateBtn">Set Interview Date</button>
+      <button class="btn-modal-cancel" id="replyModalCancel">Cancel</button>
+      <button class="btn-modal-primary" id="saveReplyBtn">Send Reply</button>
     </div>
   </div>
 </div>
@@ -418,10 +523,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const ADMIN_EMAILS = ['myinkscriber@gmail.com','femiolaniyi36@gmail.com','peaceableolaniyi@gmail.com','peaceable.whiterock@gmail.com','adeolaisaiah01@gmail.com','jwill.whiterock@gmail.com','abraham.whiterock@gmail.com','cherish.whiterock@gmail.com','ideyewhiterock@gmail.com','bakinremi.whiterock@gmail.com','praisewhiterock27@gmail.com'];
 
-  let allStudents = [];
-  let filteredStudents = [];
-  let selectedIds = new Set();
-  let currentDetailUserId = null;
+  let allStudents = [], filteredStudents = [], selectedIds = new Set(), currentTheme = 'light';
+  let allQuestions = [], allSentNotifs = [];
+  let currentAdminEmail = '';
 
   // ===== TOAST =====
   function showToast(msg, type = 'success') {
@@ -433,11 +537,37 @@ document.addEventListener('DOMContentLoaded', () => {
     window._toastT = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.style.display = 'none', 300); }, 3500);
   }
 
+  function escHtml(str) { return String(str||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+  function timeAgo(dateStr) {
+    if (!dateStr) return '';
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return `${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h ago`;
+    return new Date(dateStr).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  }
+
+  // ===== TAB SWITCHING =====
+  document.querySelectorAll('.admin-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+      if (tab.dataset.tab === 'questions') loadQuestions();
+      if (tab.dataset.tab === 'notifications') loadNotifHistory();
+    });
+  });
+
   // ===== AUTH =====
   async function checkAuth() {
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) {
       if (!ADMIN_EMAILS.includes(session.user.email)) { await supabase.auth.signOut(); showLoginError('Access denied.'); return; }
+      currentAdminEmail = session.user.email;
       showAdminScreen(session.user);
     } else {
       document.getElementById('loginScreen').style.display = 'flex';
@@ -460,6 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.disabled = true; btn.textContent = 'Signing in…';
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) { errEl.textContent = error.message; btn.disabled = false; btn.textContent = 'Sign In to Admin Portal'; return; }
+    currentAdminEmail = data.user.email;
     showAdminScreen(data.user);
   }
 
@@ -478,13 +609,12 @@ document.addEventListener('DOMContentLoaded', () => {
     allStudents = []; selectedIds.clear(); updateSelectionBar();
   }
 
-  // ===== LOAD =====
+  // ===== LOAD STUDENTS =====
   async function loadStudents() {
     document.getElementById('tableLoading').style.display = 'block';
     document.getElementById('tableContainer').style.display = 'none';
     document.getElementById('emptyState').style.display = 'none';
     selectedIds.clear(); updateSelectionBar();
-
     const { data, error } = await supabase.from('student_progress').select('*').order('updated_at', { ascending: false });
     document.getElementById('tableLoading').style.display = 'none';
     if (error) { showToast('Error loading data: ' + error.message, 'error'); return; }
@@ -493,7 +623,6 @@ document.addEventListener('DOMContentLoaded', () => {
     filterTable();
   }
 
-  // ===== STATS =====
   function updateStats(students) {
     const now = new Date(), in7 = new Date(now.getTime() + 7*24*60*60*1000);
     const dated = students.filter(s => s.interview_date).length;
@@ -506,7 +635,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('stat-avg').textContent = avg === '—' ? '—' : avg + '/10';
   }
 
-  // ===== FILTER =====
   function filterTable() {
     const q = document.getElementById('searchInput').value.toLowerCase();
     const uni = document.getElementById('uniFilter').value;
@@ -524,15 +652,13 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTable(filteredStudents);
   }
 
-  // ===== RENDER TABLE =====
   function renderTable(students) {
     const tbody = document.getElementById('studentTableBody');
     const container = document.getElementById('tableContainer');
     const emptyState = document.getElementById('emptyState');
     if (students.length === 0) { container.style.display = 'none'; emptyState.style.display = 'block'; return; }
     emptyState.style.display = 'none'; container.style.display = 'block';
-    document.getElementById('tableFooter').textContent = `Showing ${students.length} of ${allStudents.length} student${allStudents.length !== 1 ? 's' : ''}`;
-
+    document.getElementById('tableFooter').textContent = `Showing ${students.length} of ${allStudents.length} students`;
     tbody.innerHTML = students.map(s => {
       const school = s.selected_university || '';
       const schoolLabel = school ? ({regent:'Regent',bpp:'BPP',yorkstjohn:'York St John',netherlands:'Netherlands',ukvi:'UKVI'}[school]||school) : 'Not Selected';
@@ -552,7 +678,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const lastActive = s.updated_at ? new Date(s.updated_at).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '—';
       const isChecked = selectedIds.has(s.user_id);
-      return `<tr class="${isChecked ? 'selected-row' : ''}">
+      return `<tr>
         <td><input type="checkbox" class="row-check student-check" data-id="${s.user_id}" ${isChecked ? 'checked' : ''}></td>
         <td class="name-cell"><strong>${escHtml(s.full_name||'Unknown')}</strong><span>${escHtml(s.email||'')}</span></td>
         <td style="font-family:monospace;font-size:12px;">${escHtml(s.student_id||'—')}</td>
@@ -560,11 +686,10 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${avgScore!==null ? `<span class="score-pill ${scorePillClass}">${avgScore.toFixed(1)}/10</span>` : '<span style="color:var(--muted);font-size:12px;">No data</span>'}</td>
         <td><span style="font-weight:600;">${scoreValues.length}</span> <span style="color:var(--muted);font-size:12px;">answered</span></td>
         <td>${checkTotal>0 ? `<span style="font-weight:600;${checkPct>=80?'color:var(--green)':''}">${checkPct}%</span> <span style="color:var(--muted);font-size:12px;">(${checkDone}/${checkTotal})</span>` : '<span style="color:var(--muted);font-size:12px;">—</span>'}</td>
-        <td class="date-cell">${dateHtml}</td>
+        <td style="font-size:12px;">${dateHtml}</td>
         <td style="color:var(--muted);font-size:12px;">${lastActive}</td>
         <td>
           <div class="action-btns">
-            <button class="btn-icon view" data-action="view" data-id="${s.user_id}" title="View Details"><span class="material-symbols-outlined">open_in_new</span></button>
             <button class="btn-icon calendar" data-action="date" data-id="${s.user_id}" data-name="${escHtml(s.full_name||'')}" data-date="${s.interview_date||''}" title="Set Interview Date"><span class="material-symbols-outlined">calendar_month</span></button>
             <button class="btn-icon delete" data-action="delete" data-id="${s.user_id}" data-name="${escHtml(s.full_name||'')}" title="Delete Student"><span class="material-symbols-outlined">delete</span></button>
           </div>
@@ -572,35 +697,28 @@ document.addEventListener('DOMContentLoaded', () => {
       </tr>`;
     }).join('');
 
-    // re-bind checkboxes
     document.querySelectorAll('.student-check').forEach(cb => {
       cb.addEventListener('change', (e) => {
         const id = e.target.dataset.id;
         if (e.target.checked) selectedIds.add(id); else selectedIds.delete(id);
         updateSelectionBar();
-        e.target.closest('tr').classList.toggle('selected-row', e.target.checked);
       });
     });
   }
 
-  // ===== SELECTION BAR =====
   function updateSelectionBar() {
     const bar = document.getElementById('selectionBar');
     const n = selectedIds.size;
     if (n > 0) { bar.classList.add('active'); document.getElementById('selInfo').textContent = `${n} student${n!==1?'s':''} selected`; }
-    else { bar.classList.remove('active'); }
+    else bar.classList.remove('active');
     document.getElementById('selectAll').indeterminate = n > 0 && n < filteredStudents.length;
     document.getElementById('selectAll').checked = n > 0 && n === filteredStudents.length;
   }
 
-  // Select all checkbox
   document.getElementById('selectAll').addEventListener('change', (e) => {
     filteredStudents.forEach(s => { if (e.target.checked) selectedIds.add(s.user_id); else selectedIds.delete(s.user_id); });
-    renderTable(filteredStudents);
-    updateSelectionBar();
+    renderTable(filteredStudents); updateSelectionBar();
   });
-
-  // Deselect all
   document.getElementById('bulkDeselectBtn').addEventListener('click', () => { selectedIds.clear(); renderTable(filteredStudents); updateSelectionBar(); });
 
   // ===== SINGLE DATE MODAL =====
@@ -608,10 +726,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('targetUserId').value = userId;
     document.getElementById('dateModalSubtitle').textContent = `Setting interview for: ${name}`;
     document.getElementById('interviewNotes').value = '';
-    if (currentDate) {
-      const d = new Date(currentDate); d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-      document.getElementById('interviewDateInput').value = d.toISOString().slice(0,16);
-    } else { document.getElementById('interviewDateInput').value = ''; }
+    if (currentDate) { const d = new Date(currentDate); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); document.getElementById('interviewDateInput').value = d.toISOString().slice(0,16); }
+    else document.getElementById('interviewDateInput').value = '';
     openModal('dateModal');
   }
 
@@ -620,26 +736,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const date = document.getElementById('interviewDateInput').value;
     if (!date) { showToast('Please select a date and time', 'error'); return; }
     const { error } = await supabase.from('student_progress').update({ interview_date: new Date(date).toISOString(), updated_at: new Date().toISOString() }).eq('user_id', userId);
-    if (error) { showToast('Error saving: ' + error.message, 'error'); } else { showToast('Interview date saved'); closeModal('dateModal'); await loadStudents(); }
+    if (error) showToast('Error saving: ' + error.message, 'error');
+    else { showToast('Interview date saved'); closeModal('dateModal'); await loadStudents(); }
   }
 
   // ===== BULK DATE MODAL =====
-  function openBulkDateModal(fromSelection = false) {
+  function openBulkDateModal() {
     const unsetCount = allStudents.filter(s => !s.interview_date).length;
     document.getElementById('bulkCountAll').textContent = `${allStudents.length} students total`;
     document.getElementById('bulkCountUnset').textContent = `${unsetCount} students have no date yet`;
     document.getElementById('bulkCountFiltered').textContent = `${filteredStudents.length} students in current view`;
-
     const selOpt = document.getElementById('bulkSelectedOption');
     const selCount = selectedIds.size;
-    if (selCount > 0) {
-      selOpt.style.display = 'flex';
-      document.getElementById('bulkCountSelected').textContent = `${selCount} students selected`;
-      selOpt.querySelector('input').checked = true;
-    } else {
-      selOpt.style.display = 'none';
-      document.querySelector('input[name="bulkTarget"][value="unset"]').checked = true;
-    }
+    if (selCount > 0) { selOpt.style.display = 'flex'; document.getElementById('bulkCountSelected').textContent = `${selCount} students selected`; selOpt.querySelector('input').checked = true; }
+    else { selOpt.style.display = 'none'; document.querySelector('input[name="bulkTarget"][value="unset"]').checked = true; }
     document.getElementById('bulkDateInput').value = '';
     document.getElementById('bulkNotes').value = '';
     openModal('bulkDateModal');
@@ -654,21 +764,14 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (target === 'unset') targetStudents = allStudents.filter(s => !s.interview_date);
     else if (target === 'selected') targetStudents = allStudents.filter(s => selectedIds.has(s.user_id));
     else if (target === 'filtered') targetStudents = filteredStudents;
-
     if (targetStudents.length === 0) { showToast('No students match the selection', 'info'); return; }
-
     closeModal('bulkDateModal');
-
-    // Show progress modal
     document.getElementById('progressTitle').textContent = `Setting dates for ${targetStudents.length} students…`;
     document.getElementById('progressBarFill').style.width = '0%';
     document.getElementById('progressText').textContent = `0 / ${targetStudents.length} updated`;
     openModal('progressModal');
-
     const isoDate = new Date(date).toISOString();
     let done = 0, errors = 0;
-
-    // Process in batches of 10
     const batchSize = 10;
     for (let i = 0; i < targetStudents.length; i += batchSize) {
       const batch = targetStudents.slice(i, i + batchSize);
@@ -680,9 +783,8 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('progressText').textContent = `${done} / ${targetStudents.length} updated`;
       await new Promise(r => setTimeout(r, 100));
     }
-
     closeModal('progressModal');
-    if (errors === 0) showToast(`✅ Interview date set for ${done} students`);
+    if (errors === 0) showToast(`Interview date set for ${done} students`);
     else showToast(`Done with ${errors} error(s). ${done} updated.`, 'error');
     selectedIds.clear();
     await loadStudents();
@@ -691,129 +793,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== EXCEL EXPORT =====
   function exportToExcel() {
     if (!allStudents.length) { showToast('No students to export', 'info'); return; }
-
     const rows = allStudents.map(s => {
       const scoreValues = s.ai_scores ? Object.values(s.ai_scores).map(q => q.score).filter(n => typeof n === 'number') : [];
       const avgScore = scoreValues.length ? (scoreValues.reduce((a,b)=>a+b,0)/scoreValues.length).toFixed(1) : '';
-      const passCount = scoreValues.filter(sc => sc >= 7).length;
       const checklistItems = s.checklist_status ? Object.values(s.checklist_status) : [];
       const checkDone = checklistItems.filter(v=>v===true).length;
       const checkTotal = checklistItems.length;
       const checkPct = checkTotal ? Math.round((checkDone/checkTotal)*100) + '%' : '';
       const schoolMap = {regent:'Regent College London',bpp:'BPP University',yorkstjohn:'York St John University',netherlands:'Netherlands',ukvi:'UKVI'};
-      const now = new Date();
-      let dateStatus = '';
-      if (s.interview_date) {
-        const d = new Date(s.interview_date);
-        dateStatus = d > now ? 'Upcoming' : 'Past';
-      }
-
       return {
-        'Full Name': s.full_name || '',
-        'Email': s.email || '',
-        'Student ID': s.student_id || '',
-        'School / University': schoolMap[s.selected_university] || s.selected_university || 'Not Selected',
+        'Full Name': s.full_name || '', 'Email': s.email || '', 'Student ID': s.student_id || '',
+        'School': schoolMap[s.selected_university] || s.selected_university || 'Not Selected',
         'Interview Date': s.interview_date ? new Date(s.interview_date).toLocaleString('en-GB') : 'Not Set',
-        'Interview Status': dateStatus || (s.interview_date ? 'Set' : 'Not Set'),
-        'Avg Score (/10)': avgScore,
-        'Questions Answered': scoreValues.length,
-        'Questions Passed (≥7)': passCount,
-        'Checklist Items Done': checkDone,
-        'Checklist Total': checkTotal,
-        'Checklist %': checkPct,
-        'Last Active': s.updated_at ? new Date(s.updated_at).toLocaleString('en-GB') : '',
-        'User ID': s.user_id || ''
+        'Avg Score (/10)': avgScore, 'Questions Answered': scoreValues.length,
+        'Checklist %': checkPct, 'Last Active': s.updated_at ? new Date(s.updated_at).toLocaleString('en-GB') : ''
       };
     });
-
-    // Question scores — add one column per unique question
-    const allQuestionIds = new Set();
-    allStudents.forEach(s => { if (s.ai_scores) Object.keys(s.ai_scores).forEach(k => allQuestionIds.add(k)); });
-    allStudents.forEach((s, idx) => {
-      if (s.ai_scores) {
-        allQuestionIds.forEach(qId => {
-          const score = s.ai_scores[qId];
-          rows[idx][qId] = score ? score.score : '';
-        });
-      }
-    });
-
     const ws = XLSX.utils.json_to_sheet(rows);
-
-    // Column widths
-    const wscols = Object.keys(rows[0] || {}).map(k => ({ wch: Math.max(k.length, 14) }));
-    ws['!cols'] = wscols;
-
+    ws['!cols'] = Object.keys(rows[0] || {}).map(k => ({ wch: Math.max(k.length, 14) }));
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Students');
-
-    // Summary sheet
-    const now = new Date();
-    const in7 = new Date(now.getTime() + 7*24*60*60*1000);
-    const summaryData = [
-      { Metric: 'Total Students', Value: allStudents.length },
-      { Metric: 'Students with Interview Date', Value: allStudents.filter(s => s.interview_date).length },
-      { Metric: 'Students WITHOUT Interview Date', Value: allStudents.filter(s => !s.interview_date).length },
-      { Metric: 'Upcoming Interviews (7 days)', Value: allStudents.filter(s => { if (!s.interview_date) return false; const d = new Date(s.interview_date); return d >= now && d <= in7; }).length },
-      { Metric: 'Export Date', Value: now.toLocaleString('en-GB') }
-    ];
-    const wsSummary = XLSX.utils.json_to_sheet(summaryData);
-    wsSummary['!cols'] = [{ wch: 35 }, { wch: 20 }];
-    XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary');
-
-    const dateStr = now.toISOString().slice(0,10);
+    const dateStr = new Date().toISOString().slice(0,10);
     XLSX.writeFile(wb, `WhiteRock_Students_${dateStr}.xlsx`);
     showToast(`Excel exported — ${allStudents.length} students`);
-  }
-
-  // ===== VIEW STUDENT =====
-  function viewStudent(userId) {
-    const s = allStudents.find(x => x.user_id === userId);
-    if (!s) return;
-    currentDetailUserId = userId;
-    document.getElementById('detailName').textContent = s.full_name || 'Unknown Student';
-    document.getElementById('detailEmail').textContent = s.email || '';
-    const scoreValues = s.ai_scores ? Object.values(s.ai_scores).map(q=>q.score).filter(n=>typeof n==='number') : [];
-    const avgScore = scoreValues.length ? (scoreValues.reduce((a,b)=>a+b,0)/scoreValues.length).toFixed(1) : '—';
-    const passCount = scoreValues.filter(sc => sc >= 7).length;
-    const checklistItems = s.checklist_status ? Object.values(s.checklist_status) : [];
-    const checkDone = checklistItems.filter(v=>v===true).length;
-    const checkTotal = checklistItems.length;
-    const school = s.selected_university ? ({regent:'Regent College London',bpp:'BPP University',yorkstjohn:'York St John University',netherlands:'Netherlands',ukvi:'UKVI Universal Prep'}[s.selected_university]||s.selected_university) : 'Not selected';
-    const interviewDate = s.interview_date ? new Date(s.interview_date).toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}) : 'Not set';
-    const lastActive = s.updated_at ? new Date(s.updated_at).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
-    let topQHtml = '';
-    if (s.ai_scores && Object.keys(s.ai_scores).length > 0) {
-      topQHtml = Object.entries(s.ai_scores).slice(0,5).map(([qId,data]) => {
-        const label = (data.questionText||qId).substring(0,45) + (data.questionText?.length>45?'…':'');
-        const sc = typeof data.score==='number' ? data.score : '—';
-        const color = typeof sc==='number' ? (sc>=7?'var(--green)':sc>=5?'var(--amber)':'var(--red)') : 'var(--muted)';
-        return `<div class="detail-row"><span class="detail-key">${label}</span><span class="detail-val" style="color:${color};font-weight:700;">${sc}/10</span></div>`;
-      }).join('');
-    } else { topQHtml = '<p style="color:var(--muted);font-size:13px;padding:8px 0;">No practice attempts yet.</p>'; }
-    document.getElementById('detailContent').innerHTML = `
-      <div class="detail-section">
-        <div class="detail-section-title">Student Info</div>
-        <div class="detail-row"><span class="detail-key">Student ID</span><span class="detail-val">${escHtml(s.student_id||'—')}</span></div>
-        <div class="detail-row"><span class="detail-key">School</span><span class="detail-val">${school}</span></div>
-        <div class="detail-row"><span class="detail-key">Interview Date</span><span class="detail-val" style="${s.interview_date?'color:var(--green)':'color:var(--muted)'}">${interviewDate}</span></div>
-        <div class="detail-row"><span class="detail-key">Last Active</span><span class="detail-val">${lastActive}</span></div>
-      </div>
-      <div class="detail-section">
-        <div class="detail-section-title">Progress Summary</div>
-        <div class="detail-row"><span class="detail-key">Questions Answered</span><span class="detail-val">${scoreValues.length}</span></div>
-        <div class="detail-row"><span class="detail-key">Questions Passed (≥7)</span><span class="detail-val" style="color:var(--green)">${passCount}</span></div>
-        <div class="detail-row"><span class="detail-key">Average Score</span><span class="detail-val">${avgScore}/10</span></div>
-        <div class="detail-row"><span class="detail-key">Checklist Completion</span><span class="detail-val">${checkTotal>0?`${checkDone}/${checkTotal} (${Math.round(checkDone/checkTotal*100)}%)`:'—'}</span></div>
-      </div>
-      <div class="detail-section"><div class="detail-section-title">Recent Practice Scores</div>${topQHtml}</div>`;
-    openModal('detailModal');
-  }
-
-  function openDateFromDetail() {
-    closeModal('detailModal');
-    const s = allStudents.find(x => x.user_id === currentDetailUserId);
-    if (s) openDateModal(s.user_id, s.full_name||'', s.interview_date||'');
   }
 
   // ===== DELETE =====
@@ -826,17 +828,169 @@ document.addEventListener('DOMContentLoaded', () => {
   async function confirmDelete() {
     const userId = document.getElementById('deleteTargetId').value;
     const { error } = await supabase.from('student_progress').delete().eq('user_id', userId);
-    if (error) { showToast('Error deleting: ' + error.message, 'error'); }
+    if (error) showToast('Error deleting: ' + error.message, 'error');
     else { showToast('Student record deleted'); closeModal('deleteModal'); await loadStudents(); }
   }
+
+  // ===== QUESTIONS =====
+  async function loadQuestions() {
+    document.getElementById('questionsLoading').style.display = 'block';
+    document.getElementById('questionsContainer').innerHTML = '';
+    document.getElementById('questionsEmpty').style.display = 'none';
+
+    const statusFilter = document.getElementById('qStatusFilter').value;
+    let query = supabase.from('student_questions').select('*').order('created_at', { ascending: false });
+    if (statusFilter) query = query.eq('status', statusFilter);
+
+    const { data, error } = await query;
+    document.getElementById('questionsLoading').style.display = 'none';
+
+    if (error) { showToast('Error loading questions: ' + error.message, 'error'); return; }
+    allQuestions = data || [];
+
+    // Update tab badge with pending count
+    const pendingCount = allQuestions.filter(q => q.status === 'pending').length;
+    const badge = document.getElementById('questionsTabBadge');
+    badge.textContent = pendingCount;
+    badge.style.display = pendingCount > 0 ? 'inline-flex' : 'none';
+
+    if (allQuestions.length === 0) { document.getElementById('questionsEmpty').style.display = 'block'; return; }
+    renderQuestions(allQuestions);
+  }
+
+  function renderQuestions(questions) {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = questions.map(q => `
+      <div style="border:1.5px solid var(--border);border-radius:14px;padding:20px;margin-bottom:14px;background:white;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:12px;">
+          <div>
+            <div style="font-size:14px;font-weight:800;color:var(--navy);">${escHtml(q.student_name)}</div>
+            <div style="font-size:12px;color:var(--muted);">${escHtml(q.student_email)} · ${timeAgo(q.created_at)}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+            <span class="badge badge-${q.status === 'pending' ? 'pending' : 'answered'}">${q.status === 'pending' ? '⏳ Pending' : '✅ Answered'}</span>
+            ${q.status === 'pending' ? `<button class="btn-icon reply" onclick="openReplyModal('${q.id}','${escHtml(q.student_name)}','${escHtml(q.question_text.replace(/'/g,'&#39;'))}',null,'${escHtml(q.student_email)}')" title="Reply"><span class="material-symbols-outlined">reply</span></button>` : `<button class="btn-icon view" onclick="openReplyModal('${q.id}','${escHtml(q.student_name)}','${escHtml(q.question_text.replace(/'/g,'&#39;'))}','${escHtml((q.admin_reply||'').replace(/'/g,'&#39;'))}','${escHtml(q.student_email)}')" title="View"><span class="material-symbols-outlined">open_in_new</span></button>`}
+          </div>
+        </div>
+        <div class="q-thread">
+          <div class="q-bubble student">
+            <div class="q-bubble-label">Student asked</div>
+            <div class="q-bubble-text">${escHtml(q.question_text)}</div>
+            <div class="q-bubble-time">${new Date(q.created_at).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</div>
+          </div>
+          ${q.admin_reply ? `<div class="q-bubble admin">
+            <div class="q-bubble-label">Admin replied · ${q.replied_by||'Admin'}</div>
+            <div class="q-bubble-text">${escHtml(q.admin_reply)}</div>
+            <div class="q-bubble-time">${q.replied_at ? new Date(q.replied_at).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : ''}</div>
+          </div>` : ''}
+        </div>
+      </div>`).join('');
+  }
+
+  function openReplyModal(questionId, studentName, questionText, existingReply, studentEmail) {
+    document.getElementById('replyQuestionId').value = questionId;
+    document.getElementById('replyStudentName').textContent = `From: ${studentName} (${studentEmail})`;
+    document.getElementById('replyText').value = existingReply || '';
+    document.getElementById('replyQuestionThread').innerHTML = `
+      <div class="q-bubble student" style="margin-bottom:12px;">
+        <div class="q-bubble-label">Student asked</div>
+        <div class="q-bubble-text">${escHtml(questionText)}</div>
+      </div>`;
+    openModal('replyModal');
+  }
+
+  async function saveReply() {
+    const questionId = document.getElementById('replyQuestionId').value;
+    const reply = document.getElementById('replyText').value.trim();
+    if (!reply) { showToast('Please type a reply', 'error'); return; }
+    const btn = document.getElementById('saveReplyBtn');
+    btn.disabled = true; btn.textContent = 'Sending…';
+
+    const { error } = await supabase.from('student_questions').update({
+      admin_reply: reply,
+      status: 'answered',
+      replied_at: new Date().toISOString(),
+      replied_by: currentAdminEmail
+    }).eq('id', questionId);
+
+    btn.disabled = false; btn.textContent = 'Send Reply';
+
+    if (error) { showToast('Error saving reply: ' + error.message, 'error'); return; }
+    showToast('Reply sent successfully');
+    closeModal('replyModal');
+    await loadQuestions();
+  }
+
+  // ===== NOTIFICATIONS =====
+  async function sendNotification() {
+    const title = document.getElementById('notifTitle').value.trim();
+    const message = document.getElementById('notifMessage').value.trim();
+    const type = document.getElementById('notifType').value;
+    const target = document.getElementById('notifTarget').value;
+    const errEl = document.getElementById('notifError');
+
+    if (!title || !message) { errEl.style.display = 'block'; return; }
+    errEl.style.display = 'none';
+
+    const btn = document.getElementById('sendNotifBtn');
+    btn.disabled = true; btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">progress_activity</span> Sending…';
+
+    const { error } = await supabase.from('student_notifications').insert({
+      title, message, type, target, created_by: currentAdminEmail
+    });
+
+    btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">send</span> Send Notification';
+
+    if (error) { showToast('Error sending notification: ' + error.message, 'error'); return; }
+    showToast(`Notification sent to ${target === 'all' ? 'all students' : target + ' students'}`);
+    document.getElementById('notifTitle').value = '';
+    document.getElementById('notifMessage').value = '';
+    await loadNotifHistory();
+  }
+
+  async function loadNotifHistory() {
+    document.getElementById('notifHistoryLoading').style.display = 'block';
+    document.getElementById('notifHistoryContainer').innerHTML = '';
+    document.getElementById('notifHistoryEmpty').style.display = 'none';
+
+    const { data, error } = await supabase.from('student_notifications').select('*').order('created_at', { ascending: false });
+    document.getElementById('notifHistoryLoading').style.display = 'none';
+
+    if (error) { showToast('Error loading notifications: ' + error.message, 'error'); return; }
+    allSentNotifs = data || [];
+
+    if (allSentNotifs.length === 0) { document.getElementById('notifHistoryEmpty').style.display = 'block'; return; }
+
+    const targetLabels = { all:'All Students', regent:'Regent', bpp:'BPP', yorkstjohn:'York St John', netherlands:'Netherlands', ukvi:'UKVI' };
+    document.getElementById('notifHistoryContainer').innerHTML = allSentNotifs.map(n => `
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:16px;border-bottom:1px solid var(--border);gap:12px;">
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span class="type-pill type-${n.type}">${n.type === 'info' ? 'ℹ️ Info' : n.type === 'success' ? '✅ Success' : '⚠️ Warning'}</span>
+            <span style="font-size:12px;color:var(--muted);">→ ${targetLabels[n.target]||n.target}</span>
+          </div>
+          <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:3px;">${escHtml(n.title)}</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.45;">${escHtml(n.message)}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px;">${timeAgo(n.created_at)} · by ${escHtml(n.created_by||'Admin')}</div>
+        </div>
+        <button class="btn-icon delete" onclick="deleteNotification('${n.id}')" title="Delete"><span class="material-symbols-outlined">delete</span></button>
+      </div>`).join('');
+  }
+
+  async function deleteNotification(id) {
+    if (!confirm('Delete this notification? Students who haven\'t read it will no longer see it.')) return;
+    const { error } = await supabase.from('student_notifications').delete().eq('id', id);
+    if (error) showToast('Error deleting: ' + error.message, 'error');
+    else { showToast('Notification deleted'); await loadNotifHistory(); }
+  }
+  window.deleteNotification = deleteNotification;
 
   // ===== MODAL HELPERS =====
   function openModal(id) { document.getElementById(id).classList.add('open'); }
   function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-  document.querySelectorAll('.modal-overlay').forEach(overlay => { overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); }); });
-
-  // ===== UTILS =====
-  function escHtml(str) { return String(str||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
+  });
 
   // ===== EVENT LISTENERS =====
   document.getElementById('loginSubmitBtn').addEventListener('click', adminLogin);
@@ -844,34 +998,41 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('adminSignOutBtn').addEventListener('click', adminSignOut);
   document.getElementById('refreshBtn').addEventListener('click', loadStudents);
   document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
-  document.getElementById('bulkDateAllBtn').addEventListener('click', () => openBulkDateModal(false));
-  document.getElementById('bulkDateSelBtn').addEventListener('click', () => openBulkDateModal(true));
+  document.getElementById('bulkDateAllBtn').addEventListener('click', openBulkDateModal);
+  document.getElementById('bulkDateSelBtn').addEventListener('click', openBulkDateModal);
   document.getElementById('saveBulkDateBtn').addEventListener('click', saveBulkDate);
   document.getElementById('saveDateBtn').addEventListener('click', saveDate);
-  document.getElementById('detailSetDateBtn').addEventListener('click', openDateFromDetail);
   document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
+  document.getElementById('saveReplyBtn').addEventListener('click', saveReply);
+  document.getElementById('sendNotifBtn').addEventListener('click', sendNotification);
+  document.getElementById('refreshQuestionsBtn').addEventListener('click', loadQuestions);
+  document.getElementById('refreshNotifBtn').addEventListener('click', loadNotifHistory);
+  document.getElementById('qStatusFilter').addEventListener('change', loadQuestions);
 
   // Modal close buttons
-  [['dateModalClose','dateModal'],['dateModalCancel','dateModal'],['bulkDateModalClose','bulkDateModal'],['bulkDateModalCancel','bulkDateModal'],['detailModalClose','detailModal'],['detailModalCancel','detailModal'],['deleteModalClose','deleteModal'],['deleteModalCancel','deleteModal']].forEach(([btnId, modalId]) => {
+  [['dateModalClose','dateModal'],['dateModalCancel','dateModal'],
+   ['bulkDateModalClose','bulkDateModal'],['bulkDateModalCancel','bulkDateModal'],
+   ['replyModalClose','replyModal'],['replyModalCancel','replyModal'],
+   ['deleteModalClose','deleteModal'],['deleteModalCancel','deleteModal']
+  ].forEach(([btnId, modalId]) => {
     document.getElementById(btnId).addEventListener('click', () => closeModal(modalId));
   });
 
-  // Filters
   document.getElementById('searchInput').addEventListener('input', filterTable);
   document.getElementById('uniFilter').addEventListener('change', filterTable);
   document.getElementById('dateFilter').addEventListener('change', filterTable);
 
-  // Table delegation
   document.getElementById('studentTableBody').addEventListener('click', (e) => {
     const btn = e.target.closest('button');
     if (!btn) return;
     const { action, id, name, date } = btn.dataset;
-    if (action === 'view') viewStudent(id);
-    else if (action === 'date') openDateModal(id, name, date);
+    if (action === 'date') openDateModal(id, name, date);
     else if (action === 'delete') openDeleteModal(id, name);
   });
 
-  // Init
+  // Make openReplyModal global
+  window.openReplyModal = openReplyModal;
+
   checkAuth();
 });
 </script>
