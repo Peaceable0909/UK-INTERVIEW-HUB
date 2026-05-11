@@ -10,17 +10,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
     :root {
-      --navy: #0d1b3e;
-      --navy-mid: #162a5c;
-      --red: #e8192c;
-      --red-dark: #c0121f;
-      --green: #16a34a;
-      --green-light: #dcfce7;
-      --orange: #ea580c;
-      --surface: #eef1f8;
-      --white: #ffffff;
-      --border: #e2e6ed;
-      --muted: #6b7280;
+      --navy: #0d1b3e; --navy-mid: #162a5c; --red: #e8192c; --red-dark: #c0121f;
+      --green: #16a34a; --green-light: #dcfce7; --orange: #ea580c;
+      --surface: #eef1f8; --white: #ffffff; --border: #e2e6ed; --muted: #6b7280;
       --shadow-sm: 0 1px 4px rgba(13,27,62,0.07);
       --shadow-md: 0 4px 20px rgba(13,27,62,0.10);
       --shadow-lg: 0 12px 40px rgba(13,27,62,0.13);
@@ -33,60 +25,44 @@
     .material-symbols-outlined { font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; vertical-align: middle; }
     .fill { font-variation-settings: 'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
 
-    /* HEADER */
-    header {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      background: rgba(255,255,255,0.96); backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      height: 60px; padding: 0 20px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: rgba(255,255,255,0.96); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); height: 60px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; }
     .header-left { display: flex; align-items: center; gap: 10px; }
-    .back-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--surface); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; color: var(--navy); }
+    .back-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--surface); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--navy); }
     .back-btn:hover { background: var(--border); }
     .header-title { font-size: 18px; font-weight: 800; color: var(--navy); }
-    .btn-signout { background: none; border: 1.5px solid var(--border); color: var(--muted); padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
+    .btn-signout { background: none; border: 1.5px solid var(--border); color: var(--muted); padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     .btn-signout:hover { border-color: var(--red); color: var(--red); }
 
-    /* NOTIFICATION BELL */
-    .notif-btn { position: relative; width: 36px; height: 36px; border-radius: 50%; background: var(--surface); border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; color: var(--navy); }
+    .notif-btn { position: relative; width: 36px; height: 36px; border-radius: 50%; background: var(--surface); border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--navy); }
     .notif-btn:hover { background: var(--border); }
-    .notif-badge { position: absolute; top: -4px; right: -4px; background: var(--red); color: white; font-size: 9px; font-weight: 800; width: 17px; height: 17px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; display: none; }
+    .notif-badge { position: absolute; top: -4px; right: -4px; background: var(--red); color: white; font-size: 9px; font-weight: 800; width: 17px; height: 17px; border-radius: 50%; display: none; align-items: center; justify-content: center; border: 2px solid white; }
     .notif-badge.show { display: flex; }
-
-    /* NOTIFICATION PANEL */
     .notif-panel { position: fixed; top: 65px; right: 16px; width: 340px; max-height: 480px; background: white; border-radius: 16px; box-shadow: var(--shadow-lg); border: 1px solid var(--border); z-index: 300; display: none; flex-direction: column; overflow: hidden; }
     .notif-panel.open { display: flex; }
     .notif-panel-header { padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
     .notif-panel-title { font-size: 14px; font-weight: 800; color: var(--navy); }
     .notif-mark-all { font-size: 12px; color: var(--navy); font-weight: 600; cursor: pointer; background: none; border: none; }
-    .notif-mark-all:hover { color: var(--red); }
     .notif-list { overflow-y: auto; flex: 1; }
-    .notif-item { padding: 14px 18px; border-bottom: 1px solid var(--surface); display: flex; gap: 12px; align-items: flex-start; transition: background 0.15s; }
+    .notif-item { padding: 14px 18px; border-bottom: 1px solid var(--surface); display: flex; gap: 12px; cursor: pointer; }
     .notif-item.unread { background: #f0f4ff; }
     .notif-item:hover { background: var(--surface); }
     .notif-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
-    .notif-dot.info { background: #3b82f6; }
-    .notif-dot.success { background: var(--green); }
-    .notif-dot.warning { background: var(--orange); }
-    .notif-dot.read { background: var(--border); }
+    .notif-dot.info { background: #3b82f6; } .notif-dot.success { background: var(--green); } .notif-dot.warning { background: var(--orange); } .notif-dot.read { background: var(--border); }
     .notif-text { flex: 1; }
     .notif-title-text { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
     .notif-msg { font-size: 12px; color: var(--muted); line-height: 1.45; }
     .notif-time { font-size: 10px; color: var(--muted); margin-top: 4px; }
     .notif-empty { padding: 32px; text-align: center; color: var(--muted); font-size: 13px; }
 
-    /* PAGE */
     .page { padding-top: 72px; max-width: 720px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
     .card { background: var(--white); border-radius: 20px; padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid rgba(255,255,255,0.8); margin-bottom: 14px; }
 
-    /* LOADING */
-    #loadingState { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 80px 0; gap: 16px; }
-    .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    #loadingState { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 60vh; gap: 16px; }
+    .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    #loadingState p { font-size: 13px; color: var(--muted); }
+    #loadingMsg { font-size: 14px; color: var(--muted); font-weight: 500; }
+    #loadingStep { font-size: 12px; color: var(--border); min-height: 16px; }
 
-    /* PROFILE CARD */
     .profile-card { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .profile-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
     .profile-avatar { width: 64px; height: 64px; border-radius: 18px; background: var(--navy); color: white; font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -94,13 +70,13 @@
     .profile-email { font-size: 13px; color: var(--muted); margin-bottom: 5px; }
     .profile-id { display: inline-block; background: #ede9fe; color: #5b21b6; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 6px; }
     .profile-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
-    .btn-action { display: flex; align-items: center; justify-content: center; gap: 7px; padding: 11px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--white); font-size: 13px; font-weight: 700; color: var(--navy); cursor: pointer; transition: all 0.15s; }
+    .btn-action { display: flex; align-items: center; justify-content: center; gap: 7px; padding: 11px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--white); font-size: 13px; font-weight: 700; color: var(--navy); cursor: pointer; }
     .btn-action:hover { background: var(--surface); }
     .btn-action.dark { background: var(--navy); color: white; border-color: var(--navy); }
     .btn-action.dark:hover { background: var(--navy-mid); }
     .profile-right { background: var(--surface); border-radius: 14px; padding: 14px; }
     .prep-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-    .btn-change { background: none; border: none; color: var(--navy); font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: color 0.15s; }
+    .btn-change { background: none; border: none; color: var(--navy); font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; }
     .btn-change:hover { color: var(--red); }
     .prep-uni-row { display: flex; align-items: center; gap: 10px; }
     .prep-uni-icon { width: 38px; height: 38px; border-radius: 12px; background: #e0e8ff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -108,33 +84,22 @@
     .prep-uni-name { font-size: 15px; font-weight: 800; color: var(--navy); }
     .prep-uni-course { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
-    /* TWO COLUMN CARDS */
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
 
-    /* LIVE TRAINING */
-    .live-badge { display: inline-flex; align-items: center; gap: 5px; background: #fee2e2; color: var(--red); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 10px; border-radius: 999px; margin-bottom: 8px; }
-    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); animation: pulseDot 1.5s infinite; }
-    @keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
-    .live-title { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 3px; }
-    .live-time { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
-    .btn-zoom { width: 100%; background: var(--red); color: white; border: none; padding: 12px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; animation: pulseBtn 2s infinite; }
-    @keyframes pulseBtn { 0%,100%{box-shadow:0 0 0 0 rgba(232,25,44,0.4)} 50%{box-shadow:0 0 0 8px rgba(232,25,44,0)} }
-    .btn-zoom:hover { background: var(--red-dark); }
-    .live-students { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
-    .student-avatars { display: flex; }
-    .student-avatars img { width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; margin-left: -6px; object-fit: cover; }
-    .student-avatars img:first-child { margin-left: 0; }
-    .live-count { font-size: 12px; color: var(--muted); font-weight: 500; }
     .session-upcoming { background: var(--surface); border-radius: 14px; padding: 14px; text-align: center; }
-    .session-upcoming .material-symbols-outlined { font-size: 28px; color: var(--muted); margin-bottom: 6px; }
+    .session-upcoming .material-symbols-outlined { font-size: 28px; color: var(--muted); margin-bottom: 6px; display: block; }
     .session-upcoming p { font-size: 13px; color: var(--muted); }
+    .live-badge { display: inline-flex; align-items: center; gap: 5px; background: #fee2e2; color: var(--red); font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; margin-bottom: 8px; }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); animation: pulseDot 1.5s infinite; }
+    @keyframes pulseDot { 0%,100%{opacity:1} 50%{opacity:0.5} }
+    .btn-zoom { width: 100%; background: var(--red); color: white; border: none; padding: 12px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; margin-top: 8px; }
+    .btn-zoom:hover { background: var(--red-dark); }
 
-    /* COUNSELOR */
     .counselor-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     .counselor-header-left { display: flex; align-items: center; gap: 8px; }
     .counselor-header-left .material-symbols-outlined { font-size: 20px; color: var(--navy); background: var(--surface); padding: 6px; border-radius: 10px; }
     .counselor-title { font-size: 16px; font-weight: 800; color: var(--navy); }
-    .btn-edit { display: flex; align-items: center; gap: 5px; background: var(--surface); border: none; padding: 7px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; color: var(--navy); cursor: pointer; transition: all 0.15s; }
+    .btn-edit { display: flex; align-items: center; gap: 5px; background: var(--surface); border: none; padding: 7px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; color: var(--navy); cursor: pointer; }
     .btn-edit:hover { background: var(--border); }
     .counselor-avatar { width: 44px; height: 44px; border-radius: 14px; background: #166534; color: white; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .counselor-info-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
@@ -144,115 +109,88 @@
     .counselor-detail .material-symbols-outlined { font-size: 18px; color: var(--navy); flex-shrink: 0; margin-top: 1px; }
     .counselor-detail-text { font-size: 13px; color: var(--navy); word-break: break-word; }
 
-    /* STATS */
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
     .stat-card { background: var(--white); border-radius: 16px; padding: 16px; box-shadow: var(--shadow-sm); }
     .stat-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
-    .stat-icon.blue { background: #dbeafe; }
-    .stat-icon.blue .material-symbols-outlined { color: #1d4ed8; font-size: 20px; }
-    .stat-icon.green { background: #dcfce7; }
-    .stat-icon.green .material-symbols-outlined { color: var(--green); font-size: 20px; }
+    .stat-icon.blue { background: #dbeafe; } .stat-icon.blue .material-symbols-outlined { color: #1d4ed8; font-size: 20px; }
+    .stat-icon.green { background: #dcfce7; } .stat-icon.green .material-symbols-outlined { color: var(--green); font-size: 20px; }
     .stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 4px; }
     .stat-value { font-size: 28px; font-weight: 900; color: var(--navy); line-height: 1; font-family: 'Manrope', sans-serif; }
     .stat-value.green { color: var(--green); }
     .stat-sub { font-size: 12px; margin-top: 4px; }
-    .stat-sub.green { color: var(--green); font-weight: 600; }
-    .stat-sub.muted { color: var(--muted); }
+    .stat-sub.green { color: var(--green); font-weight: 600; } .stat-sub.muted { color: var(--muted); }
 
-    /* CHECKLIST */
     .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     .section-title-row { display: flex; align-items: center; gap: 8px; }
     .section-icon { width: 34px; height: 34px; border-radius: 10px; background: #dbeafe; display: flex; align-items: center; justify-content: center; }
     .section-icon .material-symbols-outlined { font-size: 18px; color: #1d4ed8; }
     .section-title { font-size: 16px; font-weight: 800; color: var(--navy); }
-    .section-badge { background: #dcfce7; color: var(--green); font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+    .section-badge { background: #dcfce7; color: var(--green); font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 999px; text-transform: uppercase; white-space: nowrap; }
     .checklist-scroll { max-height: 220px; overflow-y: auto; padding-right: 4px; }
-    .checklist-scroll::-webkit-scrollbar { width: 3px; }
-    .checklist-scroll::-webkit-scrollbar-track { background: var(--surface); border-radius: 999px; }
-    .checklist-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
     .checklist-item { display: flex; align-items: center; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid var(--surface); }
     .checklist-item:last-child { border-bottom: none; }
     .checklist-left { display: flex; align-items: center; gap: 10px; }
     .check-circle { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .check-circle.done { background: var(--green); }
-    .check-circle.done .material-symbols-outlined { font-size: 14px; color: white; font-variation-settings: 'FILL' 1,'wght' 600,'GRAD' 0,'opsz' 24; }
-    .check-circle.pending { background: white; border: 2px solid #fdba74; }
-    .check-circle.pending .material-symbols-outlined { font-size: 12px; color: #f97316; }
+    .check-circle.done { background: var(--green); } .check-circle.done .material-symbols-outlined { font-size: 14px; color: white; font-variation-settings: 'FILL' 1,'wght' 600,'GRAD' 0,'opsz' 24; }
+    .check-circle.pending { background: white; border: 2px solid #fdba74; } .check-circle.pending .material-symbols-outlined { font-size: 12px; color: #f97316; }
     .check-label { font-size: 13px; font-weight: 500; color: var(--navy); }
-    .check-status { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
-    .check-status.done { background: #dcfce7; color: var(--green); display: flex; align-items: center; gap: 3px; }
-    .check-status.pending { background: #fff7ed; color: #ea580c; display: flex; align-items: center; gap: 3px; }
+    .check-status { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; white-space: nowrap; display: flex; align-items: center; gap: 3px; }
+    .check-status.done { background: #dcfce7; color: var(--green); } .check-status.pending { background: #fff7ed; color: #ea580c; }
     .check-status .material-symbols-outlined { font-size: 13px; }
-    .btn-view-all { width: 100%; background: none; border: 1.5px solid var(--border); border-radius: 12px; padding: 12px; font-size: 13px; font-weight: 700; color: var(--navy); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 12px; transition: all 0.15s; }
+    .btn-view-all { width: 100%; background: none; border: 1.5px solid var(--border); border-radius: 12px; padding: 12px; font-size: 13px; font-weight: 700; color: var(--navy); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 12px; }
     .btn-view-all:hover { background: var(--surface); }
 
-    /* PRACTICE RESPONSES */
-    .responses-tools { display: flex; gap: 6px; }
-    .icon-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--surface); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; color: var(--navy); }
+    .icon-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--surface); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--navy); }
     .icon-btn:hover { background: var(--border); }
     #searchBox { display: none; margin-bottom: 12px; }
-    #searchBox input { width: 100%; border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; font-size: 13px; outline: none; transition: border 0.15s; font-family: 'Inter', sans-serif; background: var(--surface); }
+    #searchBox input { width: 100%; border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; font-size: 13px; outline: none; font-family: 'Inter', sans-serif; background: var(--surface); }
     #searchBox input:focus { border-color: var(--navy); background: white; }
     .response-item { background: var(--surface); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
-    .response-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
-    .response-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; background: #dbeafe; color: #1d4ed8; }
-    .response-tag.bpp { background: #fef3c7; color: #92400e; }
-    .response-tag.ukvi { background: #ede9fe; color: #5b21b6; }
-    .response-tag.netherlands { background: #dcfce7; color: #166534; }
-    .response-tag.yorkstjohn { background: #fce7f3; color: #9d174d; }
+    .response-top { display: flex; align-items: flex-start; justify-content: space-between; }
+    .response-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; margin-bottom: 5px; background: #dbeafe; color: #1d4ed8; }
+    .response-tag.bpp { background: #fef3c7; color: #92400e; } .response-tag.ukvi { background: #ede9fe; color: #5b21b6; } .response-tag.netherlands { background: #dcfce7; color: #166534; } .response-tag.yorkstjohn { background: #fce7f3; color: #9d174d; }
     .response-question { font-size: 14px; font-weight: 700; color: var(--navy); line-height: 1.35; }
     .response-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
     .response-meta span.needs-work { color: var(--orange); font-weight: 700; }
-    .response-score { text-align: right; flex-shrink: 0; margin-left: 12px; }
-    .score-num { font-size: 18px; font-weight: 900; color: var(--navy); font-family: 'Manrope', sans-serif; }
-    .score-num.pass { color: var(--green); }
-    .score-num.fail { color: var(--orange); }
+    .score-num { font-size: 18px; font-weight: 900; color: var(--navy); font-family: 'Manrope', sans-serif; margin-left: 12px; flex-shrink: 0; }
+    .score-num.pass { color: var(--green); } .score-num.fail { color: var(--orange); }
     #noResponsesMsg { text-align: center; padding: 32px 0; color: var(--muted); font-size: 14px; display: none; }
 
-    /* COUNSELOR EDIT FORM */
     .form-group { margin-bottom: 12px; }
     .form-group label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 5px; }
-    .form-group input, .form-group textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 13px; outline: none; transition: border 0.15s; font-family: 'Inter', sans-serif; background: var(--surface); }
+    .form-group input, .form-group textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 13px; outline: none; font-family: 'Inter', sans-serif; background: var(--surface); }
     .form-group input:focus, .form-group textarea:focus { border-color: var(--navy); background: white; }
     .form-group textarea { resize: none; }
     .form-actions { display: flex; gap: 8px; margin-top: 14px; }
-    .btn-save { flex: 1; background: var(--navy); color: white; border: none; padding: 11px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif; }
+    .btn-save { flex: 1; background: var(--navy); color: white; border: none; padding: 11px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; }
     .btn-save:hover { background: var(--navy-mid); }
-    .btn-cancel { background: var(--surface); color: var(--navy); border: none; padding: 11px 18px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif; }
+    .btn-cancel { background: var(--surface); color: var(--navy); border: none; padding: 11px 18px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; }
     .btn-cancel:hover { background: var(--border); }
 
-    /* EMPTY STATE */
     .empty-state { text-align: center; padding: 24px 0; }
     .empty-state .material-symbols-outlined { font-size: 36px; color: var(--border); display: block; margin-bottom: 8px; }
     .empty-state p { font-size: 13px; color: var(--muted); }
     .empty-state button { margin-top: 10px; background: var(--surface); border: 1.5px solid var(--border); padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; color: var(--navy); }
 
-    /* Q&A SECTION */
-    .qa-section { margin-bottom: 14px; }
     .qa-input-row { display: flex; gap: 8px; margin-bottom: 16px; }
-    .qa-input { flex: 1; border: 1.5px solid var(--border); border-radius: 12px; padding: 11px 14px; font-size: 13px; outline: none; font-family: 'Inter', sans-serif; background: var(--surface); resize: none; min-height: 44px; max-height: 120px; transition: border 0.15s; }
+    .qa-input { flex: 1; border: 1.5px solid var(--border); border-radius: 12px; padding: 11px 14px; font-size: 13px; outline: none; font-family: 'Inter', sans-serif; background: var(--surface); resize: none; min-height: 44px; max-height: 120px; }
     .qa-input:focus { border-color: var(--navy); background: white; }
-    .qa-send-btn { background: var(--navy); color: white; border: none; border-radius: 12px; padding: 0 18px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; white-space: nowrap; }
+    .qa-send-btn { background: var(--navy); color: white; border: none; border-radius: 12px; padding: 0 18px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
     .qa-send-btn:hover { background: var(--navy-mid); }
     .qa-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .qa-thread { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; padding-right: 4px; }
-    .qa-thread::-webkit-scrollbar { width: 3px; }
-    .qa-thread::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
     .qa-bubble { border-radius: 14px; padding: 12px 14px; }
     .qa-bubble.question { background: #e0e7ff; border-bottom-right-radius: 4px; align-self: flex-end; max-width: 90%; }
     .qa-bubble.reply { background: #f0fdf4; border: 1.5px solid #bbf7d0; border-bottom-left-radius: 4px; align-self: flex-start; max-width: 90%; }
     .qa-bubble.pending { background: var(--surface); border: 1.5px dashed var(--border); }
-    .qa-bubble-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
-    .qa-bubble.question .qa-bubble-label { color: #4338ca; }
-    .qa-bubble.reply .qa-bubble-label { color: var(--green); }
-    .qa-bubble.pending .qa-bubble-label { color: var(--muted); }
+    .qa-bubble-label { font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+    .qa-bubble.question .qa-bubble-label { color: #4338ca; } .qa-bubble.reply .qa-bubble-label { color: var(--green); } .qa-bubble.pending .qa-bubble-label { color: var(--muted); }
     .qa-bubble-text { font-size: 13px; color: var(--navy); line-height: 1.5; }
     .qa-bubble-time { font-size: 10px; color: var(--muted); margin-top: 5px; }
     .qa-empty { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; }
 
-    /* BOTTOM NAV */
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.97); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0 max(10px, env(safe-area-inset-bottom)); z-index: 100; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--muted); background: none; border: none; cursor: pointer; transition: all 0.15s; flex: 1; text-decoration: none; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--muted); background: none; border: none; cursor: pointer; flex: 1; text-decoration: none; }
     .nav-item.active { color: var(--navy); }
     .nav-item.active .material-symbols-outlined { font-variation-settings: 'FILL' 1,'wght' 600,'GRAD' 0,'opsz' 24; }
     .nav-item .material-symbols-outlined { font-size: 22px; }
@@ -260,28 +198,24 @@
     .nav-item.active .nav-icon-wrap { background: #dbeafe; border-radius: 12px; }
     .nav-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
 
-    /* TOAST */
     #toast { display: none; position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: var(--navy); color: white; padding: 10px 20px; border-radius: 100px; font-size: 13px; font-weight: 600; z-index: 9999; box-shadow: var(--shadow-lg); white-space: nowrap; transition: opacity 0.3s; }
 
-    /* RESPONSIVE */
     @media (max-width: 560px) {
       .profile-card { grid-template-columns: 1fr; }
       .two-col { grid-template-columns: 1fr; }
-      .stats-grid { grid-template-columns: 1fr 1fr; }
       .notif-panel { right: 8px; left: 8px; width: auto; }
     }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
   <div class="header-left">
     <a href="index.html" class="back-btn"><span class="material-symbols-outlined">arrow_back_ios_new</span></a>
     <span class="header-title">Prep Hub</span>
   </div>
   <div style="display:flex;align-items:center;gap:8px;">
-    <button class="notif-btn" id="notifBtn" title="Notifications">
+    <button class="notif-btn" id="notifBtn">
       <span class="material-symbols-outlined" style="font-size:20px;">notifications</span>
       <span class="notif-badge" id="notifBadge">0</span>
     </button>
@@ -291,27 +225,22 @@
   </div>
 </header>
 
-<!-- NOTIFICATION PANEL -->
 <div class="notif-panel" id="notifPanel">
   <div class="notif-panel-header">
     <span class="notif-panel-title">Notifications</span>
     <button class="notif-mark-all" id="markAllBtn">Mark all read</button>
   </div>
-  <div class="notif-list" id="notifList">
-    <div class="notif-empty">No notifications yet</div>
-  </div>
+  <div class="notif-list" id="notifList"><div class="notif-empty">No notifications yet</div></div>
 </div>
 
 <main class="page">
-  <!-- LOADING -->
   <div id="loadingState">
     <div class="spinner"></div>
-    <p id="loadingMsg">Loading your dashboard…</p>
+    <p id="loadingMsg">Loading your dashboard...</p>
+    <p id="loadingStep">&nbsp;</p>
   </div>
 
   <div id="dashboardContent" style="display:none;">
-
-    <!-- PROFILE CARD -->
     <div class="card" style="padding:20px;">
       <div class="profile-card">
         <div class="profile-left">
@@ -319,91 +248,55 @@
             <div class="profile-avatar" id="avatarInitials">AC</div>
             <div>
               <div class="profile-name" id="studentName">Student</div>
-              <div class="profile-email" id="studentEmail">—</div>
+              <div class="profile-email" id="studentEmail">Loading...</div>
               <div class="profile-id" id="studentId">ID: —</div>
-              <div id="interviewDateDisplay" style="margin-top: 8px; font-size: 12px; font-weight: 700; color: var(--red); display: none;">
-                <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: text-bottom;">calendar_month</span>
+              <div id="interviewDateDisplay" style="margin-top:8px;font-size:12px;font-weight:700;color:var(--red);display:none;">
+                <span class="material-symbols-outlined" style="font-size:16px;vertical-align:text-bottom;">calendar_month</span>
                 Interview: <span id="interviewDateValue"></span>
               </div>
             </div>
           </div>
           <div class="profile-actions">
-            <button id="emailReportBtn" class="btn-action">
-              <span class="material-symbols-outlined" style="font-size:16px">mail</span> Email Report
-            </button>
-            <button id="exportJsonBtn" class="btn-action dark">
-              <span class="material-symbols-outlined" style="font-size:16px">download</span> Export Data
-            </button>
+            <button id="emailReportBtn" class="btn-action"><span class="material-symbols-outlined" style="font-size:16px">mail</span> Email Report</button>
+            <button id="exportJsonBtn" class="btn-action dark"><span class="material-symbols-outlined" style="font-size:16px">download</span> Export Data</button>
           </div>
         </div>
         <div class="profile-right">
           <div class="prep-label">
             Currently Preparing For
-            <button id="changeCourseBtn" class="btn-change">
-              <span class="material-symbols-outlined" style="font-size:15px">sync</span> Change
-            </button>
+            <button id="changeCourseBtn" class="btn-change"><span class="material-symbols-outlined" style="font-size:15px">sync</span> Change</button>
           </div>
           <div class="prep-uni-row">
             <div class="prep-uni-icon"><span class="material-symbols-outlined">school</span></div>
             <div>
-              <div class="prep-uni-name" id="currentUniversity">—</div>
-              <div class="prep-uni-course" id="currentProgram">—</div>
+              <div class="prep-uni-name" id="currentUniversity">Not selected</div>
+              <div class="prep-uni-course" id="currentProgram">Choose a pathway from home</div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- LIVE TRAINING + COUNSELOR -->
     <div class="two-col">
       <div class="card">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
           <span class="material-symbols-outlined" style="font-size:20px;color:var(--red);background:#fee2e2;padding:7px;border-radius:10px;">videocam</span>
           <span style="font-size:15px;font-weight:800;color:var(--navy);">Live Interview Training</span>
         </div>
-        <div id="liveSessionContainer">
-          <div class="session-upcoming">
-            <span class="material-symbols-outlined">schedule</span>
-            <p>Checking for upcoming sessions...</p>
-          </div>
-        </div>
+        <div id="liveSessionContainer"><div class="session-upcoming"><span class="material-symbols-outlined">schedule</span><p>Checking for sessions...</p></div></div>
       </div>
       <div class="card">
         <div class="counselor-header">
-          <div class="counselor-header-left">
-            <span class="material-symbols-outlined">support_agent</span>
-            <span class="counselor-title">My Counselor</span>
-          </div>
-          <button id="editCounselorBtn" class="btn-edit">
-            <span class="material-symbols-outlined" style="font-size:15px">edit</span> Edit
-          </button>
+          <div class="counselor-header-left"><span class="material-symbols-outlined">support_agent</span><span class="counselor-title">My Counselor</span></div>
+          <button id="editCounselorBtn" class="btn-edit"><span class="material-symbols-outlined" style="font-size:15px">edit</span> Edit</button>
         </div>
         <div id="counselorView">
-          <div id="counselorEmpty" class="empty-state">
-            <span class="material-symbols-outlined">person_add</span>
-            <p>No counselor added yet</p>
-            <button onclick="document.getElementById('editCounselorBtn').click()">Add Counselor</button>
-          </div>
+          <div id="counselorEmpty" class="empty-state"><span class="material-symbols-outlined">person_add</span><p>No counselor added yet</p><button onclick="document.getElementById('editCounselorBtn').click()">Add Counselor</button></div>
           <div id="counselorCard" style="display:none;">
-            <div class="counselor-info-row">
-              <div class="counselor-avatar" id="counselorInitials">SJ</div>
-              <div>
-                <div class="counselor-name" id="counselorName">—</div>
-                <div class="counselor-role" id="counselorRole">Counselor</div>
-              </div>
-            </div>
-            <div id="counselorEmailRow" style="display:none;" class="counselor-detail">
-              <span class="material-symbols-outlined">mail</span>
-              <div class="counselor-detail-text"><a id="counselorEmailLink" href="#">—</a></div>
-            </div>
-            <div id="counselorPhoneRow" style="display:none;" class="counselor-detail">
-              <span class="material-symbols-outlined">phone</span>
-              <div class="counselor-detail-text" id="counselorPhone">—</div>
-            </div>
-            <div id="counselorNotesRow" style="display:none;" class="counselor-detail">
-              <span class="material-symbols-outlined">sticky_note_2</span>
-              <div class="counselor-detail-text" id="counselorNotes">—</div>
-            </div>
+            <div class="counselor-info-row"><div class="counselor-avatar" id="counselorInitials">SJ</div><div><div class="counselor-name" id="counselorName">—</div><div class="counselor-role" id="counselorRole">Counselor</div></div></div>
+            <div id="counselorEmailRow" style="display:none;" class="counselor-detail"><span class="material-symbols-outlined">mail</span><div class="counselor-detail-text"><a id="counselorEmailLink" href="#">—</a></div></div>
+            <div id="counselorPhoneRow" style="display:none;" class="counselor-detail"><span class="material-symbols-outlined">phone</span><div class="counselor-detail-text" id="counselorPhone">—</div></div>
+            <div id="counselorNotesRow" style="display:none;" class="counselor-detail"><span class="material-symbols-outlined">sticky_note_2</span><div class="counselor-detail-text" id="counselorNotes">—</div></div>
           </div>
         </div>
         <div id="counselorEdit" style="display:none;">
@@ -411,122 +304,60 @@
           <div class="form-group"><label>Role / Company</label><input id="cRole" type="text" placeholder="Senior Education Consultant"/></div>
           <div class="form-group"><label>Email</label><input id="cEmail" type="email" placeholder="counselor@agency.com"/></div>
           <div class="form-group"><label>Phone / WhatsApp</label><input id="cPhone" type="tel" placeholder="+44 7700 000000"/></div>
-          <div class="form-group"><label>Notes</label><textarea id="cNotes" rows="2" placeholder="Call every Tuesday. Interview booked for 15 Jan."></textarea></div>
+          <div class="form-group"><label>Notes</label><textarea id="cNotes" rows="2" placeholder="Call every Tuesday..."></textarea></div>
           <p id="counselorError" style="color:var(--red);font-size:12px;display:none;margin-bottom:8px;">Name is required.</p>
-          <div class="form-actions">
-            <button id="saveCounselorBtn" class="btn-save">Save Counselor</button>
-            <button id="cancelCounselorBtn" class="btn-cancel">Cancel</button>
-          </div>
+          <div class="form-actions"><button id="saveCounselorBtn" class="btn-save">Save Counselor</button><button id="cancelCounselorBtn" class="btn-cancel">Cancel</button></div>
         </div>
       </div>
     </div>
 
-    <!-- STATS -->
     <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon blue"><span class="material-symbols-outlined">forum</span></div>
-        <div class="stat-label">Total AI Responses</div>
-        <div class="stat-value" id="totalResponses">0</div>
-        <div class="stat-sub muted">This is your total</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon green"><span class="material-symbols-outlined">trending_up</span></div>
-        <div class="stat-label">Average Score</div>
-        <div class="stat-value green" id="avgScore">0<span style="font-size:14px;font-weight:600;color:var(--green);opacity:0.6;">/10</span></div>
-        <div class="stat-sub green" id="avgScoreSub">Good progress!</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon blue"><span class="material-symbols-outlined">fact_check</span></div>
-        <div class="stat-label">Checklist Done</div>
-        <div class="stat-value" id="checklistPercent">0<span style="font-size:14px;font-weight:600;opacity:0.5;">%</span></div>
-        <div class="stat-sub muted" id="checklistSubText">0 of 0 completed</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon green"><span class="material-symbols-outlined fill">verified</span></div>
-        <div class="stat-label">Pass Rate</div>
-        <div class="stat-value green" id="passRate">0<span style="font-size:14px;font-weight:600;color:var(--green);opacity:0.6;">%</span></div>
-        <div class="stat-sub green">Well done!</div>
-      </div>
+      <div class="stat-card"><div class="stat-icon blue"><span class="material-symbols-outlined">forum</span></div><div class="stat-label">Total AI Responses</div><div class="stat-value" id="totalResponses">0</div><div class="stat-sub muted">Practice answers saved</div></div>
+      <div class="stat-card"><div class="stat-icon green"><span class="material-symbols-outlined">trending_up</span></div><div class="stat-label">Average Score</div><div class="stat-value green" id="avgScore">0<span style="font-size:14px;font-weight:600;opacity:0.6;">/10</span></div><div class="stat-sub green">Keep it up!</div></div>
+      <div class="stat-card"><div class="stat-icon blue"><span class="material-symbols-outlined">fact_check</span></div><div class="stat-label">Checklist Done</div><div class="stat-value" id="checklistPercent">0<span style="font-size:14px;font-weight:600;opacity:0.5;">%</span></div><div class="stat-sub muted" id="checklistSubText">0 of 0 completed</div></div>
+      <div class="stat-card"><div class="stat-icon green"><span class="material-symbols-outlined fill">verified</span></div><div class="stat-label">Pass Rate</div><div class="stat-value green" id="passRate">0<span style="font-size:14px;font-weight:600;opacity:0.6;">%</span></div><div class="stat-sub green">Questions scored 7+</div></div>
     </div>
 
-    <!-- CHECKLIST + RESPONSES -->
     <div class="two-col" style="align-items:start;">
       <div class="card">
         <div class="section-header">
-          <div class="section-title-row">
-            <div class="section-icon"><span class="material-symbols-outlined">checklist</span></div>
-            <span class="section-title">Preparation Checklist</span>
-          </div>
-          <span class="section-badge" id="checklistSummary">0/0 COMPLETED</span>
+          <div class="section-title-row"><div class="section-icon"><span class="material-symbols-outlined">checklist</span></div><span class="section-title">Preparation Checklist</span></div>
+          <span class="section-badge" id="checklistSummary">0/0 DONE</span>
         </div>
         <div class="checklist-scroll" id="checklistContainer"></div>
-        <button class="btn-view-all" onclick="document.getElementById('checklistContainer').style.maxHeight='none';this.style.display='none'">
-          View All <span class="material-symbols-outlined" style="font-size:16px">chevron_right</span>
-        </button>
+        <button class="btn-view-all" onclick="document.getElementById('checklistContainer').style.maxHeight='none';this.style.display='none'">View All <span class="material-symbols-outlined" style="font-size:16px">chevron_right</span></button>
       </div>
-
       <div class="card">
         <div class="section-header">
-          <div class="section-title-row">
-            <span class="material-symbols-outlined" style="font-size:20px;color:#1d4ed8;background:#dbeafe;padding:7px;border-radius:10px;">forum</span>
-            <span class="section-title">Practice Responses</span>
-          </div>
-          <div class="responses-tools">
-            <button id="searchBtn" class="icon-btn"><span class="material-symbols-outlined" style="font-size:18px">search</span></button>
-          </div>
+          <div class="section-title-row"><span class="material-symbols-outlined" style="font-size:20px;color:#1d4ed8;background:#dbeafe;padding:7px;border-radius:10px;">forum</span><span class="section-title">Practice Responses</span></div>
+          <button id="searchBtn" class="icon-btn"><span class="material-symbols-outlined" style="font-size:18px">search</span></button>
         </div>
         <div id="searchBox"><input type="text" placeholder="Search responses..."/></div>
         <div id="responsesContainer"></div>
         <div id="noResponsesMsg">No practice responses yet. Start practising!</div>
-        <button class="btn-view-all" id="viewAllResponsesBtn">
-          View All <span class="material-symbols-outlined" style="font-size:16px">chevron_right</span>
-        </button>
+        <button class="btn-view-all" id="viewAllResponsesBtn" style="display:none;">View All <span class="material-symbols-outlined" style="font-size:16px">chevron_right</span></button>
       </div>
     </div>
 
-    <!-- Q&A WITH COUNSELOR -->
-    <div class="card qa-section">
+    <div class="card" style="margin-bottom:14px;">
       <div class="section-header" style="margin-bottom:16px;">
-        <div class="section-title-row">
-          <span class="material-symbols-outlined" style="font-size:20px;color:#0d9488;background:#ccfbf1;padding:7px;border-radius:10px;">chat</span>
-          <span class="section-title">Ask Your Counselor</span>
-        </div>
+        <div class="section-title-row"><span class="material-symbols-outlined" style="font-size:20px;color:#0d9488;background:#ccfbf1;padding:7px;border-radius:10px;">chat</span><span class="section-title">Ask Your Counselor</span></div>
         <span style="font-size:11px;color:var(--muted);font-weight:600;">We reply within 24h</span>
       </div>
       <div class="qa-input-row">
-        <textarea class="qa-input" id="qaInput" placeholder="Type your question here..." rows="1"
-          oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
-        <button class="qa-send-btn" id="qaSendBtn">
-          <span class="material-symbols-outlined" style="font-size:18px;">send</span>
-          Send
-        </button>
+        <textarea class="qa-input" id="qaInput" placeholder="Type your question here..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+        <button class="qa-send-btn" id="qaSendBtn"><span class="material-symbols-outlined" style="font-size:18px;">send</span> Send</button>
       </div>
-      <div class="qa-thread" id="qaThread">
-        <div class="qa-empty" id="qaEmpty">No questions yet. Ask anything about your interview!</div>
-      </div>
+      <div class="qa-thread" id="qaThread"><div class="qa-empty" id="qaEmpty">No questions yet. Ask anything about your interview!</div></div>
     </div>
-
-  </div><!-- end dashboardContent -->
+  </div>
 </main>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <a href="index.html" class="nav-item">
-    <div class="nav-icon-wrap"><span class="material-symbols-outlined">home</span></div>
-    <span class="nav-label">Home</span>
-  </a>
-  <a href="index.html" class="nav-item">
-    <div class="nav-icon-wrap"><span class="material-symbols-outlined">checklist</span></div>
-    <span class="nav-label">Checklist</span>
-  </a>
-  <a href="index.html" class="nav-item">
-    <div class="nav-icon-wrap"><span class="material-symbols-outlined">forum</span></div>
-    <span class="nav-label">Practice</span>
-  </a>
-  <a href="dashboard.html" class="nav-item active">
-    <div class="nav-icon-wrap"><span class="material-symbols-outlined">person</span></div>
-    <span class="nav-label">Profile</span>
-  </a>
+  <a href="index.html" class="nav-item"><div class="nav-icon-wrap"><span class="material-symbols-outlined">home</span></div><span class="nav-label">Home</span></a>
+  <a href="index.html" class="nav-item"><div class="nav-icon-wrap"><span class="material-symbols-outlined">checklist</span></div><span class="nav-label">Checklist</span></a>
+  <a href="index.html" class="nav-item"><div class="nav-icon-wrap"><span class="material-symbols-outlined">forum</span></div><span class="nav-label">Practice</span></a>
+  <a href="dashboard.html" class="nav-item active"><div class="nav-icon-wrap"><span class="material-symbols-outlined">person</span></div><span class="nav-label">Profile</span></a>
 </nav>
 
 <div id="toast"></div>
@@ -534,535 +365,395 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="app.js"></script>
-
 <script>
-  const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+  // ── USE THE SAME CLIENT app.js CREATED ──────────────────────────────────────
+  // FIX: app.js now sets window.supabaseClient. We use that so sessions match.
+  function getDB() {
+    if (window.supabaseClient) return window.supabaseClient;
+    if (!window._dbFb) window._dbFb = supabase.createClient(
+      'https://okshteetxmmphgjgvrwt.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8'
+    );
+    return window._dbFb;
+  }
 
-  // ================== TOAST ==================
+  // ── HELPERS ─────────────────────────────────────────────────────────────────
   function showToast(msg, type = 'success') {
     const t = document.getElementById('toast');
     t.textContent = (type === 'success' ? '✅ ' : '❌ ') + msg;
     t.style.background = type === 'success' ? '#003a1f' : '#5c0000';
     t.style.display = 'block'; t.style.opacity = '1';
-    clearTimeout(window._toastTimer);
-    window._toastTimer = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.style.display = 'none', 300); }, 3000);
+    clearTimeout(window._tt);
+    window._tt = setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.style.display='none',300); }, 3000);
   }
 
-  function escapeHtml(str) {
-    if (!str) return '';
-    return String(str).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+  function esc(s) {
+    return String(s||'').replace(/[&<>"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
   }
 
-  function timeAgo(dateStr) {
-    if (!dateStr) return '';
-    const diff = Date.now() - new Date(dateStr).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 1) return 'just now';
-    if (mins < 60) return `${mins}m ago`;
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h ago`;
-    return `${Math.floor(hrs/24)}d ago`;
+  function timeAgo(d) {
+    if (!d) return '';
+    const m = Math.floor((Date.now()-new Date(d))/60000);
+    if (m<1) return 'just now'; if (m<60) return m+'m ago';
+    const h=Math.floor(m/60); if (h<24) return h+'h ago';
+    return Math.floor(h/24)+'d ago';
   }
 
-  // ================== SUPABASE CLIENT ==================
-  function getDB() {
-    if (!window._db) window._db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    return window._db;
-  }
+  function step(msg) { const e=document.getElementById('loadingStep'); if(e) e.textContent=msg||''; }
 
-  // ================== NOTIFICATIONS ==================
-  let allNotifications = [];
-  let readIds = new Set();
-
-  async function loadNotifications() {
-    const student = window.getCurrentStudent?.() || JSON.parse(localStorage.getItem('student') || 'null');
-    if (!student?.id) return;
-    const db = getDB();
-    const { data: notifs } = await db.from('student_notifications').select('*').order('created_at', { ascending: false });
-    const { data: reads } = await db.from('notification_reads').select('notification_id').eq('user_id', student.id);
-    readIds = new Set((reads || []).map(r => r.notification_id));
-    const uni = localStorage.getItem('selected_university') || '';
-    allNotifications = (notifs || []).filter(n => n.target === 'all' || n.target === uni || n.target === student.id);
-    renderNotifications();
-  }
-
-  function renderNotifications() {
-    const list = document.getElementById('notifList');
-    const badge = document.getElementById('notifBadge');
-    const unreadCount = allNotifications.filter(n => !readIds.has(n.id)).length;
-    badge.textContent = unreadCount;
-    badge.classList.toggle('show', unreadCount > 0);
-    if (allNotifications.length === 0) { list.innerHTML = '<div class="notif-empty">No notifications yet</div>'; return; }
-    list.innerHTML = allNotifications.map(n => {
-      const isRead = readIds.has(n.id);
-      return `<div class="notif-item ${isRead ? '' : 'unread'}" data-id="${n.id}">
-        <div class="notif-dot ${isRead ? 'read' : n.type}"></div>
-        <div class="notif-text">
-          <div class="notif-title-text">${escapeHtml(n.title)}</div>
-          <div class="notif-msg">${escapeHtml(n.message)}</div>
-          <div class="notif-time">${timeAgo(n.created_at)}</div>
-        </div>
-      </div>`;
-    }).join('');
-    list.querySelectorAll('.notif-item').forEach(item => {
-      item.addEventListener('click', () => markNotifRead(item.dataset.id));
-    });
-  }
-
-  async function markNotifRead(notifId) {
-    if (readIds.has(notifId)) return;
-    const student = window.getCurrentStudent?.();
-    if (!student?.id) return;
-    await getDB().from('notification_reads').upsert({ user_id: student.id, notification_id: notifId });
-    readIds.add(notifId);
-    renderNotifications();
-  }
-
-  async function markAllRead() {
-    const student = window.getCurrentStudent?.();
-    if (!student?.id) return;
-    const unread = allNotifications.filter(n => !readIds.has(n.id));
-    if (unread.length === 0) return;
-    await getDB().from('notification_reads').upsert(unread.map(n => ({ user_id: student.id, notification_id: n.id })));
-    unread.forEach(n => readIds.add(n.id));
-    renderNotifications();
-    showToast('All notifications marked as read');
-  }
-
-  document.getElementById('notifBtn').addEventListener('click', (e) => {
-    e.stopPropagation();
-    document.getElementById('notifPanel').classList.toggle('open');
-  });
-  document.addEventListener('click', (e) => {
-    const panel = document.getElementById('notifPanel');
-    const btn = document.getElementById('notifBtn');
-    if (!panel.contains(e.target) && !btn.contains(e.target)) panel.classList.remove('open');
-  });
-  document.getElementById('markAllBtn').addEventListener('click', markAllRead);
-
-  // ================== Q&A ==================
-  let qaQuestions = [];
-
-  async function loadQuestions() {
-    const student = window.getCurrentStudent?.() || JSON.parse(localStorage.getItem('student') || 'null');
-    if (!student?.id) return;
-    const { data } = await getDB().from('student_questions').select('*').eq('student_user_id', student.id).order('created_at', { ascending: true });
-    qaQuestions = data || [];
-    renderQA();
-  }
-
-  function renderQA() {
-    const thread = document.getElementById('qaThread');
-    const empty = document.getElementById('qaEmpty');
-    if (qaQuestions.length === 0) { empty.style.display = 'block'; thread.innerHTML = ''; thread.appendChild(empty); return; }
-    empty.style.display = 'none';
-    thread.innerHTML = qaQuestions.map(q => {
-      const questionBubble = `<div class="qa-bubble question"><div class="qa-bubble-label">You asked</div><div class="qa-bubble-text">${escapeHtml(q.question_text)}</div><div class="qa-bubble-time">${timeAgo(q.created_at)}</div></div>`;
-      const replyBubble = q.admin_reply
-        ? `<div class="qa-bubble reply"><div class="qa-bubble-label">✅ Counselor replied</div><div class="qa-bubble-text">${escapeHtml(q.admin_reply)}</div><div class="qa-bubble-time">${timeAgo(q.replied_at)}</div></div>`
-        : `<div class="qa-bubble pending"><div class="qa-bubble-label">⏳ Awaiting reply</div><div class="qa-bubble-text" style="color:var(--muted);">Your counselor will respond within 24 hours.</div></div>`;
-      return questionBubble + replyBubble;
-    }).join('');
-    thread.scrollTop = thread.scrollHeight;
-  }
-
-  async function sendQuestion() {
-    const input = document.getElementById('qaInput');
-    const btn = document.getElementById('qaSendBtn');
-    const text = input.value.trim();
-    if (!text) return;
-    const student = window.getCurrentStudent?.();
-    if (!student?.id) { showToast('Please log in to send questions', 'error'); return; }
-    btn.disabled = true;
-    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;animation:spin 0.7s linear infinite">progress_activity</span>';
-    const { error } = await getDB().from('student_questions').insert({
-      student_user_id: student.id,
-      student_name: student.name || 'Student',
-      student_email: student.email || '',
-      question_text: text
-    });
-    btn.disabled = false;
-    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">send</span> Send';
-    if (error) { showToast('Could not send question. Try again.', 'error'); return; }
-    input.value = ''; input.style.height = 'auto';
-    showToast('Question sent! We\'ll reply within 24h.');
-    await loadQuestions();
-  }
-
-  document.getElementById('qaSendBtn').addEventListener('click', sendQuestion);
-  document.getElementById('qaInput').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendQuestion(); }
-  });
-
-  // ================== LIVE SESSION ==================
-  const SCHEDULED_SESSIONS = [
-    { startTime: "2026-04-13T15:00:00", zoomLink: "https://us06web.zoom.us/j/81839405302?pwd=uV6qDibywFyIo0jPCYDKrdYDvud0pv.1", title: "UKVI Interview Prep" },
-    { startTime: "2026-04-17T12:00:00", zoomLink: "https://us06web.zoom.us/j/81839405302?pwd=uV6qDibywFyIo0jPCYDKrdYDvud0pv.1", title: "Mock Interview - BPP & Regent" }
-  ];
-  const SESSION_DURATION_MINUTES = 90;
-
-  function updateLiveSessionUI() {
-    const container = document.getElementById('liveSessionContainer');
-    if (!container) return;
-    const now = new Date();
-    let activeSession = null, upcomingSession = null;
-    for (const sess of SCHEDULED_SESSIONS) {
-      const start = new Date(sess.startTime);
-      const end = new Date(start.getTime() + SESSION_DURATION_MINUTES * 60000);
-      if (now >= start && now <= end) { activeSession = sess; break; }
-    }
-    if (!activeSession) {
-      const future = SCHEDULED_SESSIONS.filter(s => new Date(s.startTime) > now);
-      if (future.length) { future.sort((a,b) => new Date(a.startTime) - new Date(b.startTime)); upcomingSession = future[0]; }
-    }
-    if (activeSession) {
-      const start = new Date(activeSession.startTime);
-      const end = new Date(start.getTime() + SESSION_DURATION_MINUTES * 60000);
-      const timeStr = start.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) + ' – ' + end.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-      container.innerHTML = `<div class="live-badge"><div class="live-dot"></div> LIVE NOW</div><div class="live-title">${escapeHtml(activeSession.title)}</div><div class="live-time">${timeStr}</div><a href="${activeSession.zoomLink}" target="_blank" rel="noopener noreferrer" class="btn-zoom"><span class="material-symbols-outlined" style="font-size:18px">videocam</span> Join Zoom Training</a><div class="live-students"><div class="student-avatars"><img src="https://i.pravatar.cc/40?img=1" alt=""/><img src="https://i.pravatar.cc/40?img=2" alt=""/><img src="https://i.pravatar.cc/40?img=3" alt=""/></div><span class="live-count">24 students are live</span></div>`;
-    } else if (upcomingSession) {
-      const start = new Date(upcomingSession.startTime);
-      container.innerHTML = `<div class="session-upcoming"><span class="material-symbols-outlined">event</span><p style="font-weight:700;color:var(--navy);margin-bottom:3px;">${escapeHtml(upcomingSession.title)}</p><p>${start.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'})} at ${start.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</p><p style="font-size:11px;margin-top:6px;">Zoom link appears when session starts</p></div>`;
-    } else {
-      container.innerHTML = `<div class="session-upcoming"><span class="material-symbols-outlined">event_busy</span><p>No upcoming sessions scheduled</p></div>`;
-    }
-  }
-
-  // ================== HELPERS ==================
-  function getQuestionLabel(qId, data) {
-    if (data?.questionText && !data.questionText.match(/^(REGENT|YSJ|UKVI|BPP|NL)_/)) return data.questionText;
-    if (window.QUESTION_TEXT_MAP?.[qId]) return window.QUESTION_TEXT_MAP[qId];
-    return qId.replace(/^(REGENT|YSJ|UKVI|BPP|NL)_/,'').replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase());
-  }
-  function getCategoryFromId(qId) {
-    if (qId.startsWith('REGENT')) return 'Regent';
-    if (qId.startsWith('YSJ')) return 'York St John';
-    if (qId.startsWith('BPP')) return 'BPP';
-    if (qId.startsWith('NL')) return 'Netherlands';
-    if (qId.startsWith('UKVI')) return 'UKVI';
-    return 'Practice';
-  }
-  function getCategoryClass(cat) {
-    return {'BPP':'bpp','UKVI':'ukvi','Netherlands':'netherlands','York St John':'yorkstjohn'}[cat] || '';
-  }
-
-  let allAiScores = {}, searchQuery = '';
-
-  // ================== CHECKLIST ==================
-  function renderChecklist(checklistStatus) {
-    const container = document.getElementById('checklistContainer');
-    const summarySpan = document.getElementById('checklistSummary');
-    const subText = document.getElementById('checklistSubText');
-    if (!checklistStatus || Object.keys(checklistStatus).length === 0) {
-      container.innerHTML = '<div class="empty-state"><span class="material-symbols-outlined">checklist</span><p>No checklist items yet.</p></div>';
-      summarySpan.textContent = '0/0 COMPLETED'; return;
-    }
-    const items = Object.entries(checklistStatus);
-    const doneCount = items.filter(([,done]) => done === true).length;
-    const total = items.length;
-    const percent = total ? Math.round((doneCount / total) * 100) : 0;
-    document.getElementById('checklistPercent').innerHTML = `${percent}<span style="font-size:14px;font-weight:600;opacity:0.5;">%</span>`;
-    summarySpan.textContent = `${doneCount}/${total} COMPLETED`;
-    if (subText) subText.textContent = `${doneCount} of ${total} completed`;
-    container.innerHTML = items.map(([key, done]) => `
-      <div class="checklist-item">
-        <div class="checklist-left">
-          <div class="check-circle ${done ? 'done' : 'pending'}">
-            <span class="material-symbols-outlined">${done ? 'check' : 'radio_button_unchecked'}</span>
-          </div>
-          <span class="check-label">${escapeHtml(key.length > 50 ? key.substring(0,50)+'…' : key)}</span>
-        </div>
-        <div class="check-status ${done ? 'done' : 'pending'}">
-          <span class="material-symbols-outlined">${done ? 'check_circle' : 'pending'}</span>
-          ${done ? 'DONE' : 'PENDING'}
-        </div>
-      </div>`).join('');
-  }
-
-  // ================== RESPONSES ==================
-  function renderResponses(aiScores, query = '') {
-    const container = document.getElementById('responsesContainer');
-    const noMsg = document.getElementById('noResponsesMsg');
-    const viewAllBtn = document.getElementById('viewAllResponsesBtn');
-    if (!aiScores || Object.keys(aiScores).length === 0) {
-      container.innerHTML = ''; noMsg.style.display = 'block';
-      if (viewAllBtn) viewAllBtn.style.display = 'none'; return;
-    }
-    let entries = Object.entries(aiScores);
-    if (query.trim()) {
-      const q = query.toLowerCase();
-      entries = entries.filter(([qId, data]) => getQuestionLabel(qId,data).toLowerCase().includes(q) || (data.answer||'').toLowerCase().includes(q));
-    }
-    if (entries.length === 0) {
-      container.innerHTML = ''; noMsg.textContent = 'No responses match your search.'; noMsg.style.display = 'block';
-      if (viewAllBtn) viewAllBtn.style.display = 'none'; return;
-    }
-    noMsg.style.display = 'none';
-    entries.sort((a,b) => { const dA = a[1]?.date?new Date(a[1].date):0; const dB = b[1]?.date?new Date(b[1].date):0; return dB-dA; });
-    const shown = entries.slice(0,3);
-    container.innerHTML = shown.map(([qId, data]) => {
-      const score = typeof data.score === 'number' ? data.score : 0;
-      const pass = score >= 7;
-      const label = getQuestionLabel(qId, data);
-      const cat = getCategoryFromId(qId);
-      const catClass = getCategoryClass(cat);
-      const dateStr = data.date ? new Date(data.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '';
-      return `<div class="response-item">
-        <div class="response-top">
-          <div>
-            <div class="response-tag ${catClass}">${escapeHtml(cat)}</div>
-            <div class="response-question">${escapeHtml(label)}</div>
-            <div class="response-meta">${dateStr ? escapeHtml(dateStr)+' · ' : ''}<span class="${pass?'':'needs-work'}">${pass?'Reviewed':'Needs Work'}</span></div>
-          </div>
-          <div class="response-score"><div class="score-num ${pass?'pass':'fail'}">${score.toFixed(1)}/10</div></div>
-        </div>
-      </div>`;
-    }).join('');
-    if (viewAllBtn) viewAllBtn.style.display = entries.length > 3 ? 'flex' : 'none';
-  }
-
-  function updateStats(aiScores) {
-    const list = Object.values(aiScores);
-    const total = list.length;
-    let totalScore = 0, passCount = 0;
-    list.forEach(r => { const sc = r.score; if (typeof sc === 'number') { totalScore += sc; if (sc >= 7) passCount++; } });
-    const avg = total ? (totalScore / total).toFixed(1) : '0';
-    const passRate = total ? Math.round((passCount / total) * 100) : 0;
-    document.getElementById('totalResponses').textContent = total;
-    document.getElementById('avgScore').innerHTML = `${avg}<span style="font-size:14px;font-weight:600;color:var(--green);opacity:0.6;">/10</span>`;
-    document.getElementById('passRate').innerHTML = `${passRate}<span style="font-size:14px;font-weight:600;color:var(--green);opacity:0.6;">%</span>`;
-  }
-
-  // ================== COUNSELOR ==================
-  function renderCounselorCard(data) {
-    const empty = document.getElementById('counselorEmpty');
-    const card = document.getElementById('counselorCard');
-    if (!data || !data.name) { empty.style.display = 'block'; card.style.display = 'none'; return; }
-    empty.style.display = 'none'; card.style.display = 'block';
-    const initials = data.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-    document.getElementById('counselorInitials').textContent = initials;
-    document.getElementById('counselorName').textContent = data.name;
-    document.getElementById('counselorRole').textContent = data.role || 'Counselor';
-    const emailRow = document.getElementById('counselorEmailRow');
-    const phoneRow = document.getElementById('counselorPhoneRow');
-    const notesRow = document.getElementById('counselorNotesRow');
-    if (data.email) { emailRow.style.display='flex'; document.getElementById('counselorEmailLink').textContent=data.email; document.getElementById('counselorEmailLink').href='mailto:'+data.email; } else emailRow.style.display='none';
-    if (data.phone) { phoneRow.style.display='flex'; document.getElementById('counselorPhone').textContent=data.phone; } else phoneRow.style.display='none';
-    if (data.notes) { notesRow.style.display='flex'; document.getElementById('counselorNotes').textContent=data.notes; } else notesRow.style.display='none';
-  }
-
-  async function setupCounselor(initialCounselor) {
-    const editBtn = document.getElementById('editCounselorBtn');
-    const cancelBtn = document.getElementById('cancelCounselorBtn');
-    const saveBtn = document.getElementById('saveCounselorBtn');
-    const viewDiv = document.getElementById('counselorView');
-    const editDiv = document.getElementById('counselorEdit');
-    const errorEl = document.getElementById('counselorError');
-    let current = initialCounselor || null;
-    renderCounselorCard(current);
-    editBtn.addEventListener('click', () => {
-      if (current) { document.getElementById('cName').value=current.name||''; document.getElementById('cRole').value=current.role||''; document.getElementById('cEmail').value=current.email||''; document.getElementById('cPhone').value=current.phone||''; document.getElementById('cNotes').value=current.notes||''; }
-      viewDiv.style.display='none'; editDiv.style.display='block'; errorEl.style.display='none';
-    });
-    cancelBtn.addEventListener('click', () => { viewDiv.style.display='block'; editDiv.style.display='none'; });
-    saveBtn.addEventListener('click', async () => {
-      const name = document.getElementById('cName').value.trim();
-      if (!name) { errorEl.style.display='block'; return; }
-      const counselorData = { name, role:document.getElementById('cRole').value.trim()||null, email:document.getElementById('cEmail').value.trim()||null, phone:document.getElementById('cPhone').value.trim()||null, notes:document.getElementById('cNotes').value.trim()||null };
-      errorEl.style.display='none'; saveBtn.disabled=true; saveBtn.textContent='Saving...';
-      const student = window.getCurrentStudent?.() || JSON.parse(localStorage.getItem('student') || 'null');
-      if (student?.id) {
-        await getDB().from('student_progress').update({ counselor: counselorData, updated_at: new Date().toISOString() }).eq('user_id', student.id);
-      }
-      current = counselorData; renderCounselorCard(current);
-      saveBtn.disabled=false; saveBtn.textContent='Save Counselor';
-      viewDiv.style.display='block'; editDiv.style.display='none';
-      showToast('Counselor saved');
-    });
-  }
-
-  // ================== ENROLLMENT ==================
-  const UNI_NAMES = { regent:'Regent College London', yorkstjohn:'York St John University', bpp:'BPP University', netherlands:'Netherlands (IND)', ukvi:'UKVI Credibility Prep' };
-  function updateEnrollmentDisplay() {
-    const uni = localStorage.getItem('selected_university') || '';
-    const course = localStorage.getItem('last_course') || '';
-    document.getElementById('currentUniversity').textContent = (uni && UNI_NAMES[uni]) ? UNI_NAMES[uni] : '—';
-    document.getElementById('currentProgram').textContent = course ? course.replace(/-/g,' ').replace(/\b\w/g,l=>l.toUpperCase()) : '—';
-  }
-
-  async function resetAndChangeCourse() {
-    const confirmed = confirm('⚠️ This will erase ALL your practice responses, checklist progress, and counselor details.\n\nAre you sure?');
-    if (!confirmed) return;
-    const btn = document.getElementById('changeCourseBtn');
-    btn.disabled = true; btn.textContent = 'Resetting...';
-    if (typeof window.resetAllProgress === 'function') await window.resetAllProgress();
-    localStorage.removeItem('selected_university'); localStorage.removeItem('last_course');
-    showToast('Progress reset. Redirecting...');
-    setTimeout(() => window.location.href = 'index.html', 1500);
-  }
-
-  // ================== EMAIL + EXPORT ==================
-  async function sendReport() {
-    const student = window.getCurrentStudent?.() || JSON.parse(localStorage.getItem('student') || 'null');
-    if (!student) return;
-    const btn = document.getElementById('emailReportBtn');
-    btn.disabled = true; btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;animation:spin 0.7s linear infinite">progress_activity</span> Sending...';
-    const progress = await window.loadSavedProgress?.();
-    const responses = progress?.ai_scores || {};
-    const checklist = progress?.checklist_status || {};
-    const scores = Object.values(responses).map(s=>s.score).filter(n=>typeof n==='number');
-    const avg = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1) : 'N/A';
-    const result = await window.sendReadyEmail?.(responses, checklist, avg, 'Dashboard report request');
-    btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px">mail</span> Email Report';
-    if (result?.success) showToast('Report sent to your tutor'); else showToast('Failed to send report', 'error');
-  }
-
-  async function exportJson() {
-    const student = window.getCurrentStudent?.() || JSON.parse(localStorage.getItem('student') || 'null');
-    const progress = await window.loadSavedProgress?.();
-    const data = { student, progress, exportedAt: new Date().toISOString() };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url;
-    a.download = `interview_progress_${student?.student_id||'student'}.json`;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    URL.revokeObjectURL(url); showToast('Data exported');
-  }
-
-  async function logout() {
-    await getDB().auth.signOut();
-    localStorage.removeItem('student'); localStorage.removeItem('selected_university'); localStorage.removeItem('last_course');
-    window.location.href = 'index.html';
-  }
-
-  // ================== LOAD DASHBOARD ==================
-  async function loadDashboard(student) {
-    // Populate profile
-    document.getElementById('studentName').textContent = student.name || 'Student';
-    document.getElementById('studentEmail').textContent = student.email || '';
-    document.getElementById('studentId').textContent = `ID: ${student.student_id || '—'}`;
-    const initials = (student.name || 'S').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-    document.getElementById('avatarInitials').textContent = initials;
-    updateEnrollmentDisplay();
-
-    // Load progress from DB
-    const db = getDB();
-    const { data: progress, error: progressErr } = await db
-      .from('student_progress')
-      .select('checklist_status, ai_scores, practice_responses, selected_university, counselor, interview_date')
-      .eq('user_id', student.id)
-      .single();
-
-    if (progressErr) console.warn('Progress load warning:', progressErr.message);
-
-    // Interview date
-    if (progress?.interview_date) {
-      const date = new Date(progress.interview_date);
-      document.getElementById('interviewDateValue').textContent = date.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
-      document.getElementById('interviewDateDisplay').style.display = 'block';
-    }
-
-    const checklist = progress?.checklist_status || {};
-    allAiScores = progress?.ai_scores || {};
-
-    // Stats
-    updateStats(allAiScores);
-    const checklistEntries = Object.values(checklist);
-    const doneCount = checklistEntries.filter(v=>v===true).length;
-    const total = checklistEntries.length;
-    const percent = total ? Math.round((doneCount/total)*100) : 0;
-    document.getElementById('checklistPercent').innerHTML = `${percent}<span style="font-size:14px;font-weight:600;opacity:0.5;">%</span>`;
-    if (document.getElementById('checklistSubText')) document.getElementById('checklistSubText').textContent = `${doneCount} of ${total} completed`;
-
-    renderChecklist(checklist);
-    renderResponses(allAiScores);
-    await setupCounselor(progress?.counselor || null);
-    updateLiveSessionUI();
-    await loadQuestions();
-    await loadNotifications();
-
-    // Reveal dashboard
+  function revealDashboard() {
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('dashboardContent').style.display = 'block';
   }
 
-  // ================== BOOT: wait → auth → load ==================
-  async function boot() {
-    // 1. Wait up to 6 s for app.js to define window.getCurrentStudent
-    document.getElementById('loadingMsg').textContent = 'Loading your dashboard…';
-    let waited = 0;
-    while (typeof window.getCurrentStudent !== 'function' && waited < 6000) {
-      await new Promise(r => setTimeout(r, 150));
-      waited += 150;
-    }
+  // ── NOTIFICATIONS ────────────────────────────────────────────────────────────
+  // FIX: notification_reads may not exist - all inside try/catch
+  let allNotifs=[], readIds=new Set();
 
-    // 2. Try localStorage first (fastest)
-    let student = window.getCurrentStudent?.();
-
-    // 3. Fall back to live Supabase session (Google OAuth redirect users)
-    if (!student?.id) {
-      document.getElementById('loadingMsg').textContent = 'Restoring your session…';
-      const db = getDB();
-      const { data: { session } } = await db.auth.getSession();
-      if (session?.user) {
-        const { data: profile } = await db
-          .from('student_progress')
-          .select('*')
-          .eq('user_id', session.user.id)
-          .single();
-        if (profile) {
-          student = { id: profile.user_id, name: profile.full_name, student_id: profile.student_id, email: profile.email };
-          localStorage.setItem('student', JSON.stringify(student));
-        }
-      }
-    }
-
-    // 4. Still nothing → redirect to login
-    if (!student?.id) {
-      window.location.href = 'index.html';
-      return;
-    }
-
-    // 5. Load with full error safety net
+  async function loadNotifications(userId) {
     try {
-      await loadDashboard(student);
-    } catch (err) {
-      console.error('Dashboard error:', err);
-      document.getElementById('loadingState').innerHTML = `
-        <div style="text-align:center;padding:40px 20px;">
-          <span class="material-symbols-outlined" style="font-size:40px;color:var(--border);display:block;margin-bottom:12px;">error</span>
-          <p style="color:var(--red);font-weight:700;margin-bottom:8px;">Something went wrong loading your dashboard.</p>
-          <p style="color:var(--muted);font-size:13px;margin-bottom:16px;">${escapeHtml(err.message || 'Unknown error')}</p>
-          <a href="index.html" style="background:var(--navy);color:white;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">← Go back home</a>
-          &nbsp;
-          <button onclick="location.reload()" style="background:var(--surface);border:1.5px solid var(--border);padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">Retry</button>
-        </div>`;
+      const { data: notifs } = await getDB().from('student_notifications').select('*').order('created_at',{ascending:false});
+      let reads = [];
+      try {
+        const { data: r } = await getDB().from('notification_reads').select('notification_id').eq('user_id', userId);
+        reads = r || [];
+      } catch(e){ /* table may not exist yet */ }
+      readIds = new Set(reads.map(r=>r.notification_id));
+      const uni = localStorage.getItem('selected_university')||'';
+      allNotifs = (notifs||[]).filter(n=> n.target==='all'||n.target===uni||n.target===userId);
+      renderNotifs();
+    } catch(e){ console.warn('loadNotifications non-fatal:', e.message); }
+  }
+
+  function renderNotifs() {
+    const list=document.getElementById('notifList'), badge=document.getElementById('notifBadge');
+    const unread=allNotifs.filter(n=>!readIds.has(n.id)).length;
+    badge.textContent=unread; badge.classList.toggle('show',unread>0);
+    if (!allNotifs.length){list.innerHTML='<div class="notif-empty">No notifications yet</div>';return;}
+    list.innerHTML=allNotifs.map(n=>{
+      const isRead=readIds.has(n.id);
+      return `<div class="notif-item ${isRead?'':'unread'}" data-id="${n.id}">
+        <div class="notif-dot ${isRead?'read':(n.type||'info')}"></div>
+        <div class="notif-text"><div class="notif-title-text">${esc(n.title)}</div><div class="notif-msg">${esc(n.message)}</div><div class="notif-time">${timeAgo(n.created_at)}</div></div>
+      </div>`;
+    }).join('');
+    list.querySelectorAll('.notif-item').forEach(el=>el.addEventListener('click',()=>markRead(el.dataset.id)));
+  }
+
+  async function markRead(id) {
+    if (readIds.has(id)) return;
+    const s=window.getCurrentStudent?.(); if(!s?.id) return;
+    try { await getDB().from('notification_reads').upsert({user_id:s.id,notification_id:id}); } catch(e){}
+    readIds.add(id); renderNotifs();
+  }
+
+  async function markAllRead() {
+    const s=window.getCurrentStudent?.(); if(!s?.id) return;
+    const unread=allNotifs.filter(n=>!readIds.has(n.id)); if(!unread.length) return;
+    try { await getDB().from('notification_reads').upsert(unread.map(n=>({user_id:s.id,notification_id:n.id}))); } catch(e){}
+    unread.forEach(n=>readIds.add(n.id)); renderNotifs();
+    showToast('All marked as read');
+  }
+
+  document.getElementById('notifBtn').addEventListener('click', e=>{e.stopPropagation();document.getElementById('notifPanel').classList.toggle('open');});
+  document.addEventListener('click', e=>{if(!document.getElementById('notifPanel').contains(e.target)&&!document.getElementById('notifBtn').contains(e.target))document.getElementById('notifPanel').classList.remove('open');});
+  document.getElementById('markAllBtn').addEventListener('click', markAllRead);
+
+  // ── Q&A ──────────────────────────────────────────────────────────────────────
+  // FIX: student_user_id column - if missing Supabase returns error, caught gracefully
+  let qaItems=[];
+
+  async function loadQuestions(userId) {
+    try {
+      const { data, error } = await getDB().from('student_questions').select('*').eq('student_user_id',userId).order('created_at',{ascending:true});
+      if (error) { console.warn('loadQuestions:', error.message); return; }
+      qaItems = data||[];
+      renderQA();
+    } catch(e){ console.warn('loadQuestions non-fatal:', e.message); }
+  }
+
+  function renderQA() {
+    const thread=document.getElementById('qaThread'), empty=document.getElementById('qaEmpty');
+    if (!qaItems.length){thread.innerHTML='';thread.appendChild(empty);empty.style.display='block';return;}
+    empty.style.display='none';
+    thread.innerHTML=qaItems.map(q=>{
+      const qb=`<div class="qa-bubble question"><div class="qa-bubble-label">You asked</div><div class="qa-bubble-text">${esc(q.question_text)}</div><div class="qa-bubble-time">${timeAgo(q.created_at)}</div></div>`;
+      const rb=q.admin_reply
+        ?`<div class="qa-bubble reply"><div class="qa-bubble-label">Counselor replied</div><div class="qa-bubble-text">${esc(q.admin_reply)}</div><div class="qa-bubble-time">${timeAgo(q.replied_at)}</div></div>`
+        :`<div class="qa-bubble pending"><div class="qa-bubble-label">Awaiting reply</div><div class="qa-bubble-text" style="color:var(--muted);">Your counselor will respond within 24 hours.</div></div>`;
+      return qb+rb;
+    }).join('');
+    thread.scrollTop=thread.scrollHeight;
+  }
+
+  async function sendQuestion() {
+    const input=document.getElementById('qaInput'), btn=document.getElementById('qaSendBtn');
+    const text=input.value.trim(); if(!text) return;
+    const s=window.getCurrentStudent?.(); if(!s?.id){showToast('Please log in','error');return;}
+    btn.disabled=true; btn.innerHTML='<span class="material-symbols-outlined" style="font-size:18px;animation:spin 0.7s linear infinite">progress_activity</span>';
+    try {
+      const {error}=await getDB().from('student_questions').insert({student_user_id:s.id,student_name:s.name||'Student',student_email:s.email||'',question_text:text});
+      if (error) throw error;
+      input.value=''; input.style.height='auto';
+      showToast('Question sent! We will reply within 24h.');
+      await loadQuestions(s.id);
+    } catch(e){ showToast('Could not send: '+e.message,'error'); }
+    btn.disabled=false; btn.innerHTML='<span class="material-symbols-outlined" style="font-size:18px;">send</span> Send';
+  }
+
+  document.getElementById('qaSendBtn').addEventListener('click', sendQuestion);
+  document.getElementById('qaInput').addEventListener('keydown', e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendQuestion();}});
+
+  // ── LIVE SESSION ─────────────────────────────────────────────────────────────
+  const SESSIONS=[
+    {startTime:"2026-04-13T15:00:00",zoomLink:"https://us06web.zoom.us/j/81839405302?pwd=uV6qDibywFyIo0jPCYDKrdYDvud0pv.1",title:"UKVI Interview Prep"},
+    {startTime:"2026-04-17T12:00:00",zoomLink:"https://us06web.zoom.us/j/81839405302?pwd=uV6qDibywFyIo0jPCYDKrdYDvud0pv.1",title:"Mock Interview - BPP & Regent"}
+  ];
+
+  function updateLiveUI() {
+    const c=document.getElementById('liveSessionContainer'); if(!c) return;
+    const now=new Date(); let active=null, next=null;
+    for(const s of SESSIONS){const st=new Date(s.startTime),en=new Date(st.getTime()+90*60000);if(now>=st&&now<=en){active=s;break;}}
+    if(!active){const fut=SESSIONS.filter(s=>new Date(s.startTime)>now).sort((a,b)=>new Date(a.startTime)-new Date(b.startTime));if(fut.length)next=fut[0];}
+    if(active){
+      const st=new Date(active.startTime),en=new Date(st.getTime()+90*60000);
+      c.innerHTML=`<div class="live-badge"><div class="live-dot"></div> LIVE NOW</div><div style="font-size:16px;font-weight:800;color:var(--navy);margin-bottom:3px;">${esc(active.title)}</div><div style="font-size:12px;color:var(--muted);margin-bottom:8px;">${st.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})} – ${en.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div><a href="${active.zoomLink}" target="_blank" class="btn-zoom"><span class="material-symbols-outlined" style="font-size:18px">videocam</span> Join Zoom Training</a>`;
+    } else if(next){
+      const st=new Date(next.startTime);
+      c.innerHTML=`<div class="session-upcoming"><span class="material-symbols-outlined">event</span><p style="font-weight:700;color:var(--navy);margin-bottom:3px;">${esc(next.title)}</p><p>${st.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'})} at ${st.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</p><p style="font-size:11px;margin-top:6px;">Zoom link appears when session starts</p></div>`;
+    } else {
+      c.innerHTML=`<div class="session-upcoming"><span class="material-symbols-outlined">event_busy</span><p>No upcoming sessions scheduled</p></div>`;
     }
   }
 
-  // ================== WIRE UP EVENTS ==================
+  // ── RENDER HELPERS ───────────────────────────────────────────────────────────
+  function getLabel(id,d){if(d?.questionText&&!/^(REGENT|YSJ|UKVI|BPP|NL)_/.test(d.questionText))return d.questionText;if(window.QUESTION_TEXT_MAP?.[id])return window.QUESTION_TEXT_MAP[id];return id.replace(/^(REGENT|YSJ|UKVI|BPP|NL)_/,'').replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase());}
+  function getCat(id){if(id.startsWith('REGENT'))return'Regent';if(id.startsWith('YSJ'))return'York St John';if(id.startsWith('BPP'))return'BPP';if(id.startsWith('NL'))return'Netherlands';if(id.startsWith('UKVI'))return'UKVI';return'Practice';}
+  function getCatClass(c){return{'BPP':'bpp','UKVI':'ukvi','Netherlands':'netherlands','York St John':'yorkstjohn'}[c]||'';}
+
+  let allAiScores={}, searchQ='';
+
+  function renderChecklist(data){
+    const cont=document.getElementById('checklistContainer'),sum=document.getElementById('checklistSummary'),sub=document.getElementById('checklistSubText');
+    if(!data||!Object.keys(data).length){cont.innerHTML='<div class="empty-state"><span class="material-symbols-outlined">checklist</span><p>No checklist items yet.</p></div>';sum.textContent='0/0 DONE';return;}
+    const items=Object.entries(data),done=items.filter(([,v])=>v===true).length,pct=items.length?Math.round(done/items.length*100):0;
+    document.getElementById('checklistPercent').innerHTML=`${pct}<span style="font-size:14px;font-weight:600;opacity:0.5;">%</span>`;
+    sum.textContent=`${done}/${items.length} DONE`; if(sub)sub.textContent=`${done} of ${items.length} completed`;
+    cont.innerHTML=items.map(([k,v])=>`<div class="checklist-item"><div class="checklist-left"><div class="check-circle ${v?'done':'pending'}"><span class="material-symbols-outlined">${v?'check':'radio_button_unchecked'}</span></div><span class="check-label">${esc(k.length>50?k.slice(0,50)+'…':k)}</span></div><div class="check-status ${v?'done':'pending'}"><span class="material-symbols-outlined">${v?'check_circle':'pending'}</span>${v?'DONE':'PENDING'}</div></div>`).join('');
+  }
+
+  function renderResponses(scores,query=''){
+    const cont=document.getElementById('responsesContainer'),noMsg=document.getElementById('noResponsesMsg'),viewBtn=document.getElementById('viewAllResponsesBtn');
+    if(!scores||!Object.keys(scores).length){cont.innerHTML='';noMsg.style.display='block';viewBtn.style.display='none';return;}
+    let entries=Object.entries(scores);
+    if(query.trim()){const q=query.toLowerCase();entries=entries.filter(([id,d])=>getLabel(id,d).toLowerCase().includes(q)||(d.answer||'').toLowerCase().includes(q));}
+    if(!entries.length){cont.innerHTML='';noMsg.textContent='No responses match your search.';noMsg.style.display='block';viewBtn.style.display='none';return;}
+    noMsg.style.display='none';
+    entries.sort((a,b)=>new Date(b[1]?.date||0)-new Date(a[1]?.date||0));
+    const shown=entries.slice(0,3);
+    cont.innerHTML=shown.map(([id,d])=>{
+      const sc=typeof d.score==='number'?d.score:0,pass=sc>=7,cat=getCat(id),ds=d.date?new Date(d.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'';
+      return `<div class="response-item"><div class="response-top"><div><div class="response-tag ${getCatClass(cat)}">${esc(cat)}</div><div class="response-question">${esc(getLabel(id,d))}</div><div class="response-meta">${ds?esc(ds)+' · ':''}<span class="${pass?'':'needs-work'}">${pass?'Reviewed':'Needs Work'}</span></div></div><div class="score-num ${pass?'pass':'fail'}">${sc.toFixed(1)}/10</div></div></div>`;
+    }).join('');
+    viewBtn.style.display=entries.length>3?'flex':'none';
+  }
+
+  function renderStats(scores){
+    const list=Object.values(scores);let sum=0,passes=0;
+    list.forEach(r=>{if(typeof r.score==='number'){sum+=r.score;if(r.score>=7)passes++;}});
+    const avg=list.length?(sum/list.length).toFixed(1):'0',rate=list.length?Math.round(passes/list.length*100):0;
+    document.getElementById('totalResponses').textContent=list.length;
+    document.getElementById('avgScore').innerHTML=`${avg}<span style="font-size:14px;font-weight:600;color:var(--green);opacity:0.6;">/10</span>`;
+    document.getElementById('passRate').innerHTML=`${rate}<span style="font-size:14px;font-weight:600;color:var(--green);opacity:0.6;">%</span>`;
+  }
+
+  // ── COUNSELOR ────────────────────────────────────────────────────────────────
+  function renderCounselor(data){
+    const empty=document.getElementById('counselorEmpty'),card=document.getElementById('counselorCard');
+    if(!data?.name){empty.style.display='block';card.style.display='none';return;}
+    empty.style.display='none';card.style.display='block';
+    document.getElementById('counselorInitials').textContent=data.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+    document.getElementById('counselorName').textContent=data.name;
+    document.getElementById('counselorRole').textContent=data.role||'Counselor';
+    const er=document.getElementById('counselorEmailRow'),pr=document.getElementById('counselorPhoneRow'),nr=document.getElementById('counselorNotesRow');
+    if(data.email){er.style.display='flex';document.getElementById('counselorEmailLink').textContent=data.email;document.getElementById('counselorEmailLink').href='mailto:'+data.email;}else er.style.display='none';
+    if(data.phone){pr.style.display='flex';document.getElementById('counselorPhone').textContent=data.phone;}else pr.style.display='none';
+    if(data.notes){nr.style.display='flex';document.getElementById('counselorNotes').textContent=data.notes;}else nr.style.display='none';
+  }
+
+  function setupCounselor(initial){
+    let cur=initial||null; renderCounselor(cur);
+    document.getElementById('editCounselorBtn').addEventListener('click',()=>{
+      if(cur){document.getElementById('cName').value=cur.name||'';document.getElementById('cRole').value=cur.role||'';document.getElementById('cEmail').value=cur.email||'';document.getElementById('cPhone').value=cur.phone||'';document.getElementById('cNotes').value=cur.notes||'';}
+      document.getElementById('counselorView').style.display='none';document.getElementById('counselorEdit').style.display='block';document.getElementById('counselorError').style.display='none';
+    });
+    document.getElementById('cancelCounselorBtn').addEventListener('click',()=>{document.getElementById('counselorView').style.display='block';document.getElementById('counselorEdit').style.display='none';});
+    document.getElementById('saveCounselorBtn').addEventListener('click',async()=>{
+      const name=document.getElementById('cName').value.trim();
+      if(!name){document.getElementById('counselorError').style.display='block';return;}
+      const data={name,role:document.getElementById('cRole').value.trim()||null,email:document.getElementById('cEmail').value.trim()||null,phone:document.getElementById('cPhone').value.trim()||null,notes:document.getElementById('cNotes').value.trim()||null};
+      document.getElementById('counselorError').style.display='none';
+      const btn=document.getElementById('saveCounselorBtn');btn.disabled=true;btn.textContent='Saving...';
+      const s=window.getCurrentStudent?.();
+      if(s?.id){try{await getDB().from('student_progress').update({counselor:data,updated_at:new Date().toISOString()}).eq('user_id',s.id);}catch(e){console.warn(e);}}
+      cur=data;renderCounselor(cur);btn.disabled=false;btn.textContent='Save Counselor';
+      document.getElementById('counselorView').style.display='block';document.getElementById('counselorEdit').style.display='none';
+      showToast('Counselor saved');
+    });
+  }
+
+  // ── MISC ─────────────────────────────────────────────────────────────────────
+  const UNI={regent:'Regent College London',yorkstjohn:'York St John University',bpp:'BPP University',netherlands:'Netherlands (IND)',ukvi:'UKVI Credibility Prep'};
+
+  function renderEnrollment(){
+    const u=localStorage.getItem('selected_university')||'',c=localStorage.getItem('last_course')||'';
+    document.getElementById('currentUniversity').textContent=UNI[u]||(u||'Not selected');
+    document.getElementById('currentProgram').textContent=c?c.replace(/-/g,' ').replace(/\b\w/g,l=>l.toUpperCase()):'Choose a pathway from home';
+  }
+
+  async function resetCourse(){
+    if(!confirm('This will erase ALL your progress. Are you sure?')) return;
+    const btn=document.getElementById('changeCourseBtn');btn.disabled=true;btn.textContent='Resetting...';
+    if(typeof window.resetAllProgress==='function') await window.resetAllProgress();
+    localStorage.removeItem('selected_university');localStorage.removeItem('last_course');
+    showToast('Progress reset. Redirecting...');
+    setTimeout(()=>window.location.href='index.html',1500);
+  }
+
+  async function sendReport(){
+    const s=window.getCurrentStudent?.();if(!s)return;
+    const btn=document.getElementById('emailReportBtn');btn.disabled=true;btn.innerHTML='<span class="material-symbols-outlined" style="font-size:16px;animation:spin 0.7s linear infinite">progress_activity</span> Sending...';
+    try{const p=await window.loadSavedProgress?.();const r=await window.sendReadyEmail?.(p?.ai_scores||{},p?.checklist_status||{},'0','Dashboard report');if(r?.success)showToast('Report sent to your tutor');else throw new Error(r?.error||'Send failed');}
+    catch(e){showToast('Failed: '+e.message,'error');}
+    btn.disabled=false;btn.innerHTML='<span class="material-symbols-outlined" style="font-size:16px">mail</span> Email Report';
+  }
+
+  async function exportJson(){
+    const s=window.getCurrentStudent?.();const p=await window.loadSavedProgress?.();
+    const blob=new Blob([JSON.stringify({student:s,progress:p,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`progress_${s?.student_id||'student'}.json`;
+    document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);showToast('Data exported');
+  }
+
+  async function logout(){
+    try{await getDB().auth.signOut();}catch(e){}
+    localStorage.removeItem('student');localStorage.removeItem('selected_university');localStorage.removeItem('last_course');
+    window.location.href='index.html';
+  }
+
+  // ── BOOT ─────────────────────────────────────────────────────────────────────
+  async function boot() {
+    // Hard timeout - forces dashboard visible after 10s no matter what
+    const hardTimer = setTimeout(()=>{
+      console.warn('Hard timeout: forcing dashboard visible');
+      revealDashboard();
+    }, 10000);
+
+    try {
+      // 1. Wait for window.sessionReady (set by app.js) OR 5s timeout
+      step('Initialising...');
+      await Promise.race([
+        window.sessionReady || Promise.resolve(null),
+        new Promise(r=>setTimeout(r,5000))
+      ]);
+
+      // 2. Get student from localStorage (app.js fills this via sessionReady)
+      step('Checking your account...');
+      let student = window.getCurrentStudent?.();
+
+      // 3. If still not found, query Supabase directly
+      if (!student?.id) {
+        step('Restoring your session...');
+        const db = getDB();
+        const { data:{ session } } = await db.auth.getSession();
+
+        if (session?.user) {
+          step('Loading your profile...');
+          const { data:profile } = await db.from('student_progress').select('*').eq('user_id',session.user.id).single();
+          if (profile) {
+            student = { id:profile.user_id, name:profile.full_name, student_id:profile.student_id||'', email:profile.email };
+            localStorage.setItem('student', JSON.stringify(student));
+          } else {
+            // Row missing - create it
+            const name = session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'Student';
+            const { data:np } = await db.from('student_progress').insert({ user_id:session.user.id, full_name:name, student_id:'', email:session.user.email }).select().single();
+            if (np) { student={id:np.user_id,name:np.full_name,student_id:'',email:np.email}; localStorage.setItem('student',JSON.stringify(student)); }
+          }
+        }
+      }
+
+      // 4. No session at all - send to login
+      if (!student?.id) {
+        clearTimeout(hardTimer);
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // 5. Fill profile UI immediately
+      step('Rendering dashboard...');
+      document.getElementById('studentName').textContent = student.name||'Student';
+      document.getElementById('studentEmail').textContent = student.email||'';
+      document.getElementById('studentId').textContent = `ID: ${student.student_id||'Not set'}`;
+      document.getElementById('avatarInitials').textContent = (student.name||'S').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+      renderEnrollment();
+
+      // 6. Load progress from Supabase
+      step('Loading your progress...');
+      let progress = null;
+      try {
+        const { data, error } = await getDB().from('student_progress')
+          .select('checklist_status,ai_scores,practice_responses,selected_university,counselor,interview_date')
+          .eq('user_id', student.id).single();
+        if (error) console.warn('Progress fetch warning:', error.message);
+        else progress = data;
+      } catch(e) { console.warn('Progress fetch error:', e.message); }
+
+      // 7. Render all sections
+      if (progress?.interview_date) {
+        document.getElementById('interviewDateValue').textContent = new Date(progress.interview_date).toLocaleString([],{dateStyle:'medium',timeStyle:'short'});
+        document.getElementById('interviewDateDisplay').style.display = 'block';
+      }
+
+      allAiScores = progress?.ai_scores||{};
+      renderStats(allAiScores);
+      renderChecklist(progress?.checklist_status||{});
+      renderResponses(allAiScores);
+      setupCounselor(progress?.counselor||null);
+      updateLiveUI();
+
+      // 8. Reveal NOW - don't wait for notifications or Q&A
+      clearTimeout(hardTimer);
+      revealDashboard();
+
+      // 9. Load notifications and Q&A in background (failures are non-fatal)
+      loadNotifications(student.id).catch(e=>console.warn('notif bg:',e));
+      loadQuestions(student.id).catch(e=>console.warn('qa bg:',e));
+
+    } catch(err) {
+      clearTimeout(hardTimer);
+      console.error('Dashboard boot error:', err);
+      revealDashboard(); // always show something
+      showToast('Some data failed to load. Try refreshing.', 'error');
+    }
+  }
+
+  // ── EVENTS ───────────────────────────────────────────────────────────────────
   document.getElementById('logoutBtn').addEventListener('click', logout);
   document.getElementById('emailReportBtn').addEventListener('click', sendReport);
   document.getElementById('exportJsonBtn').addEventListener('click', exportJson);
-  document.getElementById('changeCourseBtn').addEventListener('click', resetAndChangeCourse);
-
-  document.getElementById('searchBtn').addEventListener('click', () => {
-    const box = document.getElementById('searchBox');
-    const visible = box.style.display === 'block';
-    box.style.display = visible ? 'none' : 'block';
-    if (!visible) box.querySelector('input').focus();
+  document.getElementById('changeCourseBtn').addEventListener('click', resetCourse);
+  document.getElementById('searchBtn').addEventListener('click', ()=>{
+    const box=document.getElementById('searchBox'),open=box.style.display==='block';
+    box.style.display=open?'none':'block';if(!open)box.querySelector('input').focus();
   });
-  document.getElementById('searchBox').querySelector('input').addEventListener('input', e => {
-    searchQuery = e.target.value;
-    renderResponses(allAiScores, searchQuery);
+  document.getElementById('searchBox').querySelector('input').addEventListener('input', e=>{
+    searchQ=e.target.value; renderResponses(allAiScores,searchQ);
   });
-  document.getElementById('viewAllResponsesBtn')?.addEventListener('click', () => {
-    renderResponses(allAiScores, searchQuery);
-    document.getElementById('viewAllResponsesBtn').style.display = 'none';
+  document.getElementById('viewAllResponsesBtn').addEventListener('click', ()=>{
+    renderResponses(allAiScores,searchQ);
+    document.getElementById('viewAllResponsesBtn').style.display='none';
   });
 
-  // Start
   boot();
 </script>
 </body>
