@@ -536,10 +536,45 @@
   function renderChecklist(data){
     const cont=document.getElementById('checklistContainer'),sum=document.getElementById('checklistSummary'),sub=document.getElementById('checklistSubText');
     if(!data||!Object.keys(data).length){cont.innerHTML='<div class="empty-state"><span class="material-symbols-outlined">checklist</span><p>No checklist items yet.</p></div>';sum.textContent='0/0 DONE';return;}
-    const items=Object.entries(data),done=items.filter(([,v])=>v===true).length,pct=items.length?Math.round(done/items.length*100):0;
+
+    // Strip namespace prefix (e.g. "bpp__mba-international::Watch the video" -> "Watch the video")
+    // and group items by school+program for a clean display
+    const schoolLabels = {
+      bpp:'BPP', regent:'Regent', yorkstjohn:'York St John',
+      netherlands:'Netherlands', ukvi:'UKVI', nursing:'BSc Nursing', general:'General'
+    };
+    const groups = {}; // { "BPP — International MBA": [{label, done}] }
+    for (const [k, v] of Object.entries(data)) {
+      let groupName = 'General', label = k;
+      if (k.includes('::')) {
+        const [ns, ...rest] = k.split('::');
+        label = rest.join('::').trim();
+        // ns is like "bpp__mba-international"
+        const [school, ...courseParts] = ns.split('__');
+        const schoolName = schoolLabels[school] || school;
+        const courseName = courseParts.join(' ').replace(/-/g,' ').replace(/\w/g,l=>l.toUpperCase());
+        groupName = courseName ? `${schoolName} — ${courseName}` : schoolName;
+      }
+      if (!groups[groupName]) groups[groupName] = [];
+      groups[groupName].push({ label, done: v === true });
+    }
+
+    const allItems = Object.values(groups).flat();
+    const done = allItems.filter(i=>i.done).length;
+    const total = allItems.length;
+    const pct = total ? Math.round(done/total*100) : 0;
+
     document.getElementById('checklistPercent').innerHTML=`${pct}<span style="font-size:14px;font-weight:600;opacity:0.5;">%</span>`;
-    sum.textContent=`${done}/${items.length} DONE`; if(sub)sub.textContent=`${done} of ${items.length} completed`;
-    cont.innerHTML=items.map(([k,v])=>`<div class="checklist-item"><div class="checklist-left"><div class="check-circle ${v?'done':'pending'}"><span class="material-symbols-outlined">${v?'check':'radio_button_unchecked'}</span></div><span class="check-label">${esc(k.length>50?k.slice(0,50)+'…':k)}</span></div><div class="check-status ${v?'done':'pending'}"><span class="material-symbols-outlined">${v?'check_circle':'pending'}</span>${v?'DONE':'PENDING'}</div></div>`).join('');
+    sum.textContent=`${done}/${total} DONE`;
+    if(sub) sub.textContent=`${done} of ${total} completed`;
+
+    let html = '';
+    for (const [groupName, items] of Object.entries(groups)) {
+      const groupDone = items.filter(i=>i.done).length;
+      html += `<div style="padding:8px 0 4px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);border-top:1px solid var(--border);margin-top:4px;">${esc(groupName)} <span style="font-weight:600;color:var(--green)">${groupDone}/${items.length}</span></div>`;
+      html += items.map(({label,done})=>`<div class="checklist-item"><div class="checklist-left"><div class="check-circle ${done?'done':'pending'}"><span class="material-symbols-outlined">${done?'check':'radio_button_unchecked'}</span></div><span class="check-label">${esc(label.length>50?label.slice(0,50)+'…':label)}</span></div><div class="check-status ${done?'done':'pending'}"><span class="material-symbols-outlined">${done?'check_circle':'pending'}</span>${done?'DONE':'PENDING'}</div></div>`).join('');
+    }
+    cont.innerHTML = html;
   }
 
   function renderResponses(scores,query=''){
