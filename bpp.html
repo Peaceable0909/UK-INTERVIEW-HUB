@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="app.js"></script>
     <!-- Puter.js for free AI without API keys -->
+    <script src="checklist-init.js"></script>
     <script src="https://js.puter.com/v2/"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
@@ -2584,11 +2585,7 @@
 
       // ===== COURSE SELECTION =====
       async function selectCourse(courseId) {
-        if (currentCourse && currentCourse !== courseData[courseId]) {
-          const confirmed = confirm("⚠️ Changing your course will reset your responses and checklist.\n\nDo you want to continue?");
-          if (!confirmed) return;
-          if (typeof window.resetAllProgress === "function") await window.resetAllProgress();
-        }
+        // No reset on course switch — progress is namespaced per course
         currentCourse = courseData[courseId];
         localStorage.setItem('last_course', courseId); // save for auto-reload
         localStorage.setItem('last_school', 'bpp');
@@ -2828,20 +2825,8 @@ Return ONLY valid JSON, no other text:
 
       // ===== INIT =====
       document.addEventListener("DOMContentLoaded", async function () {
-        // ===== CROSS-SCHOOL RESET =====
-        const THIS_SCHOOL = 'bpp';
-        const lastSchool = localStorage.getItem('last_school');
-        if (lastSchool && lastSchool !== THIS_SCHOOL) {{
-          // Student came from a different school — wipe progress silently
-          console.log('School changed from', lastSchool, 'to', THIS_SCHOOL, '— resetting progress');
-          localStorage.removeItem('last_course');
-          if (typeof window.resetAllProgress === 'function') {{
-            window.resetAllProgress().then(() => {{
-              console.log('Cross-school reset complete');
-            }});
-          }}
-        }}
-        localStorage.setItem('last_school', THIS_SCHOOL);
+        // Track current school (no reset on switch)
+        localStorage.setItem('last_school', 'bpp');
 
         initTheme();
         updateProgress();
@@ -2852,41 +2837,9 @@ Return ONLY valid JSON, no other text:
         // Auto-select last course if any
         const lastCourse = localStorage.getItem('last_course');
         if (lastCourse && !currentCourse) selectCourse(lastCourse);
-        // Restore checklist and AI scores
-        await restoreChecklist();
+        // Restore checklist (fixed: restore first, then attach listeners)
+        await window._initChecklist(null, 'bpp_chk_');
         await restoreAIScores();
-        // Setup checklist auto-save
-        if (typeof window.saveChecklistItem === "function") {
-          document.querySelectorAll(".check-box").forEach((cb, index) => {
-            const checkItem = cb.closest(".check-item");
-            if (checkItem && !checkItem.id) checkItem.id = `bpp_chk_${index}`;
-            const itemId = checkItem ? checkItem.id : `bpp_chk_${index}`;
-            // Load saved state (already done above, but ensure visual sync)
-            window.loadSavedProgress?.().then((progress) => {
-              if (progress?.checklist_status?.[itemId]) {
-                cb.classList.add("done");
-                const titleP = checkItem?.querySelector(".flex-1 p:first-child");
-                if (titleP) {
-                  titleP.style.textDecoration = "line-through";
-                  titleP.style.color = "var(--text-muted)";
-                }
-                updateProgress();
-              }
-            });
-            cb.addEventListener("click", () => {
-              cb.classList.toggle("done");
-              const isChecked = cb.classList.contains("done");
-              const titleP = checkItem?.querySelector(".flex-1 p.font-medium, .flex-1 p:first-child");
-              if (titleP) {
-                titleP.style.textDecoration = isChecked ? "line-through" : "";
-                titleP.style.color = isChecked ? "var(--text-muted)" : "";
-              }
-              const itemText = titleP ? titleP.textContent.trim() : null;
-              window.saveChecklistItem?.(itemId, isChecked, itemText);
-              updateProgress();
-            });
-          });
-        }
         // Ready button email
         const readyBtn = document.getElementById("bpp-ready-btn");
         const readyStatus = document.getElementById("bpp-ready-status");

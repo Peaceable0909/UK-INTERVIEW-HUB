@@ -7,14 +7,9 @@ const EMAILJS_TEMPLATE_ID = 'template_6lh9ond';
 
 // ===== INIT =====
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// FIX: Expose on window so dashboard.html uses the SAME client (same session, no race)
 window.supabaseClient = supabaseClient;
-
 emailjs.init(EMAILJS_PUBLIC_KEY);
 
-// FIX: Promise that resolves when checkSession() finishes (success or fail)
-// dashboard.html awaits this instead of using a blind setTimeout
 let _sessionReadyResolve;
 window.sessionReady = new Promise(resolve => { _sessionReadyResolve = resolve; });
 
@@ -51,7 +46,6 @@ async function checkSession() {
   } catch (err) {
     console.error('checkSession error:', err);
   } finally {
-    // Always resolve so dashboard.html never hangs
     _sessionReadyResolve();
   }
 }
@@ -316,6 +310,15 @@ window.getCurrentStudent = () => {
 };
 window.getSelectedUniversity = () => localStorage.getItem('selected_university');
 
+// ===== PROGRESS KEY HELPERS =====
+// Returns a namespaced key like "bpp__mba-international" so each school+program
+// stores its own independent data. Falls back to a school-only key.
+window.getProgressNamespace = () => {
+  const school = localStorage.getItem('last_school') || 'general';
+  const course = localStorage.getItem('last_course') || '';
+  return course ? `${school}__${course}` : school;
+};
+
 window.saveProgress = async (data) => {
   const student = window.getCurrentStudent();
   if (!student?.id) return { error: 'Not authenticated' };
@@ -402,25 +405,39 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
   }
 };
 
+// ===== CHECKLIST SAVE =====
+// KEY FIX: Each school+program gets its own checklist namespace in the DB.
+// We store checklist_status as a flat object where keys are namespaced:
+// "bpp__mba-international::Watch the full training video" = true
+// This means switching school or program never overwrites another combo's ticks.
 window.saveChecklistItem = async (itemId, checked, itemText) => {
   const student = window.getCurrentStudent();
   if (!student?.id) return;
-  const key = (itemText && itemText.trim()) ? itemText.trim() : itemId;
+  const ns = window.getProgressNamespace();
+  const key = `${ns}::${(itemText && itemText.trim()) ? itemText.trim() : itemId}`;
   try {
     const { data: current } = await supabaseClient.from('student_progress')
       .select('checklist_status').eq('user_id', student.id).single();
     const updated = { ...(current?.checklist_status || {}), [key]: checked };
     await supabaseClient.from('student_progress')
-      .update({ checklist_status: updated, updated_at: new Date().toISOString() }).eq('user_id', student.id);
+      .update({ checklist_status: updated, updated_at: new Date().toISOString() })
+      .eq('user_id', student.id);
   } catch (err) { console.error('saveChecklistItem error:', err); }
 };
 
+// ===== RESET ALL PROGRESS (manual opt-out only — never auto-called) =====
 window.resetAllProgress = async () => {
   const student = window.getCurrentStudent();
   if (!student?.id) return { error: 'Not authenticated' };
   try {
     const { error } = await supabaseClient.from('student_progress')
-      .update({ ai_scores: {}, practice_responses: {}, checklist_status: {}, selected_university: null, updated_at: new Date().toISOString() })
+      .update({
+        ai_scores: {},
+        practice_responses: {},
+        checklist_status: {},
+        selected_university: null,
+        updated_at: new Date().toISOString()
+      })
       .eq('user_id', student.id);
     if (error) return { error: error.message };
     localStorage.removeItem('last_course');
@@ -438,6 +455,11 @@ window.QUESTION_TEXT_MAP = {
   'YSJ_Q1':'Why did you choose York St John University specifically?','YSJ_Q2':'What modules will you study and why do they interest you?','YSJ_Q3':'How does this course relate to your previous studies or work experience?','YSJ_Q4':'Did you apply to other universities? Why did you reject them?','YSJ_Q5':'Where will you stay in the UK and what are the costs?','YSJ_Q6':'How much is your tuition fee and how much have you paid?','YSJ_Q7':'Who is sponsoring you and what is their occupation/income?','YSJ_Q8':'What are your living costs and how will you fund them?','YSJ_Q9':'What are your career plans after graduation?','YSJ_Q10':'How will this course help you achieve your career goals?','YSJ_Q11':'What do you know about life in York or London?','YSJ_Q12':'What are your working rights and visa responsibilities?','YSJ_Q13':'What do you know about YSJ\'s rankings and reputation?','YSJ_Q14':'How is your course assessed?','YSJ_Q15':'What accommodation options have you researched?','YSJ_Q16':'How will you cover unexpected expenses?','YSJ_Q17':'Why study in York or London specifically?','YSJ_Q18':'What are the transport options from your accommodation?'
 };
 
+// ===== SAVE AI RESPONSE =====
+// KEY FIX: question IDs are already namespaced by school prefix (BPP_Q1, YSJ_p1 etc.)
+// We store ALL schools' scores in the same ai_scores object — they never collide
+// because the keys are unique per school. Switching school/program just shows
+// different keys in the dashboard.
 window.saveAIResponse = async (questionId, answerText, score, feedback, questionText) => {
   const student = window.getCurrentStudent();
   if (!student?.id) return { error: 'Not authenticated' };
@@ -465,6 +487,8 @@ window.saveAIResponse = async (questionId, answerText, score, feedback, question
   } catch (err) { return { error: err.message }; }
 };
 
+// ===== LOAD SAVED PROGRESS =====
+// KEY FIX: loads ALL progress (all schools/programs) — callers filter by namespace
 window.loadSavedProgress = async () => {
   let student = window.getCurrentStudent();
   if (!student?.id) {
@@ -482,6 +506,55 @@ window.loadSavedProgress = async () => {
     if (error) { console.error('loadSavedProgress error:', error.message); return null; }
     return progress;
   } catch (err) { console.error('loadSavedProgress error:', err); return null; }
+};
+
+// ===== LOAD PROGRESS FOR CURRENT NAMESPACE =====
+// Returns only the checklist items and ai_scores relevant to the current school+program.
+// checklist_status keys are namespaced, so we filter by prefix.
+// ai_scores keys start with school prefix (BPP_, REGENT_, YSJ_, etc.)
+window.loadProgressForCurrentPage = async () => {
+  const all = await window.loadSavedProgress();
+  if (!all) return { checklist_status: {}, ai_scores: {} };
+
+  const ns = window.getProgressNamespace(); // e.g. "bpp__mba-international"
+  const school = (localStorage.getItem('last_school') || '').toUpperCase();
+
+  // Filter checklist: only keys that start with this namespace
+  const filteredChecklist = {};
+  for (const [k, v] of Object.entries(all.checklist_status || {})) {
+    if (k.startsWith(ns + '::')) {
+      // Strip namespace prefix so the page logic sees clean keys
+      filteredChecklist[k] = v;
+    }
+  }
+
+  // Filter AI scores: keys that start with current school prefix
+  // e.g. BPP_ for bpp, REGENT_ for regent, YSJ_ for yorkstjohn, etc.
+  const schoolPrefixMap = {
+    bpp: 'BPP_',
+    regent: 'REGENT_',
+    yorkstjohn: 'YSJ_',
+    netherlands: 'NL_',
+    ukvi: 'UKVI_',
+    nursing: 'NRS_'
+  };
+  const currentSchool = localStorage.getItem('last_school') || '';
+  const prefix = schoolPrefixMap[currentSchool] || '';
+  const filteredScores = {};
+  for (const [k, v] of Object.entries(all.ai_scores || {})) {
+    if (!prefix || k.startsWith(prefix)) {
+      filteredScores[k] = v;
+    }
+  }
+
+  return {
+    checklist_status: filteredChecklist,
+    ai_scores: filteredScores,
+    practice_responses: all.practice_responses || {},
+    selected_university: all.selected_university,
+    counselor: all.counselor,
+    interview_date: all.interview_date
+  };
 };
 
 // ===== INIT ALL =====

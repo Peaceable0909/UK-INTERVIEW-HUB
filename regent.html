@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="app.js"></script>
     <!-- Puter.js for free AI -->
+    <script src="checklist-init.js"></script>
     <script src="https://js.puter.com/v2/"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
@@ -2095,11 +2096,7 @@
 
       async function selectCourse(id) {
         // If already on a course, warn about reset
-        if (course && course !== COURSES[id]) {
-          const confirmed = confirm("⚠️ Changing your course will reset your responses and checklist.\n\nDo you want to continue?");
-          if (!confirmed) return;
-          if (typeof window.resetAllProgress === "function") await window.resetAllProgress();
-        }
+        // No reset on course switch — progress namespaced per course
         course = COURSES[id];
         localStorage.setItem('last_course', id); // save for auto-reload
         localStorage.setItem('last_school', 'regent');
@@ -2338,44 +2335,10 @@ Return ONLY valid JSON, no other text:
 
       document.addEventListener("DOMContentLoaded", async ()=>{
 
-        // ===== CROSS-SCHOOL RESET =====
-        const THIS_SCHOOL = 'regent';
-        const lastSchool = localStorage.getItem('last_school');
-        if (lastSchool && lastSchool !== THIS_SCHOOL) {{
-          console.log('Cross-school switch: ' + lastSchool + ' -> ' + THIS_SCHOOL + ' — resetting');
-          localStorage.removeItem('last_course');
-          if (typeof window.resetAllProgress === 'function') window.resetAllProgress();
-        }}
-        localStorage.setItem('last_school', THIS_SCHOOL);
+        localStorage.setItem('last_school', 'regent');
         const lastCourse=localStorage.getItem('last_course');
         if(lastCourse && !course) selectCourse(lastCourse);
-        if(typeof window.saveChecklistItem==="function"){
-          document.querySelectorAll(".check-box").forEach((cb,index)=>{
-            const checkItem=cb.closest(".check-item");
-            if(checkItem && !checkItem.id) checkItem.id=`regent_chk_${index}`;
-            const itemId=checkItem?checkItem.id:`regent_chk_${index}`;
-            window.loadSavedProgress?.().then(progress=>{
-              if(progress?.checklist_status?.[itemId]){
-                cb.classList.add("done");
-                const titleSpan=checkItem?.querySelector(".ct");
-                if(titleSpan){ titleSpan.style.textDecoration="line-through"; titleSpan.style.color="var(--text-muted)"; }
-                updProg();
-              }
-            });
-            cb.addEventListener("click", async ()=>{
-              cb.classList.toggle("done");
-              const isChecked=cb.classList.contains("done");
-              const titleSpan=checkItem?.querySelector(".ct");
-              if(titleSpan){
-                titleSpan.style.textDecoration=isChecked?"line-through":"";
-                titleSpan.style.color=isChecked?"var(--text-muted)":"";
-              }
-              const itemText=titleSpan?titleSpan.textContent.trim():null;
-              await window.saveChecklistItem?.(itemId,isChecked,itemText);
-              updProg();
-            });
-          });
-        }
+        await window._initChecklist('#chk-content', 'regent_chk_');
         const readyBtn=document.getElementById("regent-ready-btn");
         const readyStatus=document.getElementById("regent-ready-status");
         if(readyBtn && typeof window.sendReadyEmail==="function"){
@@ -2403,7 +2366,6 @@ Return ONLY valid JSON, no other text:
             }
           });
         }else if(readyBtn){ readyBtn.addEventListener("click",()=>{ if(typeof window.sendReadyEmail==="function"){ readyBtn.click(); } else { alert("Please make sure you are logged in and try again."); } }); }
-        await restoreChecklist();
         await restoreAIScores();
       });
     </script>

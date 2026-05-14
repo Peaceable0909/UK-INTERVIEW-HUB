@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="app.js"></script>
+    <script src="checklist-init.js"></script>
     <script src="https://js.puter.com/v2/"></script>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;900&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -1796,39 +1797,7 @@
       }
 
       async function initChecklist() {
-        // Load from Supabase first
-        let savedStatus = {};
-        if (typeof window.loadSavedProgress === 'function') {
-          const progress = await window.loadSavedProgress();
-          if (progress?.checklist_status) {
-            savedStatus = progress.checklist_status;
-          }
-        }
-
-        document.querySelectorAll('.check-box').forEach((cb) => {
-          const item = cb.closest('.check-item');
-          const p = item?.querySelector('p:first-of-type');
-          const itemText = p?.textContent.trim();
-          
-          if (savedStatus[itemText] === true) {
-            cb.classList.add('done');
-            if (p) { p.style.textDecoration = 'line-through'; p.style.opacity = '0.6'; }
-          }
-
-          cb.addEventListener('click', async () => {
-            cb.classList.toggle('done');
-            const isDone = cb.classList.contains('done');
-            if (p) { p.style.textDecoration = isDone ? 'line-through' : ''; p.style.opacity = isDone ? '0.6' : ''; }
-            
-            updateProgress();
-            
-            // Save to Supabase
-            if (typeof window.saveChecklistItem === 'function') {
-              await window.saveChecklistItem(item.id, isDone, itemText);
-            }
-          });
-        });
-        updateProgress();
+        await window._initChecklist(null, 'nrs_chk_');
       }
 
       // ===== SCENARIO CATEGORIES =====
@@ -2040,14 +2009,7 @@ Return ONLY valid JSON:
 
       // ===== INIT =====
       document.addEventListener('DOMContentLoaded', () => {
-        const THIS_SCHOOL = 'nursing';
-        const _lastSchool = localStorage.getItem('last_school');
-        if (_lastSchool && _lastSchool !== THIS_SCHOOL) {
-          console.log('Cross-school switch — resetting progress');
-          localStorage.removeItem('last_course');
-          if (typeof window.resetAllProgress === 'function') window.resetAllProgress();
-        }
-        localStorage.setItem('last_school', THIS_SCHOOL);
+        localStorage.setItem('last_school', 'nursing');
 
         initTheme();
         initChecklist();

@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="app.js"></script>
     <!-- Puter.js for free AI without API keys -->
+    <script src="checklist-init.js"></script>
     <script src="https://js.puter.com/v2/"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
@@ -3068,17 +3069,7 @@ Return ONLY valid JSON, no other text:
 
       // ===== INIT =====
       document.addEventListener("DOMContentLoaded", async function () {
-        // ===== CROSS-SCHOOL RESET =====
-        const THIS_SCHOOL = 'netherlands';
-        const lastSchool = localStorage.getItem('last_school');
-        if (lastSchool && lastSchool !== THIS_SCHOOL) {{
-          console.log('School changed from', lastSchool, 'to', THIS_SCHOOL, '— resetting progress');
-          localStorage.removeItem('last_course');
-          if (typeof window.resetAllProgress === 'function') {{
-            window.resetAllProgress().then(() => console.log('Cross-school reset complete'));
-          }}
-        }}
-        localStorage.setItem('last_school', THIS_SCHOOL);
+        localStorage.setItem('last_school', 'netherlands');
 
         initTheme();
         updateProgress();
@@ -3091,38 +3082,7 @@ Return ONLY valid JSON, no other text:
           }
         });
 
-        // Checklist Auto-Save
-        if (typeof window.saveChecklistItem === "function") {
-          document.querySelectorAll(".check-box").forEach((cb, index) => {
-            const checkItem = cb.closest(".check-item");
-            const itemId = checkItem ? checkItem.id : `nl_chk_${index}`;
-
-            window.loadSavedProgress?.().then((progress) => {
-              if (progress?.checklist_status?.[itemId]) {
-                cb.classList.add("done");
-                const titleSpan = checkItem?.querySelector(".font-medium");
-                if (titleSpan) {
-                  titleSpan.style.textDecoration = "line-through";
-                  titleSpan.style.color = "var(--text-muted)";
-                }
-                updateProgress();
-              }
-            });
-
-            cb.addEventListener("click", async () => {
-              cb.classList.toggle("done");
-              const isChecked = cb.classList.contains("done");
-              const titleSpan = checkItem?.querySelector(".font-medium");
-              if (titleSpan) {
-                titleSpan.style.textDecoration = isChecked ? "line-through" : "";
-                titleSpan.style.color = isChecked ? "var(--text-muted)" : "";
-              }
-              const itemText = titleSpan ? titleSpan.textContent.trim() : null;
-              await window.saveChecklistItem?.(itemId, isChecked, itemText);
-              updateProgress();
-            });
-          });
-        }
+        await window._initChecklist(null, 'nl_chk_');
 
         // "I'm Ready" Email Button
         const readyBtn = document.getElementById("nl-ready-btn");
