@@ -527,8 +527,27 @@
   }
 
   // ── RENDER HELPERS ───────────────────────────────────────────────────────────
-  function getLabel(id,d){if(d?.questionText&&!/^(REGENT|YSJ|UKVI|BPP|NL)_/.test(d.questionText))return d.questionText;if(window.QUESTION_TEXT_MAP?.[id])return window.QUESTION_TEXT_MAP[id];return id.replace(/^(REGENT|YSJ|UKVI|BPP|NL)_/,'').replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase());}
-  function getCat(id){if(id.startsWith('REGENT'))return'Regent';if(id.startsWith('YSJ'))return'York St John';if(id.startsWith('BPP'))return'BPP';if(id.startsWith('NL'))return'Netherlands';if(id.startsWith('UKVI'))return'UKVI';return'Practice';}
+  function getLabel(id,d){
+    // Use stored questionText if it looks like real text (not an ID)
+    if(d?.questionText && !/^(REGENT|YSJ|UKVI|BPP|NL|NRS)_/i.test(d.questionText)) return d.questionText;
+    // Try direct map lookup
+    if(window.QUESTION_TEXT_MAP?.[id]) return window.QUESTION_TEXT_MAP[id];
+    // Try uppercase version (handles YSJ_p1 -> not in map, fallback to tidy ID)
+    const upper = id.replace(/_p(\d+)$/i, '_Q$1');
+    if(window.QUESTION_TEXT_MAP?.[upper]) return window.QUESTION_TEXT_MAP[upper];
+    // Final fallback: tidy up the ID itself
+    return id.replace(/^(REGENT|YSJ|UKVI|BPP|NL|NRS)_/i,'').replace(/[_p]+(\d)/gi,' Q$1').trim();
+  }
+  function getCat(id){
+    const u=id.toUpperCase();
+    if(u.startsWith('REGENT'))return'Regent';
+    if(u.startsWith('YSJ'))return'York St John';
+    if(u.startsWith('BPP'))return'BPP';
+    if(u.startsWith('NL_'))return'Netherlands';
+    if(u.startsWith('UKVI'))return'UKVI';
+    if(u.startsWith('NRS'))return'BSc Nursing';
+    return'Practice';
+  }
   function getCatClass(c){return{'BPP':'bpp','UKVI':'ukvi','Netherlands':'netherlands','York St John':'yorkstjohn'}[c]||'';}
 
   let allAiScores={}, searchQ='';
@@ -537,45 +556,42 @@
     const cont=document.getElementById('checklistContainer'),sum=document.getElementById('checklistSummary'),sub=document.getElementById('checklistSubText');
     if(!data||!Object.keys(data).length){cont.innerHTML='<div class="empty-state"><span class="material-symbols-outlined">checklist</span><p>No checklist items yet.</p></div>';sum.textContent='0/0 DONE';return;}
 
-    // Strip namespace prefix (e.g. "bpp__mba-international::Watch the video" -> "Watch the video")
-    // and group items by school+program for a clean display
-    const schoolLabels = {
-      bpp:'BPP', regent:'Regent', yorkstjohn:'York St John',
-      netherlands:'Netherlands', ukvi:'UKVI', nursing:'BSc Nursing', general:'General'
-    };
-    const groups = {}; // { "BPP — International MBA": [{label, done}] }
-    for (const [k, v] of Object.entries(data)) {
-      let groupName = 'General', label = k;
-      if (k.includes('::')) {
-        const [ns, ...rest] = k.split('::');
-        label = rest.join('::').trim();
-        // ns is like "bpp__mba-international"
-        const [school, ...courseParts] = ns.split('__');
-        const schoolName = schoolLabels[school] || school;
-        const courseName = courseParts.join(' ').replace(/-/g,' ').replace(/\w/g,l=>l.toUpperCase());
-        groupName = courseName ? `${schoolName} — ${courseName}` : schoolName;
+    const schoolLabels={bpp:'BPP',regent:'Regent',yorkstjohn:'York St John',netherlands:'Netherlands',ukvi:'UKVI',nursing:'BSc Nursing',general:'General'};
+    const groups={};
+    for(const [k,v] of Object.entries(data)){
+      let groupName='General',label=k;
+      if(k.includes('::')){
+        const sepIdx=k.indexOf('::');
+        const ns=k.slice(0,sepIdx);
+        label=k.slice(sepIdx+2).trim();
+        const parts=ns.split('__');
+        const schoolName=schoolLabels[parts[0]]||parts[0];
+        const courseName=parts.slice(1).join(' ').replace(/-/g,' ').split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
+        groupName=courseName?schoolName+' — '+courseName:schoolName;
       }
-      if (!groups[groupName]) groups[groupName] = [];
-      groups[groupName].push({ label, done: v === true });
+      if(!groups[groupName])groups[groupName]=[];
+      groups[groupName].push({label,done:v===true});
     }
 
-    const allItems = Object.values(groups).flat();
-    const done = allItems.filter(i=>i.done).length;
-    const total = allItems.length;
-    const pct = total ? Math.round(done/total*100) : 0;
+    const allItems=Object.values(groups).flat();
+    const done=allItems.filter(i=>i.done).length;
+    const total=allItems.length;
+    const pct=total?Math.round(done/total*100):0;
 
-    document.getElementById('checklistPercent').innerHTML=`${pct}<span style="font-size:14px;font-weight:600;opacity:0.5;">%</span>`;
-    sum.textContent=`${done}/${total} DONE`;
-    if(sub) sub.textContent=`${done} of ${total} completed`;
+    document.getElementById('checklistPercent').innerHTML=pct+'<span style="font-size:14px;font-weight:600;opacity:0.5;">%</span>';
+    sum.textContent=done+'/'+total+' DONE';
+    if(sub)sub.textContent=done+' of '+total+' completed';
+    if(sub)sub.textContent=done+' of '+total+' completed';
 
-    let html = '';
-    for (const [groupName, items] of Object.entries(groups)) {
-      const groupDone = items.filter(i=>i.done).length;
-      html += `<div style="padding:8px 0 4px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);border-top:1px solid var(--border);margin-top:4px;">${esc(groupName)} <span style="font-weight:600;color:var(--green)">${groupDone}/${items.length}</span></div>`;
-      html += items.map(({label,done})=>`<div class="checklist-item"><div class="checklist-left"><div class="check-circle ${done?'done':'pending'}"><span class="material-symbols-outlined">${done?'check':'radio_button_unchecked'}</span></div><span class="check-label">${esc(label.length>50?label.slice(0,50)+'…':label)}</span></div><div class="check-status ${done?'done':'pending'}"><span class="material-symbols-outlined">${done?'check_circle':'pending'}</span>${done?'DONE':'PENDING'}</div></div>`).join('');
+    let html='';
+    for(const [groupName,items] of Object.entries(groups)){
+      const gDone=items.filter(i=>i.done).length;
+      html+='<div style="padding:8px 0 4px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);border-top:1px solid var(--border);margin-top:4px;">'+esc(groupName)+' <span style="font-weight:600;color:var(--green)">'+gDone+'/'+items.length+'</span></div>';
+      html+=items.map(function(i){return '<div class="checklist-item"><div class="checklist-left"><div class="check-circle '+(i.done?'done':'pending')+'"><span class="material-symbols-outlined">'+(i.done?'check':'radio_button_unchecked')+'</span></div><span class="check-label">'+esc(i.label.length>50?i.label.slice(0,50)+'…':i.label)+'</span></div><div class="check-status '+(i.done?'done':'pending')+'"><span class="material-symbols-outlined">'+(i.done?'check_circle':'pending')+'</span>'+(i.done?'DONE':'PENDING')+'</div></div>';}).join('');
     }
-    cont.innerHTML = html;
+    cont.innerHTML=html;
   }
+
 
   function renderResponses(scores,query=''){
     const cont=document.getElementById('responsesContainer'),noMsg=document.getElementById('noResponsesMsg'),viewBtn=document.getElementById('viewAllResponsesBtn');
