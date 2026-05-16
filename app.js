@@ -340,7 +340,16 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
   const university = universityNames[universityRaw] || universityRaw || 'Not selected';
   if (!student) return { error: 'Not authenticated' };
 
-  const allQuestions = Object.entries(responses);
+  // Filter questions to current school only so email isn't cluttered with all schools
+  const schoolPrefixMap = {
+    regent:'REGENT_', yorkstjohn:'YSJ_', bpp:'BPP_',
+    netherlands:'NL_', ukvi:'UKVI_', nursing:'NRS_'
+  };
+  const currentSchool = localStorage.getItem('last_school') || '';
+  const schoolPrefix = schoolPrefixMap[currentSchool] || '';
+  const allQuestions = Object.entries(responses).filter(([id]) =>
+    !schoolPrefix || id.toUpperCase().startsWith(schoolPrefix.toUpperCase())
+  );
   const totalQuestions = allQuestions.length;
   const passedQuestions = allQuestions.filter(([, a]) => a?.finalStatus === 1 || a?.score >= 7);
   const failedQuestions = allQuestions.filter(([, a]) => !(a?.finalStatus === 1 || a?.score >= 7));
