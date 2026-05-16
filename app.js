@@ -328,7 +328,16 @@ window.saveProgress = async (data) => {
 
 window.sendReadyEmail = async (responses, checklist, score, message = '') => {
   const student = window.getCurrentStudent();
-  const university = window.getSelectedUniversity();
+  const universityRaw = window.getSelectedUniversity() || localStorage.getItem('last_school') || '';
+  const universityNames = {
+    regent: 'Regent College London',
+    yorkstjohn: 'York St John University',
+    bpp: 'BPP University',
+    netherlands: 'Netherlands (IND)',
+    ukvi: 'UKVI Credibility Prep',
+    nursing: 'BPP University — BSc Adult Nursing'
+  };
+  const university = universityNames[universityRaw] || universityRaw || 'Not selected';
   if (!student) return { error: 'Not authenticated' };
 
   const allQuestions = Object.entries(responses);
@@ -365,14 +374,17 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
     return `${passed ? '✅' : '❌'} Q${i + 1}: ${shortLabel}\n     Score: ${a.score || 0}/10 | Attempts: ${a.attempts || 1}`;
   }).join('\n\n');
 
+  // Strip namespace prefix from checklist keys for clean email display
+  // e.g. "bpp__mba::Watch the video" -> "Watch the video"
+  const cleanKey = k => k.includes('::') ? k.slice(k.indexOf('::') + 2).trim() : k;
   const checklistEntries = Object.entries(checklist);
   const doneItems = checklistEntries.filter(([, v]) => v === true);
   const pendingItems = checklistEntries.filter(([, v]) => v !== true);
   const checklistText = checklistEntries.length > 0
     ? [`Completed (${doneItems.length}/${checklistEntries.length}):`,
-       ...doneItems.map(([item]) => `  ✅ ${item}`),
+       ...doneItems.map(([item]) => `  ✅ ${cleanKey(item)}`),
        pendingItems.length > 0 ? `\nNot completed (${pendingItems.length}):` : '',
-       ...pendingItems.map(([item]) => `  ⬜ ${item}`)].filter(Boolean).join('\n')
+       ...pendingItems.map(([item]) => `  ⬜ ${cleanKey(item)}`)].filter(Boolean).join('\n')
     : 'No checklist items recorded.';
 
   const divider = '═══════════════════════════════════';
