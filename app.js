@@ -399,7 +399,7 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
   const divider = '═══════════════════════════════════';
   const emailBody = [
     divider, 'STUDENT INTERVIEW READINESS REPORT', divider,
-    `Name:        ${student.name}`, `Counselor ID: ${student.student_id || 'N/A'}`,
+    `Name:        ${student.name}`, `Counselor: ${student.student_id || 'N/A'}`,
     `Email:       ${student.email}`, `University:  ${university || 'Not selected'}`, '',
     'OVERALL RESULT', `${readinessEmoji} ${readinessLevel}`,
     `Score: ${passedQuestions.length}/${totalQuestions} questions passed (${percentScore}%)`, divider,
@@ -411,7 +411,7 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
 
   try {
     const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-      student_name: student.name, counselor_id: student.student_id || 'N/A',
+      student_name: student.name, counselor: student.student_id || 'N/A',
       student_email: student.email, university: university || 'Not selected',
       overall_score: `${passedQuestions.length}/${totalQuestions} (${percentScore}%)`,
       readiness_level: `${readinessEmoji} ${readinessLevel}`,

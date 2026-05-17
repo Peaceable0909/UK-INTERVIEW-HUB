@@ -249,7 +249,7 @@
             <div>
               <div class="profile-name" id="studentName">Student</div>
               <div class="profile-email" id="studentEmail">Loading...</div>
-              <div class="profile-id" id="studentId">Counselor ID: —</div>
+              <div class="profile-id" id="studentId">Counselor: —</div>
               <div id="interviewDateDisplay" style="margin-top:8px;font-size:12px;font-weight:700;color:var(--red);display:none;">
                 <span class="material-symbols-outlined" style="font-size:16px;vertical-align:text-bottom;">calendar_month</span>
                 Interview: <span id="interviewDateValue"></span>
@@ -744,7 +744,7 @@
       step('Rendering dashboard...');
       document.getElementById('studentName').textContent = student.name||'Student';
       document.getElementById('studentEmail').textContent = student.email||'';
-      document.getElementById('studentId').textContent = `Counselor ID: ${student.student_id||'Not set'}`;
+      document.getElementById('studentId').textContent = `Counselor: ${student.student_id||'Not set'}`;
       document.getElementById('avatarInitials').textContent = (student.name||'S').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
       renderEnrollment();
 
