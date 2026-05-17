@@ -250,10 +250,7 @@
               <div class="profile-name" id="studentName">Student</div>
               <div class="profile-email" id="studentEmail">Loading...</div>
               <div class="profile-id" id="studentId">Counselor: —</div>
-              <div id="interviewDateDisplay" style="margin-top:8px;font-size:12px;font-weight:700;color:var(--red);display:none;">
-                <span class="material-symbols-outlined" style="font-size:16px;vertical-align:text-bottom;">calendar_month</span>
-                Interview: <span id="interviewDateValue"></span>
-              </div>
+
             </div>
           </div>
           <div class="profile-actions">
@@ -282,6 +279,16 @@
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
           <span class="material-symbols-outlined" style="font-size:20px;color:var(--red);background:#fee2e2;padding:7px;border-radius:10px;">videocam</span>
           <span style="font-size:15px;font-weight:800;color:var(--navy);">Live Interview Training</span>
+        </div>
+        <div id="interviewDateCard" style="display:none;background:linear-gradient(135deg,#0d1b3e,#162a5c);border-radius:14px;padding:16px;margin-bottom:12px;color:white;">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;opacity:0.6;margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+            <span class="material-symbols-outlined" style="font-size:16px;">event</span> Your Scheduled Interview
+          </div>
+          <div id="interviewDateValue" style="font-size:18px;font-weight:800;margin-bottom:4px;"></div>
+          <div id="interviewNotesValue" style="font-size:12px;opacity:0.7;"></div>
+          <div style="margin-top:10px;font-size:11px;background:rgba(255,255,255,0.1);border-radius:8px;padding:8px 10px;">
+            📌 Make sure your tech is ready 10 minutes before
+          </div>
         </div>
         <div id="liveSessionContainer"><div class="session-upcoming"><span class="material-symbols-outlined">schedule</span><p>Checking for sessions...</p></div></div>
       </div>
@@ -761,8 +768,15 @@
 
       // 7. Render all sections
       if (progress?.interview_date) {
-        document.getElementById('interviewDateValue').textContent = new Date(progress.interview_date).toLocaleString([],{dateStyle:'medium',timeStyle:'short'});
-        document.getElementById('interviewDateDisplay').style.display = 'block';
+        const intDate = new Date(progress.interview_date);
+        const now = new Date();
+        // Only show if interview is in the future
+        if (intDate > now) {
+          document.getElementById('interviewDateValue').textContent =
+            intDate.toLocaleDateString([],{weekday:'long',day:'numeric',month:'long',year:'numeric'}) +
+            ' at ' + intDate.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+          document.getElementById('interviewDateCard').style.display = 'block';
+        }
       }
 
       allAiScores = progress?.ai_scores||{};

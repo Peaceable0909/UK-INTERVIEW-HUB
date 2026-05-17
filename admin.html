@@ -737,7 +737,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!date) { showToast('Please select a date and time', 'error'); return; }
     const { error } = await supabase.from('student_progress').update({ interview_date: new Date(date).toISOString(), updated_at: new Date().toISOString() }).eq('user_id', userId);
     if (error) showToast('Error saving: ' + error.message, 'error');
-    else { showToast('Interview date saved'); closeModal('dateModal'); await loadStudents(); }
+    else {
+      showToast('Interview date saved');
+      // Clear the fields so the modal looks fresh for the next booking
+      document.getElementById('interviewDateInput').value = '';
+      document.getElementById('interviewNotes').value = '';
+      closeModal('dateModal');
+      await loadStudents();
+    }
   }
 
   // ===== BULK DATE MODAL =====
