@@ -1845,6 +1845,100 @@ document.addEventListener('DOMContentLoaded', () => {
   toggleCSS.textContent=`.toggle-switch{position:relative;display:inline-block;width:44px;height:24px}.toggle-switch input{opacity:0;width:0;height:0}.toggle-slider{position:absolute;inset:0;background:#d1d5db;border-radius:99px;transition:.2s;cursor:pointer}.toggle-slider:before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;left:3px;top:3px;transition:.2s}.toggle-switch input:checked+.toggle-slider{background:var(--navy)}.toggle-switch input:checked+.toggle-slider:before{transform:translateX(20px)}`;
   document.head.appendChild(toggleCSS);
 
+
+  // ===== LIVE SESSIONS =====
+  async function loadSessions() {
+    document.getElementById('sessionsLoading').style.display = 'block';
+    document.getElementById('sessionsContainer').innerHTML = '';
+    document.getElementById('sessionsEmpty').style.display = 'none';
+    const { data, error } = await supabase.from('live_sessions').select('*').order('start_time', { ascending: true });
+    document.getElementById('sessionsLoading').style.display = 'none';
+    if (error) { showToast('Error: ' + error.message, 'error'); return; }
+    if (!data || data.length === 0) { document.getElementById('sessionsEmpty').style.display = 'block'; return; }
+    const targetLabels = { all:'All Students', regent:'Regent', bpp:'BPP', yorkstjohn:'York St John', netherlands:'Netherlands', ukvi:'UKVI' };
+    const now = new Date();
+    document.getElementById('sessionsContainer').innerHTML = data.map(s => {
+      const st = new Date(s.start_time), en = new Date(st.getTime() + s.duration_minutes * 60000);
+      const isLive = now >= st && now <= en, isPast = now > en;
+      const statusColor = isLive ? 'var(--green)' : isPast ? 'var(--muted)' : 'var(--navy)';
+      const statusLabel = isLive ? '🔴 LIVE NOW' : isPast ? '✅ Ended' : '📅 Upcoming';
+      return `<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:18px;border-bottom:1px solid var(--border);gap:12px;">
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span style="font-size:12px;font-weight:800;color:${statusColor};">${statusLabel}</span>
+            <span style="font-size:12px;color:var(--muted);">→ ${targetLabels[s.target]||s.target}</span>
+          </div>
+          <div style="font-size:15px;font-weight:800;color:var(--navy);margin-bottom:3px;">${escHtml(s.title)}</div>
+          <div style="font-size:13px;color:var(--muted);">${st.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'})} at ${st.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})} · ${s.duration_minutes} mins</div>
+          ${s.zoom_link ? `<a href="${escHtml(s.zoom_link)}" target="_blank" style="font-size:12px;color:var(--navy);font-weight:700;margin-top:4px;display:inline-block;">🔗 ${escHtml(s.zoom_link.slice(0,60))}</a>` : '<span style="font-size:12px;color:var(--muted);">No link set</span>'}
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button class="btn-icon calendar" onclick="editSession('${s.id}','${escHtml(s.title)}','${s.start_time}','${s.duration_minutes}','${escHtml(s.zoom_link||'')}','${s.target}')" title="Edit"><span class="material-symbols-outlined">edit</span></button>
+          <button class="btn-icon delete" onclick="deleteSession('${s.id}')" title="Delete"><span class="material-symbols-outlined">delete</span></button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function createSession() {
+    const title = document.getElementById('sessionTitle').value.trim();
+    const start = document.getElementById('sessionStart').value;
+    const duration = parseInt(document.getElementById('sessionDuration').value) || 90;
+    const zoom = document.getElementById('sessionZoom').value.trim();
+    const target = document.getElementById('sessionTarget').value;
+    const errEl = document.getElementById('sessionError');
+    if (!title || !start) { errEl.style.display = 'block'; return; }
+    errEl.style.display = 'none';
+    const btn = document.getElementById('createSessionBtn');
+    btn.disabled = true; btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">progress_activity</span> Saving…';
+    const { error } = await supabase.from('live_sessions').insert({
+      title, start_time: new Date(start).toISOString(),
+      duration_minutes: duration, zoom_link: zoom || null,
+      target, created_by: currentAdminEmail
+    });
+    btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">add</span> Schedule Session';
+    if (error) { showToast('Error: ' + error.message, 'error'); return; }
+    showToast('Session scheduled!');
+    document.getElementById('sessionTitle').value = '';
+    document.getElementById('sessionStart').value = '';
+    document.getElementById('sessionZoom').value = '';
+    document.getElementById('sessionDuration').value = '90';
+    await loadSessions();
+  }
+
+  async function deleteSession(id) {
+    if (!confirm('Delete this session?')) return;
+    const { error } = await supabase.from('live_sessions').delete().eq('id', id);
+    if (error) showToast('Error: ' + error.message, 'error');
+    else { showToast('Session deleted'); await loadSessions(); }
+  }
+
+  function editSession(id, title, startTime, duration, zoom, target) {
+    document.getElementById('sessionTitle').value = title;
+    const d = new Date(startTime);
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    document.getElementById('sessionStart').value = d.toISOString().slice(0,16);
+    document.getElementById('sessionDuration').value = duration;
+    document.getElementById('sessionZoom').value = zoom;
+    document.getElementById('sessionTarget').value = target;
+    const btn = document.getElementById('createSessionBtn');
+    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">save</span> Update Session';
+    btn.onclick = async () => {
+      await supabase.from('live_sessions').delete().eq('id', id);
+      btn.onclick = null;
+      btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">add</span> Schedule Session';
+      btn.addEventListener('click', createSession);
+      await createSession();
+    };
+    window.scrollTo(0,0);
+    showToast('Edit mode — update fields and click Save', 'info');
+  }
+
+  window.deleteSession = deleteSession;
+  window.editSession = editSession;
+  document.getElementById('createSessionBtn').addEventListener('click', createSession);
+  document.getElementById('refreshSessionsBtn').addEventListener('click', loadSessions);
+
   checkAuth();
 });
 </script>

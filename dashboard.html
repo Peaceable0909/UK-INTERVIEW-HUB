@@ -512,24 +512,38 @@
   document.getElementById('qaInput').addEventListener('keydown', e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendQuestion();}});
 
   // ── LIVE SESSION ─────────────────────────────────────────────────────────────
-  const SESSIONS=[
-    {startTime:"2026-04-13T15:00:00",zoomLink:"https://us06web.zoom.us/j/81839405302?pwd=uV6qDibywFyIo0jPCYDKrdYDvud0pv.1",title:"UKVI Interview Prep"},
-    {startTime:"2026-04-17T12:00:00",zoomLink:"https://us06web.zoom.us/j/81839405302?pwd=uV6qDibywFyIo0jPCYDKrdYDvud0pv.1",title:"Mock Interview - BPP & Regent"}
-  ];
-
-  function updateLiveUI() {
-    const c=document.getElementById('liveSessionContainer'); if(!c) return;
-    const now=new Date(); let active=null, next=null;
-    for(const s of SESSIONS){const st=new Date(s.startTime),en=new Date(st.getTime()+90*60000);if(now>=st&&now<=en){active=s;break;}}
-    if(!active){const fut=SESSIONS.filter(s=>new Date(s.startTime)>now).sort((a,b)=>new Date(a.startTime)-new Date(b.startTime));if(fut.length)next=fut[0];}
-    if(active){
-      const st=new Date(active.startTime),en=new Date(st.getTime()+90*60000);
-      c.innerHTML=`<div class="live-badge"><div class="live-dot"></div> LIVE NOW</div><div style="font-size:16px;font-weight:800;color:var(--navy);margin-bottom:3px;">${esc(active.title)}</div><div style="font-size:12px;color:var(--muted);margin-bottom:8px;">${st.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})} – ${en.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div><a href="${active.zoomLink}" target="_blank" class="btn-zoom"><span class="material-symbols-outlined" style="font-size:18px">videocam</span> Join Zoom Training</a>`;
-    } else if(next){
-      const st=new Date(next.startTime);
-      c.innerHTML=`<div class="session-upcoming"><span class="material-symbols-outlined">event</span><p style="font-weight:700;color:var(--navy);margin-bottom:3px;">${esc(next.title)}</p><p>${st.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'})} at ${st.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</p><p style="font-size:11px;margin-top:6px;">Zoom link appears when session starts</p></div>`;
-    } else {
-      c.innerHTML=`<div class="session-upcoming"><span class="material-symbols-outlined">event_busy</span><p>No upcoming sessions scheduled</p></div>`;
+  async function updateLiveUI() {
+    const c = document.getElementById('liveSessionContainer');
+    if (!c) return;
+    try {
+      const uni = localStorage.getItem('selected_university') || 'all';
+      const { data: sessions } = await getDB().from('live_sessions').select('*').order('start_time', { ascending: true });
+      const now = new Date();
+      const visible = (sessions || []).filter(s => s.target === 'all' || s.target === uni);
+      let active = null, next = null;
+      for (const s of visible) {
+        const st = new Date(s.start_time), en = new Date(st.getTime() + s.duration_minutes * 60000);
+        if (now >= st && now <= en) { active = s; break; }
+      }
+      if (!active) {
+        const fut = visible.filter(s => new Date(s.start_time) > now).sort((a,b) => new Date(a.start_time)-new Date(b.start_time));
+        if (fut.length) next = fut[0];
+      }
+      if (active) {
+        const st = new Date(active.start_time), en = new Date(st.getTime() + active.duration_minutes * 60000);
+        c.innerHTML = '<div class="live-badge"><div class="live-dot"></div> LIVE NOW</div>'
+          + '<div style="font-size:16px;font-weight:800;color:var(--navy);margin-bottom:3px;">'+esc(active.title)+'</div>'
+          + '<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">'+st.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' – '+en.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</div>'
+          + (active.zoom_link ? '<a href="'+esc(active.zoom_link)+'" target="_blank" class="btn-zoom"><span class="material-symbols-outlined" style="font-size:18px">videocam</span> Join Now</a>' : '<div style="font-size:13px;color:var(--muted);margin-top:8px;">Link will appear here when ready</div>');
+      } else if (next) {
+        const st = new Date(next.start_time);
+        c.innerHTML = '<div class="session-upcoming"><span class="material-symbols-outlined">event</span><p style="font-weight:700;color:var(--navy);margin-bottom:3px;">'+esc(next.title)+'</p><p>'+st.toLocaleDateString([],{weekday:'short',day:'numeric',month:'short'})+' at '+st.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</p><p style="font-size:11px;margin-top:6px;">Zoom link appears when session starts</p></div>';
+      } else {
+        c.innerHTML = '<div class="session-upcoming"><span class="material-symbols-outlined">event_busy</span><p>No upcoming sessions scheduled</p></div>';
+      }
+    } catch(e) {
+      console.warn('updateLiveUI error:', e);
+      document.getElementById('liveSessionContainer').innerHTML = '<div class="session-upcoming"><span class="material-symbols-outlined">event_busy</span><p>Could not load sessions</p></div>';
     }
   }
 

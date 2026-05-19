@@ -328,28 +328,10 @@ window.saveProgress = async (data) => {
 
 window.sendReadyEmail = async (responses, checklist, score, message = '') => {
   const student = window.getCurrentStudent();
-  const universityRaw = window.getSelectedUniversity() || localStorage.getItem('last_school') || '';
-  const universityNames = {
-    regent: 'Regent College London',
-    yorkstjohn: 'York St John University',
-    bpp: 'BPP University',
-    netherlands: 'Netherlands (IND)',
-    ukvi: 'UKVI Credibility Prep',
-    nursing: 'BPP University — BSc Adult Nursing'
-  };
-  const university = universityNames[universityRaw] || universityRaw || 'Not selected';
+  const university = window.getSelectedUniversity();
   if (!student) return { error: 'Not authenticated' };
 
-  // Filter questions to current school only so email isn't cluttered with all schools
-  const schoolPrefixMap = {
-    regent:'REGENT_', yorkstjohn:'YSJ_', bpp:'BPP_',
-    netherlands:'NL_', ukvi:'UKVI_', nursing:'NRS_'
-  };
-  const currentSchool = localStorage.getItem('last_school') || '';
-  const schoolPrefix = schoolPrefixMap[currentSchool] || '';
-  const allQuestions = Object.entries(responses).filter(([id]) =>
-    !schoolPrefix || id.toUpperCase().startsWith(schoolPrefix.toUpperCase())
-  );
+  const allQuestions = Object.entries(responses);
   const totalQuestions = allQuestions.length;
   const passedQuestions = allQuestions.filter(([, a]) => a?.finalStatus === 1 || a?.score >= 7);
   const failedQuestions = allQuestions.filter(([, a]) => !(a?.finalStatus === 1 || a?.score >= 7));
@@ -383,23 +365,20 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
     return `${passed ? '✅' : '❌'} Q${i + 1}: ${shortLabel}\n     Score: ${a.score || 0}/10 | Attempts: ${a.attempts || 1}`;
   }).join('\n\n');
 
-  // Strip namespace prefix from checklist keys for clean email display
-  // e.g. "bpp__mba::Watch the video" -> "Watch the video"
-  const cleanKey = k => k.includes('::') ? k.slice(k.indexOf('::') + 2).trim() : k;
   const checklistEntries = Object.entries(checklist);
   const doneItems = checklistEntries.filter(([, v]) => v === true);
   const pendingItems = checklistEntries.filter(([, v]) => v !== true);
   const checklistText = checklistEntries.length > 0
     ? [`Completed (${doneItems.length}/${checklistEntries.length}):`,
-       ...doneItems.map(([item]) => `  ✅ ${cleanKey(item)}`),
+       ...doneItems.map(([item]) => `  ✅ ${item}`),
        pendingItems.length > 0 ? `\nNot completed (${pendingItems.length}):` : '',
-       ...pendingItems.map(([item]) => `  ⬜ ${cleanKey(item)}`)].filter(Boolean).join('\n')
+       ...pendingItems.map(([item]) => `  ⬜ ${item}`)].filter(Boolean).join('\n')
     : 'No checklist items recorded.';
 
   const divider = '═══════════════════════════════════';
   const emailBody = [
     divider, 'STUDENT INTERVIEW READINESS REPORT', divider,
-    `Name:        ${student.name}`, `Counselor: ${student.student_id || 'N/A'}`,
+    `Name:        ${student.name}`, `Student ID:  ${student.student_id || 'N/A'}`,
     `Email:       ${student.email}`, `University:  ${university || 'Not selected'}`, '',
     'OVERALL RESULT', `${readinessEmoji} ${readinessLevel}`,
     `Score: ${passedQuestions.length}/${totalQuestions} questions passed (${percentScore}%)`, divider,
@@ -411,7 +390,7 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
 
   try {
     const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-      student_name: student.name, counselor: student.student_id || 'N/A',
+      student_name: student.name, student_id: student.student_id || 'N/A',
       student_email: student.email, university: university || 'Not selected',
       overall_score: `${passedQuestions.length}/${totalQuestions} (${percentScore}%)`,
       readiness_level: `${readinessEmoji} ${readinessLevel}`,
