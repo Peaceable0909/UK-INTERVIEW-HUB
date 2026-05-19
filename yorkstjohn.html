@@ -2112,7 +2112,9 @@ SCORING (0–100):
 PASS THRESHOLD: score >= 70
 
 Return ONLY valid JSON, no other text:
-{"pass":true,"score":75,"summary":"One specific sentence about this answer.","good":["one specific strength"],"improve":["one specific thing to fix"]}`;
+{"pass": boolean, "score": integer 0-100, "summary": "one sentence about the answer", "good": ["one specific strength"], "improve": ["one specific improvement needed"]}
+
+Do NOT copy or echo back the example. Evaluate the actual student answer and assign a real score based on the marking rules above.`;
         try {
           const response = await puter.ai.chat(prompt,{model:"gpt-4o-mini",stream:false});
           let raw="";

@@ -264,11 +264,18 @@
             Currently Preparing For
             <button id="changeCourseBtn" class="btn-change"><span class="material-symbols-outlined" style="font-size:15px">sync</span> Change</button>
           </div>
-          <div class="prep-uni-row">
-            <div class="prep-uni-icon"><span class="material-symbols-outlined">school</span></div>
-            <div>
-              <div class="prep-uni-name" id="currentUniversity">Not selected</div>
-              <div class="prep-uni-course" id="currentProgram">Choose a pathway from home</div>
+          <div id="currentSchoolCard" style="background:linear-gradient(135deg,#0d1b3e 0%,#1e3a8a 100%);border-radius:14px;padding:14px;color:white;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+              <span style="display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.2);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;padding:3px 8px;border-radius:999px;color:white;">
+                <span style="width:6px;height:6px;border-radius:50%;background:#4ade80;display:inline-block;"></span> Active
+              </span>
+            </div>
+            <div class="prep-uni-row" style="gap:10px;">
+              <div class="prep-uni-icon" style="background:rgba(255,255,255,0.15);"><span class="material-symbols-outlined" style="color:white;">school</span></div>
+              <div>
+                <div style="font-size:15px;font-weight:800;color:white;" id="currentUniversity">Not selected</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px;" id="currentProgram">Choose a pathway from home</div>
+              </div>
             </div>
           </div>
         </div>
@@ -572,50 +579,29 @@
   }
   function getCatClass(c){return{'BPP':'bpp','UKVI':'ukvi','Netherlands':'netherlands','York St John':'yorkstjohn'}[c]||'';}
 
-  let allAiScores={}, searchQ='';
+  let allAiScores={}, searchQ='', currentSchoolPrefix='';
 
+  // Renders checklist for CURRENT school only (data = {itemText: bool} from student_checklists)
   function renderChecklist(data){
     const cont=document.getElementById('checklistContainer'),sum=document.getElementById('checklistSummary'),sub=document.getElementById('checklistSubText');
-    if(!data||!Object.keys(data).length){cont.innerHTML='<div class="empty-state"><span class="material-symbols-outlined">checklist</span><p>No checklist items yet.</p></div>';sum.textContent='0/0 DONE';return;}
-
-    const schoolLabels={bpp:'BPP',regent:'Regent',yorkstjohn:'York St John',netherlands:'Netherlands',ukvi:'UKVI',nursing:'BSc Nursing',general:'General'};
-    const groups={};
-    for(const [k,v] of Object.entries(data)){
-      let groupName='General',label=k;
-      if(k.includes('::')){
-        const sepIdx=k.indexOf('::');
-        const ns=k.slice(0,sepIdx);
-        label=k.slice(sepIdx+2).trim();
-        const parts=ns.split('__');
-        const schoolName=schoolLabels[parts[0]]||parts[0];
-        const courseName=parts.slice(1).join(' ').replace(/-/g,' ').split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
-        groupName=courseName?schoolName+' — '+courseName:schoolName;
-      }
-      if(!groups[groupName])groups[groupName]=[];
-      groups[groupName].push({label,done:v===true});
+    if(!data||!Object.keys(data).length){
+      cont.innerHTML='<div class="empty-state"><span class="material-symbols-outlined">checklist</span><p>No checklist items yet for this school.</p><p style="font-size:11px;margin-top:4px;">Visit your school page to start ticking off items.</p></div>';
+      sum.textContent='0/0 DONE';
+      document.getElementById('checklistPercent').innerHTML='0<span style="font-size:14px;font-weight:600;opacity:0.5;">%</span>';
+      if(sub)sub.textContent='0 of 0 completed';
+      return;
     }
-
-    const allItems=Object.values(groups).flat();
-    const done=allItems.filter(i=>i.done).length;
-    const total=allItems.length;
+    const items=Object.entries(data).map(([label,done])=>({label,done:done===true}));
+    const done=items.filter(i=>i.done).length, total=items.length;
     const pct=total?Math.round(done/total*100):0;
-
     document.getElementById('checklistPercent').innerHTML=pct+'<span style="font-size:14px;font-weight:600;opacity:0.5;">%</span>';
     sum.textContent=done+'/'+total+' DONE';
     if(sub)sub.textContent=done+' of '+total+' completed';
-    if(sub)sub.textContent=done+' of '+total+' completed';
-
-    let html='';
-    for(const [groupName,items] of Object.entries(groups)){
-      const gDone=items.filter(i=>i.done).length;
-      html+='<div style="padding:8px 0 4px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);border-top:1px solid var(--border);margin-top:4px;">'+esc(groupName)+' <span style="font-weight:600;color:var(--green)">'+gDone+'/'+items.length+'</span></div>';
-      html+=items.map(function(i){return '<div class="checklist-item"><div class="checklist-left"><div class="check-circle '+(i.done?'done':'pending')+'"><span class="material-symbols-outlined">'+(i.done?'check':'radio_button_unchecked')+'</span></div><span class="check-label">'+esc(i.label.length>50?i.label.slice(0,50)+'…':i.label)+'</span></div><div class="check-status '+(i.done?'done':'pending')+'"><span class="material-symbols-outlined">'+(i.done?'check_circle':'pending')+'</span>'+(i.done?'DONE':'PENDING')+'</div></div>';}).join('');
-    }
-    cont.innerHTML=html;
+    cont.innerHTML=items.map(i=>'<div class="checklist-item"><div class="checklist-left"><div class="check-circle '+(i.done?'done':'pending')+'"><span class="material-symbols-outlined">'+(i.done?'check':'radio_button_unchecked')+'</span></div><span class="check-label">'+esc(i.label.length>52?i.label.slice(0,52)+'…':i.label)+'</span></div><div class="check-status '+(i.done?'done':'pending')+'"><span class="material-symbols-outlined">'+(i.done?'check_circle':'pending')+'</span>'+(i.done?'DONE':'TODO')+'</div></div>').join('');
   }
 
 
-  function renderResponses(scores,query=''){
+  function renderResponses(scores, query='', currentPrefix=''){
     const cont=document.getElementById('responsesContainer'),noMsg=document.getElementById('noResponsesMsg'),viewBtn=document.getElementById('viewAllResponsesBtn');
     if(!scores||!Object.keys(scores).length){cont.innerHTML='';noMsg.style.display='block';viewBtn.style.display='none';return;}
     let entries=Object.entries(scores);
@@ -623,21 +609,42 @@
     if(!entries.length){cont.innerHTML='';noMsg.textContent='No responses match your search.';noMsg.style.display='block';viewBtn.style.display='none';return;}
     noMsg.style.display='none';
     entries.sort((a,b)=>new Date(b[1]?.date||0)-new Date(a[1]?.date||0));
-    const shown=entries.slice(0,3);
-    cont.innerHTML=shown.map(([id,d])=>{
+    // Split current school vs other schools
+    const isCurrent = id => currentPrefix ? id.toUpperCase().startsWith(currentPrefix.toUpperCase()) : true;
+    const current = entries.filter(([id])=>isCurrent(id));
+    const history = entries.filter(([id])=>!isCurrent(id));
+    function makeCard([id,d], highlight){
       const sc=typeof d.score==='number'?d.score:0,pass=sc>=7,cat=getCat(id),ds=d.date?new Date(d.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'';
-      return `<div class="response-item"><div class="response-top"><div><div class="response-tag ${getCatClass(cat)}">${esc(cat)}</div><div class="response-question">${esc(getLabel(id,d))}</div><div class="response-meta">${ds?esc(ds)+' · ':''}<span class="${pass?'':'needs-work'}">${pass?'Reviewed':'Needs Work'}</span></div></div><div class="score-num ${pass?'pass':'fail'}">${sc.toFixed(1)}/10</div></div></div>`;
-    }).join('');
-    viewBtn.style.display=entries.length>3?'flex':'none';
+      const border = highlight ? 'border-left:3px solid var(--navy);' : 'border-left:3px solid var(--border);';
+      return '<div class="response-item" style="'+border+'"><div class="response-top"><div><div class="response-tag '+getCatClass(cat)+'">'+esc(cat)+'</div><div class="response-question">'+esc(getLabel(id,d))+'</div><div class="response-meta">'+(ds?esc(ds)+' · ':'')+'<span class="'+(pass?'':'needs-work')+'">'+(pass?'Passed':'Needs Work')+'</span></div></div><div class="score-num '+(pass?'pass':'fail')+'">'+sc.toFixed(1)+'/10</div></div></div>';
+    }
+    const shown = window._showAllResponses ? entries : current.slice(0,3);
+    let html = '';
+    if(currentPrefix && current.length){
+      if(!query) html += '<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:var(--navy);padding:4px 0 8px;">Currently preparing</div>';
+      html += (window._showAllResponses ? current : current.slice(0,3)).map(e=>makeCard(e,true)).join('');
+    }
+    if(history.length && (window._showAllResponses || !currentPrefix)){
+      if(currentPrefix) html += '<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);padding:10px 0 8px;border-top:1px solid var(--border);margin-top:4px;">Other schools</div>';
+      html += (window._showAllResponses ? history : history.slice(0,2)).map(e=>makeCard(e,false)).join('');
+    }
+    if(!html) html = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;">No responses yet for this school.</div>';
+    cont.innerHTML = html;
+    const hasMore = current.length > 3 || (history.length > 0 && !window._showAllResponses);
+    viewBtn.style.display = (!window._showAllResponses && hasMore) ? 'flex' : 'none';
   }
 
-  function renderStats(scores){
-    const list=Object.values(scores);let sum=0,passes=0;
-    list.forEach(r=>{if(typeof r.score==='number'){sum+=r.score;if(r.score>=7)passes++;}});
-    const avg=list.length?(sum/list.length).toFixed(1):'0',rate=list.length?Math.round(passes/list.length*100):0;
+  // schoolPrefix e.g. 'YSJ_' filters to current school only; pass null for all
+  function renderStats(scores, schoolPrefix){
+    let entries = Object.entries(scores);
+    if(schoolPrefix) entries = entries.filter(([id])=>id.toUpperCase().startsWith(schoolPrefix.toUpperCase()));
+    const list = entries.map(([,v])=>v);
+    let sum=0, passes=0;
+    list.forEach(r=>{if(typeof r.score==='number'){sum+=r.score; if(r.score>=7)passes++;}});
+    const avg=list.length?(sum/list.length).toFixed(1):'0', rate=list.length?Math.round(passes/list.length*100):0;
     document.getElementById('totalResponses').textContent=list.length;
-    document.getElementById('avgScore').innerHTML=`${avg}<span style="font-size:14px;font-weight:600;color:var(--green);opacity:0.6;">/10</span>`;
-    document.getElementById('passRate').innerHTML=`${rate}<span style="font-size:14px;font-weight:600;color:var(--green);opacity:0.6;">%</span>`;
+    document.getElementById('avgScore').innerHTML=avg+'<span style="font-size:14px;font-weight:600;color:var(--green);opacity:0.6;">/10</span>';
+    document.getElementById('passRate').innerHTML=rate+'<span style="font-size:14px;font-weight:600;color:var(--green);opacity:0.6;">%</span>';
   }
 
   // ── COUNSELOR ────────────────────────────────────────────────────────────────
@@ -681,7 +688,10 @@
   function renderEnrollment(){
     const u=localStorage.getItem('selected_university')||'',c=localStorage.getItem('last_course')||'';
     document.getElementById('currentUniversity').textContent=UNI[u]||(u||'Not selected');
-    document.getElementById('currentProgram').textContent=c?c.replace(/-/g,' ').replace(/\b\w/g,l=>l.toUpperCase()):'Choose a pathway from home';
+    document.getElementById('currentProgram').textContent=c?c.replace(/-/g,' ').replace(/\b\w/g,l=>l.toUpperCase()):'No course selected — go to school page';
+    // Dim the card if nothing selected
+    const card=document.getElementById('currentSchoolCard');
+    if(card) card.style.opacity = u ? '1' : '0.5';
     // Also sync to Supabase if we have a valid school
     if (u) {
       const s = window.getCurrentStudent?.();
@@ -777,22 +787,31 @@
       document.getElementById('avatarInitials').textContent = (student.name||'S').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
       renderEnrollment();
 
-      // 6. Load progress from Supabase
+      // 6. Load progress + checklist in parallel
       step('Loading your progress...');
-      let progress = null;
+      const schoolPrefixMap = {bpp:'BPP_',regent:'REGENT_',yorkstjohn:'YSJ_',netherlands:'NL_',ukvi:'UKVI_',nursing:'NRS_'};
+      const currentSchool = localStorage.getItem('last_school') || '';
+      const currentPrefix = schoolPrefixMap[currentSchool] || '';
+      let progress = null, checklistItems = {};
       try {
-        const { data, error } = await getDB().from('student_progress')
-          .select('checklist_status,ai_scores,practice_responses,selected_university,counselor,interview_date')
-          .eq('user_id', student.id).single();
-        if (error) console.warn('Progress fetch warning:', error.message);
-        else progress = data;
+        const [progResult, clResult] = await Promise.all([
+          getDB().from('student_progress')
+            .select('ai_scores,practice_responses,selected_university,counselor,interview_date')
+            .eq('user_id', student.id).single(),
+          // Load checklist from new isolated table via app.js helper
+          typeof window.loadChecklistForCurrentPage === 'function'
+            ? window.loadChecklistForCurrentPage()
+            : Promise.resolve({})
+        ]);
+        if (progResult.error) console.warn('Progress fetch warning:', progResult.error.message);
+        else progress = progResult.data;
+        checklistItems = clResult || {};
       } catch(e) { console.warn('Progress fetch error:', e.message); }
 
       // 7. Render all sections
       if (progress?.interview_date) {
         const intDate = new Date(progress.interview_date);
         const now = new Date();
-        // Only show if interview is in the future
         if (intDate > now) {
           document.getElementById('interviewDateValue').textContent =
             intDate.toLocaleDateString([],{weekday:'long',day:'numeric',month:'long',year:'numeric'}) +
@@ -802,9 +821,10 @@
       }
 
       allAiScores = progress?.ai_scores||{};
-      renderStats(allAiScores);
-      renderChecklist(progress?.checklist_status||{});
-      renderResponses(allAiScores);
+      currentSchoolPrefix = currentPrefix;
+      renderStats(allAiScores, currentPrefix);
+      renderChecklist(checklistItems);
+      renderResponses(allAiScores, '', currentPrefix);
       setupCounselor(progress?.counselor||null);
       updateLiveUI();
 
@@ -834,10 +854,10 @@
     box.style.display=open?'none':'block';if(!open)box.querySelector('input').focus();
   });
   document.getElementById('searchBox').querySelector('input').addEventListener('input', e=>{
-    searchQ=e.target.value; renderResponses(allAiScores,searchQ);
+    searchQ=e.target.value; renderResponses(allAiScores,searchQ,currentSchoolPrefix);
   });
   document.getElementById('viewAllResponsesBtn').addEventListener('click', ()=>{
-    renderResponses(allAiScores,searchQ);
+    window._showAllResponses=true; renderResponses(allAiScores,searchQ,currentSchoolPrefix);
     document.getElementById('viewAllResponsesBtn').style.display='none';
   });
 
