@@ -299,9 +299,91 @@ function setupUniversityTracking() {
   document.querySelectorAll('.start-training').forEach(btn => {
     btn.addEventListener('click', () => {
       const uni = btn.getAttribute('data-university');
-      if (localStorage.getItem('student') && uni) localStorage.setItem('selected_university', uni);
+      if (localStorage.getItem('student') && uni) {
+        localStorage.setItem('selected_university', uni);
+        // Also save to Supabase immediately
+        saveUniversityToDB(uni);
+      }
     });
   });
+}
+
+// Auto-detect school from ai_scores or checklist_status keys
+function detectSchoolFromProgress(progress) {
+  const schoolMap = {
+    'BPP_': 'bpp',
+    'REGENT_': 'regent', 
+    'YSJ_': 'yorkstjohn',
+    'NL_': 'netherlands',
+    'UKVI_': 'ukvi',
+    'NRS_': 'nursing'
+  };
+
+  // Check ai_scores keys
+  if (progress?.ai_scores) {
+    for (const key of Object.keys(progress.ai_scores)) {
+      for (const [prefix, school] of Object.entries(schoolMap)) {
+        if (key.startsWith(prefix)) return school;
+      }
+    }
+  }
+
+  // Check checklist_status keys (namespaced format: "school__course::item")
+  if (progress?.checklist_status) {
+    for (const key of Object.keys(progress.checklist_status)) {
+      for (const [prefix, school] of Object.entries(schoolMap)) {
+        if (key.toUpperCase().startsWith(prefix)) return school;
+      }
+      // Check namespaced format
+      const nsMatch = key.match(/^(bpp|regent|yorkstjohn|netherlands|ukvi|nursing|general)__/i);
+      if (nsMatch) return nsMatch[1].toLowerCase();
+    }
+  }
+
+  // Check practice_responses keys
+  if (progress?.practice_responses) {
+    for (const key of Object.keys(progress.practice_responses)) {
+      for (const [prefix, school] of Object.entries(schoolMap)) {
+        if (key.startsWith(prefix)) return school;
+      }
+    }
+  }
+
+  return null;
+}
+
+// Save selected university to Supabase
+async function saveUniversityToDB(uni) {
+  const student = window.getCurrentStudent();
+  if (!student?.id || !uni) return;
+  try {
+    await supabaseClient.from('student_progress')
+      .update({ selected_university: uni, updated_at: new Date().toISOString() })
+      .eq('user_id', student.id);
+  } catch (err) {
+    console.error('saveUniversityToDB error:', err);
+  }
+}
+
+// Auto-save detected school to DB if missing
+async function autoSaveDetectedSchool(progress) {
+  const student = window.getCurrentStudent();
+  if (!student?.id) return;
+  // Only auto-detect if selected_university is null/empty/"Not Selected"
+  const current = progress?.selected_university;
+  if (current && current !== 'null' && current !== 'Not Selected' && current !== '') return;
+
+  const detected = detectSchoolFromProgress(progress);
+  if (detected) {
+    try {
+      await supabaseClient.from('student_progress')
+        .update({ selected_university: detected, updated_at: new Date().toISOString() })
+        .eq('user_id', student.id);
+      console.log('Auto-detected and saved school:', detected);
+    } catch (err) {
+      console.error('autoSaveDetectedSchool error:', err);
+    }
+  }
 }
 
 // ===== GLOBAL FUNCTIONS =====
@@ -417,10 +499,19 @@ window.saveChecklistItem = async (itemId, checked, itemText) => {
   const key = `${ns}::${(itemText && itemText.trim()) ? itemText.trim() : itemId}`;
   try {
     const { data: current } = await supabaseClient.from('student_progress')
-      .select('checklist_status').eq('user_id', student.id).single();
+      .select('checklist_status, selected_university').eq('user_id', student.id).single();
     const updated = { ...(current?.checklist_status || {}), [key]: checked };
+
+    // Auto-detect school from namespace if missing
+    const nsSchool = ns.split('__')[0];
+    const currentUni = current?.selected_university;
+    const shouldUpdateUni = nsSchool && nsSchool !== 'general' && (!currentUni || currentUni === 'null' || currentUni === 'Not Selected' || currentUni === '');
+
+    const updateData = { checklist_status: updated, updated_at: new Date().toISOString() };
+    if (shouldUpdateUni) updateData.selected_university = nsSchool;
+
     await supabaseClient.from('student_progress')
-      .update({ checklist_status: updated, updated_at: new Date().toISOString() })
+      .update(updateData)
       .eq('user_id', student.id);
   } catch (err) { console.error('saveChecklistItem error:', err); }
 };
@@ -469,7 +560,7 @@ window.saveAIResponse = async (questionId, answerText, score, feedback, question
   }
   try {
     const { data: current, error: fetchErr } = await supabaseClient
-      .from('student_progress').select('ai_scores, practice_responses').eq('user_id', student.id).single();
+      .from('student_progress').select('ai_scores, practice_responses, selected_university').eq('user_id', student.id).single();
     if (fetchErr) return { error: fetchErr.message };
     const existing = current?.ai_scores?.[questionId] || {};
     const attempts = (existing.attempts || 0) + 1;
@@ -480,8 +571,21 @@ window.saveAIResponse = async (questionId, answerText, score, feedback, question
       [questionId]: { score, finalStatus: passed, attempts, feedback, answer: answerText, questionText: questionLabel, date: new Date().toISOString() }
     };
     const responses = { ...(current?.practice_responses || {}), [questionId]: { answer: answerText, date: new Date().toISOString() } };
+
+    // Auto-detect school from question ID if selected_university is missing
+    const detectedSchool = detectSchoolFromProgress({ ai_scores: scores });
+    const currentUni = current?.selected_university;
+    const shouldUpdateUni = detectedSchool && (!currentUni || currentUni === 'null' || currentUni === 'Not Selected' || currentUni === '');
+
+    const updateData = { 
+      ai_scores: scores, 
+      practice_responses: responses, 
+      updated_at: new Date().toISOString() 
+    };
+    if (shouldUpdateUni) updateData.selected_university = detectedSchool;
+
     const { error: updateErr } = await supabaseClient.from('student_progress')
-      .update({ ai_scores: scores, practice_responses: responses, updated_at: new Date().toISOString() }).eq('user_id', student.id);
+      .update(updateData).eq('user_id', student.id);
     if (updateErr) return { error: updateErr.message };
     return { success: true, passed, attempts };
   } catch (err) { return { error: err.message }; }
@@ -504,6 +608,8 @@ window.loadSavedProgress = async () => {
       .select('checklist_status, ai_scores, practice_responses, selected_university, counselor, interview_date')
       .eq('user_id', student.id).single();
     if (error) { console.error('loadSavedProgress error:', error.message); return null; }
+    // Auto-detect and save school if missing
+    if (progress) await autoSaveDetectedSchool(progress);
     return progress;
   } catch (err) { console.error('loadSavedProgress error:', err); return null; }
 };
