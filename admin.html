@@ -386,6 +386,7 @@ tbody tr:hover{background:#f8fafc}
       <button class="sb-item" data-tab="students2"><span class="material-symbols-outlined">group</span>Students</button>
       <button class="sb-item" data-tab="questions"><span class="material-symbols-outlined">chat</span>Questions<span class="sb-badge" id="sbQuestionsBadge" style="display:none">0</span></button>
       <button class="sb-item" data-tab="interviews-stub"><span class="material-symbols-outlined">calendar_month</span>Interviews</button>
+      <button class="sb-item" data-tab="live-sessions"><span class="material-symbols-outlined">videocam</span>Live Sessions</button>
       <button class="sb-item" data-tab="notifications"><span class="material-symbols-outlined">notifications</span>Notifications</button>
       <button class="sb-item" data-tab="analytics-stub"><span class="material-symbols-outlined">bar_chart</span>Analytics</button>
 
@@ -641,11 +642,11 @@ tbody tr:hover{background:#f8fafc}
             <input type="text" id="ivSearchInput" placeholder="Search student or school…"/>
           </div>
           <select class="filter-select" id="ivFilterRange">
-            <option value="all">All Interviews</option>
+            <option value="upcoming" selected>Upcoming Only</option>
             <option value="today">Today</option>
             <option value="week">This Week</option>
             <option value="month">This Month</option>
-            <option value="upcoming">Upcoming Only</option>
+            <option value="all">All Interviews</option>
             <option value="past">Past Interviews</option>
             <option value="unset">No Date Set</option>
           </select>
@@ -659,6 +660,7 @@ tbody tr:hover{background:#f8fafc}
             <option value="nursing">BSc Nursing</option>
           </select>
           <button class="btn-toolbar btn-amber" id="ivBulkDateBtn"><span class="material-symbols-outlined" style="font-size:15px">event</span>Bulk Set Date</button>
+          <button class="btn-toolbar btn-red" id="ivClearPastBtn"><span class="material-symbols-outlined" style="font-size:15px">delete_sweep</span>Clear Past</button>
           <button class="btn-toolbar btn-green" id="ivExportBtn"><span class="material-symbols-outlined" style="font-size:15px">download</span>Export Schedule</button>
           <button class="btn-toolbar btn-navy" id="ivRefreshBtn"><span class="material-symbols-outlined" style="font-size:15px">refresh</span>Refresh</button>
         </div>
@@ -676,7 +678,57 @@ tbody tr:hover{background:#f8fafc}
         </div>
       </div>
 
-      <!-- ════ ANALYTICS PANEL ════ -->
+      <!-- ════ LIVE SESSIONS PANEL ════ -->
+      <div id="panel-live-sessions" style="display:none">
+        <div class="welcome-bar"><h1>Live Sessions 🎥</h1><p>Schedule and manage live interview training sessions for students.</p></div>
+
+        <!-- Create Session Card -->
+        <div class="card" style="animation-delay:.05s">
+          <div class="card-title" style="margin-bottom:20px"><span class="material-symbols-outlined">add_circle</span>Schedule New Session</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="form-group" style="grid-column:1/-1"><label>Session Title *</label><input type="text" id="sessionTitle" placeholder="e.g. BPP Mock Interview Session"/></div>
+            <div class="form-group"><label>Start Date & Time *</label><input type="datetime-local" id="sessionStart"/></div>
+            <div class="form-group"><label>Duration (minutes)</label><input type="number" id="sessionDuration" value="90" min="15" max="300"/></div>
+            <div class="form-group" style="grid-column:1/-1"><label>Zoom / Teams Link</label><input type="url" id="sessionZoom" placeholder="https://zoom.us/j/..."/></div>
+            <div class="form-group"><label>Target Students</label>
+              <select id="sessionTarget">
+                <option value="all">All Students</option>
+                <option value="regent">Regent Only</option>
+                <option value="bpp">BPP Only</option>
+                <option value="yorkstjohn">York St John Only</option>
+                <option value="netherlands">Netherlands Only</option>
+                <option value="ukvi">UKVI Only</option>
+                <option value="nursing">BSc Nursing Only</option>
+              </select>
+            </div>
+          </div>
+          <p id="sessionError" style="color:var(--red);font-size:13px;display:none;margin-top:10px">Please fill in title and start time.</p>
+          <button class="btn-toolbar btn-purple" id="createSessionBtn" style="margin-top:14px;padding:11px 24px;font-size:14px">
+            <span class="material-symbols-outlined" style="font-size:18px">add</span>Schedule Session
+          </button>
+        </div>
+
+        <!-- Sessions List -->
+        <div class="card" style="animation-delay:.1s">
+          <div class="card-header">
+            <div class="card-title"><span class="material-symbols-outlined">videocam</span>All Sessions</div>
+            <div class="toolbar">
+              <select class="filter-select" id="sessionFilter">
+                <option value="all">All Sessions</option>
+                <option value="upcoming">Upcoming</option>
+                <option value="live">Live Now</option>
+                <option value="past">Past</option>
+              </select>
+              <button class="btn-toolbar btn-navy" id="refreshSessionsBtn"><span class="material-symbols-outlined" style="font-size:15px">refresh</span>Refresh</button>
+            </div>
+          </div>
+          <div id="sessionsLoading" style="text-align:center;padding:48px"><div class="spinner"></div><p style="color:var(--muted);font-size:14px">Loading sessions…</p></div>
+          <div id="sessionsEmpty" class="empty-state" style="display:none"><span class="material-symbols-outlined">event_busy</span><p>No sessions scheduled.</p></div>
+          <div id="sessionsContainer"></div>
+        </div>
+      </div>
+
+<!-- ════ ANALYTICS PANEL ════ -->
       <div id="panel-analytics-stub" style="display:none">
         <div class="welcome-bar"><h1>Analytics 📊</h1><p>In-depth performance and engagement insights.</p></div>
         <!-- Top kpis -->
@@ -1112,7 +1164,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ═══════════════════════════════════════════════════════════════════
   // SIDEBAR NAV + TAB SYSTEM
   // ═══════════════════════════════════════════════════════════════════
-  const allPanels = ['students','questions','notifications','interviews-stub','analytics-stub','reports-stub','settings-stub','users-stub','log-stub','students2'];
+  const allPanels = ['students','questions','notifications','interviews-stub','live-sessions','analytics-stub','reports-stub','settings-stub','users-stub','log-stub','students2'];
 
   function switchTab(tabId) {
     // students2 → just show students panel
@@ -1128,6 +1180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (realId==='questions') loadQuestions();
     if (realId==='notifications') loadNotifHistory();
     if (realId==='interviews-stub') renderInterviewsPanel();
+    if (realId==='live-sessions') loadSessions();
     if (realId==='analytics-stub') renderAnalyticsPanel();
     if (realId==='reports-stub') renderReportsSummary();
     if (realId==='settings-stub') initSettings();
@@ -1391,6 +1444,32 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('ivBulkDateBtn').addEventListener('click', openBulkDateModal);
     document.getElementById('ivExportBtn').addEventListener('click', ()=>{ const s=getIvFiltered(); exportFiltered(s,'WhiteRock_InterviewSchedule'); logAction('export',`Exported ${s.length} interview records`,'download'); });
     document.getElementById('ivRefreshBtn').addEventListener('click', async()=>{ await loadStudents(); renderInterviewsPanel(); });
+    document.getElementById('ivClearPastBtn').addEventListener('click', clearPastInterviews);
+  }
+
+  // Clear all past interview dates
+  async function clearPastInterviews() {
+    const now = new Date();
+    const pastStudents = allStudents.filter(s => s.interview_date && new Date(s.interview_date) < now);
+    if (!pastStudents.length) { showToast('No past interviews to clear', 'info'); return; }
+    if (!confirm(`Clear interview dates for ${pastStudents.length} past interview(s)?`)) return;
+
+    const btn = document.getElementById('ivClearPastBtn');
+    btn.disabled = true; btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:15px">progress_activity</span>Clearing…';
+
+    let cleared = 0;
+    for (const s of pastStudents) {
+      const { error } = await supabase.from('student_progress')
+        .update({ interview_date: null, interview_notes: null, updated_at: new Date().toISOString() })
+        .eq('user_id', s.user_id);
+      if (!error) cleared++;
+    }
+
+    btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:15px">delete_sweep</span>Clear Past';
+    logAction('interview', `Cleared ${cleared} past interview dates`, 'delete_sweep');
+    showToast(`Cleared ${cleared} past interview(s)`);
+    await loadStudents();
+    renderIvList(null);
   }
 
   function getIvFiltered() {
@@ -1905,14 +1984,37 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('sessionsLoading').style.display = 'none';
     if (error) { showToast('Error: ' + error.message, 'error'); return; }
     if (!data || data.length === 0) { document.getElementById('sessionsEmpty').style.display = 'block'; return; }
-    const targetLabels = { all:'All Students', regent:'Regent', bpp:'BPP', yorkstjohn:'York St John', netherlands:'Netherlands', ukvi:'UKVI' };
+
+    const filter = document.getElementById('sessionFilter')?.value || 'all';
+    const targetLabels = { all:'All Students', regent:'Regent', bpp:'BPP', yorkstjohn:'York St John', netherlands:'Netherlands', ukvi:'UKVI', nursing:'BSc Nursing' };
     const now = new Date();
-    document.getElementById('sessionsContainer').innerHTML = data.map(s => {
+
+    let filtered = data;
+    if (filter === 'upcoming') filtered = data.filter(s => new Date(s.start_time) > now);
+    else if (filter === 'live') {
+      filtered = data.filter(s => {
+        const st = new Date(s.start_time), en = new Date(st.getTime() + s.duration_minutes * 60000);
+        return now >= st && now <= en;
+      });
+    } else if (filter === 'past') {
+      filtered = data.filter(s => {
+        const st = new Date(s.start_time), en = new Date(st.getTime() + s.duration_minutes * 60000);
+        return now > en;
+      });
+    }
+
+    if (filtered.length === 0) { 
+      document.getElementById('sessionsEmpty').style.display = 'block'; 
+      document.getElementById('sessionsEmpty').innerHTML = '<span class="material-symbols-outlined">event_busy</span><p>No ' + filter + ' sessions.</p>';
+      return; 
+    }
+
+    document.getElementById('sessionsContainer').innerHTML = filtered.map((s, i) => {
       const st = new Date(s.start_time), en = new Date(st.getTime() + s.duration_minutes * 60000);
       const isLive = now >= st && now <= en, isPast = now > en;
       const statusColor = isLive ? 'var(--green)' : isPast ? 'var(--muted)' : 'var(--navy)';
       const statusLabel = isLive ? '🔴 LIVE NOW' : isPast ? '✅ Ended' : '📅 Upcoming';
-      return `<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:18px;border-bottom:1px solid var(--border);gap:12px;">
+      return `<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:18px;border-bottom:1px solid var(--border);gap:12px;animation:fadeUp .3s ease-out ${i*.05}s both">
         <div style="flex:1;">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
             <span style="font-size:12px;font-weight:800;color:${statusColor};">${statusLabel}</span>
@@ -1937,7 +2039,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const zoom = document.getElementById('sessionZoom').value.trim();
     const target = document.getElementById('sessionTarget').value;
     const errEl = document.getElementById('sessionError');
-    if (!title || !start) { errEl.style.display = 'block'; return; }
+    if (!title || !start) { errEl.style.display = 'block'; errEl.textContent = 'Title and start time are required.'; return; }
     errEl.style.display = 'none';
     const btn = document.getElementById('createSessionBtn');
     btn.disabled = true; btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">progress_activity</span> Saving…';
@@ -1948,6 +2050,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">add</span> Schedule Session';
     if (error) { showToast('Error: ' + error.message, 'error'); return; }
+    logAction('interview', `Scheduled live session: "${title}" for ${target}`, 'videocam');
     showToast('Session scheduled!');
     document.getElementById('sessionTitle').value = '';
     document.getElementById('sessionStart').value = '';
@@ -1960,7 +2063,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!confirm('Delete this session?')) return;
     const { error } = await supabase.from('live_sessions').delete().eq('id', id);
     if (error) showToast('Error: ' + error.message, 'error');
-    else { showToast('Session deleted'); await loadSessions(); }
+    else { logAction('interview', 'Deleted live session', 'delete'); showToast('Session deleted'); await loadSessions(); }
   }
 
   function editSession(id, title, startTime, duration, zoom, target) {
@@ -1973,13 +2076,45 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('sessionTarget').value = target;
     const btn = document.getElementById('createSessionBtn');
     btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">save</span> Update Session';
-    btn.onclick = async () => {
-      await supabase.from('live_sessions').delete().eq('id', id);
-      btn.onclick = null;
-      btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">add</span> Schedule Session';
-      btn.addEventListener('click', createSession);
-      await createSession();
-    };
+
+    // Remove old click handlers and set new one
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+    newBtn.addEventListener('click', async () => {
+      const title = document.getElementById('sessionTitle').value.trim();
+      const start = document.getElementById('sessionStart').value;
+      if (!title || !start) { document.getElementById('sessionError').style.display = 'block'; return; }
+
+      const { error: delErr } = await supabase.from('live_sessions').delete().eq('id', id);
+      if (delErr) { showToast('Error updating: ' + delErr.message, 'error'); return; }
+
+      const { error: insErr } = await supabase.from('live_sessions').insert({
+        title,
+        start_time: new Date(start).toISOString(),
+        duration_minutes: parseInt(document.getElementById('sessionDuration').value) || 90,
+        zoom_link: document.getElementById('sessionZoom').value.trim() || null,
+        target: document.getElementById('sessionTarget').value,
+        created_by: currentAdminEmail
+      });
+
+      if (insErr) { showToast('Error: ' + insErr.message, 'error'); return; }
+
+      // Reset button
+      const resetBtn = newBtn.cloneNode(true);
+      newBtn.parentNode.replaceChild(resetBtn, newBtn);
+      resetBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">add</span> Schedule Session';
+      resetBtn.addEventListener('click', createSession);
+
+      document.getElementById('sessionTitle').value = '';
+      document.getElementById('sessionStart').value = '';
+      document.getElementById('sessionZoom').value = '';
+      document.getElementById('sessionDuration').value = '90';
+
+      logAction('interview', `Updated live session: "${title}"`, 'edit');
+      showToast('Session updated!');
+      await loadSessions();
+    });
+
     window.scrollTo(0,0);
     showToast('Edit mode — update fields and click Save', 'info');
   }
@@ -1988,6 +2123,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.editSession = editSession;
   document.getElementById('createSessionBtn').addEventListener('click', createSession);
   document.getElementById('refreshSessionsBtn').addEventListener('click', loadSessions);
+  document.getElementById('sessionFilter').addEventListener('change', loadSessions);
 
   checkAuth();
 });
