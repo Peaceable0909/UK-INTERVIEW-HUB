@@ -511,9 +511,10 @@
         }
         .mobile-tab-bar {
           display: flex !important;
+          top: 80px !important;
         }
         .tc {
-          padding-top: 116px !important;
+          padding-top: 136px !important;
         }
       }
 
@@ -845,46 +846,58 @@
 ====================================================== -->
     <div id="s-main" class="screen">
       <header
-        class="top-nav fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 h-14"
+        class="top-nav fixed top-0 left-0 right-0 z-50 flex flex-col md:flex-row md:items-center md:justify-between md:h-14"
+        style="padding: 0;"
       >
-        <div class="flex items-center gap-3">
-          <button
-            onclick="goBack()"
-            class="btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
-          >
-            <span class="material-symbols-outlined text-sm">arrow_back</span
-            >Change
-          </button>
-          <a href="index.html"
-            class="btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
-            style="text-decoration:none"
-            title="Back to Hub"
-          ><span class="material-symbols-outlined text-sm">home</span><span class="hidden sm:inline">Hub</span></a>
-          <div class="w-px h-5 bg-border"></div>
-          <div>
-            <div
-              class="font-headline font-bold text-sm text-on-surface"
-              id="tb-name"
-            ></div>
-            <div
-              class="font-label text-xs text-primary font-bold"
-              id="tb-campus"
-            ></div>
+        <!-- Mobile: top row with buttons; Desktop: single row -->
+        <div class="flex items-center justify-between px-3 h-11 md:h-14 md:flex-1 md:gap-3 md:px-5">
+          <div class="flex items-center gap-2">
+            <button
+              onclick="goBack()"
+              class="btn-ghost flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+            >
+              <span class="material-symbols-outlined text-sm">arrow_back</span>Change
+            </button>
+            <a href="index.html"
+              class="btn-ghost flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+              style="text-decoration:none"
+              title="Back to Hub"
+            ><span class="material-symbols-outlined text-sm">home</span><span class="hidden sm:inline">Hub</span></a>
+          </div>
+
+          <!-- Course title: hidden on mobile (shown in row below), visible on desktop -->
+          <div class="hidden md:flex items-center gap-3 flex-1 mx-3">
+            <div class="w-px h-5 bg-border flex-shrink-0"></div>
+            <div>
+              <div class="font-headline font-bold text-sm text-on-surface" id="tb-name"></div>
+              <div class="font-label text-xs text-primary font-bold" id="tb-campus"></div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="font-headline font-black text-primary text-sm tracking-tight hidden md:block">YSJ Prep</span>
+            <a href="dashboard.html"
+              class="btn-primary flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+              style="text-decoration:none"
+            ><span class="material-symbols-outlined text-sm">dashboard</span><span class="hidden sm:inline">Dashboard</span></a>
           </div>
         </div>
-        <span
-          class="font-headline font-black text-primary text-base tracking-tight hidden md:block"
-          >YSJ Prep</span
-        >
-        <div class="flex items-center gap-2">
-          <a href="dashboard.html"
-            class="btn-primary flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
-            style="text-decoration:none"
-          ><span class="material-symbols-outlined text-sm">dashboard</span><span class="hidden sm:inline">Dashboard</span></a>
+
+        <!-- Mobile: second row for course title, centred -->
+        <div class="md:hidden border-t border-border px-4 py-1.5 flex items-center justify-center text-center bg-white">
+          <div>
+            <div class="font-headline font-bold text-sm text-on-surface leading-tight" id="tb-name-mobile"></div>
+            <div class="font-label text-xs text-primary font-bold" id="tb-campus-mobile"></div>
+          </div>
         </div>
       </header>
 
-      <div class="flex pt-14">
+      <div class="flex" style="padding-top: calc(2.75rem + 2.25rem);" id="main-content-wrapper">
+        <style>
+          @media (min-width: 768px) {
+            #main-content-wrapper { padding-top: 3.5rem !important; }
+          }
+        </style>
         <!-- Side nav (desktop) -->
         <aside
           class="side-panel side-nav hidden md:flex w-56 fixed left-0 top-14 h-[calc(100vh-3.5rem)] flex-col z-40 overflow-y-auto"
@@ -967,7 +980,8 @@
         </aside>
         <!-- Mobile tab bar -->
         <div
-          class="mobile-tab-bar fixed top-14 left-0 right-0 z-40 bg-white border-b border-border shadow-sm"
+          class="mobile-tab-bar fixed left-0 right-0 z-40 bg-white border-b border-border shadow-sm"
+          style="top: 80px;"
         >
           <div
             class="flex overflow-x-auto px-3 py-2 gap-2"
@@ -2015,6 +2029,8 @@
         document.getElementById("s-main").classList.add("active");
         document.getElementById("tb-name").textContent = course.name;
         document.getElementById("tb-campus").textContent = course.campus;
+        document.getElementById("tb-name-mobile").textContent = course.name;
+        document.getElementById("tb-campus-mobile").textContent = course.campus;
         passN = 0; failN = 0; totN = 0; questionStatus = {};
         updScore();
         document.getElementById("vid-notes").innerHTML = course.videoNotes.map(n => `<div class="flex items-start gap-2"><span class="material-symbols-outlined text-primary text-sm mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span>${n}</span></div>`).join("");
