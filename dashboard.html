@@ -206,6 +206,7 @@
       .notif-panel { right: 8px; left: 8px; width: auto; }
     }
   </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -681,6 +682,13 @@
     const u=localStorage.getItem('selected_university')||'',c=localStorage.getItem('last_course')||'';
     document.getElementById('currentUniversity').textContent=UNI[u]||(u||'Not selected');
     document.getElementById('currentProgram').textContent=c?c.replace(/-/g,' ').replace(/\b\w/g,l=>l.toUpperCase()):'Choose a pathway from home';
+    // Also sync to Supabase if we have a valid school
+    if (u) {
+      const s = window.getCurrentStudent?.();
+      if (s?.id) {
+        getDB().from('student_progress').update({ selected_university: u, updated_at: new Date().toISOString() }).eq('user_id', s.id).then(()=>{}).catch(()=>{});
+      }
+    }
   }
 
   async function resetCourse(){
