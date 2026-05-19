@@ -2648,19 +2648,20 @@
 
       // Restore checklist from Supabase
       async function restoreChecklist() {
-        if (typeof window.saveChecklistItem !== "function") return;
-        const progress = await window.loadSavedProgress();
-        if (!progress?.checklist_status) return;
-        document.querySelectorAll(".check-box").forEach((cb, index) => {
-          const checkItem = cb.closest(".check-item");
-          const itemId = checkItem ? checkItem.id : `bpp_chk_${index}`;
-          if (progress.checklist_status[itemId]) {
-            cb.classList.add("done");
-            const titleP = checkItem?.querySelector(".flex-1 p:first-child");
-            if (titleP) {
-              titleP.style.textDecoration = "line-through";
-              titleP.style.color = "var(--text-muted)";
-            }
+        if (typeof window.loadChecklistForCurrentPage !== 'function') return;
+        const items = await window.loadChecklistForCurrentPage();
+        if (!items || !Object.keys(items).length) return;
+        document.querySelectorAll('.check-box').forEach((cb, index) => {
+          const checkItem = cb.closest('.check-item');
+          const titleEl = checkItem
+            ? (checkItem.querySelector('.ct') || checkItem.querySelector('.font-medium') || checkItem.querySelector('p'))
+            : null;
+          const itemText = titleEl ? titleEl.textContent.trim() : null;
+          const itemId = checkItem?.id || null;
+          const key = itemText || itemId;
+          if (key && items[key]) {
+            cb.classList.add('done');
+            if (titleEl) { titleEl.style.textDecoration = 'line-through'; titleEl.style.color = 'var(--text-muted, #94a3b8)'; }
           }
         });
         updateProgress();

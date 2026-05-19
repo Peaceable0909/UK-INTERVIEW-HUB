@@ -436,7 +436,7 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
   const failedText = failedQuestions.length > 0
     ? failedQuestions.map(([qId, a]) => {
         const label = (window.QUESTION_TEXT_MAP || {})[qId] || a.questionText || qId;
-        return `• ${label} — Best score: ${a.score || 0}/10 after ${a.attempts || 1} attempt(s)`;
+        return `• ${label} -- Best score: ${a.score || 0}/10 after ${a.attempts || 1} attempt(s)`;
       }).join('\n')
     : 'All questions passed ✅';
 
@@ -487,36 +487,80 @@ window.sendReadyEmail = async (responses, checklist, score, message = '') => {
   }
 };
 
-// ===== CHECKLIST SAVE =====
-// KEY FIX: Each school+program gets its own checklist namespace in the DB.
-// We store checklist_status as a flat object where keys are namespaced:
-// "bpp__mba-international::Watch the full training video" = true
-// This means switching school or program never overwrites another combo's ticks.
+// ===== CHECKLIST SAVE/LOAD -- student_checklists table =====
+// One row per (user_id, school, course). Completely isolated across schools.
+// Falls back gracefully if the user is not authenticated.
+
 window.saveChecklistItem = async (itemId, checked, itemText) => {
   const student = window.getCurrentStudent();
   if (!student?.id) return;
-  const ns = window.getProgressNamespace();
-  const key = `${ns}::${(itemText && itemText.trim()) ? itemText.trim() : itemId}`;
+  const school = localStorage.getItem('last_school') || 'general';
+  const course = localStorage.getItem('last_course') || '';
+  const key = (itemText && itemText.trim()) ? itemText.trim() : itemId;
   try {
-    const { data: current } = await supabaseClient.from('student_progress')
-      .select('checklist_status, selected_university').eq('user_id', student.id).single();
-    const updated = { ...(current?.checklist_status || {}), [key]: checked };
+    // Load current row for this school+course
+    const { data: current } = await supabaseClient
+      .from('student_checklists')
+      .select('items')
+      .eq('user_id', student.id)
+      .eq('school', school)
+      .eq('course', course)
+      .maybeSingle();
 
-    // Auto-detect school from namespace if missing
-    const nsSchool = ns.split('__')[0];
-    const currentUni = current?.selected_university;
-    const shouldUpdateUni = nsSchool && nsSchool !== 'general' && (!currentUni || currentUni === 'null' || currentUni === 'Not Selected' || currentUni === '');
+    const updatedItems = { ...(current?.items || {}), [key]: checked };
 
-    const updateData = { checklist_status: updated, updated_at: new Date().toISOString() };
-    if (shouldUpdateUni) updateData.selected_university = nsSchool;
-
-    await supabaseClient.from('student_progress')
-      .update(updateData)
-      .eq('user_id', student.id);
+    await supabaseClient
+      .from('student_checklists')
+      .upsert(
+        { user_id: student.id, school, course, items: updatedItems, updated_at: new Date().toISOString() },
+        { onConflict: 'user_id,school,course' }
+      );
   } catch (err) { console.error('saveChecklistItem error:', err); }
 };
 
-// ===== RESET ALL PROGRESS (manual opt-out only — never auto-called) =====
+// Load checklist items for the current school+course only.
+// Returns a plain object: { "item text": true/false, … }
+window.loadChecklistForCurrentPage = async () => {
+  const student = window.getCurrentStudent();
+  if (!student?.id) {
+    try {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session?.user) return {};
+    } catch { return {}; }
+  }
+  const userId = student?.id || (await supabaseClient.auth.getSession())?.data?.session?.user?.id;
+  if (!userId) return {};
+  const school = localStorage.getItem('last_school') || 'general';
+  const course = localStorage.getItem('last_course') || '';
+  try {
+    const { data, error } = await supabaseClient
+      .from('student_checklists')
+      .select('items')
+      .eq('user_id', userId)
+      .eq('school', school)
+      .eq('course', course)
+      .maybeSingle();
+    if (error) { console.error('loadChecklistForCurrentPage error:', error.message); return {}; }
+    return data?.items || {};
+  } catch (err) { console.error('loadChecklistForCurrentPage error:', err); return {}; }
+};
+
+// Load ALL checklists for a user (used by dashboard/ready email).
+// Returns array: [{ school, course, items }, …]
+window.loadAllChecklists = async () => {
+  const student = window.getCurrentStudent();
+  if (!student?.id) return [];
+  try {
+    const { data, error } = await supabaseClient
+      .from('student_checklists')
+      .select('school, course, items, updated_at')
+      .eq('user_id', student.id);
+    if (error) { console.error('loadAllChecklists error:', error.message); return []; }
+    return data || [];
+  } catch (err) { console.error('loadAllChecklists error:', err); return []; }
+};
+
+// ===== RESET ALL PROGRESS (manual opt-out only -- never auto-called) =====
 window.resetAllProgress = async () => {
   const student = window.getCurrentStudent();
   if (!student?.id) return { error: 'Not authenticated' };
@@ -548,7 +592,7 @@ window.QUESTION_TEXT_MAP = {
 
 // ===== SAVE AI RESPONSE =====
 // KEY FIX: question IDs are already namespaced by school prefix (BPP_Q1, YSJ_p1 etc.)
-// We store ALL schools' scores in the same ai_scores object — they never collide
+// We store ALL schools' scores in the same ai_scores object -- they never collide
 // because the keys are unique per school. Switching school/program just shows
 // different keys in the dashboard.
 window.saveAIResponse = async (questionId, answerText, score, feedback, questionText) => {
@@ -592,7 +636,9 @@ window.saveAIResponse = async (questionId, answerText, score, feedback, question
 };
 
 // ===== LOAD SAVED PROGRESS =====
-// KEY FIX: loads ALL progress (all schools/programs) — callers filter by namespace
+// Loads ai_scores/practice_responses from student_progress and checklist from
+// student_checklists (isolated per school+course). checklist_status on the returned
+// object contains only the current school+course items so all callers stay compatible.
 window.loadSavedProgress = async () => {
   let student = window.getCurrentStudent();
   if (!student?.id) {
@@ -603,13 +649,17 @@ window.loadSavedProgress = async () => {
   }
   if (!student?.id) return null;
   try {
-    const { data: progress, error } = await supabaseClient
-      .from('student_progress')
-      .select('checklist_status, ai_scores, practice_responses, selected_university, counselor, interview_date')
-      .eq('user_id', student.id).single();
-    if (error) { console.error('loadSavedProgress error:', error.message); return null; }
-    // Auto-detect and save school if missing
+    const [progressResult, checklistItems] = await Promise.all([
+      supabaseClient
+        .from('student_progress')
+        .select('ai_scores, practice_responses, selected_university, counselor, interview_date')
+        .eq('user_id', student.id).single(),
+      window.loadChecklistForCurrentPage()
+    ]);
+    if (progressResult.error) { console.error('loadSavedProgress error:', progressResult.error.message); return null; }
+    const progress = progressResult.data;
     if (progress) await autoSaveDetectedSchool(progress);
+    progress.checklist_status = checklistItems;
     return progress;
   } catch (err) { console.error('loadSavedProgress error:', err); return null; }
 };
