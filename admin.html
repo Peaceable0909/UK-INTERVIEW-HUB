@@ -343,6 +343,7 @@ tbody tr:hover{background:#f8fafc}
 @media(max-width:1100px){.stats-grid{grid-template-columns:1fr 1fr}.charts-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:900px){.main-grid{grid-template-columns:1fr}.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main-wrap{margin-left:0}}
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -492,6 +493,7 @@ tbody tr:hover{background:#f8fafc}
                     <option value="yorkstjohn">York St John</option>
                     <option value="netherlands">Netherlands</option>
                     <option value="ukvi">UKVI</option>
+                    <option value="nursing">BSc Nursing</option>
                   </select>
                   <select class="filter-select" id="dateFilter">
                     <option value="">All Dates</option>
@@ -608,6 +610,7 @@ tbody tr:hover{background:#f8fafc}
                   <option value="yorkstjohn">York St John</option>
                   <option value="netherlands">Netherlands</option>
                   <option value="ukvi">UKVI</option>
+                  <option value="nursing">BSc Nursing</option>
                 </select>
               </div>
             </div>
@@ -653,6 +656,7 @@ tbody tr:hover{background:#f8fafc}
             <option value="yorkstjohn">York St John</option>
             <option value="netherlands">Netherlands</option>
             <option value="ukvi">UKVI</option>
+            <option value="nursing">BSc Nursing</option>
           </select>
           <button class="btn-toolbar btn-amber" id="ivBulkDateBtn"><span class="material-symbols-outlined" style="font-size:15px">event</span>Bulk Set Date</button>
           <button class="btn-toolbar btn-green" id="ivExportBtn"><span class="material-symbols-outlined" style="font-size:15px">download</span>Export Schedule</button>
@@ -960,8 +964,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── UTILITIES ──────────────────────────────────────────────────────
   const escHtml = str => String(str||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const schoolLabel = k => ({regent:'Regent',bpp:'BPP',yorkstjohn:'York St John',netherlands:'Netherlands',ukvi:'UKVI'}[k]||k||'Not Selected');
-  const schoolColors = {regent:'#16a34a',bpp:'#7c3aed',yorkstjohn:'#ef233c',netherlands:'#d97706',ukvi:'#1a6fcc'};
+  const schoolLabel = k => ({regent:'Regent',bpp:'BPP',yorkstjohn:'York St John',netherlands:'Netherlands',ukvi:'UKVI',nursing:'BSc Nursing'}[k]||k||'Not Selected');
+  const schoolColors = {regent:'#16a34a',bpp:'#7c3aed',yorkstjohn:'#ef233c',netherlands:'#d97706',ukvi:'#1a6fcc',nursing:'#0d9488'};
   const schoolClass  = k => k?'badge-school-'+k:'badge-none';
 
   function timeAgo(dateStr) {
@@ -987,6 +991,52 @@ document.addEventListener('DOMContentLoaded', () => {
   function studentAvgScore(s) {
     const vals = s.ai_scores ? Object.values(s.ai_scores).map(q=>q.score).filter(n=>typeof n==='number') : [];
     return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
+  }
+
+  // Detect school from progress data when selected_university is missing
+  function detectSchoolFromProgress(s) {
+    if (s.selected_university && s.selected_university !== 'null' && s.selected_university !== 'Not Selected' && s.selected_university !== '') {
+      return s.selected_university;
+    }
+    const schoolMap = {
+      'BPP_': 'bpp',
+      'REGENT_': 'regent', 
+      'YSJ_': 'yorkstjohn',
+      'NL_': 'netherlands',
+      'UKVI_': 'ukvi',
+      'NRS_': 'nursing'
+    };
+    // Check ai_scores keys
+    if (s.ai_scores) {
+      for (const key of Object.keys(s.ai_scores)) {
+        for (const [prefix, school] of Object.entries(schoolMap)) {
+          if (key.startsWith(prefix)) return school;
+        }
+      }
+    }
+    // Check checklist_status keys (namespaced format)
+    if (s.checklist_status) {
+      for (const key of Object.keys(s.checklist_status)) {
+        const nsMatch = key.match(/^(bpp|regent|yorkstjohn|netherlands|ukvi|nursing)__/i);
+        if (nsMatch) return nsMatch[1].toLowerCase();
+        for (const [prefix, school] of Object.entries(schoolMap)) {
+          if (key.toUpperCase().startsWith(prefix)) return school;
+        }
+      }
+    }
+    // Check practice_responses keys
+    if (s.practice_responses) {
+      for (const key of Object.keys(s.practice_responses)) {
+        for (const [prefix, school] of Object.entries(schoolMap)) {
+          if (key.startsWith(prefix)) return school;
+        }
+      }
+    }
+    return s.selected_university || null;
+  }
+
+  function getStudentSchool(s) {
+    return detectSchoolFromProgress(s) || s.selected_university || null;
   }
 
   // ── DATE DISPLAY ──
@@ -1193,7 +1243,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const now2=new Date(), in7=new Date(now2.getTime()+7*24*60*60*1000);
     filteredStudents = allStudents.filter(s => {
       const mQ = !q||(s.full_name||'').toLowerCase().includes(q)||(s.email||'').toLowerCase().includes(q)||(s.student_id||'').toLowerCase().includes(q);
-      const mU = !uni||s.selected_university===uni;
+      const mU = !uni||getStudentSchool(s)===uni;
       let mD = true;
       if (dateF==='set') mD=!!s.interview_date;
       else if (dateF==='unset') mD=!s.interview_date;
@@ -1224,7 +1274,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td><input type="checkbox" class="row-check student-check" data-id="${s.user_id}" ${selectedIds.has(s.user_id)?'checked':''}></td>
         <td class="name-cell"><strong>${escHtml(s.full_name||'Unknown')}</strong><span>${escHtml(s.email||'')}</span></td>
         <td style="font-family:monospace;font-size:12px;color:var(--muted)">${escHtml(s.student_id||'—')}</td>
-        <td><span class="badge ${schoolClass(s.selected_university)}">${schoolLabel(s.selected_university)}</span></td>
+        <td><span class="badge ${schoolClass(getStudentSchool(s))}">${schoolLabel(getStudentSchool(s))}</span></td>
         <td>${avg!==null?`<span class="score-pill ${scoreClass}">${avg.toFixed(1)}/10</span>`:'<span style="color:var(--muted);font-size:12px">No data</span>'}</td>
         <td><strong>${scoreVals.length}</strong> <span style="color:var(--muted);font-size:12px">answered</span></td>
         <td>${chkPct!==null?`<strong style="${chkPct>=80?'color:var(--green)':''}">${chkPct}%</strong> <span style="color:var(--muted);font-size:12px">(${chkDone}/${chkItems.length})</span>`:'<span style="color:var(--muted);font-size:12px">—</span>'}</td>
@@ -1279,7 +1329,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const d=new Date(s.interview_date);
       return `<div class="interview-item" style="animation:fadeUp .35s ease-out ${i*.08}s both">
         <div class="iv-date"><div class="month">${mon[d.getMonth()]}</div><div class="day">${d.getDate()}</div></div>
-        <div class="iv-info"><div class="iv-name">${escHtml(s.full_name||'Unknown')}</div><div class="iv-school">${schoolLabel(s.selected_university)}</div></div>
+        <div class="iv-info"><div class="iv-name">${escHtml(s.full_name||'Unknown')}</div><div class="iv-school">${schoolLabel(getStudentSchool(s))}</div></div>
         <div class="iv-time"><span class="iv-time-val">${d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</span><span class="iv-online">Online</span></div>
       </div>`;
     }).join('');
@@ -1287,9 +1337,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── CHARTS (dashboard) ──
   function renderCharts(students) {
-    const counts={regent:0,bpp:0,yorkstjohn:0,netherlands:0,ukvi:0};
-    students.forEach(s=>{ if(counts[s.selected_university]!==undefined) counts[s.selected_university]++; });
-    const sLabels=['Regent College','BPP University','York St John','Netherlands','UKVI'];
+    const counts={regent:0,bpp:0,yorkstjohn:0,netherlands:0,ukvi:0,nursing:0};
+    students.forEach(s=>{ const sch=getStudentSchool(s); if(counts[sch]!==undefined) counts[sch]++; });
+    const sLabels=['Regent College','BPP University','York St John','Netherlands','UKVI','BSc Nursing'];
     const sColors=Object.values(schoolColors);
     const sData=Object.values(counts);
     const total=students.length||1;
@@ -1393,10 +1443,10 @@ document.addEventListener('DOMContentLoaded', () => {
                   isPast?'<span style="background:var(--surface);color:var(--muted);font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px">Past</span>':
                   hasDate?'<span class="iv-online" style="display:inline-flex">Upcoming</span>':'<span style="background:#fef3c7;color:var(--amber);font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px">No Date</span>';
       return `<div style="display:flex;align-items:center;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);transition:background .15s;animation:fadeUp .3s ease-out ${i*.025}s both" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background=''">
-        <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,${schoolColors[s.selected_university]||'#64748b'},${schoolColors[s.selected_university]||'#64748b'}99);display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:14px;flex-shrink:0">${(s.full_name||'?').charAt(0).toUpperCase()}</div>
+        <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,${schoolColors[getStudentSchool(s)]||'#64748b'},${schoolColors[getStudentSchool(s)]||'#64748b'}99);display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:14px;flex-shrink:0">${(s.full_name||'?').charAt(0).toUpperCase()}</div>
         <div style="flex:1;min-width:0">
           <div style="font-weight:700;font-size:13.5px;color:var(--navy)">${escHtml(s.full_name||'Unknown')}</div>
-          <div style="font-size:12px;color:var(--muted)">${escHtml(s.email||'')} · <span class="badge ${schoolClass(s.selected_university)}">${schoolLabel(s.selected_university)}</span></div>
+          <div style="font-size:12px;color:var(--muted)">${escHtml(s.email||'')} · <span class="badge ${schoolClass(getStudentSchool(s))}">${schoolLabel(getStudentSchool(s))}</span></div>
         </div>
         <div style="text-align:center;min-width:90px">${avg!==null?`<span class="${scoreClass}">${avg.toFixed(1)}/10</span>`:'<span style="color:var(--muted);font-size:12px">—</span>'}</div>
         <div style="min-width:160px;font-size:12.5px;font-weight:600;color:${isPast?'var(--muted)':hasDate?'var(--green)':'var(--amber)'}">${hasDate?fmtDate(s.interview_date):'Not scheduled'}</div>
@@ -1433,8 +1483,8 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="stat-card" style="animation-delay:.2s"><div class="stat-icon amber"><span class="material-symbols-outlined">pending</span></div><div class="stat-info"><div class="stat-label">Pending Scheduling</div><div class="stat-value">${pending}</div><div class="stat-sub">No interview date set</div></div></div>`;
 
     // school chart
-    const counts={regent:0,bpp:0,yorkstjohn:0,netherlands:0,ukvi:0};
-    students.forEach(s=>{ if(counts[s.selected_university]!==undefined) counts[s.selected_university]++; });
+    const counts={regent:0,bpp:0,yorkstjohn:0,netherlands:0,ukvi:0,nursing:0};
+    students.forEach(s=>{ const sch=getStudentSchool(s); if(counts[sch]!==undefined) counts[sch]++; });
     if (anlSchoolChart) anlSchoolChart.destroy();
     anlSchoolChart=new Chart(document.getElementById('anlSchoolChart'),{type:'bar',data:{labels:['Regent','BPP','York St John','Netherlands','UKVI'],datasets:[{data:Object.values(counts),backgroundColor:Object.values(schoolColors),borderRadius:8,borderSkipped:false}]},options:{plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,grid:{color:'rgba(0,0,0,.04)'}}},animation:{duration:900}}});
 
@@ -1465,7 +1515,7 @@ document.addEventListener('DOMContentLoaded', () => {
           return `<tr style="animation:fadeUp .3s ease-out ${i*.04}s both">
             <td style="font-weight:700;color:${i===0?'#fbbf24':i===1?'#94a3b8':i===2?'#cd7f32':'var(--muted)'};font-size:15px">${i===0?'🥇':i===1?'🥈':i===2?'🥉':`#${i+1}`}</td>
             <td class="name-cell"><strong>${escHtml(s.full_name||'?')}</strong><span>${escHtml(s.email||'')}</span></td>
-            <td><span class="badge ${schoolClass(s.selected_university)}">${schoolLabel(s.selected_university)}</span></td>
+            <td><span class="badge ${schoolClass(getStudentSchool(s))}">${schoolLabel(getStudentSchool(s))}</span></td>
             <td><span class="score-pill score-high">${avg.toFixed(1)}/10</span></td>
             <td style="font-size:12.5px">${s.interview_date?fmtDate(s.interview_date):'<span style="color:var(--muted)">Not Set</span>'}</td>
           </tr>`;}).join('')}</tbody>
@@ -1481,7 +1531,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pending=students.length-dated;
     const avgAll=()=>{ const sc=students.filter(s=>studentAvgScore(s)!==null); return sc.length?(sc.reduce((a,s)=>a+studentAvgScore(s),0)/sc.length).toFixed(1):'—'; };
     const schools={regent:0,bpp:0,yorkstjohn:0,netherlands:0,ukvi:0};
-    students.forEach(s=>{ if(schools[s.selected_university]!==undefined) schools[s.selected_university]++; });
+    students.forEach(s=>{ const sch=getStudentSchool(s); if(schools[sch]!==undefined) schools[sch]++; });
     document.getElementById('rptSummary').innerHTML=`
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px">
         <div style="background:var(--surface);border-radius:12px;padding:16px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px">Total Students</div><div style="font-size:28px;font-family:'Anton',sans-serif;color:var(--navy)">${students.length}</div></div>
