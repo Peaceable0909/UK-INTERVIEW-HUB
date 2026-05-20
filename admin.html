@@ -1803,7 +1803,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function openDateModal(userId, name, currentDate) {
     document.getElementById('targetUserId').value=userId;
     document.getElementById('dateModalSubtitle').textContent=`Setting interview for: ${name}`;
-    document.getElementById('interviewNotes').value='';
+    // Restore existing notes from loaded student data
+    const s = allStudents.find(s => s.user_id === userId);
+    document.getElementById('interviewNotes').value = s?.interview_notes || '';
     if (currentDate){ const d=new Date(currentDate); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); document.getElementById('interviewDateInput').value=d.toISOString().slice(0,16); }
     else document.getElementById('interviewDateInput').value='';
     openModal('dateModal');
@@ -1878,6 +1880,19 @@ document.addEventListener('DOMContentLoaded', () => {
     closeModal('progressModal');
     logAction('interview',`Bulk-set interview date for ${done} students → ${fmtDate(dateVal)}`,'event');
     showToast(`Interview date set for ${done} student${done!==1?'s':''}`);
+    // Email each student if toggle is on (bulk)
+    if (document.getElementById('sendInterviewEmail')?.checked) {
+      for (const s of targets) {
+        callEmailFn({
+          type: 'interview',
+          user_id: s.user_id,
+          student_name: s.full_name || 'Student',
+          interview_date: isoDate,
+          notes: notes || ''
+        }).catch(() => {});
+      }
+      showToast(`✉️ Sending ${done} email${done!==1?'s':''}…`, 'success');
+    }
     await loadStudents();
     if (document.getElementById('panel-interviews-stub').style.display!=='none') renderIvList(null);
   }
@@ -1971,7 +1986,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const {error}=await supabase.from('student_notifications').insert({title,message,type,target,created_by:currentAdminEmail});
     btn.disabled=false; btn.innerHTML='<span class="material-symbols-outlined" style="font-size:18px">send</span> Send Notification';
     if (error){ showToast('Error: '+error.message,'error'); return; }
-    const targetLabels={all:'all students',regent:'Regent',bpp:'BPP',yorkstjohn:'York St John',netherlands:'Netherlands',ukvi:'UKVI'};
+    const targetLabels={all:'all students',regent:'Regent',bpp:'BPP',yorkstjohn:'York St John',netherlands:'Netherlands',ukvi:'UKVI',nursing:'BSc Nursing'};
     logAction('notification',`Sent notification "${title}" to ${targetLabels[target]||target}`,'notifications');
     showToast(`Notification sent to ${targetLabels[target]||target}`);
     // Also email the targeted students (only if toggle is on)
@@ -1992,7 +2007,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (error){ showToast('Error: '+error.message,'error'); return; }
     allSentNotifs=data||[];
     if (!allSentNotifs.length){ document.getElementById('notifHistoryEmpty').style.display='block'; return; }
-    const tLabels={all:'All Students',regent:'Regent',bpp:'BPP',yorkstjohn:'York St John',netherlands:'Netherlands',ukvi:'UKVI'};
+    const tLabels={all:'All Students',regent:'Regent',bpp:'BPP',yorkstjohn:'York St John',netherlands:'Netherlands',ukvi:'UKVI',nursing:'BSc Nursing'};
     document.getElementById('notifHistoryContainer').innerHTML=allSentNotifs.map(n=>`
       <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:16px;border-bottom:1px solid var(--border);gap:12px;animation:fadeUp .3s ease-out both">
         <div style="flex:1"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
@@ -2063,10 +2078,11 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    if (filtered.length === 0) { 
-      document.getElementById('sessionsEmpty').style.display = 'block'; 
-      document.getElementById('sessionsEmpty').innerHTML = '<span class="material-symbols-outlined">event_busy</span><p>No ' + filter + ' sessions.</p>';
-      return; 
+    if (filtered.length === 0) {
+      const emEl = document.getElementById('sessionsEmpty');
+      emEl.innerHTML = '<span class="material-symbols-outlined">event_busy</span><p>No ' + filter + ' sessions.</p>';
+      emEl.style.display = 'block';
+      return;
     }
 
     document.getElementById('sessionsContainer').innerHTML = filtered.map((s, i) => {
@@ -2126,6 +2142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('sessionStart').value = '';
     document.getElementById('sessionZoom').value = '';
     document.getElementById('sessionDuration').value = '90';
+    document.getElementById('sessionTarget').value = 'all';
     await loadSessions();
   }
 
@@ -2155,19 +2172,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const start = document.getElementById('sessionStart').value;
       if (!title || !start) { document.getElementById('sessionError').style.display = 'block'; return; }
 
-      const { error: delErr } = await supabase.from('live_sessions').delete().eq('id', id);
-      if (delErr) { showToast('Error updating: ' + delErr.message, 'error'); return; }
-
-      const { error: insErr } = await supabase.from('live_sessions').insert({
+      // Use UPDATE instead of delete+insert to avoid data loss on error
+      const { error: updErr } = await supabase.from('live_sessions').update({
         title,
         start_time: new Date(start).toISOString(),
         duration_minutes: parseInt(document.getElementById('sessionDuration').value) || 90,
         zoom_link: document.getElementById('sessionZoom').value.trim() || null,
         target: document.getElementById('sessionTarget').value,
-        created_by: currentAdminEmail
-      });
+        updated_at: new Date().toISOString()
+      }).eq('id', id);
 
-      if (insErr) { showToast('Error: ' + insErr.message, 'error'); return; }
+      if (updErr) { showToast('Error updating: ' + updErr.message, 'error'); return; }
 
       // Reset button
       const resetBtn = newBtn.cloneNode(true);
@@ -2179,6 +2194,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('sessionStart').value = '';
       document.getElementById('sessionZoom').value = '';
       document.getElementById('sessionDuration').value = '90';
+      document.getElementById('sessionTarget').value = 'all';
 
       logAction('interview', `Updated live session: "${title}"`, 'edit');
       showToast('Session updated!');
