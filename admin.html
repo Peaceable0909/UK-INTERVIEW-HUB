@@ -1006,6 +1006,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+  // ─────────────────────────────────────────────────────────────────────
+  // EMAIL HELPER — calls send-email Edge Function (Resend, $0)
+  // ─────────────────────────────────────────────────────────────────────
+  async function callEmailFn(payload) {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      const res = await fetch('https://okshteetxmmphgjgvrwt.supabase.co/functions/v1/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+        },
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) console.warn('Email fn error:', json);
+      else console.log('Email sent:', json);
+      return json;
+    } catch(e) { console.warn('Email fn exception:', e); }
+  }
+
+
   const ADMIN_EMAILS = ['admin@whiterock.com','akinremi@gmail.com','whiterockeducationalservices@gmail.com','simon@whiterock-edu.com','simonfemi@yahoo.com','myinkscriber@gmail.com','femiolaniyi36@gmail.com','peaceableolaniyi@gmail.com','peaceable.whiterock@gmail.com','jwill.whiterock@gmail.com','abraham.whiterock@gmail.com','cherish.whiterock@gmail.com','ideyewhiterock@gmail.com','bakinremi.whiterock@gmail.com','praisewhiterock27@gmail.com','waleadegoke.whiterock@gmail.com'];
 
   let allStudents = [], filteredStudents = [], selectedIds = new Set();
@@ -1783,6 +1806,14 @@ document.addEventListener('DOMContentLoaded', () => {
     logAction('interview',`Set interview date for ${s?.full_name||userId} → ${fmtDate(dateVal)}`,'calendar_month');
     showToast('Interview date saved'); closeModal('dateModal'); await loadStudents();
     if (document.getElementById('panel-interviews-stub').style.display!=='none') renderIvList(null);
+    // Send confirmation email to student
+    callEmailFn({
+      type: 'interview',
+      user_id: userId,
+      student_name: s?.full_name || 'Student',
+      interview_date: new Date(dateVal).toISOString(),
+      notes: document.getElementById('interviewNotes').value || ''
+    }).then(r => { if(r?.id || r?.sent !== undefined) showToast('✉️ Email sent to student', 'success'); });
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -1920,6 +1951,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const targetLabels={all:'all students',regent:'Regent',bpp:'BPP',yorkstjohn:'York St John',netherlands:'Netherlands',ukvi:'UKVI'};
     logAction('notification',`Sent notification "${title}" to ${targetLabels[target]||target}`,'notifications');
     showToast(`Notification sent to ${targetLabels[target]||target}`);
+    // Also email the targeted students
+    callEmailFn({ type: 'notification', target, title, message, type_: type })
+      .then(r => { if(r?.sent > 0) showToast(`✉️ ${r.sent} email${r.sent===1?'':'s'} sent`, 'success'); });
     document.getElementById('notifTitle').value=''; document.getElementById('notifMessage').value='';
     await loadNotifHistory();
   }
@@ -2053,6 +2087,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (error) { showToast('Error: ' + error.message, 'error'); return; }
     logAction('interview', `Scheduled live session: "${title}" for ${target}`, 'videocam');
     showToast('Session scheduled!');
+    // Send email notification to all targeted students
+    callEmailFn({
+      type: 'session',
+      title, start_time: new Date(start).toISOString(),
+      duration_minutes: parseInt(document.getElementById('sessionDuration').value) || 90,
+      zoom_link: zoom || null,
+      target
+    }).then(r => { if(r?.sent > 0) showToast(`✉️ ${r.sent} email${r.sent===1?'':'s'} sent`, 'success'); });
     document.getElementById('sessionTitle').value = '';
     document.getElementById('sessionStart').value = '';
     document.getElementById('sessionZoom').value = '';
