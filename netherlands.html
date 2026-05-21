@@ -3083,6 +3083,20 @@ Return ONLY valid JSON, no other text:
         });
 
         await window._initChecklist(null, 'nl_chk_');
+        // ── REALTIME (notifications + presence) ───────────────────
+        if (typeof window.watchNotifications === 'function') {
+          window.watchNotifications(({ type, data }) => {
+            if (type === 'notification') {
+              if (typeof window.showRealtimeToast === 'function')
+                window.showRealtimeToast('📢 ' + (data.title||'Notification'), data.message||'', data.type||'info');
+            } else if (type === 'session') {
+              const dateStr = data.start_time ? new Date(data.start_time).toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
+              if (typeof window.showRealtimeToast === 'function')
+                window.showRealtimeToast('🎥 Live session scheduled', (data.title||'') + (dateStr ? ' · ' + dateStr : ''), 'session', 12000);
+            }
+          });
+        }
+        if (typeof window.startPresence === 'function') window.startPresence('netherlands');
 
         // "I'm Ready" Email Button
         const readyBtn = document.getElementById("nl-ready-btn");

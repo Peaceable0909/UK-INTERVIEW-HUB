@@ -434,6 +434,17 @@ tbody tr:hover{background:#f8fafc}
     <div class="page-content">
 
       <!-- ════ STUDENTS / DASHBOARD PANEL ════ -->
+      <!-- Realtime online students panel -->
+      <div id="onlinePanel" style="display:none;background:white;border-radius:14px;border:1px solid var(--border);padding:20px;margin-bottom:20px;box-shadow:var(--shadow-sm)">
+        <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:#16a34a;margin-bottom:12px;display:flex;align-items:center;gap:8px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block"></span>
+          Students Online Now
+          <span style="font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0">(updates every 30s)</span>
+        </div>
+        <div id="onlineStudentsList"><div style="font-size:12px;color:var(--muted);padding:8px 0">No students currently online</div></div>
+      </div>
+      <style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}</style>
+
       <div id="panel-students">
         <div class="welcome-bar">
           <h1>Welcome back, Admin! 👋</h1>
@@ -472,6 +483,17 @@ tbody tr:hover{background:#f8fafc}
               <div class="stat-label">Avg AI Score</div>
               <div class="stat-value" id="stat-avg">—</div>
               <div class="stat-trend up">+0.4 from last week</div>
+            </div>
+          </div>
+          <div class="stat-card" style="cursor:pointer" onclick="const p=document.getElementById('onlinePanel');p.style.display=p.style.display==='none'?'block':'none'">
+            <div class="stat-icon green"><span class="material-symbols-outlined">sensors</span></div>
+            <div class="stat-info">
+              <div class="stat-label">Online Now</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
+                <span class="stat-value" id="onlineCountNum">0</span>
+                <span id="onlineCountBadge" style="display:none;background:#22c55e;color:white;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px">0</span>
+              </div>
+              <div class="stat-sub">click to view</div>
             </div>
           </div>
         </div>
@@ -1284,6 +1306,54 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('hdrUserEmail').textContent = user.email.split('@')[0];
     switchTab('students');
     loadStudents();
+
+    // ── REALTIME ───────────────────────────────────────────────
+    const presenceMap = {};
+    window._presenceMap = presenceMap;
+
+    function renderPresence() {
+      const now = Date.now();
+      const online = Object.values(presenceMap).filter(p => p.last_seen && (now - new Date(p.last_seen).getTime()) < 90000);
+      const badge = document.getElementById('onlineCountBadge');
+      const num   = document.getElementById('onlineCountNum');
+      if (badge) { badge.textContent = online.length; badge.style.display = online.length ? 'inline-flex' : 'none'; }
+      if (num)   num.textContent = online.length;
+      const list = document.getElementById('onlineStudentsList');
+      if (!list) return;
+      if (!online.length) { list.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:8px 0">No students currently online</div>'; return; }
+      list.innerHTML = online.sort((a,b) => new Date(b.last_seen) - new Date(a.last_seen)).map(p => {
+        const mins = Math.round((now - new Date(p.last_seen).getTime()) / 60000);
+        return '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">' +
+          '<span style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0"></span>' +
+          '<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (p.name||'Student') + '</div>' +
+          '<div style="font-size:11px;color:var(--muted)">' + (p.page||'hub') + ' · ' + (mins < 1 ? 'just now' : mins + 'm ago') + '</div></div></div>';
+      }).join('');
+    }
+    // Seed presence from initial load
+    if (window.allStudents) {
+      window.allStudents.forEach(s => {
+        if (s.last_seen) presenceMap[s.user_id] = { name: s.full_name, last_seen: s.last_seen, page: s.current_page };
+      });
+    }
+    setInterval(renderPresence, 15000);
+
+    supabase.channel('admin-presence-watch')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'student_progress' }, payload => {
+        const u = payload.new;
+        if (!u.last_seen) return;
+        const name = allStudents.find(s => s.user_id === u.user_id)?.full_name || 'Student';
+        presenceMap[u.user_id] = { name, last_seen: u.last_seen, page: u.current_page };
+        renderPresence();
+      })
+      .subscribe();
+
+    supabase.channel('admin-questions-live')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'student_questions' }, payload => {
+        const q = payload.new;
+        logAction('student', 'New question from ' + (q.student_name||'Student') + ': "' + (q.question_text||'').slice(0,60) + '..."', 'help');
+        showToast('❓ New question from ' + (q.student_name||'Student'), 'info');
+      })
+      .subscribe();
   }
 
   async function adminSignOut() {
@@ -1316,6 +1386,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateStats(students) {
+    // Seed presence map from initial load
+    if (window._presenceMap) {
+      students.forEach(s => {
+        if (s.last_seen) window._presenceMap[s.user_id] = { name: s.full_name, last_seen: s.last_seen, page: s.current_page };
+      });
+    }
+    // Update online count display
+    const now = Date.now();
+    const onlineCount = students.filter(s => s.last_seen && (now - new Date(s.last_seen).getTime()) < 90000).length;
+    const el = document.getElementById('onlineCountNum');
+    if (el) el.textContent = onlineCount;
+    const badge = document.getElementById('onlineCountBadge');
+    if (badge) { badge.textContent = onlineCount; badge.style.display = onlineCount ? 'inline-flex' : 'none'; }
     const now2=new Date(), in7=new Date(now2.getTime()+7*24*60*60*1000);
     const dated = students.filter(s=>s.interview_date).length;
     const upcoming = students.filter(s=>{ if(!s.interview_date) return false; const d=new Date(s.interview_date); return d>=now2&&d<=in7; }).length;

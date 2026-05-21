@@ -724,3 +724,152 @@ document.addEventListener('DOMContentLoaded', () => {
   setupModalControls();
   setupUniversityTracking();
 });
+
+// ===================================================================
+// REALTIME MODULE
+// Three features:
+//   1. watchMyProgress(cb)   — fires when admin updates YOUR row
+//      (interview date, counselor, notes)
+//   2. watchNotifications(cb) — fires on new notification or session
+//   3. startPresence(page)   — heartbeat so admin sees you online
+//   4. Admin only: watchAllPresence(cb), watchStudentActivity(cb)
+// ===================================================================
+
+let _presenceInterval = null;
+let _realtimeChannels = [];
+
+// Tear down all channels (call on logout / page unload)
+window.realtimeDestroy = () => {
+  _realtimeChannels.forEach(ch => { try { supabaseClient.removeChannel(ch); } catch(_){} });
+  _realtimeChannels = [];
+  if (_presenceInterval) { clearInterval(_presenceInterval); _presenceInterval = null; }
+};
+
+// ── 1. Watch own student_progress row for interview date / counselor changes ──
+window.watchMyProgress = (callback) => {
+  const student = window.getCurrentStudent();
+  if (!student?.id) return;
+  const ch = supabaseClient
+    .channel('my-progress-' + student.id)
+    .on('postgres_changes', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'student_progress',
+      filter: 'user_id=eq.' + student.id
+    }, payload => {
+      console.log('[Realtime] progress update:', payload.new);
+      callback(payload.new);
+    })
+    .subscribe();
+  _realtimeChannels.push(ch);
+  return ch;
+};
+
+// ── 2. Watch for new notifications and live sessions ──
+window.watchNotifications = (callback) => {
+  const ch = supabaseClient
+    .channel('student-notifications-live')
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'student_notifications'
+    }, payload => {
+      console.log('[Realtime] new notification:', payload.new);
+      callback({ type: 'notification', data: payload.new });
+    })
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'live_sessions'
+    }, payload => {
+      console.log('[Realtime] new live session:', payload.new);
+      callback({ type: 'session', data: payload.new });
+    })
+    .subscribe();
+  _realtimeChannels.push(ch);
+  return ch;
+};
+
+// ── 3. Presence heartbeat — update last_seen + current_page every 30s ──
+window.startPresence = async (page) => {
+  const student = window.getCurrentStudent();
+  if (!student?.id) return;
+  const update = () => {
+    supabaseClient.from('student_progress').update({
+      last_seen: new Date().toISOString(),
+      current_page: page || document.title || 'hub'
+    }).eq('user_id', student.id).then(() => {});
+  };
+  update(); // immediate
+  _presenceInterval = setInterval(update, 30000);
+  window.addEventListener('beforeunload', window.realtimeDestroy);
+};
+
+// ── 4. ADMIN: watch all student presence (last_seen updates) ──
+window.watchAllPresence = (callback) => {
+  const ch = supabaseClient
+    .channel('admin-presence-watch')
+    .on('postgres_changes', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'student_progress'
+    }, payload => {
+      if (payload.new?.last_seen) callback(payload.new);
+    })
+    .subscribe();
+  _realtimeChannels.push(ch);
+  return ch;
+};
+
+// ── 5. ADMIN: watch new student questions live ──
+window.watchStudentQuestions = (callback) => {
+  const ch = supabaseClient
+    .channel('admin-questions-live')
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'student_questions'
+    }, payload => {
+      console.log('[Realtime] new question:', payload.new);
+      callback(payload.new);
+    })
+    .subscribe();
+  _realtimeChannels.push(ch);
+  return ch;
+};
+
+// ── Helper: show a realtime toast banner on school pages ──
+window.showRealtimeToast = (title, body, type = 'info', durationMs = 8000) => {
+  const existing = document.getElementById('rt-toast');
+  if (existing) existing.remove();
+  const colors = {
+    info: { bg: '#1e3a8a', icon: 'info' },
+    success: { bg: '#16a34a', icon: 'check_circle' },
+    warning: { bg: '#d97706', icon: 'warning' },
+    session: { bg: '#7c3aed', icon: 'videocam' }
+  };
+  const c = colors[type] || colors.info;
+  const el = document.createElement('div');
+  el.id = 'rt-toast';
+  el.style.cssText = `position:fixed;top:80px;left:50%;transform:translateX(-50%);
+    background:${c.bg};color:white;padding:12px 20px;border-radius:12px;
+    display:flex;align-items:flex-start;gap:12px;max-width:380px;width:calc(100% - 32px);
+    box-shadow:0 8px 32px rgba(0,0,0,0.25);z-index:9999;
+    animation:rtSlideIn 0.3s ease;font-family:inherit;`;
+  el.innerHTML = `
+    <span class="material-symbols-outlined" style="font-size:20px;flex-shrink:0;margin-top:1px">${c.icon}</span>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:13px;font-weight:700;margin-bottom:2px">${title}</div>
+      <div style="font-size:12px;opacity:0.85;line-height:1.4">${body}</div>
+    </div>
+    <button onclick="this.closest('#rt-toast').remove()" style="background:none;border:none;color:white;cursor:pointer;padding:0;font-size:18px;opacity:0.7;flex-shrink:0">✕</button>`;
+  // Inject animation if not present
+  if (!document.getElementById('rt-toast-style')) {
+    const style = document.createElement('style');
+    style.id = 'rt-toast-style';
+    style.textContent = '@keyframes rtSlideIn{from{opacity:0;transform:translateX(-50%) translateY(-12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}';
+    document.head.appendChild(style);
+  }
+  document.body.appendChild(el);
+  setTimeout(() => { if (el.parentNode) el.remove(); }, durationMs);
+};

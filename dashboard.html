@@ -828,6 +828,39 @@
       setupCounselor(progress?.counselor||null);
       updateLiveUI();
 
+      // ── REALTIME ──────────────────────────────────────────────
+      // 1. Watch own row for interview date / counselor updates
+      if (typeof window.watchMyProgress === 'function') {
+        window.watchMyProgress((updated) => {
+          if (updated.interview_date) {
+            const intDate = new Date(updated.interview_date);
+            if (intDate > new Date()) {
+              document.getElementById('interviewDateValue').textContent =
+                intDate.toLocaleDateString([],{weekday:'long',day:'numeric',month:'long',year:'numeric'}) +
+                ' at ' + intDate.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+              document.getElementById('interviewDateCard').style.display = 'block';
+            }
+          }
+          // Flash card to signal update
+          const card = document.getElementById('interviewDateCard');
+          if (card) { card.style.transition='background 0.4s'; card.style.background='#dbeafe'; setTimeout(()=>card.style.background='',1200); }
+        });
+      }
+      // 2. Watch for new notifications and live sessions
+      if (typeof window.watchNotifications === 'function') {
+        window.watchNotifications(({ type, data }) => {
+          if (type === 'notification') {
+            showToast('📢 ' + (data.title||'New notification'), 'info');
+            // Refresh notification list
+            setTimeout(() => loadNotifications?.(), 400);
+          } else if (type === 'session') {
+            showToast('🎥 New live session: ' + (data.title||''), 'success');
+          }
+        });
+      }
+      // 3. Heartbeat presence
+      if (typeof window.startPresence === 'function') window.startPresence('dashboard');
+
       // 8. Reveal NOW - don't wait for notifications or Q&A
       clearTimeout(hardTimer);
       revealDashboard();
