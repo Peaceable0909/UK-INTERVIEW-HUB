@@ -2184,34 +2184,44 @@ Question: "${q.q}"
 Required content: ${q.cr}
 Student answer: "${ans}"
 
-MARKING RULES — READ CAREFULLY:
-Do NOT penalise: punctuation, capitalisation, minor spelling, grammar.
-DO penalise strictly:
-- Vague or general answers with no specifics
-- Answers that do not directly address the question
-- Answers that feel copied, robotic, or impersonal
-- Answers that are too short to demonstrate real understanding
-- Missing use of "I" or "my" where the question requires personal response
+MARKING RULES — STRICT DEDUCTION-BASED RUBRIC:
 
-A PASSING answer MUST:
-1. Directly answer the question asked
-2. Include specific details (real names, figures, locations, module names)
-3. Use personal language ("I", "my") showing genuine understanding
-4. Be clear and easy to follow
-5. Cover the key points listed in "Required content"
+Start at 100. Deduct points for EACH failing below. Deductions are CUMULATIVE.
 
-SCORING (0–100):
-- 85–100: Excellent — specific, personal, complete, convincing
-- 70–84: Good — mostly specific and personal, minor gaps
-- 50–69: Weak — too vague, missing key points, or impersonal
-- 0–49: Fail — off-topic, too short, generic, or no personal language
+AUTOMATIC FAIL (score 0-35):
+- Answer is 1-2 sentences or under 30 words → cap at 30
+- Answer is completely off-topic or does not address the question → cap at 20
+- Answer could apply to ANY university/course (no specifics at all) → cap at 35
 
-PASS THRESHOLD: score >= 70
+MAJOR DEDUCTIONS (-15 to -25 each):
+- No module names mentioned when the question requires course knowledge → -25
+- No campus address or city mentioned when relevant → -15
+- No career goal or target job role named → -20
+- No personal language ("I", "my", "I chose") — reads like a brochure → -20
+- Claims something factually wrong about the course, campus, or university → -20
 
-Return ONLY valid JSON, no other text:
+MODERATE DEDUCTIONS (-8 to -12 each):
+- Only 1 module named when 2-3 are expected → -10
+- Career plan is vague ("get a good job") with no specific role or company → -12
+- No comparison with other universities when the question expects it → -10
+- Answer is unfocused or rambling without a clear structure → -8
+- Accommodation plan mentioned but no cost or location specifics → -8
+
+MINOR DEDUCTIONS (-3 to -5 each):
+- Slightly generic phrasing in one section but rest is specific → -5
+- Missing one minor detail from the required content → -3
+- Answer is adequate but lacks enthusiasm or personal connection → -5
+
+CALIBRATION — most students should score 45-72. Scores above 80 are RARE and require exceptional detail, personal voice, and complete coverage. A "decent" answer with some specifics but gaps should score 55-65, NOT 75+.
+
+PASS THRESHOLD: score >= 70. Most first attempts should NOT pass.
+
+Do NOT penalise: punctuation, capitalisation, minor spelling, grammar, accent markers.
+
+Return ONLY valid JSON, no markdown, no explanation:
 {"pass": boolean, "score": integer 0-100, "summary": "one sentence about the answer", "good": ["one specific strength"], "improve": ["one specific improvement needed"]}
 
-Do NOT copy or echo back the example. Evaluate the actual student answer and assign a real score based on the marking rules above.`;
+CRITICAL: Evaluate the ACTUAL student answer. Do NOT return a default or template score. Every answer gets a DIFFERENT score based on its specific content.`;
         try {
           const response = await puter.ai.chat(prompt,{model:"gpt-4o-mini",stream:false});
           let raw="";

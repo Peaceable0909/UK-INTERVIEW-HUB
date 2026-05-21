@@ -2951,27 +2951,38 @@
 Question: "${document.getElementById('ukvi-question-text')?.textContent || 'Why have you chosen to study this programme in the UK?'}"
 Student answer: "${answer}"
 
-MARKING RULES — READ CAREFULLY:
+MARKING RULES — STRICT DEDUCTION-BASED RUBRIC:
+
+Start at 10. Deduct for EACH failing below. Deductions are CUMULATIVE.
+
+AUTOMATIC FAIL (score 1-3):
+- Answer is 1-2 sentences or under 30 words → cap at 3
+- Answer is completely off-topic → cap at 2
+- Answer could apply to ANY university/course (zero specifics) → cap at 3
+
+MAJOR DEDUCTIONS (-1.5 to -2.5 each):
+- No module names mentioned when course knowledge is expected → -2.5
+- No campus address or location details → -1.5
+- No career goal or target job role named → -2
+- No personal language ("I", "my") — reads like a brochure → -2
+- Factually wrong about the course, campus, or university → -2
+
+MODERATE DEDUCTIONS (-0.5 to -1 each):
+- Only 1 module named when 2-3 expected → -1
+- Career plan is vague with no specific role/company → -1
+- No comparison with other universities when expected → -1
+- Unfocused or rambling answer → -0.5
+- Accommodation mentioned but no cost/location → -0.5
+
+MINOR DEDUCTIONS (-0.25 to -0.5 each):
+- Slightly generic phrasing in one section → -0.5
+- Missing one minor required detail → -0.25
+
+CALIBRATION — most students should score 4.5-7.2. Scores above 8 are RARE. A "decent" answer with some specifics but gaps = 5.5-6.5, NOT 7.5+.
+
+PASS THRESHOLD: score >= 7. Most first attempts should NOT pass.
+
 Do NOT penalise: punctuation, capitalisation, minor spelling, grammar.
-DO penalise strictly:
-- Vague or general answers with no specifics
-- Answers that do not directly address the question
-- Copied, robotic, or impersonal language
-- Answers too short to show real understanding
-- Missing "I" or "my" where the question requires personal response
-
-A PASSING answer (score 7+) MUST:
-1. Directly answer the question asked
-2. Name specific details: university name, course, modules, campus, career plans
-3. Use personal language ("I chose", "my goal is", "I understand")
-4. Show genuine understanding — not a memorised script
-5. Be clear, logical, and relevant
-
-SCORING (1–10):
-- 8–10: Strong — specific, personal, convincing, complete
-- 7: Good — mostly strong, small gaps acceptable
-- 5–6: Weak — too vague, impersonal, or missing key points
-- 1–4: Fail — generic, off-topic, too short, or no personal language
 
 Return ONLY valid JSON, no other text:
 {
