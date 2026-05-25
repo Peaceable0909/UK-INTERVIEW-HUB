@@ -2095,8 +2095,7 @@
       let questionStatus = {};
 
       async function selectCourse(id) {
-        // If already on a course, warn about reset
-        // No reset on course switch — progress namespaced per course
+        await window.onCourseSelected('regent', id);
         course = COURSES[id];
         localStorage.setItem('last_course', id); // save for auto-reload
         localStorage.setItem('last_school', 'regent');
@@ -2366,6 +2365,8 @@ CRITICAL: Evaluate the ACTUAL student answer. Do NOT return a default or templat
       document.addEventListener("DOMContentLoaded", async ()=>{
 
         localStorage.setItem('last_school', 'regent');
+        if (window.sessionReady) await window.sessionReady;
+        await window.lockToSchool('regent', null);
         const lastCourse=localStorage.getItem('last_course');
         if(lastCourse && !course) selectCourse(lastCourse);
         await window._initChecklist('#chk-content', 'regent_chk_');
