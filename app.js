@@ -582,6 +582,136 @@ window.resetAllProgress = async () => {
   } catch (err) { return { error: err.message }; }
 };
 
+// ═══════════════════════════════════════════════════════════════════════
+// SCHOOL / PROGRAM LOCK  one active session at a time
+// Switching school OR program wipes the full record and notifies student.
+// ═══════════════════════════════════════════════════════════════════════
+
+const _SCHOOL_LABELS = {
+  regent:'Regent College', bpp:'BPP', yorkstjohn:'York St John',
+  ukvi:'UKVI', netherlands:'Netherlands', nursing:'BSc Nursing'
+};
+const _EDGE_FN_URL = 'https://okshteetxmmphgjgvrwt.supabase.co/functions/v1/send-email';
+
+window.lockToSchool = async function(pageSchool, pageCourse) {
+  pageCourse = pageCourse || null;
+  const student = window.getCurrentStudent();
+  if (!student) return;
+  const activeSchool = student.selected_university;
+  const activeCourse = student.selected_course || null;
+  const schoolChanged = activeSchool && activeSchool !== 'Not Selected' && activeSchool !== pageSchool;
+  const courseChanged = pageCourse && activeCourse && activeCourse !== pageCourse;
+  if (!activeSchool || activeSchool === 'Not Selected') { await _setActiveSession(pageSchool, pageCourse, student); return; }
+  if (!schoolChanged && !courseChanged) return;
+  var fromLabel = (_SCHOOL_LABELS[activeSchool] || activeSchool) + (activeCourse ? ' (' + activeCourse + ')' : '');
+  var toLabel   = (_SCHOOL_LABELS[pageSchool]   || pageSchool)   + (pageCourse   ? ' (' + pageCourse   + ')' : '');
+  _showSwitchWarning(activeSchool, activeCourse || '', pageSchool, pageCourse || '', fromLabel, toLabel);
+  _setReadyBtn(false);
+};
+
+window.onCourseSelected = async function(pageSchool, newCourse) {
+  const student = window.getCurrentStudent();
+  if (!student) return;
+  const activeCourse = student.selected_course || null;
+  if (activeCourse === newCourse) return;
+  if (activeCourse) { await _executeSwitch(pageSchool, activeCourse, pageSchool, newCourse, student); }
+  else { await _setActiveSession(pageSchool, newCourse, student); }
+};
+
+function _showSwitchWarning(fromSchool, fromCourse, toSchool, toCourse, fromLabel, toLabel) {
+  var readyBtn = document.getElementById('readyBtn');
+  if (!readyBtn) return;
+  var old = document.getElementById('school-switch-banner');
+  if (old) old.remove();
+  var banner = document.createElement('div');
+  banner.id = 'school-switch-banner';
+  banner.style.cssText = 'background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:14px 18px;margin:12px 0;font-size:14px;line-height:1.5;';
+  banner.innerHTML = '<strong>You are currently working on ' + fromLabel + '.</strong><br>'
+    + 'Switching to <strong>' + toLabel + '</strong> will <strong>permanently reset your entire record</strong> '
+    + '(all practice responses, checklist progress, and AI scores will be cleared).<br>'
+    + '<button id="confirm-switch-btn" style="margin-top:10px;padding:8px 16px;background:#dc3545;color:#fff;border:none;border-radius:6px;cursor:pointer;">'
+    + 'Yes \u2014 clear my record and switch to ' + toLabel + '</button>'
+    + '<button onclick="document.getElementById(\'school-switch-banner\').remove();history.back()" '
+    + 'style="margin-top:10px;margin-left:8px;padding:8px 16px;background:#6c757d;color:#fff;border:none;border-radius:6px;cursor:pointer;">Go back</button>';
+  readyBtn.parentElement.insertBefore(banner, readyBtn);
+  document.getElementById('confirm-switch-btn').addEventListener('click', function() {
+    _executeSwitch(fromSchool, fromCourse, toSchool, toCourse, null);
+  });
+}
+
+async function _executeSwitch(fromSchool, fromCourse, toSchool, toCourse, _student) {
+  var btn = document.getElementById('confirm-switch-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Switching…'; }
+  const student = _student || window.getCurrentStudent();
+  if (!student) return;
+  await window.resetAllProgress();
+  await supabaseClient.from('student_checklists').delete().eq('user_id', student.id);
+  await _setActiveSession(toSchool, toCourse || null, student);
+  await _sendSwitchEmail(student, fromSchool, fromCourse, toSchool, toCourse);
+  await _insertSwitchNotification(student, fromSchool, fromCourse, toSchool, toCourse);
+  var old2 = document.getElementById('school-switch-banner');
+  if (old2) old2.remove();
+  _setReadyBtn(true);
+  var toLabel2 = (_SCHOOL_LABELS[toSchool] || toSchool) + (toCourse ? ' (' + toCourse + ')' : '');
+  if (window.showToast) window.showToast('Switched to ' + toLabel2 + '. Your previous record has been cleared.', 'success');
+  setTimeout(function() { window.location.reload(); }, 1200);
+}
+
+async function _sendSwitchEmail(student, fromSchool, fromCourse, toSchool, toCourse) {
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    var token = session && session.access_token;
+    if (!token || !student.email) return;
+    await fetch(_EDGE_FN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({
+        type: 'session_reset',
+        student_email: student.email,
+        student_name:  student.name || 'there',
+        from_school:   fromSchool,
+        from_course:   fromCourse || '',
+        to_school:     toSchool,
+        to_course:     toCourse  || ''
+      })
+    });
+  } catch(e) { console.warn('Switch email failed:', e); }
+}
+
+async function _insertSwitchNotification(student, fromSchool, fromCourse, toSchool, toCourse) {
+  try {
+    var fromLabel = (_SCHOOL_LABELS[fromSchool] || fromSchool) + (fromCourse ? ' - ' + fromCourse : '');
+    var toLabel   = (_SCHOOL_LABELS[toSchool]   || toSchool)   + (toCourse   ? ' - ' + toCourse   : '');
+    await supabaseClient.from('student_notifications').insert({
+      title: 'Your session record was reset',
+      message: 'You switched from ' + fromLabel + ' to ' + toLabel + '. Your previous practice responses, checklist progress, and AI scores have been permanently cleared. If this was a mistake, contact your counsellor.',
+      type: 'warning',
+      target: 'all',
+      target_user_id: student.id,
+      created_by: 'system'
+    });
+  } catch(e) { console.warn('Notification insert failed:', e); }
+}
+
+async function _setActiveSession(school, course, student) {
+  var update = { selected_university: school, updated_at: new Date().toISOString() };
+  if (course !== undefined) update.selected_course = course || null;
+  await supabaseClient.from('student_progress').update(update).eq('user_id', student.id);
+  student.selected_university = school;
+  if (course !== undefined) student.selected_course = course || null;
+  localStorage.setItem('student', JSON.stringify(student));
+  localStorage.setItem('selected_university', school);
+}
+
+function _setReadyBtn(enabled) {
+  var btn = document.getElementById('readyBtn');
+  if (!btn) return;
+  btn.disabled      = !enabled;
+  btn.style.opacity = enabled ? '' : '0.5';
+  btn.style.cursor  = enabled ? '' : 'not-allowed';
+}
+
+
 window.QUESTION_TEXT_MAP = {
   'UKVI_Q1':'Why have you chosen to study this programme in the UK?','UKVI_Q2':'Why did you choose this specific university?','UKVI_Q3':'What do you plan to do after your studies?','UKVI_Q4':'How will you fund your studies and living expenses?','UKVI_Q5':'Tell me about your academic background.','UKVI_Q6':'What is the name of your course and how long does it last?','UKVI_Q7':'Why do you want to study this subject at degree level?','UKVI_Q8':'What ties do you have to your home country?','UKVI_Q9':'Where will you live during your studies in the UK?','UKVI_Q10':'What are your key responsibilities as a student visa holder?','UKVI_Q11':'How many hours can you work per week during term time?','UKVI_Q12':'Have you ever been refused a visa before? If yes, explain.','UKVI_Q13':'What do you know about the Graduate Route visa?','UKVI_Q14':'How does this course fit with your previous work experience?','UKVI_Q15':'What specific modules interest you most and why?','UKVI_Q16':'Who is sponsoring your studies? What is their occupation?','UKVI_Q17':'What research did you do before choosing this university?','UKVI_Q18':'Why did you choose the UK over other countries like Canada or Australia?',
   'NL_Q1':'Why have you chosen to study in the Netherlands?','NL_Q2':'Why did you choose this specific Dutch university?','NL_Q3':'What are your plans after completing your studies?','NL_Q4':'How will you fund your tuition and living costs?','NL_Q5':'What is the language of instruction and your proficiency?','NL_Q6':'What is the exact name and duration of your course?','NL_Q7':'Do you have any family or connections in the Netherlands?','NL_Q8':'What ties do you have to your home country?','NL_Q9':'Where will you live during your studies? (City and postcode)','NL_Q10':'What do you know about the Orientation Year (Zoekjaar) visa?','NL_Q11':'How does this course connect to your future career goals?','NL_Q12':'What specific modules are you most excited about and why?','NL_Q13':'Have you ever applied for a Dutch visa before? If yes, what happened?','NL_Q14':'What is the total amount of funds required by IND for living costs?','NL_Q15':'What is your accommodation budget per month?','NL_Q16':'Why did you choose a research university (WO) over a university of applied sciences (HBO)?','NL_Q17':'What extracurricular activities or student life aspects attract you?','NL_Q18':'How will you contribute to Dutch society or your home country after graduation?',
