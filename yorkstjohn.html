@@ -2055,7 +2055,7 @@
       let questionStatus = {};
 
       async function selectCourse(id) {
-        // No reset on course switch — progress namespaced per course
+        await window.onCourseSelected('yorkstjohn', id);
         course = COURSES[id];
         localStorage.setItem('last_course', id); // save for auto-reload
         localStorage.setItem('last_school', 'yorkstjohn');
@@ -2322,6 +2322,8 @@ CRITICAL: Evaluate the ACTUAL student answer. Do NOT return a default or templat
       document.addEventListener("DOMContentLoaded", async ()=>{
 
         localStorage.setItem('last_school', 'yorkstjohn');
+        if (window.sessionReady) await window.sessionReady;
+        await window.lockToSchool('yorkstjohn', null);
         // auto-select last course if any
         const lastCourse=localStorage.getItem('last_course');
         if(lastCourse && !course) selectCourse(lastCourse);
