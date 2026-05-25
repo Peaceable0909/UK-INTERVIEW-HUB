@@ -2840,6 +2840,8 @@
       function selectPrep(prepId) {
         currentPrep = prepId;
         localStorage.setItem('last_school', 'netherlands');
+        if (window.sessionReady) await window.sessionReady;
+        await window.lockToSchool('netherlands', null);
         document.getElementById("s-select").classList.remove("active");
         document.getElementById("s-main").classList.add("active");
 
