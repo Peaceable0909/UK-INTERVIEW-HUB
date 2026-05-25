@@ -2585,7 +2585,7 @@
 
       // ===== COURSE SELECTION =====
       async function selectCourse(courseId) {
-        // No reset on course switch — progress is namespaced per course
+        await window.onCourseSelected('bpp', courseId);
         currentCourse = courseData[courseId];
         localStorage.setItem('last_course', courseId); // save for auto-reload
         localStorage.setItem('last_school', 'bpp');
@@ -2853,6 +2853,8 @@ Return ONLY valid JSON, no other text:
       document.addEventListener("DOMContentLoaded", async function () {
         // Track current school (no reset on switch)
         localStorage.setItem('last_school', 'bpp');
+        if (window.sessionReady) await window.sessionReady;
+        await window.lockToSchool('bpp', null);
 
         initTheme();
         updateProgress();
