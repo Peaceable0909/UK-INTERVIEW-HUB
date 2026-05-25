@@ -2863,6 +2863,8 @@
       function selectPrep(prepId) {
         currentPrep = prepId;
         localStorage.setItem('last_school', 'ukvi');
+        if (window.sessionReady) await window.sessionReady;
+        await window.lockToSchool('ukvi', null);
         document.getElementById("s-select").classList.remove("active");
         document.getElementById("s-main").classList.add("active");
 
