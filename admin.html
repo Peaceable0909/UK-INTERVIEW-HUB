@@ -1012,6 +1012,9 @@ tbody tr:hover{background:#f8fafc}
     <div class="modal-title">💬 Reply to Question</div>
     <p class="modal-sub" id="replyStudentName">Student question</p>
     <input type="hidden" id="replyQuestionId"/>
+    <input type="hidden" id="replyStudentEmail"/>
+    <input type="hidden" id="replyStudentNameHidden"/>
+    <input type="hidden" id="replyQuestionTextHidden"/>
     <div id="replyQuestionThread"></div>
     <div class="form-group" style="margin-top:16px"><label>Your Reply</label><textarea id="replyText" placeholder="Type your reply here..." rows="4"></textarea></div>
     <div class="modal-actions">
@@ -2034,6 +2037,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.openReplyModal=function(questionId,studentName,questionText,existingReply,studentEmail){
     document.getElementById('replyQuestionId').value=questionId;
+    document.getElementById('replyStudentEmail').value=studentEmail||'';
+    document.getElementById('replyStudentNameHidden').value=studentName||'';
+    document.getElementById('replyQuestionTextHidden').value=questionText||'';
     document.getElementById('replyStudentName').textContent=`From: ${studentName} (${studentEmail})`;
     document.getElementById('replyText').value=existingReply||'';
     document.getElementById('replyQuestionThread').innerHTML=`<div class="q-bubble student" style="margin-bottom:12px"><div class="q-bubble-label">Student asked</div><div class="q-bubble-text">${escHtml(questionText)}</div></div>`;
@@ -2050,6 +2056,13 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.disabled=false; btn.textContent='Send Reply';
     if (error){ showToast('Error: '+error.message,'error'); return; }
     logAction('question',`Replied to question from ${document.getElementById('replyStudentName').textContent.replace('From: ','')}`,'reply');
+    const studentEmail=document.getElementById('replyStudentEmail').value;
+    const studentName=document.getElementById('replyStudentNameHidden').value;
+    const questionText=document.getElementById('replyQuestionTextHidden').value;
+    if(studentEmail){
+      callEmailFn({type:'question_reply',student_email:studentEmail,student_name:studentName,question_text:questionText,reply_text:reply})
+        .then(r=>{ if(r?.sent>0) showToast('✉️ Reply emailed to student','success'); });
+    }
     showToast('Reply sent'); closeModal('replyModal'); await loadQuestions();
   }
 
