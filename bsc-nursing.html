@@ -2040,6 +2040,8 @@ Return ONLY valid JSON:
       // ===== INIT =====
       document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('last_school', 'nursing');
+        if (window.sessionReady) await window.sessionReady;
+        await window.lockToSchool('nursing', null);
 
         initTheme();
         initChecklist();
