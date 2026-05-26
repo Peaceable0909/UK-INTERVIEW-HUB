@@ -619,63 +619,114 @@ window.onCourseSelected = async function(pageSchool, newCourse) {
 };
 
 function _showSwitchWarning(fromSchool, fromCourse, toSchool, toCourse, fromLabel, toLabel) {
-  var readyBtn = document.getElementById('readyBtn');
-  if (!readyBtn) return;
-  var old = document.getElementById('school-switch-banner');
-  if (old) old.remove();
-  var banner = document.createElement('div');
-  banner.id = 'school-switch-banner';
-  banner.style.cssText = 'background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:14px 18px;margin:12px 0;font-size:14px;line-height:1.5;';
-  banner.innerHTML = '<strong>You are currently working on ' + fromLabel + '.</strong><br>'
-    + 'Switching to <strong>' + toLabel + '</strong> will <strong>permanently reset your entire record</strong> '
-    + '(all practice responses, checklist progress, and AI scores will be cleared).<br>'
-    + '<button id="confirm-switch-btn" style="margin-top:10px;padding:8px 16px;background:#dc3545;color:#fff;border:none;border-radius:6px;cursor:pointer;">'
-    + 'Yes \u2014 clear my record and switch to ' + toLabel + '</button>'
-    + '<button onclick="document.getElementById(\'school-switch-banner\').remove();history.back()" '
-    + 'style="margin-top:10px;margin-left:8px;padding:8px 16px;background:#6c757d;color:#fff;border:none;border-radius:6px;cursor:pointer;">Go back</button>';
-  readyBtn.parentElement.insertBefore(banner, readyBtn);
-  document.getElementById('confirm-switch-btn').addEventListener('click', function() {
+  // Remove any existing modal
+  var existing = document.getElementById('wr-switch-modal');
+  if (existing) existing.remove();
+
+  var modal = document.createElement('div');
+  modal.id = 'wr-switch-modal';
+  modal.style.cssText = [
+    'position:fixed;inset:0;z-index:9999',
+    'background:rgba(13,27,62,0.72)',
+    'backdrop-filter:blur(6px)',
+    'display:flex;align-items:center;justify-content:center',
+    'padding:20px;box-sizing:border-box'
+  ].join(';');
+
+  modal.innerHTML = [
+    '<div style="background:#fff;border-radius:24px;max-width:420px;width:100%;',
+    'box-shadow:0 24px 64px rgba(13,27,62,0.3);overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif">',
+
+    // Red header strip
+    '<div style="background:linear-gradient(135deg,#dc2626,#b91c1c);padding:24px 24px 20px">',
+    '<div style="font-size:28px;margin-bottom:8px">&#9888;&#65039;</div>',
+    '<div style="font-size:18px;font-weight:900;color:#fff;line-height:1.2">Hold on!</div>',
+    '<div style="font-size:13px;color:rgba(255,255,255,0.8);margin-top:4px">Switching will permanently reset your record</div>',
+    '</div>',
+
+    // Body
+    '<div style="padding:22px 24px">',
+
+    // From → To
+    '<div style="background:#f8fafc;border-radius:12px;padding:14px 16px;margin-bottom:16px">',
+    '<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;margin-bottom:8px">You are switching from</div>',
+    '<div style="display:flex;align-items:center;gap:10px">',
+    '<span style="background:#fee2e2;color:#991b1b;font-size:13px;font-weight:700;padding:5px 12px;border-radius:8px">' + fromLabel + '</span>',
+    '<span style="color:#94a3b8;font-size:16px">&#8594;</span>',
+    '<span style="background:#dbeafe;color:#1d4ed8;font-size:13px;font-weight:700;padding:5px 12px;border-radius:8px">' + toLabel + '</span>',
+    '</div>',
+    '</div>',
+
+    // What gets cleared
+    '<div style="margin-bottom:20px">',
+    '<div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:8px">Everything below will be permanently deleted:</div>',
+    '<div style="font-size:13px;color:#6b7280;line-height:2">',
+    '&#10060; All practice responses &amp; AI scores<br>',
+    '&#10060; Checklist progress<br>',
+    '&#10060; Readiness submission',
+    '</div>',
+    '</div>',
+
+    // Buttons
+    '<div style="display:flex;flex-direction:column;gap:8px">',
+    '<button id="wr-confirm-switch" style="width:100%;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border:none;',
+    'padding:14px;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;',
+    'border-bottom:3px solid #991b1c">',
+    'Yes, delete my record &amp; switch to ' + toLabel,
+    '</button>',
+    '<button id="wr-cancel-switch" style="width:100%;background:#f1f5f9;color:#374151;border:none;',
+    'padding:14px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">',
+    'Cancel &mdash; stay on ' + fromLabel,
+    '</button>',
+    '</div>',
+
+    '</div></div>'
+  ].join('');
+
+  document.body.appendChild(modal);
+
+  document.getElementById('wr-confirm-switch').addEventListener('click', function() {
     _executeSwitch(fromSchool, fromCourse, toSchool, toCourse, null);
+  });
+  document.getElementById('wr-cancel-switch').addEventListener('click', function() {
+    document.getElementById('wr-switch-modal').remove();
+    history.back();
+  });
+  // Tap outside to cancel
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) {
+      modal.remove();
+      history.back();
+    }
   });
 }
 
 async function _executeSwitch(fromSchool, fromCourse, toSchool, toCourse, _student) {
-  var btn = document.getElementById('confirm-switch-btn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Switching…'; }
+  // Show loading state on the confirm button
+  var confirmBtn = document.getElementById('wr-confirm-switch');
+  if (confirmBtn) {
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Switching…';
+    confirmBtn.style.opacity = '0.7';
+  }
+  var cancelBtn = document.getElementById('wr-cancel-switch');
+  if (cancelBtn) cancelBtn.disabled = true;
+
   const student = _student || window.getCurrentStudent();
   if (!student) return;
+
   await window.resetAllProgress();
   await supabaseClient.from('student_checklists').delete().eq('user_id', student.id);
   await _setActiveSession(toSchool, toCourse || null, student);
-  await _sendSwitchEmail(student, fromSchool, fromCourse, toSchool, toCourse);
   await _insertSwitchNotification(student, fromSchool, fromCourse, toSchool, toCourse);
-  var old2 = document.getElementById('school-switch-banner');
-  if (old2) old2.remove();
+
+  var modal = document.getElementById('wr-switch-modal');
+  if (modal) modal.remove();
   _setReadyBtn(true);
+
   var toLabel2 = (_SCHOOL_LABELS[toSchool] || toSchool) + (toCourse ? ' (' + toCourse + ')' : '');
   if (window.showToast) window.showToast('Switched to ' + toLabel2 + '. Your previous record has been cleared.', 'success');
   setTimeout(function() { window.location.reload(); }, 1200);
-}
-
-async function _sendSwitchEmail(student, fromSchool, fromCourse, toSchool, toCourse) {
-  try {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    var token = session && session.access_token;
-    if (!token || !student.email) return;
-    await fetch(_EDGE_FN_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({
-        type: 'session_reset',
-        student_email: student.email,
-        student_name:  student.name || 'there',
-        from_school:   fromSchool,
-        from_course:   fromCourse || '',
-        to_school:     toSchool,
-        to_course:     toCourse  || ''
-      })
-    });
-  } catch(e) { console.warn('Switch email failed:', e); }
 }
 
 async function _insertSwitchNotification(student, fromSchool, fromCourse, toSchool, toCourse) {
