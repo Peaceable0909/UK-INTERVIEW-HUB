@@ -375,7 +375,35 @@
       <div class="hero-top">
         <div class="hero-greeting">
           <div class="hero-hi">Welcome back 👋</div>
-          <div class="hero-name" id="studentName">Student</div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <div class="hero-name" id="studentName">Student</div>
+            <button id="editProfileBtn" title="Edit name"
+              style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.25);border-radius:8px;
+                     padding:4px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;
+                     color:rgba(255,255,255,0.85);font-size:11px;font-weight:700;font-family:inherit">
+              <span class="material-symbols-outlined" style="font-size:13px">edit</span> Edit
+            </button>
+          </div>
+          <div id="profileEditForm" style="display:none;margin-top:10px">
+            <input id="profileNameInput" type="text" placeholder="Your full name"
+              style="width:100%;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.25);
+                     border-radius:10px;padding:9px 12px;color:#fff;font-size:14px;font-weight:600;
+                     outline:none;box-sizing:border-box;font-family:inherit"
+              onfocus="this.style.borderColor='rgba(255,255,255,0.6)'"
+              onblur="this.style.borderColor='rgba(255,255,255,0.25)'"/>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button id="saveProfileBtn"
+                style="flex:1;background:rgba(255,255,255,0.95);color:#0d1b3e;border:none;border-radius:9px;
+                       padding:9px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">
+                Save Name
+              </button>
+              <button id="cancelProfileBtn"
+                style="background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.8);border:none;border-radius:9px;
+                       padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">
+                Cancel
+              </button>
+            </div>
+          </div>
           <div class="hero-email" id="studentEmail">Loading...</div>
           <div class="hero-badges">
             <span class="hero-badge"><span class="material-symbols-outlined" style="font-size:11px">badge</span> <span id="studentId">—</span></span>
@@ -895,6 +923,58 @@
     });
   }
 
+  // ── PROFILE NAME EDIT ──────────────────────────────────────────────────────────
+  function setupProfileEdit(student) {
+    let curName = student.name || '';
+    const editBtn   = document.getElementById('editProfileBtn');
+    const form      = document.getElementById('profileEditForm');
+    const input     = document.getElementById('profileNameInput');
+    const saveBtn   = document.getElementById('saveProfileBtn');
+    const cancelBtn = document.getElementById('cancelProfileBtn');
+    if (!editBtn) return;
+
+    editBtn.addEventListener('click', () => {
+      input.value = curName;
+      form.style.display = 'block';
+      editBtn.style.display = 'none';
+      input.focus(); input.select();
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      form.style.display = 'none';
+      editBtn.style.display = 'inline-flex';
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') saveBtn.click();
+      if (e.key === 'Escape') cancelBtn.click();
+    });
+
+    saveBtn.addEventListener('click', async () => {
+      const newName = input.value.trim();
+      if (!newName) { input.style.borderColor='rgba(248,113,113,0.8)'; return; }
+      saveBtn.disabled = true; saveBtn.textContent = 'Saving...';
+      const s = window.getCurrentStudent?.();
+      if (s?.id) {
+        try {
+          await getDB().from('student_progress')
+            .update({ name: newName, updated_at: new Date().toISOString() })
+            .eq('user_id', s.id);
+          s.name = newName;
+          localStorage.setItem('student', JSON.stringify(s));
+          curName = newName;
+        } catch(e) { console.warn('Name save error:', e); }
+      }
+      document.getElementById('studentName').textContent = newName;
+      document.getElementById('avatarInitials').textContent =
+        newName.split(' ').filter(Boolean).map(n=>n[0]).join('').toUpperCase().slice(0,2) || 'S';
+      form.style.display = 'none';
+      editBtn.style.display = 'inline-flex';
+      saveBtn.disabled = false; saveBtn.textContent = 'Save Name';
+      showToast('Name updated ✔');
+    });
+  }
+
   // ── MISC ─────────────────────────────────────────────────────────────────────
   const UNI={regent:'Regent College London',yorkstjohn:'York St John University',bpp:'BPP University',netherlands:'Netherlands (IND)',ukvi:'UKVI Credibility Prep'};
 
@@ -1039,6 +1119,7 @@
       renderChecklist(checklistItems);
       renderResponses(allAiScores, '', currentPrefix);
       setupCounselor(progress?.counselor||null);
+      setupProfileEdit(student);
       updateLiveUI();
 
       // ── REALTIME ──────────────────────────────────────────────
