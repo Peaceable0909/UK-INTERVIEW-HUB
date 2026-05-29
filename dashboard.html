@@ -958,7 +958,7 @@
       if (s?.id) {
         try {
           await getDB().from('student_progress')
-            .update({ name: newName, updated_at: new Date().toISOString() })
+            .update({ full_name: newName, updated_at: new Date().toISOString() })
             .eq('user_id', s.id);
           s.name = newName;
           localStorage.setItem('student', JSON.stringify(s));
