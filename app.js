@@ -340,15 +340,6 @@ function detectSchoolFromProgress(progress) {
     }
   }
 
-  // Check practice_responses keys
-  if (progress?.practice_responses) {
-    for (const key of Object.keys(progress.practice_responses)) {
-      for (const [prefix, school] of Object.entries(schoolMap)) {
-        if (key.startsWith(prefix)) return school;
-      }
-    }
-  }
-
   return null;
 }
 
@@ -568,9 +559,9 @@ window.resetAllProgress = async () => {
     const { error } = await supabaseClient.from('student_progress')
       .update({
         ai_scores: {},
-        practice_responses: {},
         checklist_status: {},
         selected_university: null,
+        selected_course: null,
         updated_at: new Date().toISOString()
       })
       .eq('user_id', student.id);
@@ -773,9 +764,9 @@ window.QUESTION_TEXT_MAP = {
 
 // ===== SAVE AI RESPONSE =====
 // KEY FIX: question IDs are already namespaced by school prefix (BPP_Q1, YSJ_p1 etc.)
-// We store ALL schools' scores in the same ai_scores object -- they never collide
-// because the keys are unique per school. Switching school/program just shows
-// different keys in the dashboard.
+// Uses a DB-level atomic JSONB merge (save_ai_score RPC) to avoid
+// read-modify-write race conditions. practice_responses is no longer written —
+// it was a duplicate of ai_scores.answer with no extra value.
 window.saveAIResponse = async (questionId, answerText, score, feedback, questionText) => {
   const student = window.getCurrentStudent();
   if (!student?.id) return { error: 'Not authenticated' };
@@ -784,40 +775,51 @@ window.saveAIResponse = async (questionId, answerText, score, feedback, question
     window.QUESTION_TEXT_MAP[questionId] = questionText;
   }
   try {
+    // First read: only needed to get current attempts count + selected_university
     const { data: current, error: fetchErr } = await supabaseClient
-      .from('student_progress').select('ai_scores, practice_responses, selected_university').eq('user_id', student.id).single();
+      .from('student_progress')
+      .select('ai_scores, selected_university')
+      .eq('user_id', student.id).single();
     if (fetchErr) return { error: fetchErr.message };
-    const existing = current?.ai_scores?.[questionId] || {};
-    const attempts = (existing.attempts || 0) + 1;
-    const passed = (score >= 7) ? 1 : (existing.finalStatus === 1 ? 1 : 0);
+
+    const existing  = current?.ai_scores?.[questionId] || {};
+    const attempts  = (existing.attempts || 0) + 1;
+    const passed    = (score >= 7) ? 1 : (existing.finalStatus === 1 ? 1 : 0);
     const questionLabel = (window.QUESTION_TEXT_MAP || {})[questionId] || questionText || questionId;
-    const scores = {
-      ...(current?.ai_scores || {}),
-      [questionId]: { score, finalStatus: passed, attempts, feedback, answer: answerText, questionText: questionLabel, date: new Date().toISOString() }
-    };
-    const responses = { ...(current?.practice_responses || {}), [questionId]: { answer: answerText, date: new Date().toISOString() } };
 
-    // Auto-detect school from question ID if selected_university is missing
-    const detectedSchool = detectSchoolFromProgress({ ai_scores: scores });
+    const scoreData = {
+      score, finalStatus: passed, attempts,
+      feedback, answer: answerText,
+      questionText: questionLabel,
+      date: new Date().toISOString()
+    };
+
+    // Atomic merge via RPC — no race condition
+    const { error: rpcErr } = await supabaseClient.rpc('save_ai_score', {
+      p_user_id:     student.id,
+      p_question_id: questionId,
+      p_score_data:  scoreData
+    });
+    if (rpcErr) return { error: rpcErr.message };
+
+    // Auto-detect school if selected_university is missing
     const currentUni = current?.selected_university;
-    const shouldUpdateUni = detectedSchool && (!currentUni || currentUni === 'null' || currentUni === 'Not Selected' || currentUni === '');
+    const shouldUpdateUni = !currentUni || currentUni === 'null' || currentUni === 'Not Selected' || currentUni === '';
+    if (shouldUpdateUni) {
+      const detectedSchool = detectSchoolFromProgress({ ai_scores: { [questionId]: scoreData } });
+      if (detectedSchool) {
+        await supabaseClient.from('student_progress')
+          .update({ selected_university: detectedSchool, updated_at: new Date().toISOString() })
+          .eq('user_id', student.id);
+      }
+    }
 
-    const updateData = { 
-      ai_scores: scores, 
-      practice_responses: responses, 
-      updated_at: new Date().toISOString() 
-    };
-    if (shouldUpdateUni) updateData.selected_university = detectedSchool;
-
-    const { error: updateErr } = await supabaseClient.from('student_progress')
-      .update(updateData).eq('user_id', student.id);
-    if (updateErr) return { error: updateErr.message };
     return { success: true, passed, attempts };
   } catch (err) { return { error: err.message }; }
 };
 
 // ===== LOAD SAVED PROGRESS =====
-// Loads ai_scores/practice_responses from student_progress and checklist from
+// Loads ai_scores from student_progress and checklist from
 // student_checklists (isolated per school+course). checklist_status on the returned
 // object contains only the current school+course items so all callers stay compatible.
 window.loadSavedProgress = async () => {
@@ -833,7 +835,7 @@ window.loadSavedProgress = async () => {
     const [progressResult, checklistItems] = await Promise.all([
       supabaseClient
         .from('student_progress')
-        .select('ai_scores, practice_responses, selected_university, counselor, interview_date')
+        .select('ai_scores, selected_university, counselor, interview_date, selected_course')
         .eq('user_id', student.id).single(),
       window.loadChecklistForCurrentPage()
     ]);
@@ -887,8 +889,8 @@ window.loadProgressForCurrentPage = async () => {
   return {
     checklist_status: filteredChecklist,
     ai_scores: filteredScores,
-    practice_responses: all.practice_responses || {},
     selected_university: all.selected_university,
+    selected_course: all.selected_course,
     counselor: all.counselor,
     interview_date: all.interview_date
   };
