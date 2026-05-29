@@ -1089,7 +1089,7 @@
       try {
         const [progResult, clResult] = await Promise.all([
           getDB().from('student_progress')
-            .select('ai_scores,practice_responses,selected_university,counselor,interview_date')
+            .select('ai_scores,selected_university,selected_course,counselor,interview_date')
             .eq('user_id', student.id).single(),
           // Load checklist from new isolated table via app.js helper
           typeof window.loadChecklistForCurrentPage === 'function'
