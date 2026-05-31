@@ -4,126 +4,460 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <base href="/UK-INTERVIEW-HUB/">
-<title>Question Bank | YSJ Prep</title>
+<title>Question Bank | York St John</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
 <style>
-:root{--red:#c41230;--navy:#1a1a2e;--surface:#fff;--bg:#f0f2f5;--border:#e5e7eb;--txt:#111827;--muted:#6b7280;}
+/* ═══════════════════════════════════════════════════════════
+   WhiteRock × York St John — Design System v2
+   UI/UX Pro Max: 8dp grid · 44px targets · system fonts
+   Style: Clean flat + subtle depth (EdTech / Apple-like)
+═══════════════════════════════════════════════════════════ */
+:root{
+  /* Brand */
+  --red:#c41230; --red-dk:#9e0e25; --red-lt:#fff5f5; --red-mid:#fecaca;
+  --navy:#1a1a2e; --navy2:#0f172a;
+  /* Neutrals */
+  --bg:#f5f5f7; --surface:#ffffff; --surface2:#fafafa;
+  --border:#e5e7eb; --divider:#f3f4f6;
+  /* Text */
+  --t1:#1d1d1f; --t2:#3c3c43; --t3:#6e6e73; --t4:#aeaeb2;
+  /* Semantic */
+  --green:#1c7c54; --green-lt:#d1fae5; --green-bg:#f0fdf4;
+  --amber:#b45309; --amber-lt:#fef3c7; --amber-bg:#fffbeb;
+  --blue:#1d4ed8; --blue-lt:#dbeafe; --blue-bg:#eff6ff;
+  --purple:#5b21b6; --purple-lt:#ede9fe; --purple-bg:#faf5ff;
+  --teal:#0d7377; --teal-lt:#ccfbf1; --teal-bg:#f0fdfa;
+  /* Spacing (8dp) */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px;
+  --s6:24px; --s7:28px; --s8:32px; --s10:40px; --s12:48px;
+  /* Radii */
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-pill:99px;
+  /* Elevation */
+  --sh-1:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh-2:0 4px 12px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
+  --sh-3:0 12px 32px rgba(0,0,0,.1),0 4px 8px rgba(0,0,0,.06);
+  /* Layout */
+  --topbar:56px; --bottomnav:60px;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{font-family:-apple-system,BlinkMacSystemFont,"Inter",sans-serif;background:var(--bg);-webkit-font-smoothing:antialiased;}
-.mat{font-family:"Material Symbols Outlined";font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;vertical-align:middle;line-height:1;}
-.top-bar{position:fixed;top:0;left:0;right:0;height:56px;height:calc(56px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:env(safe-area-inset-top) 16px 0;padding-bottom:0;gap:8px;z-index:100;min-height:56px;}
-.back-btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;flex-shrink:0;}
-.back-btn .mat{font-size:22px;color:var(--navy);}
-.top-title{font-size:16px;font-weight:800;color:var(--navy);flex:1;}
-.cat-bar{position:sticky;top:calc(56px + env(safe-area-inset-top));z-index:90;background:var(--surface);border-bottom:1px solid var(--border);}
-.cat-scroll{display:flex;gap:8px;padding:10px 16px;overflow-x:auto;scrollbar-width:none;}
+html{font-size:16px;-webkit-text-size-adjust:100%;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--t1);line-height:1.5;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+/* Material Symbols */
+.mi{
+  font-family:"Material Symbols Outlined";
+  font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;
+  vertical-align:middle;line-height:1;user-select:none;
+  font-size:22px; /* prevents shift */
+}
+.mi.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
+.mi.sm{font-size:18px;}
+.mi.xs{font-size:16px;}
+.mi.lg{font-size:26px;}
+.mi.xl{font-size:32px;}
+/* Headings */
+h1{font-size:clamp(22px,5vw,28px);font-weight:800;line-height:1.15;letter-spacing:-.3px;color:var(--t1);}
+h2{font-size:18px;font-weight:800;line-height:1.2;letter-spacing:-.2px;color:var(--t1);}
+h3{font-size:16px;font-weight:700;line-height:1.3;color:var(--t1);}
+p{color:var(--t3);line-height:1.5;}
+/* Links */
+a{text-decoration:none;color:inherit;}
+/* Buttons */
+button{font-family:inherit;cursor:pointer;border:none;background:none;font-size:16px;}
+button:disabled{opacity:.5;cursor:not-allowed;}
+/* ── TOP BAR ─────────────────────────────────────────── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:calc(var(--topbar) + env(safe-area-inset-top));
+  padding-top:env(safe-area-inset-top);
+  background:rgba(255,255,255,.92);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding-left:var(--s2);padding-right:var(--s4);gap:var(--s2);
+}
+.topbar-back{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--navy);-webkit-tap-highlight-color:transparent;
+  transition:background .15s;flex-shrink:0;
+}
+.topbar-back:hover,.topbar-back:active{background:var(--divider);}
+.topbar-title{font-size:17px;font-weight:700;color:var(--t1);flex:1;letter-spacing:-.2px;}
+.topbar-action{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;transition:background .15s;
+}
+.topbar-action:hover,.topbar-action:active{background:var(--divider);}
+.topbar-badge-wrap{position:relative;}
+.notif-badge{
+  position:absolute;top:6px;right:6px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--red);border:2px solid #fff;
+  display:none;
+}
+.notif-badge.on{display:block;}
+/* ── PAGE BODY ───────────────────────────────────────── */
+.page{
+  padding-top:calc(var(--topbar) + env(safe-area-inset-top) + var(--s4));
+  padding-bottom:calc(var(--bottomnav) + env(safe-area-inset-bottom) + var(--s6));
+}
+.pad{padding-left:var(--s4);padding-right:var(--s4);}
+/* ── BOTTOM NAV ──────────────────────────────────────── */
+.bottomnav{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  height:calc(var(--bottomnav) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(255,255,255,.95);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  align-items:start;
+}
+.bn-tab{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:10px var(--s2) 6px;
+  color:var(--t4);font-size:10px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.04em;
+  text-decoration:none;-webkit-tap-highlight-color:transparent;
+  transition:color .15s;
+}
+.bn-tab .mi{font-size:24px;transition:all .15s;}
+.bn-tab.active{color:var(--red);}
+.bn-tab.active .mi{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
+/* ── CARD ────────────────────────────────────────────── */
+.card{
+  background:var(--surface);border-radius:var(--r-xl);
+  border:1px solid var(--border);overflow:hidden;
+}
+.card+.card{margin-top:var(--s3);}
+/* ── SECTION HEADER ──────────────────────────────────── */
+.sec-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:var(--s4);
+}
+.sec-title{font-size:18px;font-weight:800;color:var(--t1);letter-spacing:-.2px;}
+.sec-sub{font-size:13px;color:var(--t3);margin-top:2px;}
+.sec-link{
+  font-size:13px;font-weight:700;color:var(--red);
+  display:flex;align-items:center;gap:2px;
+}
+/* ── BUTTONS ─────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:var(--s2);border-radius:var(--r-md);font-weight:700;
+  min-height:44px;padding:0 var(--s5);font-size:15px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:filter .15s, opacity .15s;
+  touch-action:manipulation;
+}
+.btn:active{filter:brightness(.93);}
+.btn.full{width:100%;}
+.btn.red{background:var(--red);color:#fff;}
+.btn.navy{background:var(--navy);color:#fff;}
+.btn.outline{border:1.5px solid var(--border);background:var(--surface);color:var(--t1);}
+.btn.ghost{background:transparent;color:var(--red);border:none;}
+.btn.lg{min-height:52px;font-size:16px;border-radius:14px;}
+/* ── CHIPS / BADGES ──────────────────────────────────── */
+.chip{
+  display:inline-flex;align-items:center;gap:var(--s1);
+  border-radius:var(--r-pill);padding:5px 12px;
+  font-size:12px;font-weight:700;
+}
+.chip.red{background:var(--red-lt);color:var(--red);}
+.chip.green{background:var(--green-lt);color:var(--green);}
+.chip.navy{background:#e8eaf2;color:var(--navy);}
+.chip.muted{background:var(--divider);color:var(--t3);}
+.chip.border{background:var(--surface);border:1.5px solid var(--border);color:var(--t2);}
+/* ── INPUT ───────────────────────────────────────────── */
+.input{
+  width:100%;border:1.5px solid var(--border);
+  border-radius:var(--r-md);padding:12px 14px;
+  font-size:16px;font-family:inherit;
+  outline:none;background:var(--surface);
+  transition:border-color .15s;color:var(--t1);
+}
+.input:focus{border-color:var(--red);}
+.textarea{resize:none;min-height:120px;line-height:1.5;}
+/* ── DIVIDER ─────────────────────────────────────────── */
+.hr{height:1px;background:var(--divider);margin:var(--s4) 0;}
+/* ── SHIMMER SKELETON ────────────────────────────────── */
+.skeleton{
+  background:linear-gradient(90deg,var(--divider) 25%,#ebebeb 50%,var(--divider) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.4s infinite;
+  border-radius:var(--r-sm);
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* ── SPINNER ─────────────────────────────────────────── */
+.spinner{
+  width:20px;height:20px;
+  border:2.5px solid var(--divider);
+  border-top-color:var(--red);
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+  display:inline-block;flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+/* ── TOAST ───────────────────────────────────────────── */
+#toast{
+  display:none;position:fixed;bottom:80px;left:50%;
+  transform:translateX(-50%);
+  background:var(--t1);color:#fff;
+  padding:10px 20px;border-radius:var(--r-pill);
+  font-size:14px;font-weight:600;z-index:9999;
+  box-shadow:var(--sh-3);white-space:nowrap;
+}
+/* ── PROGRESS BAR ────────────────────────────────────── */
+.prog-track{
+  height:6px;background:var(--divider);
+  border-radius:var(--r-pill);overflow:hidden;
+}
+.prog-fill{
+  height:100%;border-radius:var(--r-pill);
+  transition:width .5s cubic-bezier(.4,0,.2,1);
+}
+/* ── SAFE AREAS ──────────────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important;}
+}
+/* ── RESPONSIVE ──────────────────────────────────────── */
+@media(min-width:768px){
+  .page{max-width:560px;margin:0 auto;}
+  .topbar{max-width:560px;left:50%;transform:translateX(-50%);}
+  .bottomnav{max-width:560px;left:50%;transform:translateX(-50%);}
+}
+</style>
+<style>
+.cat-sticky{
+  position:sticky;top:calc(var(--topbar) + env(safe-area-inset-top));z-index:90;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:var(--s3) 0 0;
+}
+.cat-scroll{
+  display:flex;gap:var(--s2);padding:0 var(--s4) var(--s3);
+  overflow-x:auto;scrollbar-width:none;
+}
 .cat-scroll::-webkit-scrollbar{display:none;}
-.cat-chip{flex-shrink:0;padding:7px 14px;border-radius:99px;border:1.5px solid var(--border);background:var(--surface);font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;}
-.cat-chip.active{background:var(--navy);color:#fff;border-color:var(--navy);}
-.page-body{padding-top:calc(56px + env(safe-area-inset-top) + 56px + 16px);padding-bottom:calc(68px + env(safe-area-inset-bottom));padding-left:16px;padding-right:16px;}
-.cat-section{margin-bottom:24px;}
-.cat-title{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
-.cat-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.cat-icon .mat{font-size:15px;}
-.q-item{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:10px;padding:14px 14px 14px 12px;margin-bottom:8px;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;}
-.q-item:active{transform:scale(.99);}
-.q-item:hover{border-left-color:var(--red);}
-.q-text{font-size:13px;font-weight:600;color:var(--navy);line-height:1.4;}
-.q-hint-preview{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.97);border-top:1px solid var(--border);backdrop-filter:blur(20px);display:grid;grid-template-columns:repeat(5,1fr);}
-.nav-tab{display:flex;flex-direction:column;align-items:center;padding:10px 4px;text-decoration:none;color:var(--muted);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;gap:3px;}
-.nav-tab.active{color:var(--red);}
-.nav-tab .mat{font-size:22px;}
-.nav-tab.active .mat{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
+.cat-chip{
+  flex-shrink:0;padding:7px 16px;border-radius:var(--r-pill);
+  border:1.5px solid var(--border);background:var(--surface);
+  font-size:13px;font-weight:700;color:var(--t3);
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:all .15s;white-space:nowrap;
+}
+.cat-chip.on{background:var(--navy);color:#fff;border-color:var(--navy);}
+/* Category section */
+.cat-section{margin-bottom:var(--s6);}
+.cat-hdr{
+  display:flex;align-items:center;gap:var(--s3);
+  margin-bottom:var(--s3);padding-bottom:var(--s2);
+  border-bottom:2px solid var(--divider);
+}
+.cat-icon{
+  width:32px;height:32px;border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.cat-icon .mi{font-size:18px;}
+.cat-name{font-size:15px;font-weight:800;color:var(--t1);}
+/* Question accordion item */
+.q-acc{
+  background:var(--surface);border-radius:var(--r-lg);
+  border:1px solid var(--border);margin-bottom:var(--s2);
+  overflow:hidden;transition:border-color .2s;
+}
+.q-acc.open{border-color:var(--red);}
+.q-header{
+  display:flex;align-items:flex-start;gap:var(--s3);
+  padding:var(--s4);cursor:pointer;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  min-height:52px;
+}
+.q-header:active{background:var(--bg);}
+.q-indicator{
+  width:4px;border-radius:2px;min-height:20px;
+  background:var(--divider);margin-top:2px;flex-shrink:0;
+  transition:background .2s;
+}
+.q-acc.open .q-indicator{background:var(--red);}
+.q-header-text{flex:1;}
+.q-text{font-size:14px;font-weight:600;color:var(--t1);line-height:1.45;}
+.q-chevron{color:var(--t4);flex-shrink:0;margin-top:1px;transition:transform .25s;}
+.q-acc.open .q-chevron{transform:rotate(180deg);}
+/* Question body */
+.q-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .3s cubic-bezier(.4,0,.2,1);
+}
+.q-acc.open .q-body{max-height:800px;}
+.q-body-inner{
+  border-top:1px solid var(--divider);
+  padding:var(--s4) var(--s4) var(--s5);
+}
+.q-criteria-label{font-size:11px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--t3);margin-bottom:var(--s2);}
+.q-criteria{
+  font-size:13px;color:var(--t2);line-height:1.5;
+  background:var(--bg);border-radius:var(--r-md);
+  padding:var(--s3) var(--s4);margin-bottom:var(--s4);
+}
+.q-hint-box{
+  background:var(--amber-bg);border-left:3px solid var(--amber);
+  border-radius:0 var(--r-md) var(--r-md) 0;
+  padding:var(--s3) var(--s4);margin-bottom:var(--s4);
+  font-size:13px;color:var(--t2);line-height:1.5;
+}
+.q-hint-label{font-size:11px;font-weight:800;color:var(--amber);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
+.q-practice-btn{
+  display:flex;align-items:center;justify-content:center;gap:var(--s2);
+  width:100%;background:var(--red);color:#fff;border-radius:var(--r-md);
+  padding:0 var(--s5);font-size:14px;font-weight:700;
+  min-height:44px;-webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;transition:opacity .15s;
+}
+.q-practice-btn:active{opacity:.9;}
+.q-practice-btn .mi{font-size:18px;}
 </style>
 </head>
 <body>
-<header class="top-bar">
-  <a href="yorkstjohn-hub.html" class="back-btn"><span class="mat">arrow_back_ios_new</span></a>
-  <h1 class="top-title">Question Bank</h1>
+
+<header class="topbar">
+  <a href="yorkstjohn-hub.html" class="topbar-back" aria-label="Back">
+    <span class="mi">arrow_back_ios_new</span>
+  </a>
+  <span class="topbar-title">Question Bank</span>
 </header>
 
-<div class="cat-bar">
+<div class="cat-sticky">
   <div class="cat-scroll" id="catScroll">
-    <button class="cat-chip active" onclick="filterCat('All',this)">All</button>
+    <button class="cat-chip on" onclick="filterCat('All',this)">All</button>
   </div>
 </div>
 
-<div class="page-body" id="qBody"><!-- JS renders --></div>
+<div class="page" style="padding-top:calc(var(--topbar) + env(safe-area-inset-top) + 52px);">
+  <div class="pad" id="qBody"></div>
+</div>
 
-<nav class="bottom-nav">
-  <a href="yorkstjohn-hub.html" class="nav-tab"><span class="mat">home</span>Home</a>
-  <a href="yorkstjohn-guide.html" class="nav-tab"><span class="mat">menu_book</span>Guide</a>
-  <a href="yorkstjohn-practice.html" class="nav-tab"><span class="mat">mic</span>Practice</a>
-  <a href="yorkstjohn-questions.html" class="nav-tab active"><span class="mat">quiz</span>Questions</a>
-  <a href="yorkstjohn-checklist.html" class="nav-tab"><span class="mat">checklist</span>Checklist</a>
-</nav>
-
+<nav class="bottomnav" aria-label="Main navigation"><a href="yorkstjohn-hub.html" class="bn-tab" aria-label="Home"><span class="mi">home</span>Home</a><a href="yorkstjohn-guide.html" class="bn-tab" aria-label="Guide"><span class="mi">menu_book</span>Guide</a><a href="yorkstjohn-practice.html" class="bn-tab" aria-label="Practice"><span class="mi">mic</span>Practice</a><a href="yorkstjohn-questions.html" class="bn-tab active" aria-label="Questions"><span class="mi">quiz</span>Questions</a><a href="yorkstjohn-checklist.html" class="bn-tab" aria-label="Checklist"><span class="mi">checklist</span>Checklist</a></nav>
+<div id="toast" role="alert" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 <script src="yorkstjohn-data.js"></script>
-<script>
-const CAT_ICONS={
-  'Studying in the UK':{icon:'public',color:'#7c3aed',bg:'#ede9fe'},
-  'Why York St John University':{icon:'account_balance',color:'#0891b2',bg:'#ecfeff'},
-  'Course Details & Modules':{icon:'menu_book',color:'#d97706',bg:'#fefce8'},
-  'Future Career Plans':{icon:'trending_up',color:'#16a34a',bg:'#f0fdf4'},
-  'Finance & Funding':{icon:'payments',color:'#dc2626',bg:'#fef2f2'},
-  'Accommodation & Living':{icon:'home',color:'#0d9488',bg:'#f0fdf4'},
-  'Prior UK Study':{icon:'history_edu',color:'#6366f1',bg:'#ede9fe'},
-  'Education & Employment Gaps':{icon:'work_history',color:'#ea580c',bg:'#fff7ed'},
-  'Student Visa Knowledge':{icon:'badge',color:'#1d4ed8',bg:'#eff6ff'},
-};
-let activeCat='All';
 
-function filterCat(cat,btn){
-  activeCat=cat;
-  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
-  btn.classList.add('active');
+<script>
+function showToast(msg,dur=2500){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',dur);}
+</script>
+<script>
+const CAT_STYLES = {
+  'Studying in the UK':           {icon:'public',   color:'#7c3aed',bg:'#ede9fe'},
+  'Why York St John University':  {icon:'account_balance',color:'#0891b2',bg:'#ecfeff'},
+  'Course Details & Modules':     {icon:'menu_book',color:'#d97706',bg:'#fefce8'},
+  'Future Career Plans':          {icon:'trending_up',color:'#1c7c54',bg:'#d1fae5'},
+  'Finance & Funding':            {icon:'payments', color:'#c41230',bg:'#fff5f5'},
+  'Accommodation & Living':       {icon:'home',     color:'#0d7377',bg:'#ccfbf1'},
+  'Prior UK Study':               {icon:'history_edu',color:'#5b21b6',bg:'#ede9fe'},
+  'Education & Employment Gaps':  {icon:'work_history',color:'#ea580c',bg:'#ffedd5'},
+  'Student Visa Knowledge':       {icon:'badge',    color:'#1d4ed8',bg:'#dbeafe'},
+};
+
+let openQ = null, activeCat = 'All';
+
+// Build category chips
+const scroll = document.getElementById('catScroll');
+ALL_QUESTIONS.forEach(cat => {
+  const btn = document.createElement('button');
+  btn.className = 'cat-chip';
+  btn.textContent = cat.cat;
+  btn.onclick = () => filterCat(cat.cat, btn);
+  scroll.appendChild(btn);
+});
+
+function filterCat(cat, btn) {
+  activeCat = cat;
+  document.querySelectorAll('.cat-chip').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  openQ = null;
   render();
 }
 
-function render(){
-  const body=document.getElementById('qBody');
-  const cats=activeCat==='All'?ALL_QUESTIONS:ALL_QUESTIONS.filter(c=>c.cat===activeCat);
-  body.innerHTML=cats.map(cat=>{
-    const s=CAT_ICONS[cat.cat]||{icon:'quiz',color:'#6b7280',bg:'#f3f4f6'};
-    return `<div class="cat-section">
-      <div class="cat-title">
-        <div class="cat-icon" style="background:${s.bg}"><span class="mat fill" style="color:${s.color}">${s.icon}</span></div>
-        ${cat.cat}
+function toggleQ(id) {
+  openQ = openQ===id ? null : id;
+  render();
+  if (openQ!==null) {
+    setTimeout(()=>document.getElementById('qacc-'+openQ)?.scrollIntoView({behavior:'smooth',block:'nearest'}),60);
+  }
+}
+
+function practiceQ(qText, cat) {
+  sessionStorage.setItem('ysj_practice_q', JSON.stringify({q:qText,cat}));
+  location.href = 'yorkstjohn-practice.html?from=qbank';
+}
+
+function render() {
+  const body = document.getElementById('qBody');
+  const cats = activeCat==='All' ? ALL_QUESTIONS : ALL_QUESTIONS.filter(c=>c.cat===activeCat);
+  body.innerHTML = cats.map(cat => {
+    const s = CAT_STYLES[cat.cat] || {icon:'quiz',color:'#6b7280',bg:'#f3f4f6'};
+    const items = cat.qs.map((q,i) => {
+      const qid = cat.cat.replace(/[^a-z0-9]/gi,'_')+'_'+i;
+      const isOpen = openQ===qid;
+      return `<div class="q-acc${isOpen?' open':''}" id="qacc-${qid}">
+        <div class="q-header" onclick="toggleQ('${qid}')"
+          role="button" aria-expanded="${isOpen}" aria-label="${q}">
+          <div class="q-indicator" aria-hidden="true"></div>
+          <div class="q-header-text">
+            <div class="q-text">${q}</div>
+          </div>
+          <span class="mi q-chevron sm" aria-hidden="true">expand_more</span>
+        </div>
+        <div class="q-body" role="region">
+          <div class="q-body-inner">
+            ${cat.cr ? `<div class="q-criteria-label">UKVI Expects</div>
+            <div class="q-criteria">${cat.cr}</div>` : ''}
+            <div class="q-hint-box">
+              <div class="q-hint-label">&#128161; What to include</div>
+              Give a specific example for every statement. Mention at least one comparison with another country or university. Use personal language — "I chose…" not "YSJ is…"
+            </div>
+            <button class="q-practice-btn"
+              onclick="practiceQ(${JSON.stringify(q)}, '${cat.cat.replace(/'/g,"\'")}')"
+              aria-label="Practise this question with AI">
+              <span class="mi fill sm">mic</span>
+              Practise This Question with AI
+            </button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="cat-section" id="sec-${cat.cat.toLowerCase().replace(/ /g,'-')}">
+      <div class="cat-hdr">
+        <div class="cat-icon" style="background:${s.bg}">
+          <span class="mi fill" style="color:${s.color}" aria-hidden="true">${s.icon}</span>
+        </div>
+        <span class="cat-name">${cat.cat}</span>
+        <span class="chip muted" style="margin-left:auto;font-size:11px">${cat.qs.length}</span>
       </div>
-      ${cat.qs.map((q,i)=>`<div class="q-item" style="border-left-color:${s.color}" onclick="location.href='yorkstjohn-practice.html?q='+encodeURIComponent('${cat.cat}')">
-        <div class="q-text">${q}</div>
-      </div>`).join('')}
+      ${items}
     </div>`;
   }).join('');
+
+  // Handle hash from hub module links
+  const hash = location.hash.replace('#','');
+  if (hash && activeCat==='All') {
+    const el = document.getElementById('sec-'+hash);
+    if (el) setTimeout(()=>el.scrollIntoView({behavior:'smooth'}),200);
+  }
 }
 
-document.addEventListener('DOMContentLoaded',()=>{
-  // Build cat chips
-  const scroll=document.getElementById('catScroll');
-  ALL_QUESTIONS.forEach(cat=>{
-    const btn=document.createElement('button');
-    btn.className='cat-chip';
-    btn.textContent=cat.cat;
-    btn.onclick=()=>filterCat(cat.cat,btn);
-    scroll.appendChild(btn);
-  });
-  // Handle hash
-  const hash=location.hash.replace('#','');
-  if(hash){
-    const catMap={uk:'Studying in the UK',ysj:'Why York St John University',
-      course:'Course Details & Modules',career:'Future Career Plans',
-      finance:'Finance & Funding',living:'Accommodation & Living'};
-    if(catMap[hash]){
-      const cat=catMap[hash];
-      const btn=[...document.querySelectorAll('.cat-chip')].find(b=>b.textContent===cat);
-      if(btn) filterCat(cat,btn);
-    }
-  }
-  render();
-});
+document.addEventListener('DOMContentLoaded', () => { render(); });
 </script>
 </body>
 </html>
