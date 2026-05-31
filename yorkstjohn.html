@@ -563,68 +563,14 @@ function renderList(entries) {
         </div>
         <span class="mi course-chevron sm" aria-hidden="true">expand_more</span>
       </div>
-      <div class="course-detail" id="detail-${id}" role="region" aria-label="${c.name} details">
-        <div class="detail-inner">
-          <!-- Key stats grid -->
-          <div class="detail-grid">
-            <div class="detail-cell">
-              <div class="detail-cell-val">${c.tuition||'—'}</div>
-              <div class="detail-cell-lbl">Per year tuition</div>
-            </div>
-            <div class="detail-cell">
-              <div class="detail-cell-val">${c.livingCost||'—'}</div>
-              <div class="detail-cell-lbl">UKVI living cost</div>
-            </div>
-            <div class="detail-cell">
-              <div class="detail-cell-val">${c.accommodation||'—'}</div>
-              <div class="detail-cell-lbl">Accommodation/wk</div>
-            </div>
-            <div class="detail-cell">
-              <div class="detail-cell-val" style="font-size:13px">${c.salary||'—'}</div>
-              <div class="detail-cell-lbl">Graduate salary</div>
-            </div>
-          </div>
-          <!-- Campus -->
-          <div class="detail-section">
-            <div class="detail-label">Campus Address</div>
-            <div class="detail-value">${c.address||c.city}</div>
-          </div>
-          <!-- Assessment -->
-          <div class="detail-section">
-            <div class="detail-label">How You Will Be Assessed</div>
-            <div class="detail-value">${c.assessment||'Coursework and examinations.'}</div>
-          </div>
-          <!-- Modules -->
-          ${modsHtml ? `<div class="detail-section">
-            <div class="detail-label">Key Modules</div>
-            <div class="module-list">${modsHtml}</div>
-          </div>` : ''}
-          <!-- Roles -->
-          ${rolesHtml ? `<div class="detail-section">
-            <div class="detail-label">Graduate Career Options</div>
-            <div class="role-chips">${rolesHtml}</div>
-          </div>` : ''}
-          <!-- Resources -->
-          <div class="detail-section">
-            <div class="detail-label">Official Resources</div>
-            <div class="resource-list">${resHtml}</div>
-          </div>
-          <!-- Select button -->
-          <button class="btn full lg ${isSel?'outline':'red'}"
-            onclick="selectCourse('${id}',event)"
-            aria-label="Select ${c.name}">
-            <span class="mi fill">${isSel?'check_circle':'arrow_forward'}</span>
-            ${isSel ? 'Currently Selected — Continue' : 'Select This Course'}
-          </button>
-        </div>
-      </div>
+<!-- details moved to guide page -->
     </div>`;
   }).join('');
 }
 
 function toggleCourse(id) {
-  openId = openId===id ? null : id;
-  filterCourses(document.getElementById('searchInput').value);
+  // Just select — don't expand. Full details are in the Guide page.
+  selectCourse(id, null);
 }
 
 function selectCourse(id, e) {
