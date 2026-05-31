@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<base href="/UK-INTERVIEW-HUB/">
+<title>Mock Interview | York St John</title>
+<script src="https://js.puter.com/v2/"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ysj.css">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   AI MOCK INTERVIEW — Complete UI
+══════════════════════════════════════════════════════════════ */
+
+/* All phases hidden by default */
+#phase-countdown, #phase-interview, #phase-results { display: none; }
+#phase-countdown.active, #phase-interview.active, #phase-results.active { display: flex; }
+
+/* ── INTRO SCREEN ─────────────────────────────────────────── */
+.intro-screen {
+  min-height: 100dvh;
+  background: linear-gradient(160deg, var(--navy2) 0%, #1e1b4b 60%, #3b0764 100%);
+  display: flex; flex-direction: column;
+  padding: calc(var(--s12) + env(safe-area-inset-top)) var(--s5) calc(var(--s8) + env(safe-area-inset-bottom));
+  position: relative; overflow: hidden;
+}
+.intro-screen::before {
+  content:""; position:absolute; top:-100px; right:-80px;
+  width:400px; height:400px; border-radius:50%;
+  background: radial-gradient(circle, rgba(196,18,48,.15) 0%, transparent 70%);
+  pointer-events:none;
+}
+.intro-back {
+  position:fixed; top:calc(var(--s4) + env(safe-area-inset-top)); left:var(--s4);
+  width:44px; height:44px; border-radius:50%;
+  background:rgba(255,255,255,.1); display:flex; align-items:center; justify-content:center;
+  color:#fff; z-index:10; -webkit-tap-highlight-color:transparent;
+}
+.intro-back .mi { font-size:22px; }
+
+.intro-avatar-wrap {
+  display: flex; justify-content: center; margin-bottom: var(--s6);
+}
+.intro-avatar {
+  width: 96px; height: 96px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--red), #7c3aed);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 0 8px rgba(196,18,48,.2), 0 0 0 16px rgba(196,18,48,.1);
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+@keyframes pulse-ring {
+  0%,100% { box-shadow: 0 0 0 8px rgba(196,18,48,.2), 0 0 0 16px rgba(196,18,48,.08); }
+  50%      { box-shadow: 0 0 0 12px rgba(196,18,48,.15), 0 0 0 24px rgba(196,18,48,.05); }
+}
+.intro-avatar .mi { font-size: 44px; color: #fff; }
+
+.intro-title {
+  font-size: clamp(26px,6vw,34px); font-weight: 900; color: #fff;
+  text-align: center; letter-spacing: -.4px; margin-bottom: var(--s2);
+}
+.intro-title em { color: #fca5a5; font-style: normal; display: block; }
+.intro-subtitle {
+  font-size: 15px; color: rgba(255,255,255,.6); text-align: center;
+  margin-bottom: var(--s7); line-height: 1.5;
+}
+
+/* Steps */
+.intro-steps { display: flex; flex-direction: column; gap: var(--s4); margin-bottom: var(--s8); }
+.intro-step {
+  display: flex; align-items: flex-start; gap: var(--s4);
+  background: rgba(255,255,255,.07); border-radius: var(--r-lg);
+  padding: var(--s4) var(--s5); border: 1px solid rgba(255,255,255,.1);
+}
+.step-num {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  background: var(--red); display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; color: #fff;
+}
+.step-text strong { display: block; font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 2px; }
+.step-text span   { font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.4; }
+
+/* Browser warning */
+.browser-warn {
+  background: rgba(251,191,36,.12); border: 1px solid rgba(251,191,36,.3);
+  border-radius: var(--r-md); padding: var(--s3) var(--s4); margin-bottom: var(--s5);
+  display: flex; align-items: center; gap: var(--s3);
+  font-size: 13px; color: rgba(255,255,255,.75);
+}
+.browser-warn .mi { font-size: 18px; color: #fbbf24; flex-shrink: 0; }
+
+.btn-start-mock {
+  width: 100%; background: var(--red); color: #fff; border: none;
+  border-radius: var(--r-xl); padding: var(--s5); font-size: 18px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center; gap: var(--s3);
+  cursor: pointer; letter-spacing: -.2px;
+  transition: filter var(--dur-fast), transform var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast);
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.btn-start-mock:hover  { filter: brightness(1.1); box-shadow: 0 8px 24px rgba(196,18,48,.4); }
+.btn-start-mock:active { transform: scale(.97); }
+.btn-start-mock .mi { font-size: 24px; }
+
+/* ── COUNTDOWN OVERLAY ───────────────────────────────────────── */
+#phase-countdown {
+  position: fixed; inset: 0; z-index: 500;
+  background: var(--navy2);
+  align-items: center; justify-content: center;
+  flex-direction: column; gap: var(--s5);
+}
+.countdown-num {
+  font-size: 120px; font-weight: 900; color: #fff;
+  line-height: 1; letter-spacing: -.5rem;
+  animation: countdown-pop .8s var(--ease-spring) both;
+}
+@keyframes countdown-pop {
+  0%   { transform: scale(1.4); opacity: 0; }
+  60%  { transform: scale(.95); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.countdown-label { font-size: 16px; color: rgba(255,255,255,.5); font-weight: 600; }
+
+/* ── INTERVIEW PHASE ─────────────────────────────────────────── */
+#phase-interview {
+  flex-direction: column; min-height: 100dvh;
+  background: #0c0c1a;
+}
+
+/* Top bar */
+.mock-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: calc(var(--s3) + env(safe-area-inset-top)) var(--s5) var(--s3);
+  background: rgba(255,255,255,.04); border-bottom: 1px solid rgba(255,255,255,.08);
+  flex-shrink: 0;
+}
+.mock-progress-wrap { flex: 1; max-width: 200px; }
+.mock-progress-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.4);
+  text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+.mock-progress-bar { height: 4px; background: rgba(255,255,255,.1); border-radius: 99px; overflow: hidden; }
+.mock-progress-fill { height: 100%; background: var(--red); border-radius: 99px; transition: width .5s var(--ease-out); }
+.mock-q-label { font-size: 13px; font-weight: 800; color: rgba(255,255,255,.6);
+  text-align: right; }
+.mock-controls { display: flex; align-items: center; gap: var(--s3); }
+.mock-ctrl-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,.7); cursor: pointer;
+  transition: background var(--dur-micro);
+  -webkit-tap-highlight-color: transparent;
+}
+.mock-ctrl-btn:hover  { background: rgba(255,255,255,.14); }
+.mock-ctrl-btn:active { background: rgba(255,255,255,.2); }
+.mock-ctrl-btn .mi { font-size: 18px; }
+
+/* AI Avatar area */
+.ai-avatar-section {
+  display: flex; flex-direction: column; align-items: center;
+  padding: var(--s7) var(--s5) var(--s5); flex-shrink: 0;
+}
+.ai-avatar-outer {
+  position: relative; width: 100px; height: 100px; margin-bottom: var(--s5);
+}
+.ai-avatar-ring {
+  position: absolute; inset: -8px; border-radius: 50%;
+  border: 2px solid rgba(196,18,48,.3);
+  animation: ring-fade 2s ease-in-out infinite;
+  opacity: 0;
+}
+.ai-avatar-ring.delay { animation-delay: .6s; inset: -16px; }
+.ai-speaking .ai-avatar-ring { opacity: 1; }
+@keyframes ring-fade {
+  0%,100% { opacity: 0; transform: scale(.9); }
+  50%      { opacity: 1; transform: scale(1); }
+}
+.ai-avatar-circle {
+  width: 100px; height: 100px; border-radius: 50%;
+  background: linear-gradient(135deg, #1e1b4b, var(--navy));
+  border: 2px solid rgba(196,18,48,.4);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 1;
+  box-shadow: 0 0 32px rgba(196,18,48,.2);
+}
+.ai-avatar-circle .mi { font-size: 48px; color: rgba(255,255,255,.9); }
+
+/* Soundwave bars */
+.soundwave {
+  display: flex; align-items: center; gap: 3px; height: 24px; margin-top: var(--s2);
+}
+.sw-bar {
+  width: 3px; border-radius: 99px; background: var(--red);
+  animation: sw-idle 1.2s ease-in-out infinite;
+  min-height: 4px;
+}
+.sw-bar:nth-child(1) { animation-delay: 0ms;   --h: 8px;  }
+.sw-bar:nth-child(2) { animation-delay: 100ms; --h: 16px; }
+.sw-bar:nth-child(3) { animation-delay: 200ms; --h: 22px; }
+.sw-bar:nth-child(4) { animation-delay: 150ms; --h: 18px; }
+.sw-bar:nth-child(5) { animation-delay: 50ms;  --h: 12px; }
+.sw-bar:nth-child(6) { animation-delay: 200ms; --h: 20px; }
+.sw-bar:nth-child(7) { animation-delay: 100ms; --h: 14px; }
+@keyframes sw-idle {
+  0%,100% { height: 4px; opacity: .3; }
+  50%      { height: var(--h); opacity: 1; }
+}
+/* Only animate when speaking */
+.soundwave.silent .sw-bar { animation: none; height: 4px; opacity: .2; }
+
+.ai-status-label {
+  font-size: 12px; font-weight: 700; color: rgba(255,255,255,.4);
+  text-transform: uppercase; letter-spacing: .08em; margin-top: var(--s2);
+  transition: color var(--dur-base);
+}
+.ai-status-label.speaking { color: var(--red); }
+.ai-status-label.listening { color: #22c55e; }
+.ai-status-label.thinking  { color: #eab308; }
+
+/* Question display */
+.question-area {
+  flex: 1; display: flex; flex-direction: column;
+  padding: 0 var(--s5); max-width: 640px; width: 100%; margin: 0 auto;
+}
+.question-chip {
+  display: inline-flex; align-items: center; gap: var(--s2);
+  background: rgba(196,18,48,.15); border: 1px solid rgba(196,18,48,.3);
+  border-radius: var(--r-pill); padding: 5px 14px;
+  font-size: 11px; font-weight: 800; color: rgba(255,255,255,.7);
+  text-transform: uppercase; letter-spacing: .08em; margin-bottom: var(--s4);
+  align-self: flex-start;
+}
+.question-text {
+  font-size: clamp(18px,4vw,22px); font-weight: 800; color: #fff;
+  line-height: 1.4; margin-bottom: var(--s5); letter-spacing: -.2px;
+  min-height: 60px;
+}
+
+/* Transcript area */
+.transcript-card {
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--r-xl); padding: var(--s5); margin-bottom: var(--s4);
+  min-height: 120px; flex: 1; max-height: 220px; overflow-y: auto;
+  position: relative;
+}
+.transcript-label {
+  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em;
+  color: rgba(255,255,255,.3); margin-bottom: var(--s3);
+  display: flex; align-items: center; gap: var(--s2);
+}
+.rec-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #ef4444;
+  animation: rec-pulse 1s ease-in-out infinite;
+  display: none;
+}
+.recording .rec-dot { display: block; }
+@keyframes rec-pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: .4; transform: scale(.7); }
+}
+.transcript-text {
+  font-size: 15px; color: rgba(255,255,255,.85); line-height: 1.6;
+  font-weight: 500;
+}
+.transcript-text:empty::before {
+  content: "Your answer will appear here as you speak…";
+  color: rgba(255,255,255,.2); font-style: italic; font-weight: 400;
+}
+.transcript-placeholder {
+  font-size: 15px; color: rgba(255,255,255,.2); font-style: italic; font-weight: 400;
+}
+
+/* Feedback card */
+.feedback-card {
+  border-radius: var(--r-xl); padding: var(--s5); margin-bottom: var(--s4);
+  display: none; animation: scaleIn var(--dur-base) var(--ease-spring) both;
+}
+.feedback-card.show { display: block; }
+.feedback-card.pass { background: rgba(22,163,74,.15); border: 1.5px solid rgba(22,163,74,.4); }
+.feedback-card.fail { background: rgba(196,18,48,.15);  border: 1.5px solid rgba(196,18,48,.4); }
+.fb-score-row { display: flex; align-items: center; gap: var(--s4); margin-bottom: var(--s4); }
+.fb-score-big { font-size: 40px; font-weight: 900; line-height: 1; }
+.fb-score-big.pass { color: #4ade80; }
+.fb-score-big.fail { color: #f87171; }
+.fb-verdict { font-size: 15px; font-weight: 800; color: #fff; }
+.fb-verdict-sub { font-size: 12px; color: rgba(255,255,255,.5); margin-top: 2px; }
+.fb-text { font-size: 14px; color: rgba(255,255,255,.8); line-height: 1.6; margin-bottom: var(--s4); }
+.fb-checklist { display: flex; flex-direction: column; gap: var(--s2); }
+.fb-check-item { display: flex; align-items: flex-start; gap: var(--s2); font-size: 13px; }
+.fb-check-item.good    { color: #4ade80; }
+.fb-check-item.missing { color: #f87171; }
+.fb-check-item .mi { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+/* Bottom controls */
+.mock-bottom {
+  padding: var(--s4) var(--s5);
+  padding-bottom: calc(var(--s4) + env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; gap: var(--s3); flex-shrink: 0;
+  background: rgba(0,0,0,.3); border-top: 1px solid rgba(255,255,255,.06);
+  max-width: 640px; width: 100%; margin: 0 auto;
+}
+.mock-action-row { display: flex; gap: var(--s3); }
+.btn-submit-answer {
+  flex: 1; background: var(--green); color: #fff; border: none;
+  border-radius: var(--r-lg); padding: var(--s4); font-size: 16px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; gap: var(--s2);
+  cursor: pointer; min-height: 52px; font-family: inherit;
+  transition: filter var(--dur-fast), transform var(--dur-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-submit-answer:hover  { filter: brightness(1.1); }
+.btn-submit-answer:active { transform: scale(.97); }
+.btn-submit-answer .mi { font-size: 22px; }
+.btn-submit-answer:disabled { opacity: .4; cursor: not-allowed; }
+
+.btn-tap-record {
+  flex: 1; background: rgba(255,255,255,.08); color: #fff; border: 1.5px solid rgba(255,255,255,.15);
+  border-radius: var(--r-lg); padding: var(--s4); font-size: 15px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: var(--s2);
+  cursor: pointer; min-height: 52px; font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-tap-record.recording { background: rgba(239,68,68,.2); border-color: #ef4444; color: #f87171; }
+.btn-tap-record .mi { font-size: 22px; }
+
+.btn-retry {
+  flex: 1; background: rgba(255,255,255,.06); color: rgba(255,255,255,.7);
+  border: 1.5px solid rgba(255,255,255,.12); border-radius: var(--r-lg);
+  padding: var(--s4); font-size: 15px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: var(--s2);
+  cursor: pointer; min-height: 52px; font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-next-q {
+  flex: 2; background: var(--red); color: #fff; border: none;
+  border-radius: var(--r-lg); padding: var(--s4); font-size: 16px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; gap: var(--s2);
+  cursor: pointer; min-height: 52px; font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+  transition: filter var(--dur-fast);
+}
+.btn-next-q:hover { filter: brightness(1.1); }
+
+/* Thinking overlay */
+.thinking-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(12,12,26,.9);
+  display: none; align-items: center; justify-content: center;
+  flex-direction: column; gap: var(--s4);
+}
+.thinking-overlay.show { display: flex; }
+.thinking-spinner {
+  width: 56px; height: 56px; border-radius: 50%;
+  border: 3px solid rgba(255,255,255,.1);
+  border-top-color: var(--red);
+  animation: spin .8s linear infinite;
+}
+.thinking-label { font-size: 15px; font-weight: 700; color: rgba(255,255,255,.7); }
+.thinking-sub   { font-size: 13px; color: rgba(255,255,255,.35); }
+
+/* ── RESULTS PHASE ─────────────────────────────────────────── */
+#phase-results {
+  flex-direction: column; min-height: 100dvh;
+  background: linear-gradient(160deg, var(--navy2) 0%, #1e1b4b 60%, #0f0f1e 100%);
+  overflow-y: auto;
+}
+.results-header {
+  padding: calc(var(--s7) + env(safe-area-inset-top)) var(--s5) var(--s5);
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.results-ring-wrap { position: relative; width: 140px; height: 140px; margin-bottom: var(--s5); }
+.results-ring-wrap svg { transform: rotate(-90deg); }
+.results-ring-wrap circle { transition: stroke-dashoffset 1.2s var(--ease-out); }
+.results-ring-pct {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.results-ring-num  { font-size: 36px; font-weight: 900; color: #fff; line-height: 1; }
+.results-ring-label{ font-size: 11px; color: rgba(255,255,255,.4); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .08em; }
+.results-verdict {
+  font-size: 22px; font-weight: 900; color: #fff; margin-bottom: var(--s2); letter-spacing: -.3px;
+}
+.results-verdict-chip {
+  display: inline-flex; align-items: center; gap: var(--s2);
+  border-radius: var(--r-pill); padding: 6px 18px; font-size: 13px; font-weight: 800;
+  margin-bottom: var(--s4);
+}
+.results-verdict-chip.ready     { background: rgba(22,163,74,.2); color: #4ade80; border: 1px solid rgba(22,163,74,.4); }
+.results-verdict-chip.needs_work{ background: rgba(234,179,8,.2);  color: #fbbf24; border: 1px solid rgba(234,179,8,.4); }
+.results-verdict-chip.not_ready { background: rgba(196,18,48,.2);  color: #f87171; border: 1px solid rgba(196,18,48,.4); }
+.results-summary-text {
+  font-size: 14px; color: rgba(255,255,255,.6); line-height: 1.6; max-width: 500px;
+}
+
+/* Per-question breakdown */
+.results-body { padding: var(--s5); max-width: 640px; margin: 0 auto; width: 100%; }
+.res-section-title {
+  font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em;
+  color: rgba(255,255,255,.4); margin-bottom: var(--s4);
+}
+.res-q-card {
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--r-xl); margin-bottom: var(--s3); overflow: hidden;
+}
+.res-q-header {
+  display: flex; align-items: center; gap: var(--s4); padding: var(--s4) var(--s5);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.res-q-badge {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; color: #fff;
+}
+.res-q-badge.pass { background: var(--green); }
+.res-q-badge.fail { background: var(--red); }
+.res-q-title { flex: 1; font-size: 14px; font-weight: 700; color: rgba(255,255,255,.85); line-height: 1.3; }
+.res-q-score { font-size: 20px; font-weight: 900; }
+.res-q-score.pass { color: #4ade80; }
+.res-q-score.fail { color: #f87171; }
+.res-q-chev { color: rgba(255,255,255,.3); transition: transform var(--dur-base); font-size:20px; }
+.res-q-card.open .res-q-chev { transform: rotate(180deg); }
+.res-q-body { max-height: 0; overflow: hidden; transition: max-height .35s var(--ease-out); }
+.res-q-card.open .res-q-body { max-height: 600px; }
+.res-q-content { padding: 0 var(--s5) var(--s5); border-top: 1px solid rgba(255,255,255,.08); }
+.res-q-transcript {
+  background: rgba(255,255,255,.05); border-radius: var(--r-md); padding: var(--s4);
+  font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.6; margin: var(--s4) 0;
+}
+.res-q-label { font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .1em; color: rgba(255,255,255,.3); margin-bottom: var(--s2); }
+.res-q-feedback { font-size: 14px; color: rgba(255,255,255,.75); line-height: 1.6; }
+
+/* Results actions */
+.results-actions {
+  padding: var(--s5);
+  padding-bottom: calc(var(--s5) + env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; gap: var(--s3);
+  max-width: 640px; margin: 0 auto; width: 100%;
+}
+.btn-submit-admin {
+  width: 100%; background: #fff; color: var(--navy); border: none;
+  border-radius: var(--r-xl); padding: var(--s5); font-size: 16px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center; gap: var(--s3);
+  cursor: pointer; font-family: inherit;
+  transition: filter var(--dur-fast), transform var(--dur-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-submit-admin:hover  { filter: brightness(.95); }
+.btn-submit-admin:active { transform: scale(.98); }
+.btn-submit-admin .mi { font-size: 22px; color: var(--red); }
+.btn-practice-again {
+  width: 100%; background: rgba(255,255,255,.08); color: rgba(255,255,255,.7);
+  border: 1.5px solid rgba(255,255,255,.15); border-radius: var(--r-xl);
+  padding: var(--s4); font-size: 15px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: var(--s3);
+  cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent;
+}
+
+/* Voice mute button */
+.mute-btn-wrap { position: fixed; top: 80px; right: var(--s4); z-index: 200; }
+.mute-btn {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: rgba(255,255,255,.6);
+  transition: background var(--dur-micro);
+}
+.mute-btn.muted { background: rgba(196,18,48,.2); border-color: rgba(196,18,48,.4); color: var(--red); }
+.mute-btn .mi { font-size: 20px; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════
+     INTRO SCREEN
+════════════════════════════════════════════════════ -->
+<div class="intro-screen" id="intro-screen">
+  <a href="yorkstjohn-hub.html" class="intro-back" aria-label="Back">
+    <span class="mi">arrow_back_ios_new</span>
+  </a>
+
+  <div class="intro-avatar-wrap">
+    <div class="intro-avatar">
+      <span class="mi fill" style="font-size:48px;color:#fff">smart_toy</span>
+    </div>
+  </div>
+
+  <h1 class="intro-title">
+    AI Mock Interview
+    <em>York St John University</em>
+  </h1>
+  <p class="intro-subtitle">
+    Your AI interviewer will ask you questions, listen to your answers,
+    and give you immediate spoken feedback — just like the real thing.
+  </p>
+
+  <div class="intro-steps">
+    <div class="intro-step">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <strong>AI asks a question</strong>
+        <span>Spoken aloud with text on screen. Read carefully.</span>
+      </div>
+    </div>
+    <div class="intro-step">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <strong>You answer verbally</strong>
+        <span>Speak clearly — your words transcribe live on screen.</span>
+      </div>
+    </div>
+    <div class="intro-step">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        <strong>Instant AI feedback</strong>
+        <span>Scored immediately. The AI tells you exactly what to improve.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="browser-warn" id="browser-warn" style="display:none">
+    <span class="mi">info</span>
+    <span>For best results, use <strong>Chrome</strong> or <strong>Edge</strong>. Safari users: tap the mic button to record.</span>
+  </div>
+
+  <div id="course-name-display" style="margin-bottom:var(--s5);text-align:center;font-size:14px;color:rgba(255,255,255,.5);">
+    Preparing for: <strong id="course-name-text" style="color:rgba(255,255,255,.8)">—</strong>
+  </div>
+
+  <button class="btn-start-mock" id="startBtn" onclick="beginInterview()">
+    <span class="mi fill">play_circle</span>
+    Start Interview
+  </button>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     COUNTDOWN OVERLAY
+════════════════════════════════════════════════════ -->
+<div id="phase-countdown">
+  <div class="countdown-num" id="countdown-num">3</div>
+  <div class="countdown-label">Get ready to speak…</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     INTERVIEW PHASE
+════════════════════════════════════════════════════ -->
+<div id="phase-interview">
+  <!-- Top bar -->
+  <div class="mock-topbar">
+    <div class="mock-progress-wrap">
+      <div class="mock-progress-label" id="mock-q-progress-label">Question 1 of 3</div>
+      <div class="mock-progress-bar">
+        <div class="mock-progress-fill" id="mock-progress-fill" style="width:33%"></div>
+      </div>
+    </div>
+    <div class="mock-controls">
+      <div class="mock-q-label" id="mock-q-num">Q1</div>
+    </div>
+  </div>
+
+  <!-- AI Avatar -->
+  <div class="ai-avatar-section">
+    <div class="ai-avatar-outer" id="ai-avatar-outer">
+      <div class="ai-avatar-ring"></div>
+      <div class="ai-avatar-ring delay"></div>
+      <div class="ai-avatar-circle">
+        <span class="mi fill" style="font-size:48px;color:rgba(255,255,255,.9)">smart_toy</span>
+      </div>
+    </div>
+    <div class="soundwave" id="soundwave">
+      <div class="sw-bar"></div><div class="sw-bar"></div><div class="sw-bar"></div>
+      <div class="sw-bar"></div><div class="sw-bar"></div><div class="sw-bar"></div>
+      <div class="sw-bar"></div>
+    </div>
+    <div class="ai-status-label" id="ai-status">Preparing…</div>
+  </div>
+
+  <!-- Question + Transcript -->
+  <div class="question-area">
+    <div class="question-chip">
+      <span class="mi" style="font-size:13px">record_voice_over</span>
+      <span id="q-category">Background</span>
+    </div>
+    <div class="question-text" id="question-text">Loading question…</div>
+
+    <!-- Live transcript while recording -->
+    <div class="transcript-card" id="transcript-card">
+      <div class="transcript-label">
+        <span class="rec-dot" id="rec-dot"></span>
+        Your answer
+      </div>
+      <div class="transcript-text" id="transcript-display" aria-live="polite"></div>
+    </div>
+
+    <!-- Feedback card (shown after grading) -->
+    <div class="feedback-card" id="feedback-card">
+      <div class="fb-score-row">
+        <div class="fb-score-big" id="fb-score-num">—</div>
+        <div>
+          <div class="fb-verdict" id="fb-verdict">—</div>
+          <div class="fb-verdict-sub" id="fb-verdict-sub">—</div>
+        </div>
+      </div>
+      <div class="fb-text" id="fb-text"></div>
+      <div class="fb-checklist" id="fb-checklist"></div>
+    </div>
+  </div>
+
+  <!-- Bottom controls -->
+  <div class="mock-bottom">
+    <!-- State: recording -->
+    <div class="mock-action-row" id="controls-recording" style="display:none">
+      <button class="btn-tap-record" id="tap-record-btn" onclick="toggleRecording()">
+        <span class="mi fill">mic</span>
+        <span id="tap-record-label">Tap to Record</span>
+      </button>
+      <button class="btn-submit-answer" id="submit-btn" onclick="submitAnswer()" disabled>
+        <span class="mi fill">check_circle</span>
+        Submit Answer
+      </button>
+    </div>
+    <!-- State: after feedback -->
+    <div class="mock-action-row" id="controls-after" style="display:none">
+      <button class="btn-retry" onclick="retryQuestion()">
+        <span class="mi">refresh</span>
+        Try Again
+      </button>
+      <button class="btn-next-q" id="next-q-btn" onclick="nextQuestion()">
+        Next Question
+        <span class="mi">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Thinking overlay -->
+<div class="thinking-overlay" id="thinking-overlay">
+  <div class="thinking-spinner"></div>
+  <div class="thinking-label">Evaluating your answer…</div>
+  <div class="thinking-sub">AI is checking all criteria</div>
+</div>
+
+<!-- Mute button (fixed, visible during interview) -->
+<div class="mute-btn-wrap" id="mute-wrap" style="display:none">
+  <button class="mute-btn" id="mute-btn" onclick="toggleMute()" aria-label="Toggle AI voice">
+    <span class="mi fill">volume_up</span>
+  </button>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     RESULTS PHASE
+════════════════════════════════════════════════════ -->
+<div id="phase-results">
+  <div class="results-header">
+    <div class="results-ring-wrap">
+      <svg width="140" height="140" viewBox="0 0 140 140" aria-hidden="true">
+        <circle cx="70" cy="70" r="58" stroke="rgba(255,255,255,.1)" stroke-width="10" fill="none"/>
+        <circle cx="70" cy="70" r="58" stroke="#c41230" stroke-width="10" fill="none"
+          stroke-dasharray="364.4" stroke-dashoffset="364.4"
+          id="results-ring-circle" stroke-linecap="round"/>
+      </svg>
+      <div class="results-ring-pct">
+        <div class="results-ring-num" id="results-score-num">0</div>
+        <div class="results-ring-label">Overall</div>
+      </div>
+    </div>
+    <h1 class="results-verdict" id="results-verdict-title">Interview Complete</h1>
+    <div class="results-verdict-chip" id="results-verdict-chip">
+      <span class="mi fill">verified</span>
+      <span id="results-verdict-text">Analysing…</span>
+    </div>
+    <p class="results-summary-text" id="results-summary"></p>
+  </div>
+
+  <div class="results-body">
+    <div class="res-section-title">Question Breakdown</div>
+    <div id="results-q-list"></div>
+  </div>
+
+  <div class="results-actions">
+    <button class="btn-submit-admin" id="submit-to-admin-btn" onclick="submitToAdmin()">
+      <span class="mi fill">send</span>
+      Submit Report to WhiteRock
+    </button>
+    <button class="btn-practice-again" onclick="restartInterview()">
+      <span class="mi">refresh</span>
+      Practice Again
+    </button>
+    <a href="yorkstjohn-hub.html" style="display:block;text-align:center;font-size:14px;font-weight:700;color:rgba(255,255,255,.4);padding:var(--s3);">
+      Back to Dashboard
+    </a>
+  </div>
+</div>
+
+<div id="toast" role="alert" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js?v=4"></script>
+<script src="yorkstjohn-data.js"></script>
+<script>
+// ════════════════════════════════════════════════════════════════
+//  AI MOCK INTERVIEW ENGINE
+//  TTS (SpeechSynthesis) + STT (SpeechRecognition) + Puter AI
+// ════════════════════════════════════════════════════════════════
+
+// ── INTERVIEW QUESTIONS ──────────────────────────────────────────
+const QUESTIONS = [
+  {
+    id: 'q_background',
+    category: 'Your Background',
+    text: 'Tell me about yourself — your academic and professional background.',
+    hint: 'Include your institution, qualification, graduation month and year, then each job with company name, title, and dates.',
+    criteria: [
+      'Institution name mentioned',
+      'Qualification or degree mentioned',
+      'Graduation month AND year stated',
+      'Employment listed in chronological order',
+      'Each job: company name mentioned',
+      'Each job: job title mentioned',
+      'Each job: start and end dates mentioned',
+      'No unexplained gap longer than six months',
+      'Timeline continues to current position',
+    ],
+    prompt_extra: `
+MANDATORY CRITERIA — check each one:
+1. Institution name (the university/college attended)
+2. Qualification/degree name
+3. Graduation MONTH mentioned (not just year)
+4. Graduation YEAR mentioned
+5. Employment in chronological order (earliest first)
+6. Each employer: company name
+7. Each employer: job title/position
+8. Each employer: employment dates (start and end)
+9. No unexplained gap longer than 6 months between jobs
+10. Timeline up to current employment
+
+The student should NOT explain what companies do. That is unnecessary.`
+  },
+  {
+    id: 'q_programme',
+    category: 'Your Programme',
+    text: 'Tell me about your programme.',
+    hint: 'State the full programme title, what it covers, key areas of study, and why it connects to your interests or career.',
+    criteria: [
+      'Full programme title stated clearly',
+      'Brief explanation of what the programme covers',
+      'Key areas of study or modules mentioned',
+      'Connection to personal interests or experience',
+      'Connection to career goals',
+    ],
+    prompt_extra: `
+MANDATORY CRITERIA — check each one:
+1. Full programme title stated (e.g. "MSc International Business Management" — not just "business management")
+2. Brief explanation of what the programme covers or focuses on
+3. At least two key areas of study or module topics mentioned
+4. Personal connection: links to their background, interests, or experience
+5. Career connection: explains how it supports future goals`
+  },
+  {
+    id: 'q_why_programme',
+    category: 'Why This Programme',
+    text: 'Why did you choose this programme?',
+    hint: 'Link to your current work, future career plans, professional ambitions, and give realistic specific examples.',
+    criteria: [
+      'Linked to current work experience',
+      'Linked to future career plans',
+      'Connected to professional ambitions',
+      'Specific realistic examples provided',
+      'Explains how programme supports future plans',
+    ],
+    prompt_extra: `
+MANDATORY CRITERIA — check each one:
+1. Explicitly linked to current work experience (not vague — specific connection)
+2. Linked to future career plans (not generic like "better job" — specific role or industry)
+3. Connects to a professional ambition or business goal they already have
+4. At least one specific, realistic example given
+5. Clearly explains how studying this programme will help them achieve their goals
+
+PENALISE heavily if the answer is generic and could apply to any programme at any university.`
+  },
+];
+
+// ── STATE ────────────────────────────────────────────────────────
+let currentQIdx    = 0;
+let transcript     = '';
+let isMuted        = false;
+let isRecording    = false;
+let sessionResults = [];
+let sessionId      = null;
+let recognition    = null;
+let synth          = window.speechSynthesis;
+let selectedVoice  = null;
+let hasSpeechRecog = false;
+let tapToRecord    = false; // iOS needs tap gesture
+
+// ── BROWSER DETECTION ────────────────────────────────────────────
+function detectBrowserSupport() {
+  hasSpeechRecog = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+  // iOS Safari needs tap gesture — detect it
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  tapToRecord = isIOS || isSafari || !hasSpeechRecog;
+  if (!hasSpeechRecog || tapToRecord) {
+    document.getElementById('browser-warn').style.display = 'flex';
+  }
+}
+
+// ── VOICE SELECTION ──────────────────────────────────────────────
+function getVoice() {
+  const voices = synth.getVoices();
+  // Prefer British or Irish female voice
+  const prefs = [
+    v => v.name.includes('Google UK English Female'),
+    v => v.name.includes('Microsoft Hazel'),
+    v => v.name.includes('Moira'),
+    v => v.lang === 'en-GB' && v.name.toLowerCase().includes('female'),
+    v => v.lang === 'en-GB',
+    v => v.lang === 'en-IE',
+    v => v.lang.startsWith('en'),
+  ];
+  for (const pref of prefs) {
+    const v = voices.find(pref);
+    if (v) return v;
+  }
+  return voices[0] || null;
+}
+
+function speak(text, onEnd) {
+  if (isMuted) { if (onEnd) setTimeout(onEnd, 0); return; }
+  synth.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.voice = selectedVoice || getVoice();
+  utt.rate  = 0.92;
+  utt.pitch = 1.05;
+  utt.volume = 1;
+  utt.onend = () => { setAISpeaking(false); if (onEnd) onEnd(); };
+  utt.onerror = () => { setAISpeaking(false); if (onEnd) onEnd(); };
+  setAISpeaking(true);
+  synth.speak(utt);
+}
+
+// ── UI STATE HELPERS ─────────────────────────────────────────────
+function setAISpeaking(yes) {
+  const avatar = document.getElementById('ai-avatar-outer');
+  const sw     = document.getElementById('soundwave');
+  const status = document.getElementById('ai-status');
+  if (yes) {
+    avatar?.classList.add('ai-speaking');
+    sw?.classList.remove('silent');
+    if (status) { status.textContent = 'Speaking…'; status.className = 'ai-status-label speaking'; }
+  } else {
+    avatar?.classList.remove('ai-speaking');
+    sw?.classList.add('silent');
+    if (status && status.textContent === 'Speaking…') {
+      status.textContent = 'Listening…'; status.className = 'ai-status-label listening';
+    }
+  }
+}
+
+function setStatus(text, cls = '') {
+  const el = document.getElementById('ai-status');
+  if (el) { el.textContent = text; el.className = 'ai-status-label ' + cls; }
+}
+
+function showThinking(yes) {
+  document.getElementById('thinking-overlay').classList.toggle('show', yes);
+}
+
+function showPhase(name) {
+  ['intro-screen','phase-countdown','phase-interview','phase-results'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+  const target = document.getElementById(name);
+  if (target) target.classList.add('active');
+  document.getElementById('mute-wrap').style.display = name === 'phase-interview' ? 'block' : 'none';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2800);
+}
+
+// ── SPEECH RECOGNITION ──────────────────────────────────────────
+function initRecognition() {
+  if (!hasSpeechRecog) return;
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.continuous     = true;
+  recognition.interimResults = true;
+  recognition.lang           = 'en-GB';
+
+  recognition.onresult = (e) => {
+    let interim = '', final = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript;
+      else                      interim += e.results[i][0].transcript;
+    }
+    if (final) transcript += final + ' ';
+    const display = (transcript + interim).trim();
+    const el = document.getElementById('transcript-display');
+    if (el) el.textContent = display;
+    // Enable submit once they have at least 20 chars
+    const btn = document.getElementById('submit-btn');
+    if (btn) btn.disabled = display.length < 20;
+  };
+
+  recognition.onerror = (e) => {
+    console.warn('STT error:', e.error);
+    if (e.error === 'not-allowed') {
+      showToast('Microphone permission denied. Please allow mic access.');
+    }
+  };
+
+  recognition.onend = () => {
+    if (isRecording) {
+      try { recognition.start(); } catch(e) {}
+    }
+  };
+}
+
+function startRecording() {
+  if (!hasSpeechRecog) return;
+  isRecording = true;
+  transcript  = '';
+  const el = document.getElementById('transcript-display');
+  if (el) el.textContent = '';
+  const btn = document.getElementById('submit-btn');
+  if (btn) btn.disabled = true;
+  document.getElementById('transcript-card')?.classList.add('recording');
+  try { recognition?.start(); } catch(e) {}
+
+  // Update tap record button to show "recording" state
+  updateTapBtn(true);
+  setStatus('Listening…', 'listening');
+}
+
+function stopRecording() {
+  isRecording = false;
+  recognition?.stop();
+  document.getElementById('transcript-card')?.classList.remove('recording');
+  updateTapBtn(false);
+}
+
+function updateTapBtn(recording) {
+  const btn   = document.getElementById('tap-record-btn');
+  const label = document.getElementById('tap-record-label');
+  if (!btn || !label) return;
+  if (recording) {
+    btn.classList.add('recording');
+    label.textContent = 'Recording… tap to stop';
+    btn.querySelector('.mi').textContent = 'stop_circle';
+  } else {
+    btn.classList.remove('recording');
+    label.textContent = 'Tap to Record';
+    btn.querySelector('.mi').textContent = 'mic';
+  }
+}
+
+function toggleRecording() {
+  if (isRecording) {
+    stopRecording();
+  } else {
+    startRecording();
+  }
+}
+
+function toggleMute() {
+  isMuted = !isMuted;
+  const btn = document.getElementById('mute-btn');
+  if (btn) {
+    btn.classList.toggle('muted', isMuted);
+    btn.querySelector('.mi').textContent = isMuted ? 'volume_off' : 'volume_up';
+  }
+  if (isMuted) synth.cancel();
+  showToast(isMuted ? 'AI voice muted' : 'AI voice on');
+}
+
+// ── MAIN FLOW ────────────────────────────────────────────────────
+async function beginInterview() {
+  // Request mic permission early
+  if (hasSpeechRecog) {
+    try { await navigator.mediaDevices.getUserMedia({ audio: true }); } catch(e) {}
+  }
+  // Init voice
+  if (synth.getVoices().length === 0) {
+    await new Promise(r => { synth.addEventListener('voiceschanged', r, { once: true }); setTimeout(r, 1500); });
+  }
+  selectedVoice = getVoice();
+  initRecognition();
+
+  // Countdown
+  showPhase('phase-countdown');
+  document.getElementById('phase-countdown').classList.add('active');
+
+  for (let i = 3; i >= 1; i--) {
+    document.getElementById('countdown-num').textContent = i;
+    await wait(1000);
+  }
+
+  // Start interview
+  showPhase('phase-interview');
+  await startQuestion(0);
+}
+
+async function startQuestion(idx) {
+  currentQIdx = idx;
+  const q = QUESTIONS[idx];
+  if (!q) { showResults(); return; }
+
+  // Update UI
+  const total = QUESTIONS.length;
+  document.getElementById('mock-q-progress-label').textContent = `Question ${idx+1} of ${total}`;
+  document.getElementById('mock-progress-fill').style.width = ((idx+1)/total*100) + '%';
+  document.getElementById('mock-q-num').textContent = `Q${idx+1}`;
+  document.getElementById('q-category').textContent = q.category;
+  document.getElementById('question-text').textContent = q.text;
+  document.getElementById('transcript-display').textContent = '';
+  document.getElementById('feedback-card').classList.remove('show', 'pass', 'fail');
+  document.getElementById('controls-recording').style.display = 'none';
+  document.getElementById('controls-after').style.display = 'none';
+
+  // AI speaks intro for first question
+  if (idx === 0) {
+    const s = window.getCurrentStudent?.();
+    const firstName = (s?.name || 'there').split(' ')[0];
+    await speakAsync(`Hello ${firstName}. Welcome to your mock interview. I will ask you ${total} questions. After each answer, I will give you immediate feedback. Let's begin.`);
+    await wait(800);
+  }
+
+  // AI speaks the question
+  setStatus('Speaking…', 'speaking');
+  await speakAsync(`Question ${idx+1}. ${q.text}`);
+
+  // Start recording
+  await wait(400);
+  setStatus('Listening…', 'listening');
+  document.getElementById('controls-recording').style.display = 'flex';
+
+  if (tapToRecord) {
+    // On iOS/Safari: show tap button only
+    document.getElementById('tap-record-btn').style.display = 'flex';
+    setStatus('Tap mic to answer', 'listening');
+  } else {
+    // Auto-start on Chrome/Edge
+    startRecording();
+    document.getElementById('tap-record-btn').style.display = 'flex';
+  }
+
+  const submitBtn = document.getElementById('submit-btn');
+  if (submitBtn) submitBtn.disabled = true;
+}
+
+async function submitAnswer() {
+  stopRecording();
+  const answer = transcript.trim() ||
+    document.getElementById('transcript-display')?.textContent?.trim() || '';
+
+  if (answer.length < 15) {
+    showToast('Please speak a longer answer before submitting.');
+    startRecording();
+    return;
+  }
+
+  setStatus('Thinking…', 'thinking');
+  showThinking(true);
+
+  try {
+    const q = QUESTIONS[currentQIdx];
+    const result = await gradeAnswer(q, answer);
+    showThinking(false);
+    await showFeedback(result, answer);
+  } catch(e) {
+    showThinking(false);
+    console.error('Grading error:', e);
+    showToast('Could not grade — please try again.');
+    startRecording();
+  }
+}
+
+async function gradeAnswer(q, answer) {
+  const prompt = `You are a strict UK student visa credibility interview examiner evaluating this answer.
+
+Question: "${q.text}"
+Student's answer: "${answer}"
+${q.prompt_extra}
+
+CORE RULE: A good answer = STATEMENT + CONCRETE EXAMPLE. Generic answers score very low.
+${q.criteria.map((c,i) => `${i+1}. ${c}`).join('\n')}
+
+SCORING: Start at 100. Deduct 10-15 for each criterion not met. Deduct extra for vague or generic content.
+PASS THRESHOLD: 70+
+
+Return ONLY valid JSON:
+{
+  "score": 0-100,
+  "pass": boolean,
+  "feedback_text": "Spoken feedback in 2-3 sentences. Start with what was good. Then state specifically what was missing. End with one clear instruction. Use 'I' as the coach voice. Be direct but encouraging. AVOID starting with 'Thank you' — get straight to the point.",
+  "good": ["one specific strength"],
+  "missing": ["one specific thing missing"]
+}`;
+
+  const resp = await puter.ai.chat(prompt, { model: 'gpt-4o-mini' });
+  const raw  = typeof resp === 'string' ? resp : resp?.message?.content || JSON.stringify(resp);
+  const match = raw.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error('No JSON');
+  return JSON.parse(match[0]);
+}
+
+async function showFeedback(result, answer) {
+  const q    = QUESTIONS[currentQIdx];
+  const pass = result.pass || result.score >= 70;
+  const score = result.score || 0;
+
+  // Save to session results
+  sessionResults.push({
+    qId:       q.id,
+    question:  q.text,
+    transcript: answer,
+    score,
+    pass,
+    feedback:  result.feedback_text || '',
+    good:      result.good || [],
+    missing:   result.missing || [],
+  });
+
+  // Show feedback card
+  const card = document.getElementById('feedback-card');
+  card.className = `feedback-card show ${pass ? 'pass' : 'fail'}`;
+
+  const scoreEl = document.getElementById('fb-score-num');
+  scoreEl.textContent = score;
+  scoreEl.className   = `fb-score-big ${pass ? 'pass' : 'fail'}`;
+
+  document.getElementById('fb-verdict').textContent     = pass ? '✅ Good answer' : '❌ Needs improvement';
+  document.getElementById('fb-verdict-sub').textContent = `${score}/100 — ${pass ? 'You passed this question' : 'Keep practising'}`;
+  document.getElementById('fb-text').textContent        = result.feedback_text || '';
+
+  const chkEl = document.getElementById('fb-checklist');
+  chkEl.innerHTML = [
+    ...(result.good    || []).map(g => `<div class="fb-check-item good"><span class="mi fill">check_circle</span>${g}</div>`),
+    ...(result.missing || []).map(m => `<div class="fb-check-item missing"><span class="mi fill">cancel</span>${m}</div>`),
+  ].join('');
+
+  // Hide recording controls, show after controls
+  document.getElementById('controls-recording').style.display = 'none';
+  document.getElementById('controls-after').style.display = 'flex';
+
+  // Update next button label
+  const nextBtn = document.getElementById('next-q-btn');
+  const isLast  = currentQIdx >= QUESTIONS.length - 1;
+  if (nextBtn) nextBtn.innerHTML = isLast
+    ? '<span class="mi fill">bar_chart</span>See Results'
+    : 'Next Question <span class="mi">arrow_forward</span>';
+
+  // Speak feedback aloud
+  await wait(300);
+  setStatus('Feedback…', 'speaking');
+  await speakAsync(result.feedback_text || '');
+  setStatus(pass ? 'Well done!' : 'Keep practising', pass ? 'listening' : '');
+
+  // Save to Supabase
+  saveQuestionScore(q.id, answer, score, pass, result.feedback_text);
+}
+
+function retryQuestion() {
+  synth.cancel();
+  transcript = '';
+  document.getElementById('transcript-display').textContent = '';
+  document.getElementById('feedback-card').classList.remove('show','pass','fail');
+  document.getElementById('controls-recording').style.display = 'flex';
+  document.getElementById('controls-after').style.display = 'none';
+  // Remove last saved result (allow overwrite)
+  sessionResults.pop();
+  setStatus('Listening…', 'listening');
+  if (!tapToRecord) startRecording();
+  speak(`Let's try that again. ${QUESTIONS[currentQIdx].text}`);
+}
+
+async function nextQuestion() {
+  synth.cancel();
+  stopRecording();
+  const next = currentQIdx + 1;
+  if (next >= QUESTIONS.length) {
+    await showResults();
+  } else {
+    await startQuestion(next);
+  }
+}
+
+// ── RESULTS ─────────────────────────────────────────────────────
+async function showResults() {
+  showPhase('phase-results');
+
+  const total   = sessionResults.reduce((s, r) => s + r.score, 0);
+  const avg     = sessionResults.length ? Math.round(total / sessionResults.length) : 0;
+  const passed  = sessionResults.filter(r => r.pass).length;
+  const readiness = avg >= 80 ? 'ready' : avg >= 60 ? 'needs_work' : 'not_ready';
+  const verdictText = avg >= 80 ? 'Interview Ready' : avg >= 60 ? 'Needs More Practice' : 'Not Ready Yet';
+
+  // Ring animation
+  const circ = 2 * Math.PI * 58; // r=58
+  const ring  = document.getElementById('results-ring-circle');
+  if (ring) {
+    ring.style.stroke = avg >= 80 ? '#4ade80' : avg >= 60 ? '#fbbf24' : '#f87171';
+    setTimeout(() => { ring.style.strokeDashoffset = circ - (circ * avg / 100); }, 300);
+  }
+  document.getElementById('results-score-num').textContent  = avg;
+  document.getElementById('results-verdict-title').textContent = verdictText;
+
+  const chip = document.getElementById('results-verdict-chip');
+  chip.className = `results-verdict-chip ${readiness}`;
+  document.getElementById('results-verdict-text').textContent =
+    readiness === 'ready' ? '✅ Ready for Interview' :
+    readiness === 'needs_work' ? '⚠️ Needs Practice' : '❌ More Work Needed';
+
+  // Build question breakdown
+  const list = document.getElementById('results-q-list');
+  list.innerHTML = sessionResults.map((r, i) => `
+    <div class="res-q-card" id="res-card-${i}">
+      <div class="res-q-header" onclick="toggleResCard(${i})">
+        <div class="res-q-badge ${r.pass?'pass':'fail'}">${r.pass?'✓':'✗'}</div>
+        <div class="res-q-title">${r.question}</div>
+        <div class="res-q-score ${r.pass?'pass':'fail'}">${r.score}</div>
+        <span class="mi res-q-chev">expand_more</span>
+      </div>
+      <div class="res-q-body">
+        <div class="res-q-content">
+          <div class="res-q-label">Your Answer</div>
+          <div class="res-q-transcript">${r.transcript || '(No transcript)'}</div>
+          <div class="res-q-label">AI Feedback</div>
+          <div class="res-q-feedback">${r.feedback}</div>
+          ${r.missing?.length ? `<div class="res-q-label" style="margin-top:12px;color:#f87171">Missed</div>
+            ${r.missing.map(m=>`<div class="fb-check-item missing" style="color:#f87171;font-size:13px;margin-bottom:4px"><span class="mi fill" style="font-size:15px">cancel</span>${m}</div>`).join('')}` : ''}
+          ${r.good?.length ? `<div class="res-q-label" style="margin-top:12px;color:#4ade80">Strengths</div>
+            ${r.good.map(g=>`<div class="fb-check-item good" style="color:#4ade80;font-size:13px;margin-bottom:4px"><span class="mi fill" style="font-size:15px">check_circle</span>${g}</div>`).join('')}` : ''}
+        </div>
+      </div>
+    </div>`).join('');
+
+  // Generate summary text
+  const summaryText = `You scored ${avg} out of 100 overall, passing ${passed} of ${QUESTIONS.length} questions. ${avg >= 70 ? 'Strong performance overall.' : 'Focus on giving specific examples and including all required details for each question.'}`;
+  document.getElementById('results-summary').textContent = summaryText;
+
+  // Speak summary
+  await wait(800);
+  speak(`Interview complete. You scored ${avg} out of 100. ${avg >= 70 ? 'Well done. You are on track for your interview.' : 'Keep practising. Focus on including all the specific details required for each answer.'}`);
+
+  // Save session
+  saveSession(avg, readiness, summaryText);
+}
+
+function toggleResCard(i) {
+  const card = document.getElementById('res-card-'+i);
+  if (card) card.classList.toggle('open');
+}
+
+async function submitToAdmin() {
+  const btn = document.getElementById('submit-to-admin-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner" style="border-top-color:var(--navy)"></span><span style="margin-left:8px">Sending…</span>';
+  try {
+    const progress = await window.loadSavedProgress?.();
+    const responses = progress?.ai_scores || {};
+    const checklist = progress?.checklist_status || {};
+    const avg = sessionResults.length
+      ? (sessionResults.reduce((s,r)=>s+r.score,0)/sessionResults.length).toFixed(1)
+      : '0';
+    const res = await window.sendReadyEmail?.(responses, checklist, avg, 'Student submitted Mock Interview results');
+    if (res?.success || res?.sent) {
+      btn.innerHTML = '<span class="mi fill">check_circle</span><span>Sent to WhiteRock!</span>';
+      btn.style.background = '#dcfce7'; btn.style.color = '#166534';
+      showToast('✅ Report sent!');
+    } else throw new Error('Failed');
+  } catch(e) {
+    btn.disabled = false;
+    btn.innerHTML = '<span class="mi fill">send</span>Submit Report to WhiteRock';
+    showToast('Could not send — please try again.');
+  }
+}
+
+function restartInterview() {
+  synth.cancel();
+  sessionResults = [];
+  transcript     = '';
+  currentQIdx    = 0;
+  showPhase('intro-screen');
+}
+
+// ── DB SAVES ─────────────────────────────────────────────────────
+async function saveQuestionScore(qId, answer, score, pass, feedback) {
+  try {
+    if (typeof window.saveAIResponse === 'function') {
+      await window.saveAIResponse('MOCK_YSJ_'+qId, answer, Math.round(score/10), feedback, qId);
+    }
+  } catch(e) { console.warn('Save score:', e.message); }
+}
+
+async function saveSession(avgScore, readiness, summary) {
+  try {
+    await (window.sessionReady || Promise.resolve());
+    const s = window.getCurrentStudent?.();
+    if (!s?.id) return;
+    const cid = localStorage.getItem('last_course');
+    await supabaseClient.from('mock_interview_sessions').insert({
+      user_id:      s.id,
+      school:       'yorkstjohn',
+      course_id:    cid || null,
+      completed_at: new Date().toISOString(),
+      questions:    sessionResults,
+      overall_score:avgScore,
+      readiness,
+      summary_text: summary,
+    });
+  } catch(e) { console.warn('Session save:', e.message); }
+}
+
+// ── HELPERS ──────────────────────────────────────────────────────
+function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+function speakAsync(text) {
+  return new Promise(resolve => speak(text, resolve));
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  detectBrowserSupport();
+  // Show course name
+  const cid = localStorage.getItem('last_course');
+  if (cid && COURSES && COURSES[cid]) {
+    document.getElementById('course-name-text').textContent = COURSES[cid].name;
+  }
+  // Preload voices
+  if (synth.getVoices().length > 0) {
+    selectedVoice = getVoice();
+  } else {
+    synth.addEventListener('voiceschanged', () => { selectedVoice = getVoice(); }, { once: true });
+  }
+});
+</script>
+</body>
+</html>
