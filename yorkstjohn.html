@@ -1,537 +1,532 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <base href="/UK-INTERVIEW-HUB/">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      York St John University Interview Prep — Pre-CAS Credibility Interview
-      Simulator
-    </title>
-    <!-- Puter.js for free AI -->
-    <script src="checklist-init.js"></script>
-    <script src="https://js.puter.com/v2/"></script>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <!-- Supabase + EmailJS + App Logic -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script src="app.js?v=3"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-      rel="stylesheet"
-    />
-    <script id="tailwind-config">
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: "#d4351c", // YSJ Red
-              "primary-light": "#fde8e5",
-              "primary-mid": "#f5c2bb",
-              secondary: "#1d4ed8", // YSJ Blue
-              "secondary-light": "#dbeafe",
-              accent: "#0891b2",
-              surface: "#ffffff",
-              "surface-low": "#f8fafc",
-              "surface-mid": "#f1f5f9",
-              "surface-high": "#e2e8f0",
-              border: "#e2e8f0",
-              "border-strong": "#cbd5e1",
-              muted: "#64748b",
-              "on-surface": "#0f172a",
-              error: "#dc2626",
-              success: "#16a34a",
-            },
-            fontFamily: {
-              headline: ["Space Grotesk"],
-              body: ["Inter"],
-              label: ["Manrope"],
-            },
-          },
-        },
-      };
-    </script>
-    <style>
-      * {
-        box-sizing: border-box;
-      }
-      .material-symbols-outlined {
-        font-variation-settings:
-          "FILL" 0,
-          "wght" 400,
-          "GRAD" 0,
-          "opsz" 24;
-        vertical-align: middle;
-      }
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <base href="/UK-INTERVIEW-HUB/">
+  <title>Interview Training | York St John University</title>
+  <script src="checklist-init.js"></script>
+  <script src="https://js.puter.com/v2/"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="app.js?v=3"></script>
+  <style>
+    :root {
+      --ysj-red:#c41230; --ysj-red-dark:#9e0e25; --ysj-navy:#1a1a2e;
+      --ysj-navy2:#16213e; --ysj-blue:#0f3460; --ysj-gray:#f4f6f9;
+      --ysj-border:#e5e7eb; --ysj-text:#1f2937; --ysj-muted:#6b7280;
+      --sidebar-w:72px; --sidebar-w-open:220px; --topnav-h:64px;
+      --right-w:300px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:"Inter",sans-serif;background:var(--ysj-gray);color:var(--ysj-text);}
+    .mat{font-family:"Material Symbols Outlined";font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;vertical-align:middle;}
+    .mat.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
 
-      /* NAV */
-      .top-nav {
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(16px);
-        border-bottom: 1px solid #e2e8f0;
-      }
-      .side-nav {
-        background: #ffffff;
-        border-right: 1px solid #e2e8f0;
-      }
+    /* ── COURSE SELECTION ──────────────────────────────── */
+    #s-select{display:none;}
+    #s-select.active{display:block;}
 
-      /* CARDS */
-      .course-card {
-        background: #ffffff;
-        border: 1.5px solid #e2e8f0;
-        transition: all 0.25s;
-        cursor: pointer;
-      }
-      .course-card:hover {
-        border-color: #d4351c;
-        transform: translateY(-3px);
-        box-shadow: 0 12px 32px rgba(212, 53, 28, 0.1);
-      }
-      .course-card:hover .card-arrow {
-        opacity: 1;
-        transform: translateX(4px);
-      }
-      .card-arrow {
-        opacity: 0;
-        transition: all 0.2s;
-      }
+    /* ── MAIN LMS LAYOUT ─────────────────────────────── */
+    #s-main{display:none;min-height:100dvh;}
+    #s-main.active{display:flex;}
 
-      /* PANEL */
-      .panel {
-        background: #ffffff;
-        border: 1.5px solid #e2e8f0;
-        border-radius: 14px;
-      }
-      .panel-tinted {
-        background: #f8fafc;
-        border: 1.5px solid #e2e8f0;
-        border-radius: 14px;
-      }
-      .panel-primary {
-        background: #fde8e5;
-        border: 1.5px solid #f5c2bb;
-        border-radius: 14px;
-      }
-      .panel-secondary {
-        background: #dbeafe;
-        border: 1.5px solid #bfdbfe;
-        border-radius: 14px;
-      }
+    /* ── SIDEBAR ─────────────────────────────────────── */
+    .ysj-sidebar{
+      width:var(--sidebar-w);flex-shrink:0;
+      background:var(--ysj-navy);
+      display:flex;flex-direction:column;align-items:center;
+      position:fixed;top:0;left:0;height:100vh;z-index:200;
+      transition:width 0.25s;overflow:hidden;
+    }
+    .ysj-sidebar:hover{width:var(--sidebar-w-open);}
+    .ysj-sidebar:hover .sl-label{opacity:1;width:auto;}
+    .ysj-logo-wrap{
+      width:100%;display:flex;align-items:center;gap:12px;
+      padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);
+      min-height:var(--topnav-h);
+    }
+    .ysj-logo-box{
+      width:40px;height:40px;flex-shrink:0;border-radius:10px;
+      background:var(--ysj-red);display:flex;align-items:center;justify-content:center;
+    }
+    .ysj-logo-box img{width:28px;}
+    .ysj-logo-text{white-space:nowrap;opacity:0;width:0;overflow:hidden;transition:opacity 0.2s;}
+    .ysj-sidebar:hover .ysj-logo-text{opacity:1;width:auto;}
+    .ysj-logo-text strong{display:block;font-size:11px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:0.06em;}
+    .ysj-logo-text span{font-size:10px;color:rgba(255,255,255,0.5);font-weight:500;}
 
-      /* BUTTONS */
-      .btn-primary {
-        background: #d4351c;
-        color: #ffffff;
-        font-weight: 700;
-        transition: all 0.2s;
-      }
-      .btn-primary:hover {
-        background: #b91c1c;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 16px rgba(212, 53, 28, 0.25);
-      }
-      .btn-primary:active {
-        transform: scale(0.98);
-      }
-      .btn-primary:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        transform: none;
-        box-shadow: none;
-      }
-      .btn-ghost {
-        background: transparent;
-        border: 1.5px solid #e2e8f0;
-        color: #64748b;
-        transition: all 0.2s;
-      }
-      .btn-ghost:hover {
-        background: #f1f5f9;
-        color: #0f172a;
-        border-color: #cbd5e1;
-      }
+    .ysj-nav{flex:1;width:100%;padding:10px 0;overflow-y:auto;}
+    .ysj-nav-item{
+      display:flex;align-items:center;gap:14px;
+      padding:11px 16px;cursor:pointer;border:none;background:none;
+      color:rgba(255,255,255,0.55);font-size:13px;font-weight:600;
+      width:100%;text-align:left;border-radius:0;
+      transition:background 0.15s,color 0.15s;
+      white-space:nowrap;text-decoration:none;
+    }
+    .ysj-nav-item:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.9);}
+    .ysj-nav-item.active{background:var(--ysj-red);color:#fff;}
+    .ysj-nav-item .mat{font-size:20px;flex-shrink:0;}
+    .sl-label{opacity:0;width:0;overflow:hidden;transition:opacity 0.2s;}
 
-      /* TABS */
-      .tab-btn {
-        font-family: "Manrope", sans-serif;
-        font-weight: 700;
-        font-size: 10px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        padding: 8px 14px;
-        border-radius: 100px;
-        background: #f1f5f9;
-        border: none;
-        color: #64748b;
-        cursor: pointer;
-        transition: all 0.2s;
-        white-space: nowrap;
-        flex-shrink: 0;
-      }
-      .tab-btn:hover {
-        background: #e2e8f0;
-        color: #0f172a;
-      }
-      .tab-btn.active {
-        background: #d4351c;
-        color: #ffffff;
-        font-weight: 800;
-      }
+    .ysj-sidebar-bottom{width:100%;padding:8px 0;border-top:1px solid rgba(255,255,255,0.08);}
 
-      /* SIDE LINKS */
-      .side-link {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 24px;
-        color: #64748b;
-        font-family: "Manrope", sans-serif;
-        font-weight: 700;
-        font-size: 10px;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        transition: all 0.2s;
-        cursor: pointer;
-        border-left: 3px solid transparent;
-      }
-      .side-link:hover {
-        color: #0f172a;
-        background: #f8fafc;
-      }
-      .side-link.active {
-        color: #d4351c;
-        background: #fde8e5;
-        border-left-color: #d4351c;
-      }
+    /* ── TOP NAV ──────────────────────────────────────── */
+    .ysj-topnav{
+      position:fixed;top:0;left:var(--sidebar-w);right:0;
+      height:var(--topnav-h);background:#fff;
+      border-bottom:1px solid var(--ysj-border);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 24px;z-index:100;gap:16px;
+    }
+    .ysj-topnav-left{display:flex;align-items:center;gap:12px;}
+    .ysj-page-title{font-size:16px;font-weight:800;color:var(--ysj-navy);font-family:"Manrope",sans-serif;}
+    .ysj-course-pill{
+      background:#f3f4f6;border:1px solid #e5e7eb;border-radius:20px;
+      padding:4px 12px;font-size:12px;font-weight:600;color:var(--ysj-muted);
+      display:flex;align-items:center;gap:6px;cursor:pointer;
+    }
+    .ysj-course-pill:hover{background:#e5e7eb;}
+    .ysj-topnav-right{display:flex;align-items:center;gap:16px;}
+    .ysj-stat-chip{
+      display:flex;align-items:center;gap:6px;
+      background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;
+      padding:6px 12px;font-size:13px;font-weight:700;
+    }
+    .ysj-stat-chip .stat-emoji{font-size:16px;}
+    .ysj-notif-btn{
+      width:36px;height:36px;border-radius:50%;background:#f3f4f6;
+      border:1px solid #e5e7eb;display:flex;align-items:center;justify-content:center;
+      cursor:pointer;position:relative;
+    }
+    .ysj-notif-btn:hover{background:#e5e7eb;}
+    .ysj-notif-badge{
+      position:absolute;top:-4px;right:-4px;width:16px;height:16px;
+      background:var(--ysj-red);color:#fff;border-radius:50%;
+      font-size:9px;font-weight:800;display:none;align-items:center;justify-content:center;
+      border:2px solid #fff;
+    }
+    .ysj-notif-badge.show{display:flex;}
+    .ysj-user-btn{
+      display:flex;align-items:center;gap:8px;cursor:pointer;
+      border:none;background:none;font-size:13px;font-weight:700;
+      color:var(--ysj-navy);padding:4px 8px;border-radius:8px;
+    }
+    .ysj-user-btn:hover{background:#f3f4f6;}
+    .ysj-avatar{
+      width:32px;height:32px;border-radius:50%;
+      background:linear-gradient(135deg,var(--ysj-red),#7c3aed);
+      display:flex;align-items:center;justify-content:center;
+      font-size:12px;font-weight:800;color:#fff;flex-shrink:0;
+    }
 
-      /* ACCORDION */
-      .acc-item {
-        background: #ffffff;
-        border: 1.5px solid #e2e8f0;
-        border-radius: 12px;
-        overflow: hidden;
-        margin-bottom: 8px;
-      }
-      .acc-item.open .acc-arrow {
-        transform: rotate(180deg);
-      }
-      .acc-body {
-        display: none;
-      }
-      .acc-item.open .acc-body {
-        display: block;
-      }
+    /* ── PAGE BODY ────────────────────────────────────── */
+    .ysj-page-body{
+      margin-left:var(--sidebar-w);
+      margin-top:var(--topnav-h);
+      display:flex;
+      min-height:calc(100vh - var(--topnav-h));
+    }
+    .ysj-main-scroll{
+      flex:1;overflow-y:auto;padding:24px;
+      max-width:calc(100vw - var(--sidebar-w) - var(--right-w));
+    }
+    .ysj-right-sidebar{
+      width:var(--right-w);flex-shrink:0;
+      border-left:1px solid var(--ysj-border);
+      background:#fff;overflow-y:auto;
+      padding:20px 16px;
+      position:sticky;top:0;height:calc(100vh - var(--topnav-h));
+    }
 
-      /* PROGRESS */
-      .progress-track {
-        background: #e2e8f0;
-        border-radius: 100px;
-        height: 6px;
-        overflow: hidden;
-      }
-      .progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, #1d4ed8, #d4351c);
-        border-radius: 100px;
-        transition: width 0.5s ease;
-        position: relative;
-      }
-      .progress-fill::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 60%;
-        height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 255, 255, 0.6),
-          transparent
-        );
-        animation: sweep 3s ease infinite;
-      }
-      @keyframes sweep {
-        to {
-          left: 200%;
-        }
-      }
+    /* ── HERO ─────────────────────────────────────────── */
+    .ysj-hero{
+      background:linear-gradient(135deg,#fff 55%,#fef2f2 100%);
+      border-radius:20px;padding:28px 32px;margin-bottom:24px;
+      border:1px solid #fecaca;display:flex;align-items:center;
+      justify-content:space-between;gap:24px;overflow:hidden;position:relative;
+    }
+    .ysj-hero::before{
+      content:"";position:absolute;top:-40px;right:160px;
+      width:200px;height:200px;border-radius:50%;
+      background:rgba(196,18,48,0.04);
+    }
+    .ysj-hero-left{flex:1;position:relative;z-index:1;}
+    .ysj-hero-left h1{
+      font-family:"Manrope",sans-serif;font-size:28px;font-weight:900;
+      color:var(--ysj-navy);line-height:1.15;margin-bottom:6px;
+    }
+    .ysj-hero-left h1 span{color:var(--ysj-red);}
+    .ysj-hero-left p{font-size:14px;color:var(--ysj-muted);margin-bottom:20px;line-height:1.5;}
+    .ysj-hero-stats{display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+    .hero-progress-ring{position:relative;width:72px;height:72px;flex-shrink:0;}
+    .hero-progress-ring svg{transform:rotate(-90deg);}
+    .hero-ring-text{
+      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+      font-size:14px;font-weight:800;color:var(--ysj-navy);
+    }
+    .hero-stat{text-align:center;}
+    .hero-stat-val{font-size:22px;font-weight:900;color:var(--ysj-navy);font-family:"Manrope",sans-serif;line-height:1;}
+    .hero-stat-label{font-size:11px;color:var(--ysj-muted);font-weight:500;margin-top:3px;}
+    .hero-stars{display:flex;gap:2px;margin-top:3px;}
+    .hero-star{font-size:14px;}
+    .ysj-hero-right{flex-shrink:0;position:relative;z-index:1;}
+    .ysj-hero-illustration{
+      width:180px;height:140px;background:linear-gradient(135deg,#fff5f5,#fff);
+      border-radius:16px;border:2px solid #fecaca;
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+    }
 
-      /* CHECKLIST */
-      .check-item {
-        border-bottom: 1px solid #f1f5f9;
-      }
-      .check-item:last-child {
-        border-bottom: none;
-      }
-      .check-box {
-        width: 20px;
-        height: 20px;
-        border: 2px solid #cbd5e1;
-        border-radius: 6px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        transition: all 0.15s;
-        margin-top: 2px;
-      }
-      .check-box:hover {
-        border-color: #d4351c;
-      }
-      .check-box.done {
-        background: #d4351c;
-        border-color: #d4351c;
-      }
-      .check-box.done::after {
-        content: "✓";
-        color: #fff;
-        font-size: 11px;
-        font-weight: 900;
-      }
+    /* ── MODULE GRID ──────────────────────────────────── */
+    .ysj-modules-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+    .ysj-modules-header h2{font-size:18px;font-weight:800;color:var(--ysj-navy);font-family:"Manrope",sans-serif;}
+    .ysj-modules-header p{font-size:12px;color:var(--ysj-muted);margin-top:2px;}
+    .view-all-btn{
+      display:flex;align-items:center;gap:6px;border:1px solid var(--ysj-border);
+      border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;
+      color:var(--ysj-navy);cursor:pointer;background:#fff;
+    }
+    .view-all-btn:hover{background:#f3f4f6;}
+    .ysj-module-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+      margin-bottom:24px;
+    }
+    .ysj-module-card{
+      background:#fff;border-radius:16px;padding:18px 16px 14px;
+      border:2px solid transparent;cursor:pointer;
+      transition:all 0.2s;position:relative;overflow:hidden;
+    }
+    .ysj-module-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.1);}
+    .ysj-module-card.active{border-color:var(--card-color);}
+    .ysj-module-card.completed{background:linear-gradient(135deg,#f0fdf4,#fff);}
+    .ysj-module-num{
+      font-size:11px;font-weight:800;color:var(--card-color);
+      margin-bottom:10px;display:block;
+    }
+    .ysj-module-icon{
+      width:42px;height:42px;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;
+      margin-bottom:10px;font-size:20px;
+    }
+    .ysj-module-title{
+      font-size:13px;font-weight:700;color:var(--ysj-navy);
+      line-height:1.3;margin-bottom:8px;min-height:34px;
+    }
+    .ysj-module-meta{font-size:11px;color:var(--ysj-muted);margin-bottom:10px;}
+    .ysj-module-progress-bar{
+      height:4px;background:#f3f4f6;border-radius:99px;margin-bottom:8px;
+    }
+    .ysj-module-progress-fill{
+      height:100%;border-radius:99px;background:var(--card-color);
+      transition:width 0.5s;
+    }
+    .ysj-module-pct{font-size:11px;font-weight:700;color:var(--ysj-muted);}
+    .ysj-module-btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:100%;padding:8px;border-radius:8px;font-size:12px;font-weight:700;
+      border:1.5px solid var(--card-color);color:var(--card-color);
+      cursor:pointer;background:transparent;margin-top:6px;
+      transition:all 0.15s;
+    }
+    .ysj-module-btn:hover,.ysj-module-card.active .ysj-module-btn{
+      background:var(--card-color);color:#fff;
+    }
+    .ysj-module-btn.completed-btn{
+      background:#dcfce7;border-color:#16a34a;color:#16a34a;
+    }
+    .ysj-module-btn.completed-btn:hover{background:#16a34a;color:#fff;}
 
-      /* FEEDBACK */
-      .fb-pass {
-        background: #f0fdf4;
-        border-left: 4px solid #16a34a;
-        border-radius: 0 10px 10px 0;
-      }
-      .fb-fail {
-        background: #fef2f2;
-        border-left: 4px solid #dc2626;
-        border-radius: 0 10px 10px 0;
-      }
-      .fb-loading {
-        background: #fde8e5;
-        border-left: 4px solid #d4351c;
-        border-radius: 0 10px 10px 0;
-      }
+    /* ── CONTENT AREA (tabs) ────────────────────────── */
+    .tc{display:none;}
+    .tc.active{display:block;}
+    .ysj-content-card{
+      background:#fff;border-radius:16px;padding:24px;margin-bottom:20px;
+      border:1px solid var(--ysj-border);
+    }
+    .ysj-content-card h3{
+      font-size:16px;font-weight:800;color:var(--ysj-navy);
+      font-family:"Manrope",sans-serif;margin-bottom:16px;
+      display:flex;align-items:center;gap:8px;
+    }
 
-      /* CHIPS */
-      .chip-pg {
-        background: #fde8e5;
-        color: #d4351c;
-        border: 1px solid #f5c2bb;
-        font-family: "Manrope", sans-serif;
-        font-weight: 800;
-        font-size: 9px;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        padding: 3px 10px;
-        border-radius: 100px;
-        display: inline-block;
-      }
-      .chip-ug {
-        background: #dbeafe;
-        color: #1d4ed8;
-        border: 1px solid #bfdbfe;
-        font-family: "Manrope", sans-serif;
-        font-weight: 800;
-        font-size: 9px;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        padding: 3px 10px;
-        border-radius: 100px;
-        display: inline-block;
-      }
+    /* ── CONTINUE LEARNING ────────────────────────── */
+    .ysj-continue{margin-bottom:24px;}
+    .ysj-continue h2{font-size:18px;font-weight:800;color:var(--ysj-navy);font-family:"Manrope",sans-serif;margin-bottom:14px;}
+    .continue-card{
+      background:#fff;border-radius:16px;padding:0;overflow:hidden;
+      border:1px solid var(--ysj-border);display:flex;gap:0;
+    }
+    .continue-info{padding:20px 24px;flex:1;}
+    .continue-lesson-badge{
+      display:inline-flex;align-items:center;gap:6px;
+      background:var(--ysj-red);color:#fff;border-radius:6px;
+      padding:3px 10px;font-size:11px;font-weight:800;text-transform:uppercase;
+      margin-bottom:10px;
+    }
+    .continue-info h3{font-size:18px;font-weight:800;color:var(--ysj-navy);font-family:"Manrope",sans-serif;margin-bottom:6px;}
+    .continue-info p{font-size:13px;color:var(--ysj-muted);margin-bottom:14px;line-height:1.5;}
+    .continue-meta{display:flex;align-items:center;gap:16px;margin-bottom:16px;font-size:12px;color:var(--ysj-muted);}
+    .continue-meta-item{display:flex;align-items:center;gap:4px;}
+    .continue-actions{display:flex;gap:10px;}
+    .btn-continue{
+      display:flex;align-items:center;gap:6px;background:var(--ysj-red);color:#fff;
+      border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;
+      cursor:pointer;
+    }
+    .btn-continue:hover{background:var(--ysj-red-dark);}
+    .btn-details{
+      border:1.5px solid var(--ysj-border);background:#fff;color:var(--ysj-navy);
+      border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;
+    }
+    .btn-details:hover{background:#f3f4f6;}
+    .continue-thumb{
+      width:240px;flex-shrink:0;background:linear-gradient(135deg,#1a1a2e,#0f3460);
+      display:flex;align-items:center;justify-content:center;position:relative;
+    }
+    .play-overlay{
+      width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.95);
+      display:flex;align-items:center;justify-content:center;cursor:pointer;
+    }
+    .play-overlay .mat{font-size:28px;color:var(--ysj-red);}
+    .thumb-label{
+      position:absolute;top:10px;left:10px;
+      background:rgba(0,0,0,0.6);color:#fff;font-size:10px;font-weight:700;
+      padding:3px 8px;border-radius:4px;
+    }
+    .thumb-time{
+      position:absolute;bottom:10px;right:10px;
+      background:rgba(0,0,0,0.7);color:#fff;font-size:10px;font-weight:600;
+      padding:2px 6px;border-radius:4px;
+    }
 
-      /* Q NUMBER */
-      .q-num {
-        background: #fde8e5;
-        color: #d4351c;
-        font-family: "Manrope", sans-serif;
-        font-weight: 800;
-        font-size: 9px;
-        padding: 2px 7px;
-        border-radius: 4px;
-        flex-shrink: 0;
-        margin-top: 2px;
-        letter-spacing: 0.05em;
-      }
+    /* ── ACHIEVEMENTS ─────────────────────────────── */
+    .ysj-achievements{margin-bottom:24px;}
+    .ysj-achievements h2{font-size:18px;font-weight:800;color:var(--ysj-navy);font-family:"Manrope",sans-serif;margin-bottom:14px;}
+    .achievements-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+    .achievement-card{
+      background:#fff;border-radius:12px;padding:14px;
+      border:1px solid var(--ysj-border);text-align:center;
+    }
+    .achievement-icon{font-size:28px;margin-bottom:6px;display:block;}
+    .achievement-title{font-size:12px;font-weight:700;color:var(--ysj-navy);margin-bottom:2px;}
+    .achievement-desc{font-size:11px;color:var(--ysj-muted);}
+    .achievement-xp{font-size:11px;font-weight:800;color:#16a34a;margin-top:4px;}
 
-      /* FILTER BUTTONS */
-      .filter-btn {
-        font-family: "Manrope", sans-serif;
-        font-weight: 700;
-        font-size: 9px;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        padding: 6px 14px;
-        border-radius: 100px;
-        background: #f8fafc;
-        border: 1.5px solid #e2e8f0;
-        color: #64748b;
-        cursor: pointer;
-        transition: all 0.15s;
-      }
-      .filter-btn:hover {
-        border-color: #cbd5e1;
-        color: #0f172a;
-      }
-      .filter-btn.active {
-        background: #fde8e5;
-        border-color: #d4351c;
-        color: #d4351c;
-      }
+    /* ── HELP BANNER ──────────────────────────────── */
+    .ysj-help{
+      background:linear-gradient(135deg,#fff5f5,#fef2f2);
+      border-radius:16px;padding:24px;border:1px solid #fecaca;
+      display:flex;align-items:center;gap:20px;margin-bottom:24px;
+    }
+    .help-text h3{font-size:16px;font-weight:800;color:var(--ysj-navy);margin-bottom:4px;}
+    .help-text p{font-size:13px;color:var(--ysj-muted);margin-bottom:10px;}
+    .help-features{list-style:none;}
+    .help-features li{font-size:12px;color:var(--ysj-text);margin-bottom:3px;display:flex;align-items:center;gap:6px;}
+    .help-features li::before{content:"✓";color:#16a34a;font-weight:800;}
+    .btn-book{
+      background:var(--ysj-navy);color:#fff;border:none;border-radius:10px;
+      padding:12px 20px;font-size:13px;font-weight:700;cursor:pointer;
+      display:flex;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0;
+    }
+    .btn-book:hover{background:var(--ysj-navy2);}
 
-      /* RESOURCE CARDS */
-      .lcard {
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 16px;
-        background: #ffffff;
-        border: 1.5px solid #e2e8f0;
-        border-radius: 10px;
-        text-decoration: none;
-        color: #0f172a;
-        font-size: 13px;
-        font-weight: 600;
-        transition: all 0.2s;
-      }
-      .lcard:hover {
-        background: #fff5f5;
-        border-color: #d4351c;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(212, 53, 28, 0.08);
-      }
-      .lsub {
-        color: #64748b;
-        font-size: 11px;
-        font-weight: 500;
-        margin-top: 2px;
-        display: block;
-        font-family: "Manrope", sans-serif;
-      }
+    /* ── RIGHT SIDEBAR ────────────────────────────── */
+    .rs-section{margin-bottom:20px;}
+    .rs-section-title{font-size:13px;font-weight:800;color:var(--ysj-navy);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+    .rs-section-title .mat{font-size:16px;color:var(--ysj-red);}
 
-      /* TEXTAREA */
-      textarea.sim-input {
-        background: #f8fafc;
-        border: none;
-        border-bottom: 2px solid #e2e8f0;
-        border-radius: 0;
-        color: #0f172a;
-        font-family: "Inter", sans-serif;
-        font-size: 14px;
-        outline: none;
-        transition: border-color 0.2s;
-        resize: vertical;
-        padding: 12px 0;
-        width: 100%;
-      }
-      textarea.sim-input:focus {
-        border-bottom-color: #d4351c;
-        background: #fff;
-      }
-      textarea.sim-input::placeholder {
-        color: #94a3b8;
-      }
+    /* AI Coach */
+    .ai-coach-card{
+      background:linear-gradient(135deg,var(--ysj-navy),var(--ysj-blue));
+      border-radius:14px;padding:16px;margin-bottom:20px;color:#fff;
+    }
+    .ai-coach-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+    .ai-robot{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;}
+    .ai-coach-header-text strong{display:block;font-size:13px;font-weight:800;}
+    .ai-coach-header-text span{font-size:11px;opacity:0.7;}
+    .ai-greeting{font-size:14px;font-weight:700;margin-bottom:2px;}
+    .ai-greeting span{font-size:11px;font-weight:400;opacity:0.8;display:block;margin-top:2px;}
+    .coach-list{margin-top:12px;}
+    .coach-item{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px;}
+    .coach-dot{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
+    .coach-dot.done{background:#16a34a;}
+    .coach-dot.warn{background:#f59e0b;}
+    .coach-rec{
+      background:rgba(255,255,255,0.1);border-radius:8px;padding:10px;margin-top:12px;
+    }
+    .coach-rec-label{font-size:10px;font-weight:800;color:#fbbf24;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
+    .coach-rec-text{font-size:12px;opacity:0.9;line-height:1.4;}
+    .btn-continue-learning{
+      width:100%;background:var(--ysj-red);color:#fff;border:none;
+      border-radius:8px;padding:9px;font-size:12px;font-weight:700;cursor:pointer;
+      margin-top:10px;
+    }
 
-      /* SCREENS */
-      .screen {
-        display: none;
-      }
-      .screen.active {
-        display: block;
-      }
-      .tc {
-        display: none;
-      }
-      .tc.active {
-        display: block;
-      }
+    /* Skills Progress */
+    .skill-item{margin-bottom:12px;}
+    .skill-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+    .skill-name{font-size:12px;font-weight:600;color:var(--ysj-text);display:flex;align-items:center;gap:6px;}
+    .skill-name .mat{font-size:14px;}
+    .skill-pct{font-size:12px;font-weight:800;color:var(--ysj-navy);}
+    .skill-bar{height:6px;background:#f3f4f6;border-radius:99px;overflow:hidden;}
+    .skill-fill{height:100%;border-radius:99px;transition:width 0.7s;}
 
-      /* SPINNER */
-      .spinner {
-        display: inline-block;
-        width: 13px;
-        height: 13px;
-        border: 2px solid rgba(255, 255, 255, 0.4);
-        border-top-color: #fff;
-        border-radius: 50%;
-        animation: spin 0.7s linear infinite;
-      }
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
+    /* Quick Practice */
+    .qp-item{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 0;border-bottom:1px solid #f3f4f6;cursor:pointer;
+    }
+    .qp-item:last-child{border-bottom:none;}
+    .qp-item:hover .qp-arrow{transform:translateX(3px);}
+    .qp-left{display:flex;align-items:center;gap:10px;}
+    .qp-icon{
+      width:34px;height:34px;border-radius:10px;
+      display:flex;align-items:center;justify-content:center;font-size:16px;
+    }
+    .qp-title{font-size:13px;font-weight:700;color:var(--ysj-navy);}
+    .qp-sub{font-size:11px;color:var(--ysj-muted);}
+    .qp-arrow{color:var(--ysj-muted);font-size:16px;transition:transform 0.2s;}
 
-      /* SCORE */
-      .score-num {
-        font-family: "Space Grotesk", sans-serif;
-        font-size: 2rem;
-        font-weight: 900;
-      }
+    .btn-mock{
+      width:100%;background:linear-gradient(135deg,var(--ysj-navy),var(--ysj-blue));
+      color:#fff;border:none;border-radius:10px;padding:14px;
+      font-size:13px;font-weight:800;cursor:pointer;margin-top:12px;
+      text-align:center;line-height:1.3;
+    }
+    .btn-mock span{display:block;font-size:10px;font-weight:500;opacity:0.7;margin-top:2px;}
+    .btn-mock:hover{opacity:0.9;}
 
-      /* INFO CARD */
-      .icard {
-        background: #f8fafc;
-        border: 1.5px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 20px;
-      }
+    /* ── EXISTING QUESTION/CHECKLIST/GUIDE STYLES ─── */
+    /* (carry over key styles from original page) */
+    .q-card{background:#fff;border-radius:14px;padding:18px;margin-bottom:14px;border:1px solid var(--ysj-border);}
+    .q-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:var(--ysj-muted);margin-bottom:6px;}
+    .q-text{font-size:15px;font-weight:700;color:var(--ysj-navy);margin-bottom:8px;line-height:1.4;}
+    .q-hint{font-size:12px;color:var(--ysj-muted);line-height:1.5;margin-bottom:12px;background:#f9fafb;padding:10px;border-radius:8px;}
+    .q-input{width:100%;border:1.5px solid var(--ysj-border);border-radius:10px;padding:10px 12px;font-size:13px;resize:none;font-family:inherit;outline:none;}
+    .q-input:focus{border-color:var(--ysj-red);}
+    .q-btn{
+      background:var(--ysj-red);color:#fff;border:none;border-radius:8px;
+      padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;
+      display:flex;align-items:center;gap:6px;
+    }
+    .q-btn:hover{background:var(--ysj-red-dark);}
+    .q-btn:disabled{opacity:0.5;cursor:not-allowed;}
+    .fbb-area{margin-top:12px;}
+    .fb-pass{background:#f0fdf4;border:1px solid #86efac;border-radius:10px;}
+    .fb-fail{background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;}
+    .guide-acc{background:#fff;border-radius:12px;border:1px solid var(--ysj-border);margin-bottom:8px;overflow:hidden;}
+    .guide-acc-header{padding:14px 16px;font-size:14px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+    .guide-acc-body{padding:0 16px 16px;font-size:13px;color:var(--ysj-muted);line-height:1.6;display:none;}
+    .guide-acc-body.open{display:block;}
+    .chk-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f3f4f6;}
+    .chk-item:last-child{border-bottom:none;}
+    .chk-box{width:20px;height:20px;border-radius:6px;border:2px solid var(--ysj-border);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+    .chk-box.checked{background:var(--ysj-red);border-color:var(--ysj-red);}
+    .chk-box.checked::after{content:"✓";color:#fff;font-size:11px;font-weight:800;}
+    .chk-label{font-size:13px;color:var(--ysj-text);flex:1;}
+    .know-cat{margin-bottom:20px;}
+    .know-cat-title{font-size:13px;font-weight:800;color:var(--ysj-navy);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+    .know-q{
+      padding:10px 14px;border-radius:8px;background:#f9fafb;
+      border-left:3px solid var(--ysj-red);margin-bottom:6px;
+      font-size:13px;color:var(--ysj-text);cursor:pointer;
+    }
+    .know-q:hover{background:#f3f4f6;}
+    .score-badge{
+      display:inline-flex;align-items:center;gap:4px;border-radius:6px;
+      padding:3px 8px;font-size:11px;font-weight:800;
+    }
+    .score-pass{background:#dcfce7;color:#16a34a;}
+    .score-fail{background:#fee2e2;color:#dc2626;}
+    .score-pending{background:#f3f4f6;color:#6b7280;}
 
-      /* MODULE ITEM */
-      .mod-item {
-        background: #ffffff;
-        border: 1.5px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 18px 20px;
-        display: flex;
-        gap: 14px;
-        align-items: flex-start;
-        margin-bottom: 8px;
-      }
-      .mod-num {
-        background: #d4351c;
-        color: #fff;
-        font-family: "Manrope", sans-serif;
-        font-weight: 800;
-        font-size: 9px;
-        padding: 3px 8px;
-        border-radius: 5px;
-        flex-shrink: 0;
-        margin-top: 2px;
-        letter-spacing: 0.05em;
-      }
+    /* ── TOAST ─────────────────────────────────────── */
+    #toast{display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+      background:#1a1a2e;color:#fff;padding:10px 20px;border-radius:99px;
+      font-size:13px;font-weight:600;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.2);white-space:nowrap;}
 
-      /* Mobile layout */
-      @media (max-width: 768px) {
-        .side-panel {
-          display: none !important;
-        }
-        .main-offset {
-          margin-left: 0 !important;
-        }
-        .mobile-tab-bar {
-          display: flex !important;
-          top: 80px !important;
-        }
-        .tc {
-          padding-top: 136px !important;
-        }
-      }
+    /* ── NOTIFICATION PANEL ─────────────────────── */
+    #notifPanel{display:none;position:fixed;top:68px;right:16px;width:320px;max-height:440px;
+      background:#fff;border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,0.15);
+      border:1px solid var(--ysj-border);z-index:300;flex-direction:column;overflow:hidden;}
+    #notifPanel.open{display:flex;}
 
-      .mobile-tab-bar {
-        display: none;
-      }
-    </style>
-  <base target="_blank">
+    /* ── RESPONSIVE ────────────────────────────── */
+    @media(max-width:1100px){
+      .ysj-right-sidebar{display:none;}
+      .ysj-main-scroll{max-width:calc(100vw - var(--sidebar-w));}
+    }
+    @media(max-width:780px){
+      .ysj-module-grid{grid-template-columns:repeat(2,1fr);}
+      .achievements-grid{grid-template-columns:repeat(2,1fr);}
+      .continue-thumb{display:none;}
+    }
+    @media(max-width:500px){
+      .ysj-module-grid{grid-template-columns:1fr 1fr;}
+      .ysj-topnav{padding:0 12px;}
+    }
+
+    /* ── OLD STYLES (course select + critical ids) ─ */
+    /* Tailwind-style helpers */
+    .active{} /* toggled by JS */
+    .hidden{display:none!important;}
+    .spinner{width:20px;height:20px;border:2px solid #e5e7eb;border-top-color:var(--ysj-red);border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    /* For the puter video notes and guide sections that existing JS renders */
+    .text-primary{color:var(--ysj-red);}
+    .text-secondary{color:#1d4ed8;}
+    .text-accent{color:#0891b2;}
+    .text-success{color:#16a34a;}
+    .text-error{color:#dc2626;}
+    .text-muted{color:var(--ysj-muted);}
+    .text-on-surface{color:var(--ysj-navy);}
+    .bg-primary-light{background:#fef2f2;}
+    .bg-secondary-light{background:#eff6ff;}
+    .border-primary-mid{border-color:#fca5a5;}
+    .border-blue-200{border-color:#bfdbfe;}
+    .bg-cyan-50{background:#ecfeff;}
+    .border-cyan-200{border-color:#a5f3fc;}
+    .space-y-2>*+*{margin-top:0.5rem;}
+    .flex{display:flex;} .items-start{align-items:flex-start;} .items-center{align-items:center;}
+    .gap-2{gap:0.5rem;} .font-bold{font-weight:700;} .text-sm{font-size:0.875rem;}
+    .text-xs{font-size:0.75rem;} .mt-2{margin-top:0.5rem;} .mb-2{margin-bottom:0.5rem;}
+    .w-full{width:100%;} .rounded-xl{border-radius:0.75rem;} .p-5{padding:1.25rem;}
+    .text-lg{font-size:1.125rem;} .font-semibold{font-weight:600;} .font-extrabold{font-weight:800;}
+    .list-disc{list-style-type:disc;} .pl-4{padding-left:1rem;} .space-y-1>*+*{margin-top:0.25rem;}
+    .mt-4{margin-top:1rem;} .p-3{padding:0.75rem;} .border{border-width:1px;border-style:solid;}
+    .border-green-400{border-color:#4ade80;} .bg-green-50{background:#f0fdf4;}
+    .border-orange-400{border-color:#fb923c;} .bg-orange-50{background:#fff7ed;}
+    .border-red-400{border-color:#f87171;} .bg-red-50{background:#fef2f2;}
+    .text-green-800{color:#166534;} .text-orange-800{color:#9a3412;} .text-red-800{color:#991b1b;}
+    .font-medium{font-weight:500;} .leading-relaxed{line-height:1.625;}
+    .grid{display:grid;} .grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr));}
+    .gap-4{gap:1rem;} .rounded-lg{border-radius:0.5rem;}
+    .py-2{padding-top:0.5rem;padding-bottom:0.5rem;}
+    .text-left{text-align:left;} .text-right{text-align:right;}
+    .border-b{border-bottom-width:1px;border-style:solid;border-color:#e5e7eb;}
+    .border-border{border-color:var(--ysj-border);}
+    .w-full{width:100%;} th{font-weight:700;font-size:12px;} td{font-size:12px;}
+    table{width:100%;border-collapse:collapse;}
+  </style>
+  <script>
+    tailwind.config = {
+      corePlugins: { preflight: false },
+      theme: { extend: {
+        colors: { primary:'#c41230', 'primary-dark':'#9e0e25' }
+      }}
+    }
+  </script>
 </head>
-  <body
-    class="bg-surface-low text-on-surface font-body min-h-screen"
-    style="font-family: &quot;Inter&quot;, sans-serif"
-  >
-    <!-- ======================================================
-     COURSE SELECT SCREEN
-====================================================== -->
-    <div id="s-select" class="screen active min-h-screen">
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     COURSE SELECTION SCREEN
+══════════════════════════════════════════════════════════════════════ -->
+<div id="s-select" class="active" style="background:var(--ysj-gray);min-height:100vh;">
       <div
         class="top-nav fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-14"
       >
@@ -874,9 +869,178 @@
     </div>
 
     <!-- ======================================================
-     MAIN SCREEN
-====================================================== -->
-    <div id="s-main" class="screen">
+
+</div><!-- /s-select -->
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     MAIN LMS DASHBOARD
+══════════════════════════════════════════════════════════════════════ -->
+<div id="s-main">
+
+  <!-- ── LEFT SIDEBAR ──────────────────────────────────────────── -->
+  <aside class="ysj-sidebar">
+    <div class="ysj-logo-wrap">
+      <div class="ysj-logo-box">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect width="28" height="28" rx="6" fill="white" fill-opacity="0.15"/>
+          <path d="M8 8h12M14 8v12M8 20h12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="ysj-logo-text">
+        <strong>YORK ST JOHN</strong>
+        <span>University</span>
+      </div>
+    </div>
+    <nav class="ysj-nav">
+      <button class="ysj-nav-item active" id="nav-dashboard" onclick="showTab('video','sl-video');setActiveNav(this)">
+        <span class="mat">dashboard</span><span class="sl-label">Dashboard</span>
+      </button>
+      <button class="ysj-nav-item" id="nav-training" onclick="showTab('guide','sl-guide');setActiveNav(this)">
+        <span class="mat">school</span><span class="sl-label">Training</span>
+      </button>
+      <button class="ysj-nav-item" id="nav-practice" onclick="showTab('know','sl-know');setActiveNav(this)">
+        <span class="mat">psychology</span><span class="sl-label">Practice</span>
+      </button>
+      <button class="ysj-nav-item" id="nav-mock" onclick="showTab('practice','sl-practice');setActiveNav(this)">
+        <span class="mat">mic</span><span class="sl-label">Mock Tests</span>
+      </button>
+      <button class="ysj-nav-item" onclick="showProgressPanel()">
+        <span class="mat">bar_chart</span><span class="sl-label">Progress</span>
+      </button>
+      <button class="ysj-nav-item" onclick="showTab('guide','sl-guide');setActiveNav(this)">
+        <span class="mat">menu_book</span><span class="sl-label">Resources</span>
+      </button>
+      <button class="ysj-nav-item" id="nav-checklist" onclick="showTab('checklist','sl-checklist');setActiveNav(this)">
+        <span class="mat">checklist</span><span class="sl-label">Checklist</span>
+      </button>
+    </nav>
+    <div class="ysj-sidebar-bottom">
+      <button class="ysj-nav-item" onclick="location.href='index.html'">
+        <span class="mat">settings</span><span class="sl-label">Settings</span>
+      </button>
+      <button class="ysj-nav-item" id="logoutBtn" style="display:none">
+        <span class="mat">logout</span><span class="sl-label">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── PAGE WRAPPER ──────────────────────────────────────────── -->
+  <div style="flex:1;display:flex;flex-direction:column;margin-left:72px;">
+
+    <!-- ── TOP NAV ────────────────────────────────────────────── -->
+    <header class="ysj-topnav">
+      <div class="ysj-topnav-left">
+        <span class="ysj-page-title">Interview Training</span>
+        <button class="ysj-course-pill" id="tb-name" onclick="goBack()">
+          <span class="mat" style="font-size:14px">school</span>
+          <span id="tb-name-mobile">Select Course</span>
+          <span class="mat" style="font-size:14px">expand_more</span>
+        </button>
+      </div>
+      <div class="ysj-topnav-right">
+        <div class="ysj-stat-chip">
+          <span class="stat-emoji">🔥</span>
+          <span id="ysj-streak-display">0</span>
+          <span style="color:#6b7280;font-weight:500"> Day Streak</span>
+        </div>
+        <div class="ysj-stat-chip">
+          <span class="stat-emoji">🏆</span>
+          <span id="ysj-xp-display">0</span>
+          <span style="color:#6b7280;font-weight:500"> XP</span>
+        </div>
+        <div class="ysj-notif-btn" id="notifBtn">
+          <span class="mat" style="font-size:18px">notifications</span>
+          <span class="ysj-notif-badge" id="notifBadge">0</span>
+        </div>
+        <button class="ysj-user-btn" id="logoutBtn2">
+          <div class="ysj-avatar" id="avatarInitials">AC</div>
+          <span id="studentName">Student</span>
+          <span class="mat" style="font-size:16px">expand_more</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ── PAGE BODY ───────────────────────────────────────────── -->
+    <div class="ysj-page-body">
+
+      <!-- ── MAIN SCROLL AREA ──────────────────────────────────── -->
+      <main class="ysj-main-scroll">
+
+        <!-- HERO -->
+        <div class="ysj-hero">
+          <div class="ysj-hero-left">
+            <h1>Your Interview<br><span>Success Journey</span> 🎉</h1>
+            <p>Step by step training to help you ace your Pre-CAS Credibility Interview.</p>
+            <div class="ysj-hero-stats">
+              <div class="hero-progress-ring">
+                <svg width="72" height="72" viewBox="0 0 72 72">
+                  <circle cx="36" cy="36" r="30" stroke="#f3f4f6" stroke-width="6" fill="none"/>
+                  <circle cx="36" cy="36" r="30" stroke="#c41230" stroke-width="6" fill="none"
+                    stroke-dasharray="188.5"
+                    stroke-dashoffset="128" id="hero-ring-circle"
+                    stroke-linecap="round"/>
+                </svg>
+                <div class="hero-ring-text"><span id="hero-progress-pct">0%</span></div>
+              </div>
+              <div class="hero-stat">
+                <div class="hero-stat-val" id="hero-days-left">—</div>
+                <div class="hero-stat-label">Days Left</div>
+                <div style="font-size:11px;color:#9ca3af;" id="hero-interview-date">Set interview date</div>
+              </div>
+              <div class="hero-stat">
+                <div class="hero-stat-val" id="hero-readiness">0<span style="font-size:14px;font-weight:500;color:#9ca3af;">/10</span></div>
+                <div class="hero-stat-label">Interview Readiness</div>
+                <div class="hero-stars" id="hero-stars"></div>
+              </div>
+            </div>
+          </div>
+          <div class="ysj-hero-right">
+            <div class="ysj-hero-illustration">
+              <svg width="160" height="120" viewBox="0 0 160 120" fill="none">
+                <!-- Simple YSJ campus illustration -->
+                <rect x="20" y="60" width="120" height="50" rx="4" fill="#fecaca"/>
+                <rect x="35" y="40" width="90" height="22" rx="4" fill="#c41230"/>
+                <rect x="50" y="25" width="60" height="17" rx="4" fill="#9e0e25"/>
+                <!-- Windows -->
+                <rect x="30" y="68" width="12" height="10" rx="2" fill="white" opacity="0.6"/>
+                <rect x="50" y="68" width="12" height="10" rx="2" fill="white" opacity="0.6"/>
+                <rect x="70" y="68" width="12" height="10" rx="2" fill="white" opacity="0.6"/>
+                <rect x="90" y="68" width="12" height="10" rx="2" fill="white" opacity="0.6"/>
+                <rect x="110" y="68" width="12" height="10" rx="2" fill="white" opacity="0.6"/>
+                <!-- Door -->
+                <rect x="67" y="85" width="26" height="25" rx="2" fill="#9e0e25"/>
+                <!-- Flag -->
+                <line x1="80" y1="5" x2="80" y2="26" stroke="#1a1a2e" stroke-width="1.5"/>
+                <rect x="80" y="5" width="14" height="9" rx="1" fill="#c41230"/>
+                <!-- Trees -->
+                <circle cx="15" cy="80" r="10" fill="#16a34a"/>
+                <rect x="13" y="85" width="4" height="12" fill="#92400e"/>
+                <circle cx="145" cy="80" r="10" fill="#16a34a"/>
+                <rect x="143" y="85" width="4" height="12" fill="#92400e"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEARNING PATH -->
+        <div style="margin-bottom:24px;">
+          <div class="ysj-modules-header">
+            <div>
+              <h2>Your Learning Path</h2>
+              <p>Complete all modules to boost your interview readiness</p>
+            </div>
+            <button class="view-all-btn" onclick="showTab('know','sl-know')">
+              <span class="mat" style="font-size:14px">grid_view</span> View All Modules
+            </button>
+          </div>
+          <div class="ysj-module-grid" id="ysj-module-grid">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- TAB CONTENT PANELS ────────────────────────────────── -->
+        <!-- Original tab content preserved below -->
+        <div id='ysj-tab-content'>
       <header
         class="top-nav fixed top-0 left-0 right-0 z-50 flex flex-col md:flex-row md:items-center md:justify-between md:h-14"
         style="padding: 0;"
@@ -1963,8 +2127,602 @@
     </div>
 
     <!-- ======================================================
-     JAVASCRIPT - FIXED MARKING & IMPROVED AI PROMPT + RESTORE
-====================================================== -->
+        </div><!-- /ysj-tab-content -->
+
+
+        <!-- CONTINUE LEARNING -->
+        <div class="ysj-continue" id="continue-learning-section">
+          <h2>Continue Learning</h2>
+          <div class="continue-card">
+            <div class="continue-info">
+              <div class="continue-lesson-badge">
+                <span id="continue-module-num">04</span>
+                <span>Current Lesson</span>
+              </div>
+              <h3 id="continue-module-title">Your Course</h3>
+              <p id="continue-module-desc">Learn how to confidently answer questions about your chosen course.</p>
+              <div class="continue-meta">
+                <span class="continue-meta-item"><span class="mat" style="font-size:14px">schedule</span> <span id="continue-mins">16</span> mins</span>
+                <span class="continue-meta-item"><span class="mat" style="font-size:14px">play_circle</span> <span id="continue-lessons">9</span> Questions</span>
+                <span class="continue-meta-item"><span class="mat" style="font-size:14px">quiz</span> 1 Quiz</span>
+              </div>
+              <div class="continue-actions">
+                <button class="btn-continue" id="continue-lesson-btn">
+                  <span class="mat fill" style="font-size:16px">play_circle</span> Continue Lesson
+                </button>
+                <button class="btn-details">Lesson Details</button>
+              </div>
+            </div>
+            <div class="continue-thumb">
+              <div class="thumb-label">YORK ST JOHN UNIVERSITY</div>
+              <div class="play-overlay" id="continue-play-btn">
+                <span class="mat fill" style="font-size:28px;color:#c41230">play_circle</span>
+              </div>
+              <div class="thumb-time">04:32 / 16:00</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACHIEVEMENTS -->
+        <div class="ysj-achievements">
+          <h2>Recent Achievements</h2>
+          <div class="achievements-grid" id="achievements-grid">
+            <div class="achievement-card">
+              <span class="achievement-icon">🏆</span>
+              <div class="achievement-title">First Step</div>
+              <div class="achievement-desc">Completed your first module</div>
+              <div class="achievement-xp">+50 XP</div>
+            </div>
+            <div class="achievement-card">
+              <span class="achievement-icon">🎯</span>
+              <div class="achievement-title">On a Roll</div>
+              <div class="achievement-desc">3 modules completed</div>
+              <div class="achievement-xp">+100 XP</div>
+            </div>
+            <div class="achievement-card">
+              <span class="achievement-icon">⭐</span>
+              <div class="achievement-title">Good Progress</div>
+              <div class="achievement-desc">50% of training complete</div>
+              <div class="achievement-xp">+150 XP</div>
+            </div>
+            <div class="achievement-card">
+              <span class="achievement-icon">🚀</span>
+              <div class="achievement-title">Keep Going!</div>
+              <div class="achievement-desc">7 day streak maintained</div>
+              <div class="achievement-xp">+200 XP</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEED EXTRA HELP -->
+        <div class="ysj-help">
+          <div style="font-size:48px;flex-shrink:0;">🤝</div>
+          <div class="help-text" style="flex:1;">
+            <h3>Need extra help?</h3>
+            <p>Book a 1:1 session with our experts to boost your confidence.</p>
+            <ul class="help-features">
+              <li>Personalised Feedback</li>
+              <li>Real Interview Practice</li>
+              <li>Expert Guidance</li>
+            </ul>
+          </div>
+          <button class="btn-book">
+            <span class="mat" style="font-size:16px">calendar_month</span>
+            Book a Session
+          </button>
+        </div>
+
+      </main><!-- /ysj-main-scroll -->
+
+      <!-- ── RIGHT SIDEBAR ─────────────────────────────────────── -->
+      <aside class="ysj-right-sidebar">
+
+        <!-- AI Coach -->
+        <div class="ai-coach-card">
+          <div class="ai-coach-header">
+            <div class="ai-robot">🤖</div>
+            <div class="ai-coach-header-text">
+              <strong>Your AI Coach</strong>
+              <span>Interview Preparation</span>
+            </div>
+          </div>
+          <div class="ai-greeting">
+            Hi <span id="ai-coach-name">there</span>! 👋
+            <span>You're doing great! Keep going.</span>
+          </div>
+          <div class="coach-list" id="coach-completed-list">
+            <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;margin-top:8px;">You have completed</div>
+            <!-- Rendered by JS -->
+          </div>
+          <div class="coach-rec">
+            <div class="coach-rec-label">Recommendation</div>
+            <div class="coach-rec-text" id="coach-recommendation">Complete your first module to get started on your interview preparation journey.</div>
+          </div>
+          <button class="btn-continue-learning" onclick="scrollToModules()">Continue Learning</button>
+        </div>
+
+        <!-- Skills Progress -->
+        <div class="rs-section">
+          <div class="rs-section-title">
+            <span class="mat">trending_up</span> Skills Progress
+          </div>
+          <div class="skill-item">
+            <div class="skill-header">
+              <span class="skill-name"><span class="mat" style="color:#7c3aed">menu_book</span> Knowledge</span>
+              <span class="skill-pct" id="skill-knowledge">0%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" id="skill-knowledge-bar" style="width:0%;background:#7c3aed"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header">
+              <span class="skill-name"><span class="mat" style="color:#f59e0b">sentiment_satisfied</span> Confidence</span>
+              <span class="skill-pct" id="skill-confidence">0%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" id="skill-confidence-bar" style="width:0%;background:#f59e0b"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header">
+              <span class="skill-name"><span class="mat" style="color:#0891b2">mic</span> Practice</span>
+              <span class="skill-pct" id="skill-practice">0%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" id="skill-practice-bar" style="width:0%;background:#0891b2"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header">
+              <span class="skill-name"><span class="mat" style="color:#c41230">gps_fixed</span> Interview Score</span>
+              <span class="skill-pct" id="skill-score">0%</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" id="skill-score-bar" style="width:0%;background:#c41230"></div></div>
+          </div>
+          <button style="width:100%;border:1.5px solid #e5e7eb;background:#fff;border-radius:8px;padding:9px;font-size:12px;font-weight:700;color:#1a1a2e;cursor:pointer;margin-top:10px;"
+            onclick="showTab('know','sl-know')">
+            View Detailed Analytics
+          </button>
+        </div>
+
+        <!-- Quick Practice -->
+        <div class="rs-section">
+          <div class="rs-section-title">
+            <span class="mat">bolt</span> Quick Practice
+          </div>
+          <div class="qp-item" onclick="showTab('know','sl-know')">
+            <div class="qp-left">
+              <div class="qp-icon" style="background:#ede9fe;">📋</div>
+              <div>
+                <div class="qp-title">Question Bank</div>
+                <div class="qp-sub">Review all questions</div>
+              </div>
+            </div>
+            <span class="qp-arrow mat">arrow_forward_ios</span>
+          </div>
+          <div class="qp-item" onclick="showTab('guide','sl-guide')">
+            <div class="qp-left">
+              <div class="qp-icon" style="background:#fef3c7;">📖</div>
+              <div>
+                <div class="qp-title">Interview Guide</div>
+                <div class="qp-sub">Key facts to know</div>
+              </div>
+            </div>
+            <span class="qp-arrow mat">arrow_forward_ios</span>
+          </div>
+          <div class="qp-item" onclick="showTab('practice','sl-practice')">
+            <div class="qp-left">
+              <div class="qp-icon" style="background:#f0fdf4;">🎤</div>
+              <div>
+                <div class="qp-title">Speak Practice</div>
+                <div class="qp-sub">AI speaking coach</div>
+              </div>
+            </div>
+            <span class="qp-arrow mat">arrow_forward_ios</span>
+          </div>
+          <button class="btn-mock" onclick="showTab('practice','sl-practice')">
+            Start Mock Interview
+            <span>Full interview simulation</span>
+          </button>
+        </div>
+
+      </aside><!-- /ysj-right-sidebar -->
+
+    </div><!-- /ysj-page-body -->
+  </div><!-- /page-wrapper -->
+
+</div><!-- /s-main -->
+
+<!-- ── NOTIFICATION PANEL ────────────────────────────────────────── -->
+<div id="notifPanel">
+  <div style="padding:14px 16px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:14px;font-weight:800;color:#1a1a2e;">Notifications</span>
+    <button id="markAllBtn" style="font-size:12px;color:#c41230;font-weight:700;background:none;border:none;cursor:pointer;">Mark all read</button>
+  </div>
+  <div id="notifList" style="overflow-y:auto;flex:1;max-height:360px;"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// LMS DASHBOARD — Module definitions + Gamification
+// ══════════════════════════════════════════════════════════════════
+
+const LMS_MODULES = [
+  { id:'M1', num:'01', title:'Understanding the Interview', icon:'📋', color:'#6366f1', bg:'#ede9fe', mins:12,
+    tab:'guide', desc:'What UKVI looks for and how to prepare', catFilter:null },
+  { id:'M2', num:'02', title:'Why the UK', icon:'🇬🇧', color:'#7c3aed', bg:'#f5f3ff', mins:15,
+    tab:'know', desc:'Explain your reasons for choosing the UK', catFilter:'Studying in the UK' },
+  { id:'M3', num:'03', title:'Why York St John', icon:'🏫', color:'#0891b2', bg:'#ecfeff', mins:18,
+    tab:'know', desc:'University-specific knowledge and research', catFilter:'Why York St John University' },
+  { id:'M4', num:'04', title:'Your Course', icon:'📚', color:'#d97706', bg:'#fefce8', mins:16,
+    tab:'know', desc:'Course modules, assessment, and career fit', catFilter:'Course Details & Modules' },
+  { id:'M5', num:'05', title:'Finance Questions', icon:'💰', color:'#dc2626', bg:'#fef2f2', mins:14,
+    tab:'know', desc:'Funding, budget, and financial planning', catFilter:'Finance & Funding' },
+  { id:'M6', num:'06', title:'Accommodation & Living', icon:'🏠', color:'#0d9488', bg:'#f0fdf4', mins:16,
+    tab:'know', desc:'Where you will live and how you will travel', catFilter:'Accommodation & Living' },
+  { id:'M7', num:'07', title:'Career Plans & Goals', icon:'🎯', color:'#7c3aed', bg:'#faf5ff', mins:14,
+    tab:'know', desc:'Short, medium, and long-term career plans', catFilter:'Future Career Plans' },
+  { id:'M8', num:'08', title:'Mock Interview', icon:'🎤', color:'#1d4ed8', bg:'#eff6ff', mins:25,
+    tab:'practice', desc:'Full AI-graded interview simulation', catFilter:null },
+];
+
+// XP & Streak
+function getXP() { return parseInt(localStorage.getItem('ysj_xp')||'0'); }
+function addXP(n) {
+  const xp = getXP() + n;
+  localStorage.setItem('ysj_xp', xp);
+  document.getElementById('ysj-xp-display').textContent = xp;
+}
+function getStreak() {
+  const d = localStorage.getItem('ysj_streak_date');
+  const today = new Date().toDateString();
+  if (d === today) return parseInt(localStorage.getItem('ysj_streak')||'0');
+  const yesterday = new Date(Date.now()-86400000).toDateString();
+  if (d === yesterday) return parseInt(localStorage.getItem('ysj_streak')||'0');
+  localStorage.setItem('ysj_streak','0');
+  return 0;
+}
+function markToday() {
+  const today = new Date().toDateString();
+  const d = localStorage.getItem('ysj_streak_date');
+  if (d !== today) {
+    const s = getStreak() + 1;
+    localStorage.setItem('ysj_streak', s);
+    localStorage.setItem('ysj_streak_date', today);
+    document.getElementById('ysj-streak-display').textContent = s;
+  }
+}
+
+// Module progress from ai_scores
+function getModuleProgress() {
+  const scores = window._ysjAiScores || {};
+  const pqs = window._ysjPqsAnswered || {};
+  const catMap = {
+    'Studying in the UK': /^YSJ_uk/i,
+    'Why York St John University': /^YSJ_ysj/i,
+    'Course Details & Modules': /^YSJ_course/i,
+    'Future Career Plans': /^YSJ_career/i,
+    'Finance & Funding': /^YSJ_fin/i,
+    'Accommodation & Living': /^YSJ_living/i,
+    'Education & Employment Gaps': /^YSJ_gap/i,
+    'Prior UK Study': /^YSJ_prior/i,
+    'Student Visa Knowledge': /^YSJ_visa/i,
+  };
+  const allKeys = Object.keys(scores).filter(k => k.startsWith('YSJ_'));
+  const pqsKeys = Object.keys(pqs).filter(k => k.startsWith('p'));
+  const totalAllQ = 60; // approximate
+  const answered = allKeys.length + pqsKeys.length;
+  const passed = allKeys.filter(k => (scores[k]?.finalStatus||0)===1).length +
+                 pqsKeys.filter(k => (pqs[k]?.finalStatus||0)===1).length;
+  return { answered, passed, allKeys, pqsKeys, totalAllQ };
+}
+
+function getModulePct(mod) {
+  const scores = window._ysjAiScores || {};
+  const pqs = window._ysjPqsAnswered || {};
+  if (mod.tab === 'guide') {
+    // Guide progress based on how many guide sections have been expanded
+    const opened = parseInt(localStorage.getItem('ysj_guide_opened')||'0');
+    return Math.min(100, opened * 12);
+  }
+  if (mod.tab === 'practice') {
+    // Practice = PQS answered %
+    const pqsKeys = Object.keys(pqs).filter(k=>k.startsWith('p'));
+    return Math.round(pqsKeys.length / 22 * 100);
+  }
+  if (mod.catFilter) {
+    // Find keys matching this category
+    const catKeys = Object.keys(scores).filter(k=>k.startsWith('YSJ_'));
+    if (!catKeys.length) return 0;
+    // Use question count for category
+    const cat = (typeof ALL_QUESTIONS !== 'undefined') ? ALL_QUESTIONS.find(c=>c.cat===mod.catFilter) : null;
+    if (!cat) return 0;
+    const total = cat.qs.length;
+    const answered = catKeys.filter(k=>{
+      // Map catFilter to prefix
+      const prefix = catFilterToPrefix(mod.catFilter);
+      return prefix && k.includes(prefix);
+    }).length;
+    return Math.round(answered / total * 100);
+  }
+  return 0;
+}
+
+function catFilterToPrefix(cat) {
+  const map = {
+    'Studying in the UK': 'uk',
+    'Why York St John University': 'ysj',
+    'Course Details & Modules': 'course',
+    'Future Career Plans': 'career',
+    'Finance & Funding': 'fin',
+    'Accommodation & Living': 'living',
+    'Education & Employment Gaps': 'gap',
+    'Student Visa Knowledge': 'visa',
+    'Prior UK Study': 'prior',
+  };
+  return map[cat] || null;
+}
+
+function renderModuleGrid() {
+  const grid = document.getElementById('ysj-module-grid');
+  if (!grid) return;
+  grid.innerHTML = LMS_MODULES.map(mod => {
+    const pct = getModulePct(mod);
+    const isComplete = pct >= 100;
+    const hasStarted = pct > 0;
+    const btnLabel = isComplete ? '✓ Completed' : hasStarted ? 'Resume' : 'Start';
+    const btnClass = isComplete ? 'ysj-module-btn completed-btn' : 'ysj-module-btn';
+    return `<div class="ysj-module-card" style="--card-color:${mod.color};"
+        onclick="openModule('${mod.id}','${mod.tab}','${mod.catFilter||''}')">
+      <span class="ysj-module-num">${mod.num}</span>
+      <div class="ysj-module-icon" style="background:${mod.bg}">${mod.icon}</div>
+      <div class="ysj-module-title">${mod.title}</div>
+      <div class="ysj-module-meta">⏱ ${mod.mins} mins</div>
+      <div class="ysj-module-progress-bar">
+        <div class="ysj-module-progress-fill" style="width:${pct}%"></div>
+      </div>
+      <div class="ysj-module-pct">${pct}%</div>
+      <button class="${btnClass}">${btnLabel}</button>
+    </div>`;
+  }).join('');
+}
+
+function openModule(modId, tab, catFilter) {
+  markToday();
+  addXP(5);
+  showTab(tab, 'sl-' + tab);
+  // If catFilter, filter the know tab
+  if (tab === 'know' && catFilter && typeof filterKnowTab === 'function') {
+    filterKnowTab(catFilter);
+  }
+  // Scroll to content
+  setTimeout(() => {
+    const el = document.getElementById('tab-' + tab);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 100);
+  // Update continue section
+  const mod = LMS_MODULES.find(m=>m.id===modId);
+  if (mod) {
+    const el = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+    el('continue-module-num', mod.num);
+    el('continue-module-title', mod.title);
+    el('continue-module-desc', mod.desc);
+    el('continue-mins', mod.mins);
+  }
+}
+
+function setActiveNav(btn) {
+  document.querySelectorAll('.ysj-nav-item').forEach(b=>b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+function scrollToModules() {
+  document.getElementById('ysj-module-grid')?.scrollIntoView({behavior:'smooth'});
+}
+
+function showProgressPanel() {
+  showTab('know', 'sl-know');
+  setActiveNav(document.getElementById('nav-practice'));
+}
+
+function updateHero() {
+  const s = window.getCurrentStudent?.();
+  const scores = window._ysjAiScores || {};
+  const allKeys = Object.keys(scores).filter(k=>k.startsWith('YSJ_'));
+  const pqsKeys = Object.keys(window._ysjPqsAnswered||{}).filter(k=>k.startsWith('p'));
+  const total = 82; // approximate total questions
+  const answered = allKeys.length + pqsKeys.length;
+  const pct = Math.min(100, Math.round(answered / total * 100));
+
+  // Progress ring
+  const ring = document.getElementById('hero-ring-circle');
+  const pctEl = document.getElementById('hero-progress-pct');
+  if (ring) ring.style.strokeDashoffset = 188.5 - (188.5 * pct / 100);
+  if (pctEl) pctEl.textContent = pct + '%';
+
+  // Readiness (avg score 0-10)
+  const avgScore = allKeys.length
+    ? allKeys.reduce((s,k)=>(s + (scores[k]?.score||0)),0) / allKeys.length
+    : 0;
+  const readiness = Math.round(avgScore);
+  const readEl = document.getElementById('hero-readiness');
+  if (readEl) readEl.innerHTML = readiness + '<span style="font-size:14px;font-weight:500;color:#9ca3af;">/10</span>';
+
+  // Stars
+  const starsEl = document.getElementById('hero-stars');
+  if (starsEl) {
+    starsEl.innerHTML = [1,2,3,4,5].map(i=>
+      `<span class="hero-star">${i <= Math.round(readiness/2) ? '⭐' : '☆'}</span>`
+    ).join('');
+  }
+
+  // Days left
+  if (s?.interview_date) {
+    const days = Math.ceil((new Date(s.interview_date) - new Date()) / 86400000);
+    const el = document.getElementById('hero-days-left');
+    const dateEl = document.getElementById('hero-interview-date');
+    if (el) el.textContent = days > 0 ? days : '0';
+    if (dateEl) dateEl.textContent = new Date(s.interview_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  }
+}
+
+function updateSkills() {
+  const scores = window._ysjAiScores || {};
+  const allKeys = Object.keys(scores).filter(k=>k.startsWith('YSJ_'));
+  const pqsKeys = Object.keys(window._ysjPqsAnswered||{}).filter(k=>k.startsWith('p'));
+
+  // Knowledge = % of guide sections opened
+  const opened = parseInt(localStorage.getItem('ysj_guide_opened')||'0');
+  const knowledge = Math.min(100, Math.round(opened / 11 * 100));
+
+  // Confidence = % of answers scoring >= 70
+  const highScores = allKeys.filter(k=>(scores[k]?.score||0) >= 7).length;
+  const confidence = allKeys.length ? Math.round(highScores / allKeys.length * 100) : 0;
+
+  // Practice = % of PQS answered
+  const practice = Math.round(pqsKeys.length / 22 * 100);
+
+  // Interview Score = avg score as pct
+  const avgScore = allKeys.length
+    ? allKeys.reduce((s,k)=>(s + (scores[k]?.score||0)),0) / allKeys.length
+    : 0;
+  const interviewScore = Math.round(avgScore * 10);
+
+  const set = (id, barId, val) => {
+    const el = document.getElementById(id); if(el) el.textContent = val + '%';
+    const bar = document.getElementById(barId); if(bar) bar.style.width = val + '%';
+  };
+  set('skill-knowledge','skill-knowledge-bar', knowledge);
+  set('skill-confidence','skill-confidence-bar', confidence);
+  set('skill-practice','skill-practice-bar', practice);
+  set('skill-score','skill-score-bar', interviewScore);
+}
+
+function updateCoach() {
+  const s = window.getCurrentStudent?.();
+  const name = (s?.name||'there').split(' ')[0];
+  const el = document.getElementById('ai-coach-name');
+  if (el) el.textContent = name;
+
+  const scores = window._ysjAiScores || {};
+  const allKeys = Object.keys(scores).filter(k=>k.startsWith('YSJ_'));
+  const passed = allKeys.filter(k=>(scores[k]?.finalStatus||0)===1);
+  
+  const list = document.getElementById('coach-completed-list');
+  const rec = document.getElementById('coach-recommendation');
+  
+  if (list) {
+    const items = LMS_MODULES.slice(0,5).map(m => {
+      const pct = getModulePct(m);
+      const done = pct >= 50;
+      const needsFocus = pct > 0 && pct < 50;
+      if (!done && !needsFocus) return '';
+      return `<div class="coach-item">
+        <div class="coach-dot ${done?'done':'warn'}">${done?'✓':'!'}</div>
+        <span style="font-size:12px;color:rgba(255,255,255,0.85)">${m.title}</span>
+      </div>`;
+    }).filter(Boolean);
+    if (items.length) list.innerHTML = (list.querySelector('.completed-label')?.outerHTML||'<div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;margin-top:8px;">You have completed</div>') + items.join('');
+  }
+
+  if (rec) {
+    const incompleteIdx = LMS_MODULES.findIndex(m=>getModulePct(m)<100);
+    if (incompleteIdx >= 0) {
+      rec.textContent = 'Complete Module ' + LMS_MODULES[incompleteIdx].num + ' next to strengthen your answers.';
+    }
+  }
+}
+
+function updateXpDisplay() {
+  const xpEl = document.getElementById('ysj-xp-display');
+  const streakEl = document.getElementById('ysj-streak-display');
+  if (xpEl) xpEl.textContent = getXP();
+  if (streakEl) streakEl.textContent = getStreak();
+}
+
+// Intercept saveAIResponse to award XP
+const _origSaveAI = window.saveAIResponse;
+window.saveAIResponse = async function(qId, ans, score, fb, qt) {
+  const result = await _origSaveAI?.apply(this, arguments);
+  if (result?.success) {
+    addXP(result.passed ? 20 : 10);
+    markToday();
+    // Track in local mirror for dashboard
+    window._ysjAiScores = window._ysjAiScores || {};
+    window._ysjAiScores['YSJ_'+qId] = {score,finalStatus:result.passed?1:0,attempts:result.attempts};
+    renderModuleGrid();
+    updateHero();
+    updateSkills();
+    updateCoach();
+  }
+  return result;
+};
+
+// Track guide section opens
+document.addEventListener('click', function(e) {
+  const acc = e.target.closest('.guide-acc-header');
+  if (acc) {
+    const opened = parseInt(localStorage.getItem('ysj_guide_opened')||'0');
+    localStorage.setItem('ysj_guide_opened', Math.min(11, opened + 1));
+    addXP(3);
+    updateSkills();
+    updateHero();
+  }
+});
+
+// Override restoreAIScores to also update dashboard
+const _origRestore = window.restoreAIScores;
+window.restoreAIScores = async function() {
+  await _origRestore?.apply(this, arguments);
+  // Sync local mirror from student progress
+  const student = window.getCurrentStudent?.();
+  if (student?.id) {
+    try {
+      const { data } = await (window.supabaseClient || window.getDB?.())
+        .from('student_progress').select('ai_scores').eq('user_id', student.id).single();
+      if (data?.ai_scores) {
+        window._ysjAiScores = data.ai_scores;
+        renderModuleGrid();
+        updateHero();
+        updateSkills();
+        updateCoach();
+      }
+    } catch(e) {}
+  }
+};
+
+// Init dashboard after course selected
+const _origSelectCourse = window.selectCourse || null;
+// Patch — called by selectCourse after everything loads
+function initLmsDashboard() {
+  updateXpDisplay();
+  renderModuleGrid();
+  updateHero();
+  updateSkills();
+  updateCoach();
+}
+
+// Watch for s-main becoming active
+const _observer = new MutationObserver(function(muts) {
+  muts.forEach(m => {
+    if (m.target.id === 's-main' && m.target.classList.contains('active')) {
+      setTimeout(initLmsDashboard, 600);
+    }
+  });
+});
+document.addEventListener('DOMContentLoaded', function() {
+  const sm = document.getElementById('s-main');
+  if (sm) _observer.observe(sm, {attributes:true, attributeFilter:['class']});
+  updateXpDisplay();
+  // Wire logout
+  ['logoutBtn','logoutBtn2'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click', function() {
+      window.supabaseClient?.auth?.signOut?.();
+      localStorage.removeItem('student');
+      location.href = 'index.html';
+    });
+  });
+});
+</script>
+
     <script>
       const COURSES = {
         "ba-business": { name: "BA (Hons) Business Management", campus: "York Campus", city: "York", address: "Lord Mayor's Walk, York, YO31 7EX", campusUrl: "https://www.yorksj.ac.uk/campus-and-facilities/", specUrl: "https://www.yorksj.ac.uk/study/courses/undergraduate/business-management/", videoNotes: ["Your campus address: Lord Mayor's Walk, York, YO31 7EX", "Why you chose Business Management at YSJ specifically", "Your key modules and how the course is assessed", "The names of 2 other UK universities you compared and why you chose YSJ", "Placement or internship opportunities available", "Jobs and companies you will target after graduation", "Your expected salary in GBP", "Your accommodation plan and weekly cost", "Your visa working hours limit (20 hours per week during term time)"], assessment: "Coursework, group projects, presentations, and written exams. May include placement year option.", modules: [{ name: "Principles of Management", why: "Builds foundational understanding of organisational structure and management theory." }, { name: "Marketing Fundamentals", why: "Covers customer behaviour, branding, and market research techniques." }, { name: "Business Finance", why: "Teaches financial statements, budgeting, and business performance analysis." }, { name: "Human Resource Management", why: "Develops skills in recruitment, training, and employee relations." }, { name: "Strategic Management", why: "Focuses on long-term business planning and competitive positioning." }, { name: "Operations Management", why: "Covers supply chain, logistics, and process improvement." }], roles: ["Business Analyst", "Marketing Executive", "HR Coordinator", "Operations Manager"], companies: ["Nestlé", "Aviva", "Santander", "Yorkshire Bank", "Local SMEs in Yorkshire"], salary: "£22,000 – £30,000", tuition: "£11,800 per year", livingCost: "£1,171 per month (UKVI requirement for York)", accommodation: "£129-£222 per week" },
