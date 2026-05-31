@@ -587,7 +587,22 @@ function selectCourse(id, e) {
 
 async function confirmCourse() {
   if (!selectedId) return;
-  await window.onCourseSelected?.('yorkstjohn', selectedId);
+  const btn = document.getElementById('ctaBtn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Setting up…'; }
+  // Save directly — bypass onCourseSelected which can trigger lockToSchool redirect
+  localStorage.setItem('last_course', selectedId);
+  localStorage.setItem('last_school', 'yorkstjohn');
+  localStorage.setItem('selected_university', 'yorkstjohn');
+  try {
+    const s = window.getCurrentStudent?.();
+    if (s?.id) {
+      await supabaseClient.from('student_progress').update({
+        selected_university: 'yorkstjohn',
+        selected_course: selectedId,
+        updated_at: new Date().toISOString()
+      }).eq('user_id', s.id);
+    }
+  } catch(e) { console.warn('Course save:', e.message); }
   location.href = 'yorkstjohn-hub.html';
 }
 
