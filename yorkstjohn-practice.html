@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<base href="/UK-INTERVIEW-HUB/">
+<title>AI Practice | YSJ Prep</title>
+<script src="https://js.puter.com/v2/"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+:root{--red:#c41230;--red-dk:#9e0e25;--navy:#1a1a2e;--surface:#fff;--bg:#f0f2f5;--border:#e5e7eb;--txt:#111827;--muted:#6b7280;--green:#16a34a;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{font-family:-apple-system,BlinkMacSystemFont,"Inter",sans-serif;background:var(--bg);-webkit-font-smoothing:antialiased;}
+.mat{font-family:"Material Symbols Outlined";font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;vertical-align:middle;line-height:1;}
+.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
+/* Top bar */
+.top-bar{position:fixed;top:0;left:0;right:0;height:calc(56px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding-left:8px;padding-right:16px;gap:8px;z-index:100;}
+.back-btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.back-btn .mat{font-size:22px;color:var(--navy);}
+.top-title{font-size:16px;font-weight:800;color:var(--navy);flex:1;}
+.q-counter{font-size:13px;font-weight:700;color:var(--muted);background:var(--bg);border-radius:99px;padding:4px 12px;}
+/* Progress */
+.q-progress{position:sticky;top:calc(56px + env(safe-area-inset-top));z-index:90;background:var(--surface);border-bottom:1px solid var(--border);padding:8px 16px;}
+.q-prog-bar{height:5px;background:#f3f4f6;border-radius:99px;overflow:hidden;}
+.q-prog-fill{height:100%;background:var(--red);border-radius:99px;transition:width .4s;}
+/* Body */
+.page-body{padding-top:calc(56px + env(safe-area-inset-top) + 37px);padding-bottom:calc(80px + env(safe-area-inset-bottom));padding-left:16px;padding-right:16px;}
+/* Question card */
+.q-card{background:var(--surface);border-radius:16px;border:1px solid var(--border);padding:20px;margin-bottom:14px;}
+.q-cat-tag{display:inline-flex;align-items:center;gap:6px;background:var(--bg);border-radius:8px;padding:5px 10px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;}
+.q-cat-tag .mat{font-size:14px;}
+.q-num{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;}
+.q-text{font-size:17px;font-weight:800;color:var(--navy);line-height:1.4;margin-bottom:10px;}
+.q-hint-toggle{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--red);margin-bottom:10px;background:none;border:none;cursor:pointer;padding:0;}
+.q-hint-toggle .mat{font-size:16px;}
+.q-hint{background:#fff8f0;border-left:3px solid #f97316;border-radius:0 8px 8px 0;padding:12px;font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:12px;display:none;}
+.q-hint.show{display:block;}
+.q-textarea{width:100%;border:1.5px solid var(--border);border-radius:12px;padding:14px;font-size:15px;font-family:inherit;resize:none;outline:none;line-height:1.5;min-height:120px;transition:border-color .15s;}
+.q-textarea:focus{border-color:var(--red);}
+.q-actions{display:flex;gap:10px;margin-top:12px;}
+.btn-check{flex:1;background:var(--red);color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;}
+.btn-check:disabled{opacity:.5;cursor:not-allowed;}
+.btn-check .mat{font-size:20px;}
+.btn-next{background:var(--bg);border:1.5px solid var(--border);color:var(--navy);border-radius:12px;padding:14px 20px;font-size:15px;font-weight:700;cursor:pointer;min-height:52px;}
+/* Feedback */
+.feedback-card{border-radius:14px;padding:16px;margin-top:12px;}
+.feedback-card.pass{background:#f0fdf4;border:1.5px solid #86efac;}
+.feedback-card.fail{background:#fef2f2;border:1.5px solid #fca5a5;}
+.fb-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.fb-score{font-size:28px;font-weight:900;line-height:1;}
+.fb-score.pass{color:var(--green);}
+.fb-score.fail{color:var(--red);}
+.fb-verdict{font-size:14px;font-weight:700;}
+.fb-section{margin-bottom:8px;}
+.fb-section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px;}
+.fb-text{font-size:13px;color:var(--txt);line-height:1.5;}
+/* Spinner */
+.spinner{display:none;text-align:center;padding:24px;color:var(--muted);}
+.spinner.show{display:flex;align-items:center;justify-content:center;gap:10px;}
+.spin{width:20px;height:20px;border:2px solid #e5e7eb;border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+/* Bottom */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.97);border-top:1px solid var(--border);backdrop-filter:blur(20px);display:grid;grid-template-columns:repeat(5,1fr);}
+.nav-tab{display:flex;flex-direction:column;align-items:center;padding:10px 4px;text-decoration:none;color:var(--muted);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;gap:3px;}
+.nav-tab.active{color:var(--red);}
+.nav-tab .mat{font-size:22px;}
+.nav-tab.active .mat{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
+#toast{display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;font-weight:600;z-index:9999;white-space:nowrap;}
+</style>
+</head>
+<body>
+<header class="top-bar">
+  <a href="yorkstjohn-hub.html" class="back-btn"><span class="mat">arrow_back_ios_new</span></a>
+  <h1 class="top-title">AI Practice</h1>
+  <span class="q-counter" id="qCounter">Q 1 / 22</span>
+</header>
+
+<div class="q-progress">
+  <div class="q-prog-bar"><div class="q-prog-fill" id="qProg" style="width:0%"></div></div>
+</div>
+
+<div class="page-body">
+  <div id="qArea"><!-- JS renders --></div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="yorkstjohn-hub.html" class="nav-tab"><span class="mat">home</span>Home</a>
+  <a href="yorkstjohn-guide.html" class="nav-tab"><span class="mat">menu_book</span>Guide</a>
+  <a href="yorkstjohn-practice.html" class="nav-tab active"><span class="mat">mic</span>Practice</a>
+  <a href="yorkstjohn-questions.html" class="nav-tab"><span class="mat">quiz</span>Questions</a>
+  <a href="yorkstjohn-checklist.html" class="nav-tab"><span class="mat">checklist</span>Checklist</a>
+</nav>
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js?v=3"></script>
+<script src="yorkstjohn-data.js"></script>
+<script>
+let currentIdx = 0;
+let hintVisible = {};
+
+function showQ(idx) {
+  currentIdx = idx;
+  const q = PQS[idx];
+  if (!q) return;
+  document.getElementById('qCounter').textContent = 'Q '+(idx+1)+' / '+PQS.length;
+  document.getElementById('qProg').style.width = ((idx+1)/PQS.length*100)+'%';
+
+  const area = document.getElementById('qArea');
+  const catLabel = {uk:'Why the UK',ysj:'Why York St John',course:'Course Knowledge',
+    career:'Career Plans',finance:'Finance',living:'Accommodation',visa:'Visa Rules'}[q.cat] || q.cat;
+  const catIcon = {uk:'public',ysj:'account_balance',course:'menu_book',
+    career:'trending_up',finance:'payments',living:'home',visa:'badge'}[q.cat] || 'quiz';
+
+  area.innerHTML = `
+    <div class="q-card">
+      <div class="q-cat-tag"><span class="mat fill">${catIcon}</span>${catLabel}</div>
+      <div class="q-num">Question ${idx+1} of ${PQS.length}</div>
+      <div class="q-text">${q.q}</div>
+      <button class="q-hint-toggle" onclick="toggleHint('${q.id}')">
+        <span class="mat">tips_and_updates</span> Show hint
+      </button>
+      <div class="q-hint" id="hint-${q.id}">${q.hint}</div>
+      <textarea class="q-textarea" id="ans-${q.id}" placeholder="Type your answer here... Be specific, include examples and compare with alternatives." rows="5"></textarea>
+      <div class="q-actions">
+        <button class="btn-check" id="check-btn" onclick="checkAnswer('${q.id}','${q.cat}',${JSON.stringify(q.cr).replace(/"/g,'&quot;')})">
+          <span class="mat fill">psychology</span> Check with AI
+        </button>
+        ${idx < PQS.length-1 ? '<button class="btn-next" onclick="showQ('+(idx+1)+')">Skip <span class="mat">skip_next</span></button>' : ''}
+      </div>
+    </div>
+    <div class="spinner" id="spinner-${q.id}">
+      <div class="spin"></div> AI is evaluating your answer...
+    </div>
+    <div id="fb-${q.id}"></div>
+  `;
+}
+
+function toggleHint(id) {
+  const h = document.getElementById('hint-'+id);
+  const isShow = h.classList.contains('show');
+  h.classList.toggle('show');
+  document.querySelector('.q-hint-toggle').innerHTML =
+    `<span class="mat">tips_and_updates</span> ${isShow?'Show hint':'Hide hint'}`;
+}
+
+async function checkAnswer(qId, cat, criteria) {
+  const ans = document.getElementById('ans-'+qId)?.value?.trim();
+  if (!ans || ans.length < 15) {
+    showToast('Please write a more detailed answer');
+    return;
+  }
+  const btn = document.getElementById('check-btn');
+  const spinner = document.getElementById('spinner-'+qId);
+  btn.disabled = true;
+  spinner.classList.add('show');
+
+  try {
+    const course = window.getCurrentCourse?.() || {};
+    const q = PQS.find(p=>p.id===qId);
+    const prompt = `You are a strict UK student visa credibility interview examiner. You assess answers exactly as a UKVI Entry Clearance Officer would — applying the same scrutiny used in real credibility interview refusals.
+
+Course: "${course.name}" at ${course.campus}.
+Question: "${q.q}"
+Required content: ${q.cr}
+Student answer: "${ans}"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CORE PRINCIPLE — THE ONLY THING THAT MATTERS:
+A credible answer = STATEMENT + CONCRETE EXAMPLE.
+A statement alone is NEVER enough. UKVI caseworkers are trained to reject any answer that lacks specific, verifiable examples. This is confirmed in real refusal letters.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BANNED PHRASES — These appear word-for-word in real UKVI refusal letters as evidence of a "generic, surface-level" answer. Deduct -20 for EACH unless immediately followed by a specific, verifiable example:
+• "highly renowned globally" or "globally recognised"
+• "strong reputation" (without citing a ranking, table, or award)
+• "fees are less" or "more affordable" (without a comparison figure)
+• "good/fast processing times" as a reason to choose the UK
+• "I want to solve problems" as a career goal
+• "gain better employment" or "better job opportunities" (without a specific role/employer)
+• "world-class education" (without evidence)
+• Any reason that would equally apply to Australia, Canada, or the US with no UK-specific distinction
+
+AUTOMATIC FAIL — cap score as shown:
+• Answer is under 30 words or 1–2 sentences → cap at 30
+• Completely off-topic → cap at 20
+• Could apply to ANY country or university — zero specifics → cap at 35
+• Entirely banned phrases with no examples → cap at 25
+
+MAJOR DEDUCTIONS — apply each that is missing (-15 to -25):
+• No module names when course knowledge is required → -25
+• No comparison with at least one other country OR university when relevant → -20
+• Career plan has no structure: must include short-term (0–2 yr), medium-term (3–5 yr), long-term (5–10 yr) → -20
+• Financial source is vague ("my parents/family are paying") — must name source of funds (savings, property sale, inheritance, salary, sponsorship) → -20
+• No personal language ("I", "my", "I chose") — reads like a copied brochure → -20
+• Factually incorrect about the course, campus, or university → -20
+• No campus location or city when question requires it → -15
+
+MODERATE DEDUCTIONS (-8 to -12):
+• Only 1 module named when 2–3 expected → -10
+• Career role named but no timeline or employer named → -12
+• Comparison given but no specific detail about the alternative (e.g., just "Canada") → -10
+• Funding source named but no documentary basis mentioned → -10
+• Rambling, unfocused answer with no clear structure → -8
+• Accommodation plan with no cost or location specifics → -8
+
+MINOR DEDUCTIONS (-3 to -5):
+• Statement + example present but example is weak or very brief → -5
+• Missing one minor detail from required content → -3
+• Adequate answer but lacks personal connection or enthusiasm → -5
+
+CALIBRATION:
+• Most students score 45–72 on a first attempt
+• Scores above 80 require: exceptional specificity, named sources (rankings, statistics, figures), full career structure, funding evidence, personal voice
+• A "decent" answer with some specifics but gaps → 55–65, NOT 75+
+• PASS THRESHOLD: score >= 70
+• Most first attempts should NOT pass — the bar reflects the actual UKVI standard
+
+Do NOT penalise: punctuation, capitalisation, minor spelling, grammar, or accent.
+
+Return ONLY valid JSON — no markdown, no explanation, nothing else:
+{"pass": boolean, "score": integer 0-100, "summary": "one sentence about the answer", "good": ["one specific strength"], "improve": ["one specific improvement needed"]}
+
+CRITICAL: Evaluate the ACTUAL student answer. Do NOT return a default or template score. Every answer gets a DIFFERENT score based on its specific content.`;
+    const response = await puter.ai.chat(prompt, {model:'gpt-4o-mini', stream:false});
+    spinner.classList.remove('show');
+    let raw = typeof response === 'string' ? response : response?.message?.content || JSON.stringify(response);
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('No JSON');
+    const j = JSON.parse(match[0]);
+
+    const passed = j.pass || j.score >= 70;
+    const score = Math.round((j.score || 0) / 10);
+    const fbEl = document.getElementById('fb-'+qId);
+    fbEl.innerHTML = `<div class="feedback-card ${passed?'pass':'fail'}">
+      <div class="fb-header">
+        <div class="fb-score ${passed?'pass':'fail'}">${j.score || 0}<span style="font-size:16px;font-weight:500;opacity:.6;">/100</span></div>
+        <div>
+          <div class="fb-verdict">${passed?'✅ Good answer!':'❌ Needs improvement'}</div>
+        </div>
+      </div>
+      ${j.summary ? '<div class="fb-section"><div class="fb-section-title">Summary</div><div class="fb-text">'+j.summary+'</div></div>' : ''}
+      ${j.good?.[0] ? '<div class="fb-section"><div class="fb-section-title">✅ What worked</div><div class="fb-text">'+j.good[0]+'</div></div>' : ''}
+      ${j.improve?.[0] ? '<div class="fb-section"><div class="fb-section-title">💡 Improve</div><div class="fb-text">'+j.improve[0]+'</div></div>' : ''}
+      ${currentIdx < PQS.length-1 ? '<button onclick="showQ('+(currentIdx+1)+')" style="width:100%;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;">Next Question <span class="mat">arrow_forward</span></button>' : '<p style="text-align:center;font-weight:700;color:var(--green);margin-top:10px;">🎉 All questions done!</p>'}
+    </div>`;
+
+    // Save via app.js
+    if (typeof window.saveAIResponse === 'function') {
+      const scoreNorm = Math.round((j.score||0)/10);
+      await window.saveAIResponse('YSJ_'+qId, ans, scoreNorm, j.summary||'', q?.q||'');
+    }
+  } catch(e) {
+    spinner.classList.remove('show');
+    document.getElementById('fb-'+qId).innerHTML = `<div class="feedback-card fail">
+      <p>Could not connect to AI. Make sure you are signed in to Puter and try again.</p>
+    </div>`;
+    btn.disabled = false;
+  }
+}
+
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.display='block';
+  setTimeout(()=>t.style.display='none',2500);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{ showQ(0); });
+</script>
+</body>
+</html>
