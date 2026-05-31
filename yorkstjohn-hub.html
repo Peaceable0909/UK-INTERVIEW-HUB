@@ -539,34 +539,7 @@ button:disabled{opacity:.5;cursor:not-allowed;}
     </div>
   </div>
 
-  <!-- READY FOR INTERVIEW -->
-  <div class="section">
-    <div class="ready-card">
-      <div class="ready-icon">
-        <span class="mi fill lg">verified</span>
-      </div>
-      <h2 class="ready-title">Ready for Interview?</h2>
-      <p class="ready-desc">
-        When you feel prepared, submit your readiness report to the WhiteRock team.
-        They will review your answers and get in touch before your interview date.
-      </p>
-      <div class="ready-scores">
-        <div class="ready-score-item">
-          <div class="ready-score-val" id="ready-q-score">0/0</div>
-          <div class="ready-score-lbl">Questions passed</div>
-        </div>
-        <div class="ready-score-item">
-          <div class="ready-score-val" id="ready-chk-score">0/24</div>
-          <div class="ready-score-lbl">Checklist done</div>
-        </div>
-      </div>
-      <button class="btn-ready" id="readyBtn" aria-label="Submit readiness report to WhiteRock">
-        <span class="mi fill">send</span>
-        I'm Ready — Notify WhiteRock
-      </button>
-      <div class="ready-status" id="ysj-ready-status"></div>
-    </div>
-  </div>
+
 
 </div><!-- /page -->
 
@@ -736,9 +709,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   updateHero(scores, interviewDate);
   renderMods(scores);
 
-  // Checklist count
-  const chkDone=new Set(JSON.parse(localStorage.getItem('ysj_chk')||'[]')).size;
-  document.getElementById('ready-chk-score').textContent=chkDone+'/24';
+
 
   // Notifications
   try {
