@@ -343,6 +343,42 @@ button:disabled{opacity:.5;cursor:not-allowed;}
 
 <div class="page" style="padding-top:calc(var(--topbar) + env(safe-area-inset-top) + 54px);">
   <div class="pad">
+    <!-- COURSE DETAIL SECTION -->
+    <div id="course-detail-section" style="margin-bottom:var(--s6);display:none">
+      <div class="card" style="padding:var(--s5)">
+        <div style="display:flex;align-items:center;gap:var(--s3);margin-bottom:var(--s5)">
+          <div style="width:40px;height:40px;border-radius:var(--r-md);background:#fef2f2;
+            display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <span class="mi fill" style="color:var(--red)">school</span>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--t3)">Your Course</div>
+            <div style="font-size:16px;font-weight:800;color:var(--t1)" id="cd-name">Loading…</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-bottom:var(--s5)" id="cd-stats-grid"></div>
+        <div style="margin-bottom:var(--s4)">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:6px">Campus Address</div>
+          <div style="font-size:14px;color:var(--t2);background:var(--bg);border-radius:var(--r-md);padding:var(--s3) var(--s4)" id="cd-address"></div>
+        </div>
+        <div style="margin-bottom:var(--s4)">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:6px">How You Will Be Assessed</div>
+          <div style="font-size:14px;color:var(--t2);line-height:1.5;background:var(--bg);border-radius:var(--r-md);padding:var(--s3) var(--s4)" id="cd-assess"></div>
+        </div>
+        <div id="cd-modules-wrap" style="margin-bottom:var(--s4)">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:var(--s3)">Key Modules</div>
+          <div id="cd-modules"></div>
+        </div>
+        <div id="cd-roles-wrap" style="margin-bottom:var(--s4)">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:var(--s3)">Graduate Career Options</div>
+          <div id="cd-roles" style="display:flex;flex-wrap:wrap;gap:var(--s2)"></div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:var(--s3)">Official Links</div>
+          <div id="cd-links"></div>
+        </div>
+      </div>
+    </div>
     <div id="guideList"></div>
   </div>
 </div>
@@ -889,7 +925,39 @@ function toggleAcc(idx) {
   }
 }
 
+function renderCourseDetail() {
+  const cid = localStorage.getItem('last_course');
+  if (!cid || !COURSES || !COURSES[cid]) return;
+  const c = COURSES[cid];
+  document.getElementById('course-detail-section').style.display='block';
+  document.getElementById('cd-name').textContent = c.name;
+  const sg = document.getElementById('cd-stats-grid');
+  sg.innerHTML = [{v:c.tuition||'—',l:'Per year tuition'},{v:c.livingCost||'—',l:'UKVI living cost'},{v:c.accommodation||'—',l:'Accommodation/wk'},{v:c.salary||'—',l:'Graduate salary'}]
+    .map(s=>`<div style="background:var(--bg);border-radius:var(--r-md);padding:var(--s3) var(--s4)"><div style="font-size:15px;font-weight:800;color:var(--t1);line-height:1">${s.v}</div><div style="font-size:11px;color:var(--t3);margin-top:3px">${s.l}</div></div>`).join('');
+  document.getElementById('cd-address').textContent = c.address||c.city||'';
+  document.getElementById('cd-assess').textContent = c.assessment||'Coursework and examinations.';
+  const mods = document.getElementById('cd-modules');
+  if (c.modules?.length) {
+    mods.innerHTML = c.modules.map((m,i)=>`<div style="display:flex;align-items:flex-start;gap:var(--s3);background:var(--bg);border-radius:var(--r-md);padding:var(--s3) var(--s4);margin-bottom:var(--s2)"><div style="width:24px;height:24px;border-radius:6px;background:var(--navy);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">${i+1}</div><div><div style="font-size:13px;font-weight:700;color:var(--t1)">${m.name}</div>${m.why?`<div style="font-size:12px;color:var(--t3);margin-top:2px;line-height:1.4">${m.why}</div>`:''}</div></div>`).join('');
+  } else { document.getElementById('cd-modules-wrap').style.display='none'; }
+  const roles = document.getElementById('cd-roles');
+  if (c.roles?.length) {
+    roles.innerHTML = c.roles.map(r=>`<span style="background:var(--navy);color:#fff;border-radius:var(--r-pill);padding:5px 12px;font-size:12px;font-weight:700">${r}</span>`).join('');
+  } else { document.getElementById('cd-roles-wrap').style.display='none'; }
+  const isL = c.city==='London';
+  document.getElementById('cd-links').innerHTML = [
+    {icon:'open_in_new',label:'Programme Specification',href:c.specUrl||'https://www.yorksj.ac.uk/programme-specifications/'},
+    {icon:'apartment',label:'Campus Information',href:c.campusUrl||'https://www.yorksj.ac.uk/campus-and-facilities/'},
+    {icon:'payments',label:'Tuition Fees & Funding',href:'https://www.yorksj.ac.uk/international/funding-scholarships-and-paying-tuition-fees/'},
+    {icon:'home',label:isL?'London Accommodation':'York Accommodation',href:isL?'https://www.yorksj.ac.uk/london-campus/welcome/before-you-start-at-our-london-campus/':'https://www.yorksj.ac.uk/study/accommodation/'},
+    {icon:'badge',label:'Student Visa Requirements',href:'https://www.gov.uk/student-visa'},
+    {icon:'badge',label:'Graduate Route Visa',href:'https://www.gov.uk/graduate-visa'},
+    {icon:'link',label:'UKCISA Visa & Immigration Advice',href:'https://www.ukcisa.org.uk/student-advice/visas-and-immigration'},
+  ].map(l=>`<a href="${l.href}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:var(--s3);background:var(--bg);border-radius:var(--r-md);padding:var(--s3) var(--s4);margin-bottom:var(--s2);text-decoration:none;-webkit-tap-highlight-color:transparent;"><span class="mi fill sm" style="color:var(--red)">${l.icon}</span><span style="flex:1;font-size:13px;font-weight:600;color:var(--t1)">${l.label}</span><span class="mi" style="font-size:14px;color:var(--t4)">open_in_new</span></a>`).join('');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  renderCourseDetail();
   const list = document.getElementById('guideList');
   list.innerHTML = GUIDE_SECTIONS.map((s,i) => {
     const isRead = readSet.has(s.id);
