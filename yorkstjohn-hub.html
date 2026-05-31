@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<base href="/UK-INTERVIEW-HUB/">
+<title>Dashboard | York St John Interview Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+:root{--red:#c41230;--red-dk:#9e0e25;--navy:#1a1a2e;--surface:#fff;--bg:#f0f2f5;--border:#e5e7eb;--txt:#111827;--muted:#6b7280;--green:#16a34a;--amber:#d97706;--purple:#7c3aed;--teal:#0d9488;--blue:#1d4ed8;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,"Inter",sans-serif;background:var(--bg);-webkit-font-smoothing:antialiased;}
+.mat{font-family:"Material Symbols Outlined";font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;vertical-align:middle;line-height:1;}
+.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
+
+/* Top bar */
+.top-bar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:var(--navy);
+  padding:env(safe-area-inset-top) 16px 0;
+  padding-top:calc(env(safe-area-inset-top) + 14px);
+  padding-bottom:14px;
+}
+.top-bar-inner{display:flex;align-items:center;justify-content:space-between;}
+.top-left{display:flex;align-items:center;gap:10px;}
+.logo-pill{display:flex;align-items:center;gap:8px;}
+.logo-mark{width:30px;height:30px;border-radius:8px;background:var(--red);display:flex;align-items:center;justify-content:center;}
+.logo-mark .mat{font-size:16px;color:#fff;}
+.logo-name{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.2px;}
+.top-right{display:flex;align-items:center;gap:8px;}
+.top-icon-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.top-icon-btn .mat{font-size:18px;color:#fff;}
+.notif-dot{
+  position:absolute;top:0;right:0;width:10px;height:10px;
+  border-radius:50%;background:var(--red);border:2px solid var(--navy);
+  display:none;
+}
+.notif-dot.show{display:block;}
+.avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--red),var(--purple));
+  color:#fff;font-size:12px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* Scroll body */
+.page-body{
+  padding-top:74px;padding-bottom:calc(68px + env(safe-area-inset-bottom));
+  padding-top:calc(74px + env(safe-area-inset-top));
+}
+
+/* Hero */
+.hero{
+  background:linear-gradient(150deg,var(--navy) 0%,#2d1b69 100%);
+  padding:20px;
+}
+.hero-greeting{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:4px;}
+.hero-name{font-size:22px;font-weight:900;color:#fff;margin-bottom:2px;}
+.hero-course{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);
+  border-radius:8px;padding:5px 10px;
+  font-size:12px;font-weight:700;color:rgba(255,255,255,.85);
+  cursor:pointer;margin-bottom:20px;margin-top:6px;
+}
+.hero-course .mat{font-size:14px;}
+
+/* KPI row */
+.kpi-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:0;}
+.kpi-card{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;padding:12px;text-align:center;
+}
+.kpi-val{font-size:22px;font-weight:900;color:#fff;line-height:1;}
+.kpi-val sub{font-size:12px;font-weight:500;opacity:.6;}
+.kpi-lbl{font-size:10px;color:rgba(255,255,255,.55);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
+
+/* XP strip */
+.xp-strip{
+  background:var(--surface);padding:12px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.xp-chip{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;}
+.xp-chip .mat{font-size:18px;}
+.xp-chip.streak .mat{color:#f97316;}
+.xp-chip.xp .mat{color:#eab308;}
+
+/* Section */
+.section{padding:20px 16px 0;}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sec-title{font-size:17px;font-weight:800;color:var(--navy);letter-spacing:-.2px;}
+.sec-link{font-size:13px;font-weight:700;color:var(--red);}
+
+/* Module grid */
+.mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.mod-card{
+  background:var(--surface);border-radius:14px;border:2px solid var(--border);
+  padding:14px;cursor:pointer;transition:all .18s;
+  -webkit-tap-highlight-color:transparent;
+}
+.mod-card:active{transform:scale(.97);}
+.mod-card.done{border-color:var(--c,var(--border));}
+.mod-num{font-size:10px;font-weight:800;color:var(--c,var(--muted));letter-spacing:.08em;margin-bottom:8px;}
+.mod-icon{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:10px;
+}
+.mod-icon .mat{font-size:20px;}
+.mod-title{font-size:13px;font-weight:700;color:var(--navy);line-height:1.3;margin-bottom:6px;}
+.mod-bar-wrap{height:4px;background:#f3f4f6;border-radius:99px;margin-bottom:5px;overflow:hidden;}
+.mod-bar{height:100%;border-radius:99px;background:var(--c,var(--muted));}
+.mod-foot{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
+.mod-pct{font-size:11px;font-weight:700;color:var(--muted);}
+.mod-status{font-size:11px;font-weight:800;color:var(--c,var(--muted));}
+
+/* Quick actions */
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;}
+.quick-btn{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:16px;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:all .15s;
+}
+.quick-btn:active{transform:scale(.97);}
+.quick-icon{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:10px;
+}
+.quick-icon .mat{font-size:22px;}
+.quick-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:2px;}
+.quick-sub{font-size:11px;color:var(--muted);}
+.btn-mock{
+  width:100%;background:var(--navy);color:#fff;
+  border:none;border-radius:14px;padding:16px;
+  font-size:15px;font-weight:800;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:0;-webkit-tap-highlight-color:transparent;
+}
+.btn-mock .mat{font-size:20px;}
+.btn-mock:active{opacity:.9;}
+
+/* Bottom nav */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(255,255,255,.97);border-top:1px solid var(--border);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  align-items:start;z-index:100;
+}
+.nav-tab{
+  display:flex;flex-direction:column;align-items:center;
+  padding:10px 4px;text-decoration:none;
+  color:var(--muted);font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.05em;gap:3px;
+}
+.nav-tab:hover{color:var(--txt);}
+.nav-tab.active{color:var(--red);}
+.nav-tab .mat{font-size:22px;}
+.nav-tab.active .mat{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
+
+#toast{display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+  background:var(--navy);color:#fff;padding:10px 20px;border-radius:99px;
+  font-size:13px;font-weight:600;z-index:9999;white-space:nowrap;}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <div class="top-bar-inner">
+    <div class="top-left">
+      <div class="logo-pill">
+        <div class="logo-mark"><span class="mat fill">school</span></div>
+        <span class="logo-name">YSJ Interview</span>
+      </div>
+    </div>
+    <div class="top-right">
+      <button class="top-icon-btn" id="notifBtn" aria-label="Notifications">
+        <span class="mat">notifications</span>
+        <span class="notif-dot" id="notifBadge"></span>
+      </button>
+      <div class="avatar" id="avatarInitials">AC</div>
+    </div>
+  </div>
+</header>
+
+<!-- BODY -->
+<div class="page-body">
+
+  <!-- HERO -->
+  <div class="hero">
+    <p class="hero-greeting">Welcome back 👋</p>
+    <h1 class="hero-name" id="studentName">Student</h1>
+    <div class="hero-course" onclick="location.href='yorkstjohn.html'" role="button" tabindex="0">
+      <span class="mat">school</span>
+      <span id="hero-course-name">Select your course</span>
+      <span class="mat">expand_more</span>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-val" id="hero-pct">0<sub>%</sub></div>
+        <div class="kpi-lbl">Complete</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" id="hero-days">—</div>
+        <div class="kpi-lbl">Days Left</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val" id="hero-score">0<sub>/10</sub></div>
+        <div class="kpi-lbl">Readiness</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- XP STRIP -->
+  <div class="xp-strip">
+    <div class="xp-chip streak">
+      <span class="mat fill">local_fire_department</span>
+      <span id="ysj-streak-display">0</span> Day Streak
+    </div>
+    <div class="xp-chip xp">
+      <span class="mat fill">emoji_events</span>
+      <span id="ysj-xp-display">0</span> XP Points
+    </div>
+  </div>
+
+  <!-- MODULES -->
+  <div class="section">
+    <div class="sec-hdr">
+      <span class="sec-title">Your Learning Path</span>
+      <a href="yorkstjohn-questions.html" class="sec-link">View all</a>
+    </div>
+    <div class="mod-grid" id="modGrid"><!-- JS renders --></div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="section" style="padding-bottom:20px;">
+    <div class="sec-hdr"><span class="sec-title">Quick Actions</span></div>
+    <div class="quick-grid">
+      <button class="quick-btn" onclick="location.href='yorkstjohn-guide.html'">
+        <div class="quick-icon" style="background:#ede9fe;"><span class="mat fill" style="color:#7c3aed">menu_book</span></div>
+        <div class="quick-title">Interview Guide</div>
+        <div class="quick-sub">Key facts to know</div>
+      </button>
+      <button class="quick-btn" onclick="location.href='yorkstjohn-checklist.html'">
+        <div class="quick-icon" style="background:#f0fdf4;"><span class="mat fill" style="color:#16a34a">checklist</span></div>
+        <div class="quick-title">Checklist</div>
+        <div class="quick-sub">Track your prep</div>
+      </button>
+      <button class="quick-btn" onclick="location.href='yorkstjohn-questions.html'">
+        <div class="quick-icon" style="background:#eff6ff;"><span class="mat fill" style="color:#1d4ed8">quiz</span></div>
+        <div class="quick-title">Question Bank</div>
+        <div class="quick-sub">All categories</div>
+      </button>
+      <button class="quick-btn" onclick="location.href='yorkstjohn-practice.html'">
+        <div class="quick-icon" style="background:#fff7ed;"><span class="mat fill" style="color:#ea580c">mic</span></div>
+        <div class="quick-title">AI Practice</div>
+        <div class="quick-sub">Get scored live</div>
+      </button>
+    </div>
+    <button class="btn-mock" onclick="location.href='yorkstjohn-practice.html'">
+      <span class="mat fill">play_circle</span> Start Mock Interview
+    </button>
+  </div>
+
+</div><!-- /page-body -->
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav" aria-label="Main navigation">
+  <a href="yorkstjohn-hub.html" class="nav-tab active"><span class="mat">home</span>Home</a>
+  <a href="yorkstjohn-guide.html" class="nav-tab"><span class="mat">menu_book</span>Guide</a>
+  <a href="yorkstjohn-practice.html" class="nav-tab"><span class="mat">mic</span>Practice</a>
+  <a href="yorkstjohn-questions.html" class="nav-tab"><span class="mat">quiz</span>Questions</a>
+  <a href="yorkstjohn-checklist.html" class="nav-tab"><span class="mat">checklist</span>Checklist</a>
+</nav>
+
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js?v=3"></script>
+<script src="yorkstjohn-data.js"></script>
+<script>
+const MODULES = [
+  {id:'M1',num:'01',title:'Understanding the Interview',icon:'psychology',color:'#6366f1',bg:'#ede9fe',mins:12,href:'yorkstjohn-guide.html'},
+  {id:'M2',num:'02',title:'Why the UK',icon:'public',color:'#7c3aed',bg:'#f5f3ff',mins:15,href:'yorkstjohn-questions.html#uk'},
+  {id:'M3',num:'03',title:'Why York St John',icon:'account_balance',color:'#0891b2',bg:'#ecfeff',mins:18,href:'yorkstjohn-questions.html#ysj'},
+  {id:'M4',num:'04',title:'Your Course',icon:'menu_book',color:'#d97706',bg:'#fefce8',mins:16,href:'yorkstjohn-questions.html#course'},
+  {id:'M5',num:'05',title:'Finance',icon:'payments',color:'#dc2626',bg:'#fef2f2',mins:14,href:'yorkstjohn-questions.html#finance'},
+  {id:'M6',num:'06',title:'Accommodation',icon:'home',color:'#0d9488',bg:'#f0fdf4',mins:16,href:'yorkstjohn-questions.html#living'},
+  {id:'M7',num:'07',title:'Career Plans',icon:'trending_up',color:'#7c3aed',bg:'#faf5ff',mins:14,href:'yorkstjohn-questions.html#career'},
+  {id:'M8',num:'08',title:'Mock Interview',icon:'mic',color:'#1d4ed8',bg:'#eff6ff',mins:25,href:'yorkstjohn-practice.html'},
+];
+
+function getXP(){return parseInt(localStorage.getItem('ysj_xp')||'0');}
+function getStreak(){
+  const d=localStorage.getItem('ysj_streak_date'),today=new Date().toDateString();
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  if(d===today||d===yesterday) return parseInt(localStorage.getItem('ysj_streak')||'0');
+  return 0;
+}
+
+function renderModules(){
+  const scores=JSON.parse(localStorage.getItem('ysj_scores')||'{}');
+  const grid=document.getElementById('modGrid');
+  grid.innerHTML=MODULES.map(m=>{
+    const keys=Object.keys(scores).filter(k=>k.startsWith('YSJ_'));
+    const pct=m.id==='M1'?Math.min(100,parseInt(localStorage.getItem('ysj_guide_opened')||'0')*10):
+              m.id==='M8'?Math.round(Object.keys(scores).filter(k=>k.startsWith('p')).length/22*100):0;
+    const done=pct>=80;
+    const status=done?'Completed':pct>0?'Resume':'Start';
+    return `<div class="mod-card${done?' done':''}" style="--c:${m.color}" onclick="location.href='${m.href}'">
+      <div class="mod-num">${m.num}</div>
+      <div class="mod-icon" style="background:${m.bg}"><span class="mat fill" style="color:${m.color}">${m.icon}</span></div>
+      <div class="mod-title">${m.title}</div>
+      <div class="mod-bar-wrap"><div class="mod-bar" style="width:${pct}%"></div></div>
+      <div class="mod-foot">
+        <span class="mod-pct">${pct}%</span>
+        <span class="mod-status">${status}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', async ()=>{
+  // XP + Streak
+  document.getElementById('ysj-xp-display').textContent=getXP();
+  document.getElementById('ysj-streak-display').textContent=getStreak();
+  
+  await (window.sessionReady||Promise.resolve());
+  const s=window.getCurrentStudent?.();
+  if(s){
+    document.getElementById('studentName').textContent=s.name||'Student';
+    document.getElementById('avatarInitials').textContent=(s.name||'S').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+  }
+  
+  const cid=localStorage.getItem('last_course');
+  if(cid&&COURSES[cid]){
+    document.getElementById('hero-course-name').textContent=COURSES[cid].name;
+  }
+  
+  // Scores
+  if(s?.id){
+    try{
+      const {data}=await (window.supabaseClient||window.getDB?.())
+        .from('student_progress').select('ai_scores,interview_date').eq('user_id',s.id).single();
+      if(data){
+        const scores=data.ai_scores||{};
+        localStorage.setItem('ysj_scores',JSON.stringify(scores));
+        const keys=Object.keys(scores).filter(k=>k.startsWith('YSJ_'));
+        const pct=Math.round(keys.length/60*100);
+        const avg=keys.length?keys.reduce((a,k)=>a+(scores[k]?.score||0),0)/keys.length:0;
+        document.getElementById('hero-pct').innerHTML=pct+'<sub>%</sub>';
+        document.getElementById('hero-score').innerHTML=Math.round(avg)+'<sub>/10</sub>';
+        if(data.interview_date){
+          const days=Math.ceil((new Date(data.interview_date)-new Date())/86400000);
+          document.getElementById('hero-days').textContent=days>0?days:'Today';
+        }
+      }
+    }catch(e){}
+  }
+  renderModules();
+  
+  // Notifications
+  if(s?.id){
+    try{
+      const {data}=await (window.supabaseClient||window.getDB?.())
+        .from('student_notifications').select('id').eq('target_user_id',s.id).limit(1);
+      if(data?.length) document.getElementById('notifBadge').classList.add('show');
+    }catch(e){}
+  }
+});
+</script>
+</body>
+</html>
