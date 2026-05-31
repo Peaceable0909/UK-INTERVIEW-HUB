@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<base href="/UK-INTERVIEW-HUB/">
+<title>Checklist | YSJ Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+:root{--red:#c41230;--navy:#1a1a2e;--surface:#fff;--bg:#f0f2f5;--border:#e5e7eb;--txt:#111827;--muted:#6b7280;--green:#16a34a;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{font-family:-apple-system,BlinkMacSystemFont,"Inter",sans-serif;background:var(--bg);-webkit-font-smoothing:antialiased;}
+.mat{font-family:"Material Symbols Outlined";font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;vertical-align:middle;line-height:1;}
+.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
+.top-bar{position:fixed;top:0;left:0;right:0;height:calc(56px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding-left:8px;padding-right:16px;gap:8px;z-index:100;}
+.back-btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;}
+.back-btn .mat{font-size:22px;color:var(--navy);}
+.top-title{font-size:16px;font-weight:800;color:var(--navy);flex:1;}
+.progress-strip{background:var(--surface);padding:16px;border-bottom:1px solid var(--border);}
+.prog-hdr{display:flex;justify-content:space-between;margin-bottom:8px;}
+.prog-label{font-size:13px;font-weight:700;color:var(--navy);}
+.prog-pct{font-size:13px;font-weight:800;color:var(--green);}
+.prog-bar{height:8px;background:#f3f4f6;border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--green);border-radius:99px;transition:width .4s;}
+.page-body{padding-top:calc(56px + env(safe-area-inset-top) + 72px);padding-bottom:calc(68px + env(safe-area-inset-bottom));padding-left:16px;padding-right:16px;}
+.section-title{font-size:13px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:20px 0 10px;}
+.chk-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:10px;}
+.chk-item{display:flex;align-items:center;gap:14px;padding:15px 16px;min-height:52px;border-bottom:1px solid #f3f4f6;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s;}
+.chk-item:last-child{border-bottom:none;}
+.chk-item:active{background:#f9f9f9;}
+.chk-box{width:24px;height:24px;border-radius:7px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.chk-box.checked{background:var(--green);border-color:var(--green);}
+.chk-box.checked .mat{font-size:14px;color:#fff;}
+.chk-label{font-size:14px;color:var(--txt);flex:1;line-height:1.4;}
+.chk-label.done{color:var(--muted);text-decoration:line-through;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.97);border-top:1px solid var(--border);backdrop-filter:blur(20px);display:grid;grid-template-columns:repeat(5,1fr);}
+.nav-tab{display:flex;flex-direction:column;align-items:center;padding:10px 4px;text-decoration:none;color:var(--muted);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;gap:3px;}
+.nav-tab.active{color:var(--red);}
+.nav-tab .mat{font-size:22px;}
+.nav-tab.active .mat{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
+</style>
+</head>
+<body>
+<header class="top-bar">
+  <a href="yorkstjohn-hub.html" class="back-btn"><span class="mat">arrow_back_ios_new</span></a>
+  <h1 class="top-title">Interview Checklist</h1>
+</header>
+
+<div style="position:sticky;top:calc(56px + env(safe-area-inset-top));z-index:90;">
+  <div class="progress-strip">
+    <div class="prog-hdr">
+      <span class="prog-label" id="prog-label">0 of 0 items complete</span>
+      <span class="prog-pct" id="prog-pct">0%</span>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<div class="page-body" id="chkBody"><!-- JS renders --></div>
+
+<nav class="bottom-nav">
+  <a href="yorkstjohn-hub.html" class="nav-tab"><span class="mat">home</span>Home</a>
+  <a href="yorkstjohn-guide.html" class="nav-tab"><span class="mat">menu_book</span>Guide</a>
+  <a href="yorkstjohn-practice.html" class="nav-tab"><span class="mat">mic</span>Practice</a>
+  <a href="yorkstjohn-questions.html" class="nav-tab"><span class="mat">quiz</span>Questions</a>
+  <a href="yorkstjohn-checklist.html" class="nav-tab active"><span class="mat">checklist</span>Checklist</a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js?v=3"></script>
+<script src="yorkstjohn-data.js"></script>
+<script src="checklist-init.js"></script>
+<script>
+// Checklist items per category
+const CHECKLIST = [
+  {group:'Before the Interview',items:[
+    {id:'c1',label:'I know my exact campus address and postcode'},
+    {id:'c2',label:'I can name at least 3 specific modules in my course'},
+    {id:'c3',label:'I know how my course is assessed (essays, exams, dissertation etc.)'},
+    {id:'c4',label:'I have compared YSJ with at least 2 other UK universities'},
+    {id:'c5',label:'I can explain why I chose the UK over other countries'},
+    {id:'c6',label:'I know my tuition fee amount and how much I have paid'},
+  ]},
+  {group:'Career & Finance',items:[
+    {id:'c7',label:'I have a short-term, medium-term, and long-term career plan'},
+    {id:'c8',label:'I can name specific job roles and companies I will target'},
+    {id:'c9',label:'I know the UKVI minimum living cost for my city'},
+    {id:'c10',label:'I can clearly explain the source of my funding'},
+    {id:'c11',label:'I know my expected salary range after graduation'},
+  ]},
+  {group:'Accommodation & Life',items:[
+    {id:'c12',label:'I know where I will live and the weekly/monthly cost'},
+    {id:'c13',label:'I know how I will travel to campus from my accommodation'},
+    {id:'c14',label:'I know what life is like in York / London'},
+    {id:'c15',label:'I have researched nearby towns/areas for accommodation'},
+  ]},
+  {group:'Visa & Compliance',items:[
+    {id:'c16',label:'I know I can work maximum 20 hours per week during term time'},
+    {id:'c17',label:'I know I must attend all scheduled classes'},
+    {id:'c18',label:'I know I cannot claim public funds'},
+    {id:'c19',label:'I know I must report any address changes to the university'},
+    {id:'c20',label:'I know about the Graduate Route visa (2 years after graduation)'},
+  ]},
+  {group:'Interview Skills',items:[
+    {id:'c21',label:'I can explain why I chose this course without using generic phrases'},
+    {id:'c22',label:'I have practised answering at least 10 practice questions with AI'},
+    {id:'c23',label:'I can back every statement with a specific concrete example'},
+    {id:'c24',label:'I have read all sections of the Interview Guide'},
+  ]},
+];
+
+let checked = new Set(JSON.parse(localStorage.getItem('ysj_chk')||'[]'));
+const totalItems = CHECKLIST.reduce((a,g)=>a+g.items.length,0);
+
+function updateProgress() {
+  const pct = Math.round(checked.size/totalItems*100);
+  document.getElementById('prog-label').textContent = checked.size+' of '+totalItems+' items complete';
+  document.getElementById('prog-pct').textContent = pct+'%';
+  document.getElementById('prog-fill').style.width = pct+'%';
+}
+
+function toggle(id) {
+  if (checked.has(id)) checked.delete(id);
+  else checked.add(id);
+  localStorage.setItem('ysj_chk', JSON.stringify([...checked]));
+  // Update UI
+  const box = document.getElementById('box-'+id);
+  const label = document.getElementById('lbl-'+id);
+  if (checked.has(id)) {
+    box.classList.add('checked');
+    box.innerHTML = '<span class="mat fill">check</span>';
+    label.classList.add('done');
+  } else {
+    box.classList.remove('checked');
+    box.innerHTML = '';
+    label.classList.remove('done');
+  }
+  updateProgress();
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  // Try to load from Supabase too
+  await (window.sessionReady||Promise.resolve());
+  const s = window.getCurrentStudent?.();
+  if (s?.id) {
+    try {
+      const {data} = await (window.supabaseClient||window.getDB?.())
+        .from('student_checklists').select('item_id,is_checked')
+        .eq('user_id',s.id).eq('school','yorkstjohn');
+      if (data) data.filter(r=>r.is_checked).forEach(r=>checked.add(r.item_id));
+    } catch(e) {}
+  }
+
+  const body = document.getElementById('chkBody');
+  body.innerHTML = CHECKLIST.map(group => `
+    <div class="section-title">${group.group}</div>
+    <div class="chk-card">
+      ${group.items.map(item => `
+        <div class="chk-item" onclick="toggle('${item.id}')">
+          <div class="chk-box${checked.has(item.id)?' checked':''}" id="box-${item.id}">
+            ${checked.has(item.id)?'<span class="mat fill">check</span>':''}
+          </div>
+          <div class="chk-label${checked.has(item.id)?' done':''}" id="lbl-${item.id}">${item.label}</div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+  updateProgress();
+});
+</script>
+</body>
+</html>
