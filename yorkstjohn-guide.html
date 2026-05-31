@@ -4,124 +4,917 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <base href="/UK-INTERVIEW-HUB/">
-<title>Interview Guide | YSJ Prep</title>
+<title>Interview Guide | York St John</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
 <style>
-:root{--red:#c41230;--navy:#1a1a2e;--surface:#fff;--bg:#f0f2f5;--border:#e5e7eb;--txt:#111827;--muted:#6b7280;--green:#16a34a;}
+/* ═══════════════════════════════════════════════════════════
+   WhiteRock × York St John — Design System v2
+   UI/UX Pro Max: 8dp grid · 44px targets · system fonts
+   Style: Clean flat + subtle depth (EdTech / Apple-like)
+═══════════════════════════════════════════════════════════ */
+:root{
+  /* Brand */
+  --red:#c41230; --red-dk:#9e0e25; --red-lt:#fff5f5; --red-mid:#fecaca;
+  --navy:#1a1a2e; --navy2:#0f172a;
+  /* Neutrals */
+  --bg:#f5f5f7; --surface:#ffffff; --surface2:#fafafa;
+  --border:#e5e7eb; --divider:#f3f4f6;
+  /* Text */
+  --t1:#1d1d1f; --t2:#3c3c43; --t3:#6e6e73; --t4:#aeaeb2;
+  /* Semantic */
+  --green:#1c7c54; --green-lt:#d1fae5; --green-bg:#f0fdf4;
+  --amber:#b45309; --amber-lt:#fef3c7; --amber-bg:#fffbeb;
+  --blue:#1d4ed8; --blue-lt:#dbeafe; --blue-bg:#eff6ff;
+  --purple:#5b21b6; --purple-lt:#ede9fe; --purple-bg:#faf5ff;
+  --teal:#0d7377; --teal-lt:#ccfbf1; --teal-bg:#f0fdfa;
+  /* Spacing (8dp) */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px;
+  --s6:24px; --s7:28px; --s8:32px; --s10:40px; --s12:48px;
+  /* Radii */
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-pill:99px;
+  /* Elevation */
+  --sh-1:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh-2:0 4px 12px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
+  --sh-3:0 12px 32px rgba(0,0,0,.1),0 4px 8px rgba(0,0,0,.06);
+  /* Layout */
+  --topbar:56px; --bottomnav:60px;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{font-family:-apple-system,BlinkMacSystemFont,"Inter",sans-serif;background:var(--bg);-webkit-font-smoothing:antialiased;}
-.mat{font-family:"Material Symbols Outlined";font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;vertical-align:middle;line-height:1;}
-.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
-.top-bar{position:fixed;top:0;left:0;right:0;height:56px;height:calc(56px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding-left:8px;padding-right:16px;gap:8px;z-index:100;}
-.back-btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
-.back-btn .mat{font-size:22px;color:var(--navy);}
-.top-title{font-size:16px;font-weight:800;color:var(--navy);flex:1;}
-.page-body{padding-top:calc(56px + env(safe-area-inset-top) + 16px);padding-bottom:calc(68px + env(safe-area-inset-bottom));padding-left:16px;padding-right:16px;}
-.progress-bar{height:4px;background:#f3f4f6;border-radius:99px;margin-bottom:20px;overflow:hidden;}
-.progress-fill{height:100%;background:var(--red);border-radius:99px;transition:width .4s;}
-.section-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
-.guide-card{background:var(--surface);border-radius:16px;border:1px solid var(--border);margin-bottom:10px;overflow:hidden;-webkit-tap-highlight-color:transparent;}
-.guide-header{display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer;min-height:60px;}
-.guide-num{width:28px;height:28px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.guide-num.done{background:var(--green);}
-.guide-title-wrap{flex:1;}
-.guide-title{font-size:14px;font-weight:700;color:var(--navy);line-height:1.3;}
-.guide-sub{font-size:12px;color:var(--muted);margin-top:1px;}
-.guide-chevron{color:var(--muted);transition:transform .2s;}
-.guide-chevron.open{transform:rotate(180deg);}
-.guide-body{display:none;padding:0 16px 16px;font-size:13px;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);}
-.guide-body.open{display:block;}
-.guide-body ul{padding-left:18px;margin-top:8px;}
-.guide-body li{margin-bottom:6px;}
-.guide-body strong{color:var(--navy);}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.97);border-top:1px solid var(--border);backdrop-filter:blur(20px);display:grid;grid-template-columns:repeat(5,1fr);}
-.nav-tab{display:flex;flex-direction:column;align-items:center;padding:10px 4px;text-decoration:none;color:var(--muted);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;gap:3px;}
-.nav-tab.active{color:var(--red);}
-.nav-tab .mat{font-size:22px;}
-.nav-tab.active .mat{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
+html{font-size:16px;-webkit-text-size-adjust:100%;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--t1);line-height:1.5;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+/* Material Symbols */
+.mi{
+  font-family:"Material Symbols Outlined";
+  font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;
+  vertical-align:middle;line-height:1;user-select:none;
+  font-size:22px; /* prevents shift */
+}
+.mi.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
+.mi.sm{font-size:18px;}
+.mi.xs{font-size:16px;}
+.mi.lg{font-size:26px;}
+.mi.xl{font-size:32px;}
+/* Headings */
+h1{font-size:clamp(22px,5vw,28px);font-weight:800;line-height:1.15;letter-spacing:-.3px;color:var(--t1);}
+h2{font-size:18px;font-weight:800;line-height:1.2;letter-spacing:-.2px;color:var(--t1);}
+h3{font-size:16px;font-weight:700;line-height:1.3;color:var(--t1);}
+p{color:var(--t3);line-height:1.5;}
+/* Links */
+a{text-decoration:none;color:inherit;}
+/* Buttons */
+button{font-family:inherit;cursor:pointer;border:none;background:none;font-size:16px;}
+button:disabled{opacity:.5;cursor:not-allowed;}
+/* ── TOP BAR ─────────────────────────────────────────── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:calc(var(--topbar) + env(safe-area-inset-top));
+  padding-top:env(safe-area-inset-top);
+  background:rgba(255,255,255,.92);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding-left:var(--s2);padding-right:var(--s4);gap:var(--s2);
+}
+.topbar-back{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--navy);-webkit-tap-highlight-color:transparent;
+  transition:background .15s;flex-shrink:0;
+}
+.topbar-back:hover,.topbar-back:active{background:var(--divider);}
+.topbar-title{font-size:17px;font-weight:700;color:var(--t1);flex:1;letter-spacing:-.2px;}
+.topbar-action{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;transition:background .15s;
+}
+.topbar-action:hover,.topbar-action:active{background:var(--divider);}
+.topbar-badge-wrap{position:relative;}
+.notif-badge{
+  position:absolute;top:6px;right:6px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--red);border:2px solid #fff;
+  display:none;
+}
+.notif-badge.on{display:block;}
+/* ── PAGE BODY ───────────────────────────────────────── */
+.page{
+  padding-top:calc(var(--topbar) + env(safe-area-inset-top) + var(--s4));
+  padding-bottom:calc(var(--bottomnav) + env(safe-area-inset-bottom) + var(--s6));
+}
+.pad{padding-left:var(--s4);padding-right:var(--s4);}
+/* ── BOTTOM NAV ──────────────────────────────────────── */
+.bottomnav{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  height:calc(var(--bottomnav) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(255,255,255,.95);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  align-items:start;
+}
+.bn-tab{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:10px var(--s2) 6px;
+  color:var(--t4);font-size:10px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.04em;
+  text-decoration:none;-webkit-tap-highlight-color:transparent;
+  transition:color .15s;
+}
+.bn-tab .mi{font-size:24px;transition:all .15s;}
+.bn-tab.active{color:var(--red);}
+.bn-tab.active .mi{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
+/* ── CARD ────────────────────────────────────────────── */
+.card{
+  background:var(--surface);border-radius:var(--r-xl);
+  border:1px solid var(--border);overflow:hidden;
+}
+.card+.card{margin-top:var(--s3);}
+/* ── SECTION HEADER ──────────────────────────────────── */
+.sec-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:var(--s4);
+}
+.sec-title{font-size:18px;font-weight:800;color:var(--t1);letter-spacing:-.2px;}
+.sec-sub{font-size:13px;color:var(--t3);margin-top:2px;}
+.sec-link{
+  font-size:13px;font-weight:700;color:var(--red);
+  display:flex;align-items:center;gap:2px;
+}
+/* ── BUTTONS ─────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:var(--s2);border-radius:var(--r-md);font-weight:700;
+  min-height:44px;padding:0 var(--s5);font-size:15px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:filter .15s, opacity .15s;
+  touch-action:manipulation;
+}
+.btn:active{filter:brightness(.93);}
+.btn.full{width:100%;}
+.btn.red{background:var(--red);color:#fff;}
+.btn.navy{background:var(--navy);color:#fff;}
+.btn.outline{border:1.5px solid var(--border);background:var(--surface);color:var(--t1);}
+.btn.ghost{background:transparent;color:var(--red);border:none;}
+.btn.lg{min-height:52px;font-size:16px;border-radius:14px;}
+/* ── CHIPS / BADGES ──────────────────────────────────── */
+.chip{
+  display:inline-flex;align-items:center;gap:var(--s1);
+  border-radius:var(--r-pill);padding:5px 12px;
+  font-size:12px;font-weight:700;
+}
+.chip.red{background:var(--red-lt);color:var(--red);}
+.chip.green{background:var(--green-lt);color:var(--green);}
+.chip.navy{background:#e8eaf2;color:var(--navy);}
+.chip.muted{background:var(--divider);color:var(--t3);}
+.chip.border{background:var(--surface);border:1.5px solid var(--border);color:var(--t2);}
+/* ── INPUT ───────────────────────────────────────────── */
+.input{
+  width:100%;border:1.5px solid var(--border);
+  border-radius:var(--r-md);padding:12px 14px;
+  font-size:16px;font-family:inherit;
+  outline:none;background:var(--surface);
+  transition:border-color .15s;color:var(--t1);
+}
+.input:focus{border-color:var(--red);}
+.textarea{resize:none;min-height:120px;line-height:1.5;}
+/* ── DIVIDER ─────────────────────────────────────────── */
+.hr{height:1px;background:var(--divider);margin:var(--s4) 0;}
+/* ── SHIMMER SKELETON ────────────────────────────────── */
+.skeleton{
+  background:linear-gradient(90deg,var(--divider) 25%,#ebebeb 50%,var(--divider) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.4s infinite;
+  border-radius:var(--r-sm);
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* ── SPINNER ─────────────────────────────────────────── */
+.spinner{
+  width:20px;height:20px;
+  border:2.5px solid var(--divider);
+  border-top-color:var(--red);
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+  display:inline-block;flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+/* ── TOAST ───────────────────────────────────────────── */
+#toast{
+  display:none;position:fixed;bottom:80px;left:50%;
+  transform:translateX(-50%);
+  background:var(--t1);color:#fff;
+  padding:10px 20px;border-radius:var(--r-pill);
+  font-size:14px;font-weight:600;z-index:9999;
+  box-shadow:var(--sh-3);white-space:nowrap;
+}
+/* ── PROGRESS BAR ────────────────────────────────────── */
+.prog-track{
+  height:6px;background:var(--divider);
+  border-radius:var(--r-pill);overflow:hidden;
+}
+.prog-fill{
+  height:100%;border-radius:var(--r-pill);
+  transition:width .5s cubic-bezier(.4,0,.2,1);
+}
+/* ── SAFE AREAS ──────────────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important;}
+}
+/* ── RESPONSIVE ──────────────────────────────────────── */
+@media(min-width:768px){
+  .page{max-width:560px;margin:0 auto;}
+  .topbar{max-width:560px;left:50%;transform:translateX(-50%);}
+  .bottomnav{max-width:560px;left:50%;transform:translateX(-50%);}
+}
+</style>
+<style>
+/* Guide-specific */
+.guide-topbar{
+  background:rgba(255,255,255,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+}
+.prog-strip{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:10px var(--s4) var(--s3);
+  position:sticky;top:calc(var(--topbar) + env(safe-area-inset-top));z-index:90;
+}
+.prog-strip-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s2);}
+.prog-strip-label{font-size:13px;font-weight:700;color:var(--t2);}
+.prog-strip-pct{font-size:13px;font-weight:800;color:var(--green);}
+.acc-card{
+  background:var(--surface);border-radius:var(--r-lg);
+  border:1px solid var(--border);margin-bottom:var(--s3);
+  overflow:hidden;
+}
+.acc-card.read{border-color:var(--green);}
+.acc-header{
+  display:flex;align-items:center;gap:var(--s3);
+  padding:var(--s4) var(--s4) var(--s4) var(--s3);
+  cursor:pointer;min-height:64px;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.acc-header:active{background:var(--bg);}
+.acc-num{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;flex-shrink:0;
+  background:var(--divider);color:var(--t3);
+  transition:all .2s;
+}
+.acc-card.read .acc-num{background:var(--green);color:#fff;}
+.acc-title-wrap{flex:1;}
+.acc-title{font-size:15px;font-weight:700;color:var(--t1);line-height:1.3;}
+.acc-subtitle{font-size:12px;color:var(--t3);margin-top:2px;}
+.acc-chevron{color:var(--t4);flex-shrink:0;transition:transform .25s;}
+.acc-card.open .acc-chevron{transform:rotate(180deg);}
+.acc-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .35s cubic-bezier(.4,0,.2,1);
+}
+.acc-card.open .acc-body{max-height:2000px;}
+.acc-content{
+  padding:0 var(--s4) var(--s5);
+  border-top:1px solid var(--divider);
+  font-size:14px;color:var(--t2);line-height:1.6;
+}
+.acc-content p{margin-bottom:var(--s3);}
+.acc-content ul{padding-left:var(--s5);margin-bottom:var(--s3);}
+.acc-content li{margin-bottom:var(--s2);}
+.acc-content strong{color:var(--t1);}
+.acc-content .tip-box{
+  background:var(--amber-bg);border-left:3px solid var(--amber);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;
+  padding:var(--s3) var(--s4);margin:var(--s3) 0;
+  font-size:13px;
+}
+.acc-content .warn-box{
+  background:var(--red-lt);border-left:3px solid var(--red);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;
+  padding:var(--s3) var(--s4);margin:var(--s3) 0;
+  font-size:13px;
+}
+/* Resources section */
+.res-section{margin-top:var(--s4);}
+.res-title{font-size:11px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--t3);margin-bottom:var(--s2);}
+.res-link{
+  display:flex;align-items:center;gap:var(--s3);
+  background:var(--bg);border-radius:var(--r-md);
+  padding:var(--s3) var(--s4);margin-bottom:var(--s2);
+  text-decoration:none;-webkit-tap-highlight-color:transparent;
+  transition:background .15s;
+}
+.res-link:active{background:var(--divider);}
+.res-link .mi{font-size:18px;color:var(--red);flex-shrink:0;}
+.res-link-text{flex:1;font-size:13px;font-weight:600;color:var(--t1);}
+.res-link .arr{font-size:14px;color:var(--t4);}
 </style>
 </head>
 <body>
-<header class="top-bar">
-  <a href="yorkstjohn-hub.html" class="back-btn" aria-label="Back to dashboard"><span class="mat">arrow_back_ios_new</span></a>
-  <h1 class="top-title">Interview Guide</h1>
-  <button style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;" onclick="markAllRead()">
-    <span class="mat" style="font-size:20px;color:var(--green)">done_all</span>
+
+<header class="topbar guide-topbar">
+  <a href="yorkstjohn-hub.html" class="topbar-back" aria-label="Back to dashboard">
+    <span class="mi">arrow_back_ios_new</span>
+  </a>
+  <span class="topbar-title">Interview Guide</span>
+  <button class="topbar-action" onclick="markAllRead()" aria-label="Mark all sections as read">
+    <span class="mi fill" style="font-size:20px;color:var(--green)">done_all</span>
   </button>
 </header>
 
-<div class="page-body">
-  <div class="progress-bar"><div class="progress-fill" id="guide-progress" style="width:0%"></div></div>
-  <p class="section-label" id="guide-progress-label">0 of 11 sections read</p>
-  <div id="guideList"><!-- Rendered by JS --></div>
+<!-- PROGRESS STRIP -->
+<div class="prog-strip">
+  <div class="prog-strip-row">
+    <span class="prog-strip-label" id="prog-label">0 of 11 sections read</span>
+    <span class="prog-strip-pct" id="prog-pct">0%</span>
+  </div>
+  <div class="prog-track">
+    <div class="prog-fill" id="prog-fill" style="width:0%;background:var(--green)"></div>
+  </div>
 </div>
 
-<nav class="bottom-nav">
-  <a href="yorkstjohn-hub.html" class="nav-tab"><span class="mat">home</span>Home</a>
-  <a href="yorkstjohn-guide.html" class="nav-tab active"><span class="mat">menu_book</span>Guide</a>
-  <a href="yorkstjohn-practice.html" class="nav-tab"><span class="mat">mic</span>Practice</a>
-  <a href="yorkstjohn-questions.html" class="nav-tab"><span class="mat">quiz</span>Questions</a>
-  <a href="yorkstjohn-checklist.html" class="nav-tab"><span class="mat">checklist</span>Checklist</a>
-</nav>
+<div class="page" style="padding-top:calc(var(--topbar) + env(safe-area-inset-top) + 54px);">
+  <div class="pad">
+    <div id="guideList"></div>
+  </div>
+</div>
 
+<nav class="bottomnav" aria-label="Main navigation"><a href="yorkstjohn-hub.html" class="bn-tab" aria-label="Home"><span class="mi">home</span>Home</a><a href="yorkstjohn-guide.html" class="bn-tab active" aria-label="Guide"><span class="mi">menu_book</span>Guide</a><a href="yorkstjohn-practice.html" class="bn-tab" aria-label="Practice"><span class="mi">mic</span>Practice</a><a href="yorkstjohn-questions.html" class="bn-tab" aria-label="Questions"><span class="mi">quiz</span>Questions</a><a href="yorkstjohn-checklist.html" class="bn-tab" aria-label="Checklist"><span class="mi">checklist</span>Checklist</a></nav>
+<div id="toast" role="alert" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 <script src="yorkstjohn-data.js"></script>
+
 <script>
-let openCount = parseInt(localStorage.getItem('ysj_guide_opened')||'0');
+function showToast(msg,dur=2500){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',dur);}
+</script>
+<script>
+const GUIDE_SECTIONS = [
+        { id: "ga1", num: "A", title: "Your Campus and Address", sub: "Location Intelligence", content: `<p>YSJ expects you to know exactly which campus your course is taught at and the full address including postcode. York Campus is at Lord Mayor's Walk, York YO31 7EX. London Campus is at 6th Floor Export Building, 1 Clove Crescent, London E14 2BA. Learn the full street address and postcode, not just the city name.</p>` },
+        { id: "ga2", num: "B", title: "Why You Chose York St John University", sub: "Institutional Choice", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Ranked in the top 10 UK universities for student satisfaction (PTES 2025).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>11-acre city centre campus in historic York, close to York Minster and city walls.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>£100 million invested in facilities including Creative Centre and Foss Building.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Gold-rated teaching excellence.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Strong employability support with career-focused courses.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Smaller cohort sizes for personalised feedback.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>CMI-accredited leadership content in many business courses.</span></li></ul>` },
+        { id: "ga3", num: "C", title: "Why This Course Specifically", sub: "Course Motivation", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Clear academic progression from your previous study or work.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Specific modules that fill gaps in your current knowledge.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Logical connection to your career goals.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Comparison with similar courses at other universities.</span></li></ul>` },
+        { id: "ga4", num: "D", title: "Your Accommodation Details", sub: "Living Arrangements", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>For York: Specific hall name (The Grange, Limes Court, etc.) and weekly cost (£129-£222).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>For London: Private accommodation area and monthly cost (£800-£1,500).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Distance from campus and transport options.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Why you chose that option — budget, facilities, location.</span></li></ul>` },
+        { id: "ga5", num: "E", title: "Modules in Your Course", sub: "Academic Content", content: `<p>You must name at least 2-3 modules, explain why they interest you, and connect them to your background or career goals. Also compare your course at YSJ with at least two similar courses at other UK universities, and explain why you still chose YSJ. Download the course specification from the YSJ website.</p>` },
+        { id: "ga6", num: "F", title: "How Your Course Is Assessed", sub: "Assessment Methods", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Written assignments and coursework</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Group projects and presentations</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Written exams</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Case studies and business simulations</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>A final dissertation or research project</span></li></ul>` },
+        { id: "ga7", num: "G", title: "Your Future Plans After Graduation", sub: "Career Trajectory", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Clear return plan</strong> to your home country.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Specific job titles</strong> you will apply for.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Actual companies</strong> — name real organisations in your sector.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span><strong class="text-on-surface">Expected salary range</strong> in your home currency.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>How the course will help you qualify for these roles.</span></li></ul>` },
+        { id: "ga8", num: "H", title: "Your Financial Preparation", sub: "Financial Credibility", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>The exact tuition fee for your course (£11,800 for York, £14,000 for London).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>How much you have already paid (deposit).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>UKVI minimum living cost requirements (£1,171/month York, £1,529/month London).</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Who is funding you — yourself, parents, sponsor — and their income.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Evidence available: bank statements, employment letters.</span></li></ul>` },
+        { id: "ga9", num: "I", title: "Visa Rules and Responsibilities", sub: "Compliance", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Maximum of <strong class="text-primary">20 hours per week during term time</strong>.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Full-time work allowed during official university holidays.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Cannot claim public funds.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Must attend all scheduled classes.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Must notify the university if you change your address.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Dependent or work restrictions if applicable.</span></li></ul>` },
+        { id: "ga10", num: "J", title: "What You Have Been Doing Since Your Last Qualification", sub: "Personal History", content: `<ul class="space-y-2"><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Work experience or employment since your last degree.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Internships or voluntary work.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Skills you have been developing.</span></li><li class="flex items-start gap-2"><span class="text-primary font-bold">›</span><span>Training or short courses you have completed.</span></li></ul><p class="mt-2">Be honest and show how your experience led you to resume studies now. Avoid unexplained gaps.</p>` },
+        { id: "ga11", num: "K", title: "Common Mistakes to Avoid", sub: "Red Flags", content: `<table class="w-full text-xs mt-2"><tr class="border-b border-border"><th class="text-left py-2 text-primary">Area</th><th class="text-left py-2 text-error">Mistake</th><th class="text-left py-2 text-success">Improvement</th><tr><tr class="border-b border-border"><td class="py-2">Why YSJ</td><td class="py-2 text-muted">Generic answers like "friendly staff"</td><td class="py-2">Specific facts: rankings, course structure, teaching reputation</td></tr><tr class="border-b border-border"><td class="py-2">Why this course</td><td class="py-2 text-muted">Not knowing modules</td><td class="py-2">Show understanding of content and career fit</td></tr><tr class="border-b border-border"><td class="py-2">Future plans</td><td class="py-2 text-muted">Vague answers, no company names</td><td class="py-2">Exact job titles and companies</td></tr><tr class="border-b border-border"><td class="py-2">Study gap</td><td class="py-2 text-muted">Not explaining the gap</td><td class="py-2">Be honest, show how experience led to this decision</td></tr></table>` }
+      ];
+      const ALL_QUESTIONS = [
+        { cat: "Studying in the UK", color: "text-primary", bg: "bg-primary-light", border: "border-primary-mid", qs: [
+          "Why did you choose to study in the UK instead of your home country?",
+          "Why did you decide to study in the UK over other destinations overseas?",
+          "What other countries did you consider (USA, Canada, Australia)?",
+          "Why is the UK a better option than studying in your home country or elsewhere?",
+          "What are the advantages and benefits of the UK education system?",
+          "What do you know about UK university rankings and reputation?"
+        ]},
+        { cat: "Why York St John University", color: "text-secondary", bg: "bg-secondary-light", border: "border-blue-200", qs: [
+          "Why did you choose York St John University specifically?",
+          "Which other universities did you consider?",
+          "Why did you finally select YSJ over the others? (Prepare at least 2 comparisons)",
+          "What do you know about YSJ's rankings and reputation?",
+          "How did you first hear about York St John University?",
+          "Is there something you particularly liked about the facilities, location, or student experience?",
+          "Are there any modules or opportunities specific to YSJ that attracted you?",
+          "If this programme is only at YSJ, what other courses did you consider?"
+        ]},
+        { cat: "Course Details & Modules", color: "text-accent", bg: "bg-cyan-50", border: "border-cyan-200", qs: [
+          "What is the exact name and duration of your course?",
+          "What modules will you study and what are the learning outcomes?",
+          "Which specific modules interest you most and why?",
+          "How is your course assessed (essays, exams, dissertation, projects)?",
+          "Are there any placement, internship, or research opportunities?",
+          "How does this course relate to your previous studies or work experience?",
+          "What gaps in knowledge is this course addressing?"
+        ]},
+        { cat: "Future Career Plans", color: "text-primary", bg: "bg-primary-light", border: "border-primary-mid", qs: [
+          "What do you plan to do after completing your course?",
+          "What are your short-term and long-term career goals?",
+          "What specific job roles will you target after graduation?",
+          "Which companies will you apply to and what is your expected salary?",
+          "If returning to your home country, how will your UK qualification be beneficial?",
+          "If considering working in the UK, what are the relevant visa requirements (Graduate Route)?",
+          "How does this course at YSJ specifically support your career plans?"
+        ]},
+        { cat: "Finance & Funding", color: "text-secondary", bg: "bg-secondary-light", border: "border-blue-200", qs: [
+          "How will you fund your tuition fees and day-to-day living expenses?",
+          "What is your total tuition fee and how much have you already paid?",
+          "Who is supporting you financially — personal savings, family, scholarship, or sponsor?",
+          "What is your sponsor's occupation and approximate annual income?",
+          "What is the UKVI minimum living cost requirement for your city of study?",
+          "How much do you estimate for monthly living expenses (rent, food, transport)?",
+          "What documentary evidence of funds can you provide?",
+          "How will you cover unexpected or emergency expenses?"
+        ]},
+        { cat: "Accommodation & Living", color: "text-accent", bg: "bg-cyan-50", border: "border-cyan-200", qs: [
+          "Where do you plan to live during your studies — on or off campus?",
+          "What accommodation options have you researched?",
+          "What is the weekly/monthly cost of your planned accommodation?",
+          "Which nearby towns or cities are you considering if not living on campus?",
+          "How far is the commute to campus and what are the transportation costs?",
+          "How will you travel to campus (bus, train, walking)?",
+          "What do you know about life in York / London?"
+        ]},
+        { cat: "Prior UK Study", color: "text-primary", bg: "bg-primary-light", border: "border-primary-mid", qs: [
+          "Have you previously studied in the UK?",
+          "If yes, how does the new course relate to your previous UK studies?",
+          "How does the new course build on your previous learning?",
+          "How does the new course fit into your career plans?",
+          "What gaps in knowledge does it address beyond your previous qualification?"
+        ]},
+        { cat: "Education & Employment Gaps", color: "text-secondary", bg: "bg-secondary-light", border: "border-blue-200", qs: [
+          "Can you explain any gaps in your education or employment history?",
+          "If you have spent time working, what has motivated you to return to studying now?",
+          "How does your work experience inform your decision to take this course?"
+        ]},
+        { cat: "Student Visa Knowledge", color: "text-accent", bg: "bg-cyan-50", border: "border-cyan-200", qs: [
+          "What are your working rights as a student visa holder?",
+          "How many hours can you work per week during term time and in holidays?",
+          "What are your obligations while on a student visa?",
+          "What is the Graduate Route visa and when can you apply?",
+          "What must you do if your address changes while studying?"
+        ]}
+      ];
+      const PQS = [
+        { id: "p1", cat: "ysj", q: "Why did you choose York St John University specifically?", hint: "Compare with 2 other universities by name. Mention specific facts: top 10 for student satisfaction, smaller cohort sizes, CMI accreditation, facilities, or location.", cr: 'Must name 2 other UK universities compared and give at least 2 specific, researched reasons for choosing YSJ (not generic like "friendly staff").' },
+        { id: "p2", cat: "course", q: "What modules will you study and why do they interest you?", hint: "Name 2-3 specific modules from your course. Connect each to your previous study/work and career goals.", cr: "Must name at least 2-3 correct modules and explain personal interest in at least one, linking to career goals." },
+        { id: "p3", cat: "course", q: "How does this course relate to your previous studies or work experience?", hint: "Show clear academic progression or career development. Explain the gap this course fills in your knowledge.", cr: "Must demonstrate logical progression from previous degree/work and explain specific skills/knowledge gaps this course addresses." },
+        { id: "p4", cat: "ysj", q: "Did you apply to other universities? Why did you reject them?", hint: "Name 2-3 other universities. Give specific reasons why YSJ was better (course content, location, ranking, facilities).", cr: 'Must name specific universities and give course-specific reasons for rejection (e.g., "Sheffield Hallam didn\'t have the leadership modules").' },
+        { id: "p5", cat: "living", q: "Where will you stay in the UK and what are the costs?", hint: "York: Name specific hall and weekly cost (£129-£222). London: Name area and monthly cost (£800-£1,500). Include distance from campus.", cr: "Must give specific accommodation name/area, exact cost, and distance from campus. Must know London has no university accommodation." },
+        { id: "p6", cat: "finance", q: "How much is your tuition fee and how much have you paid?", hint: "York: £11,800. London: £14,000. State deposit paid and remaining balance.", cr: "Must state exact tuition fee, amount already paid, and remaining balance." },
+        { id: "p7", cat: "finance", q: "Who is sponsoring you and what is their occupation/income?", hint: "State relationship clearly. Give occupation and approximate annual income. Mention evidence available.", cr: "Must state relationship, occupation, and approximate income. Must mention documentary evidence available." },
+        { id: "p8", cat: "finance", q: "What are your living costs and how will you fund them?", hint: "York: £1,171/month. London: £1,529/month (UKVI requirements). Break down by rent, food, transport.", cr: "Must state UKVI minimum living cost figure for the location and show awareness of monthly budgeting." },
+        { id: "p9", cat: "career", q: "What are your career plans after graduation?", hint: "Give specific job title, 2-3 company names, and expected salary in home currency. Emphasize returning home.", cr: "Must give specific job title, name actual companies, expected salary, and confirm intention to return to home country." },
+        { id: "p10", cat: "career", q: "How will this course help you achieve your career goals?", hint: "Connect specific modules to job requirements. Explain how YSJ qualification is valued in your home country.", cr: "Must link at least 2 specific course elements to job requirements and explain value of UK/YSJ qualification at home." },
+        { id: "p11", cat: "living", q: "What do you know about life in York/London?", hint: "Mention specific attractions (York Minster, museums) for York or business opportunities for London. Show research.", cr: "Must demonstrate specific knowledge of the city beyond generic statements." },
+        { id: "p12", cat: "visa", q: "What are your working rights and visa responsibilities?", hint: "20 hours/week term time, full-time holidays. Cannot claim public funds. Must attend all classes. Report address changes.", cr: "Must state 20 hours correctly, mention class attendance requirement, and address reporting obligation." },
+        { id: "p13", cat: "ysj", q: "What do you know about YSJ's rankings and reputation?", hint: "Top 10 for student satisfaction (PTES 2025), Gold teaching excellence, £100m facilities investment.", cr: "Must mention at least one specific ranking or award (e.g., top 10 student satisfaction, Gold TEF)." },
+        { id: "p14", cat: "course", q: "How is your course assessed?", hint: "Coursework, exams, presentations, group projects, dissertation. Know the specific methods for your course.", cr: "Must describe at least 2 assessment methods specific to the course." },
+        { id: "p15", cat: "living", q: "What accommodation options have you researched?", hint: "York: University halls (The Grange, Limes Court). London: Private rental through SpareRoom, Rightmove, etc.", cr: "Must show specific research: named halls for York or named areas/websites for London." },
+        { id: "p16", cat: "finance", q: "How will you cover unexpected expenses?", hint: "Mention contingency fund, parental support, or savings buffer. Show financial planning beyond minimum requirements.", cr: "Must demonstrate awareness of need for emergency funds and explain backup plan." },
+        { id: "p17", cat: "ysj", q: "Why study in York/London specifically?", hint: "York: Historic city, student-friendly, lower cost than London. London: Business hub, networking, industry access.", cr: "Must give location-specific reasons connected to study or career goals." },
+        { id: "p18", cat: "living", q: "What are the transport options from your accommodation?", hint: "York: Walking (under 1 mile) or buses. London: DLR (East India), Tube, buses. Know your route to campus.", cr: "Must know specific transport links and approximate journey time." },
+        { id: "p19", cat: "ysj", q: "How did you first hear about York St John University and what research did you do?", hint: "Mention how you found out (British Council, agent, website, friend) and what you researched: PTES ranking, facilities, course modules, location.", cr: "Must show genuine research: at least one specific source and 2 facts discovered through research." },
+        { id: "p20", cat: "living", q: "Which nearby towns or cities did you consider for accommodation and how far is the commute?", hint: "York: mention Harrogate or Leeds as nearby options; commute by train. London: mention Stratford, Barking, or East Ham; DLR to East India. Give journey time and approximate cost.", cr: "Must name a specific area, state commute method, approximate time, and cost." },
+        { id: "p21", cat: "career", q: "If you plan to work in the UK after graduating, what visa would you need and how long does it last?", hint: "Graduate Route visa: apply after graduating, valid for 2 years (3 for doctoral graduates). No sponsor required. Allows any job at any skill level.", cr: "Must name the Graduate Route visa and state the 2-year duration correctly." },
+        { id: "p22", cat: "course", q: "Can you explain any gaps in your education or employment history?", hint: "Be honest and specific. If you worked, explain what you learned. If personal reasons, give a brief explanation and connect back to why you are now ready to study.", cr: "Must give a clear, honest explanation that does not raise further concerns and ideally shows relevance to the current course." },
+      ];
+      let course = null, passN = 0, failN = 0, totN = 0;
+      let questionStatus = {};
+
+      async function selectCourse(id) {
+        await window.onCourseSelected('yorkstjohn', id);
+        course = COURSES[id];
+        localStorage.setItem('last_course', id); // save for auto-reload
+        localStorage.setItem('last_school', 'yorkstjohn');
+        document.getElementById("s-select").classList.remove("active");
+        document.getElementById("s-main").classList.add("active");
+        document.getElementById("tb-name").textContent = course.name;
+        document.getElementById("tb-campus").textContent = course.campus;
+        document.getElementById("tb-name-mobile").textContent = course.name;
+        document.getElementById("tb-campus-mobile").textContent = course.campus;
+        passN = 0; failN = 0; totN = 0; questionStatus = {};
+        updScore();
+        document.getElementById("vid-notes").innerHTML = course.videoNotes.map(n => `<div class="flex items-start gap-2"><span class="material-symbols-outlined text-primary text-sm mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span>${n}</span></div>`).join("");
+        buildGuide();
+        buildKnow();
+        buildQuestions();
+
+      // ── REALTIME (notifications + presence) ───────────────────
+      if (typeof window.watchNotifications === 'function') {
+        window.watchNotifications(({ type, data }) => {
+          if (type === 'notification') {
+            if (typeof window.showRealtimeToast === 'function')
+              window.showRealtimeToast('📢 ' + (data.title||'Notification'), data.message||'', data.type||'info');
+          } else if (type === 'session') {
+            const dateStr = data.start_time ? new Date(data.start_time).toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
+            if (typeof window.showRealtimeToast === 'function')
+              window.showRealtimeToast('🎥 Live session scheduled', (data.title||'') + (dateStr ? ' · ' + dateStr : ''), 'session', 12000);
+          }
+        });
+      }
+      if (typeof window.startPresence === 'function') window.startPresence('yorkstjohn');        buildPractice();
+        buildChecklist();
+        showTab("video", "sl-video");
+        // restore saved data after building
+        setTimeout(() => { restoreChecklist(); restoreAIScores(); }, 500);
+      }
+      function goBack() { document.getElementById("s-main").classList.remove("active"); document.getElementById("s-select").classList.add("active"); }
+      function showTab(name, btnId, isMobile) {
+        document.querySelectorAll(".tc").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".side-link").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.getElementById("tab-" + name).classList.add("active");
+        const side = document.getElementById("sl-" + name);
+        const mob = document.getElementById("mt-" + name);
+        if (side) side.classList.add("active");
+        if (mob) mob.classList.add("active");
+      }
+      function togAcc(id) { document.getElementById(id).classList.toggle("open"); }
+      function buildGuide() { document.getElementById("guide-sections").innerHTML = GUIDE_SECTIONS.map(s => `<div class="acc-item" id="${s.id}"><button class="w-full flex items-center justify-between p-5 text-left" onclick="togAcc('${s.id}')"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-xl bg-primary-light flex items-center justify-center flex-shrink-0"><span class="font-headline font-black text-xs text-primary">${s.num}</span></div><div><h3 class="font-headline font-bold text-sm text-on-surface">${s.title}</h3><p class="font-label text-xs text-muted uppercase tracking-wider mt-0.5">${s.sub}</p></div></div><span class="material-symbols-outlined text-primary acc-arrow transition-transform duration-300 flex-shrink-0">expand_more</span></button><div class="acc-body px-5 pb-5 pt-0"><div class="border-t border-border pt-4 text-muted text-sm leading-relaxed space-y-3">${s.content}</div></div></div>`).join(""); }
+      function buildKnow() {
+        const c = course;
+        document.getElementById("know-cards").innerHTML = `<div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-primary text-base">location_on</span><span class="font-label text-xs font-bold uppercase tracking-widest text-primary">Your Campus</span></div><p class="font-headline font-bold text-sm text-on-surface mb-1">${c.campus}</p><p class="text-muted text-xs leading-relaxed mb-3">${c.address}</p><a href="${c.campusUrl}" target="_blank" class="font-label text-xs font-bold text-primary">View campus →</a></div><div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-secondary text-base">quiz</span><span class="font-label text-xs font-bold uppercase tracking-widest text-secondary">Assessment</span></div><p class="text-muted text-xs leading-relaxed">${c.assessment}</p></div><div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-accent text-base">work</span><span class="font-label text-xs font-bold uppercase tracking-widest text-accent">Target Roles</span></div><p class="text-muted text-xs leading-relaxed">${c.roles.join(" · ")}</p></div><div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-primary text-base">business</span><span class="font-label text-xs font-bold uppercase tracking-widest text-primary">Target Companies</span></div><p class="text-muted text-xs leading-relaxed">${c.companies.join(" · ")}</p></div><div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-secondary text-base">currency_pound</span><span class="font-label text-xs font-bold uppercase tracking-widest text-secondary">First Salary</span></div><p class="font-headline font-black text-primary text-lg">${c.salary}</p></div><div class="icard"><div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-accent text-base">home</span><span class="font-label text-xs font-bold uppercase tracking-widest text-accent">Monthly Living</span></div><p class="font-headline font-black text-accent text-lg">${c.livingCost}</p><p class="text-muted text-xs mt-1">${c.accommodation}</p></div>`;
+        document.getElementById("mod-list").innerHTML = c.modules.map((m,i)=>`<div class="mod-item"><span class="mod-num">M${String(i+1).padStart(2,"0")}</span><div><p class="font-headline font-bold text-sm text-on-surface mb-1">${m.name}</p><p class="text-muted text-xs leading-relaxed">${m.why}</p></div></div>`).join("");
+        document.getElementById("course-spec-link").innerHTML = `<a href="${c.specUrl}" target="_blank" class="lcard"><span class="material-symbols-outlined text-primary text-xl">open_in_new</span><div><strong>Download Your Course Specification</strong><span class="lsub">YSJ Official Course Page</span></div></a>`;
+      }
+      function buildQuestions() { document.getElementById("all-questions-list").innerHTML = ALL_QUESTIONS.map((cat,ci)=>`<div class="mb-8"><div class="flex items-center gap-3 mb-4"><span class="font-label text-xs font-bold uppercase tracking-widest ${cat.color}">${ci+1}. ${cat.cat}</span><span class="font-label text-xs font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full ${cat.bg} border ${cat.border} ${cat.color}">${cat.qs.length} questions</span></div><div class="space-y-2">${cat.qs.map((q,qi)=>`<div class="panel px-5 py-3.5 flex items-start gap-3"><span class="q-num mt-0.5 flex-shrink-0">Q${qi+1}</span><p class="text-on-surface text-sm leading-relaxed">${q}</p></div>`).join("")}</div></div>`).join(""); }
+      function buildPractice() { renderPQs(PQS); }
+      function filtQ(cat, btn) { document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); renderPQs(cat==="all"?PQS:PQS.filter(q=>q.cat===cat)); }
+      function renderPQs(qs) { document.getElementById("pqs").innerHTML = qs.map(q=>`<div class="panel p-6 shadow-sm" id="pc-${q.id}"><div class="flex items-start gap-3 mb-4"><span class="q-num mt-0.5 flex-shrink-0">Q</span><p class="font-headline font-bold text-sm text-on-surface leading-snug">${q.q}</p></div><textarea class="sim-input min-h-24 block" id="ans-${q.id}" placeholder="Type your answer here..."></textarea><div class="flex items-center gap-3 mt-4 flex-wrap"><button class="btn-primary flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider" id="btn-${q.id}" onclick="chkAns('${q.id}')"><span class="material-symbols-outlined text-sm">verified</span>Check Answer</button><button class="btn-ghost flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider" onclick="togHint('${q.id}')"><span class="material-symbols-outlined text-sm">lightbulb</span>Hint</button><button class="btn-ghost flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider ml-auto" onclick="clrAns('${q.id}')"><span class="material-symbols-outlined text-sm">refresh</span>Clear</button></div><div id="hint-${q.id}" class="hidden mt-3 bg-secondary-light border border-blue-200 rounded-xl px-4 py-3 text-sm text-secondary leading-relaxed">${q.hint}</div><div id="fb-${q.id}" class="hidden mt-4 rounded-r-xl p-5 text-sm leading-relaxed"><div class="font-headline font-bold text-sm mb-2" id="fbhd-${q.id}"></div><div id="fbb-${q.id}"></div></div></div>`).join(""); }
+      function togHint(id) { document.getElementById("hint-"+id).classList.toggle("hidden"); }
+      function clrAns(id) { document.getElementById("ans-"+id).value = ""; document.getElementById("fb-"+id).classList.add("hidden"); }
+
+      async function chkAns(id) {
+        const q = PQS.find(x=>x.id===id);
+        const ans = document.getElementById("ans-"+id).value.trim();
+        if(!ans){ alert("Please type your answer first."); return; }
+        const btn = document.getElementById("btn-"+id);
+        btn.disabled=true; btn.innerHTML='<span class="spinner"></span><span class="ml-2">Marking...</span>';
+        const fb = document.getElementById("fb-"+id);
+        fb.className="mt-4 rounded-r-xl p-5 text-sm leading-relaxed fb-loading";
+        fb.classList.remove("hidden");
+        document.getElementById("fbhd-"+id).textContent="Marking your answer...";
+        document.getElementById("fbb-"+id).innerHTML="";
+        const prompt = `You are a strict UK student visa credibility interview examiner. You assess answers exactly as a UKVI Entry Clearance Officer would — applying the same scrutiny used in real credibility interview refusals.
+
+Course: "${course.name}" at ${course.campus}.
+Question: "${q.q}"
+Required content: ${q.cr}
+Student answer: "${ans}"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CORE PRINCIPLE — THE ONLY THING THAT MATTERS:
+A credible answer = STATEMENT + CONCRETE EXAMPLE.
+A statement alone is NEVER enough. UKVI caseworkers are trained to reject any answer that lacks specific, verifiable examples. This is confirmed in real refusal letters.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BANNED PHRASES — These appear word-for-word in real UKVI refusal letters as evidence of a "generic, surface-level" answer. Deduct -20 for EACH unless immediately followed by a specific, verifiable example:
+• "highly renowned globally" or "globally recognised"
+• "strong reputation" (without citing a ranking, table, or award)
+• "fees are less" or "more affordable" (without a comparison figure)
+• "good/fast processing times" as a reason to choose the UK
+• "I want to solve problems" as a career goal
+• "gain better employment" or "better job opportunities" (without a specific role/employer)
+• "world-class education" (without evidence)
+• Any reason that would equally apply to Australia, Canada, or the US with no UK-specific distinction
+
+AUTOMATIC FAIL — cap score as shown:
+• Answer is under 30 words or 1–2 sentences → cap at 30
+• Completely off-topic → cap at 20
+• Could apply to ANY country or university — zero specifics → cap at 35
+• Entirely banned phrases with no examples → cap at 25
+
+MAJOR DEDUCTIONS — apply each that is missing (-15 to -25):
+• No module names when course knowledge is required → -25
+• No comparison with at least one other country OR university when relevant → -20
+• Career plan has no structure: must include short-term (0–2 yr), medium-term (3–5 yr), long-term (5–10 yr) → -20
+• Financial source is vague ("my parents/family are paying") — must name source of funds (savings, property sale, inheritance, salary, sponsorship) → -20
+• No personal language ("I", "my", "I chose") — reads like a copied brochure → -20
+• Factually incorrect about the course, campus, or university → -20
+• No campus location or city when question requires it → -15
+
+MODERATE DEDUCTIONS (-8 to -12):
+• Only 1 module named when 2–3 expected → -10
+• Career role named but no timeline or employer named → -12
+• Comparison given but no specific detail about the alternative (e.g., just "Canada") → -10
+• Funding source named but no documentary basis mentioned → -10
+• Rambling, unfocused answer with no clear structure → -8
+• Accommodation plan with no cost or location specifics → -8
+
+MINOR DEDUCTIONS (-3 to -5):
+• Statement + example present but example is weak or very brief → -5
+• Missing one minor detail from required content → -3
+• Adequate answer but lacks personal connection or enthusiasm → -5
+
+CALIBRATION:
+• Most students score 45–72 on a first attempt
+• Scores above 80 require: exceptional specificity, named sources (rankings, statistics, figures), full career structure, funding evidence, personal voice
+• A "decent" answer with some specifics but gaps → 55–65, NOT 75+
+• PASS THRESHOLD: score >= 70
+• Most first attempts should NOT pass — the bar reflects the actual UKVI standard
+
+Do NOT penalise: punctuation, capitalisation, minor spelling, grammar, or accent.
+
+Return ONLY valid JSON — no markdown, no explanation, nothing else:
+{"pass": boolean, "score": integer 0-100, "summary": "one sentence about the answer", "good": ["one specific strength"], "improve": ["one specific improvement needed"]}
+
+CRITICAL: Evaluate the ACTUAL student answer. Do NOT return a default or template score. Every answer gets a DIFFERENT score based on its specific content.`;
+        try {
+          const response = await puter.ai.chat(prompt,{model:"gpt-4o-mini",stream:false});
+          let raw="";
+          if(typeof response==="string") raw=response;
+          else if(response.message?.content) raw=response.message.content;
+          else if(response.content) raw=response.content;
+          else throw new Error("Unexpected response format");
+          raw=raw.replace(/```json|```/g,"").replace(/\n/g," ").trim();
+          const match=raw.match(/\{.*\}/);
+          if(!match) throw new Error("Invalid JSON response from AI");
+          const j=JSON.parse(match[0]);
+          if(typeof j.pass!=="boolean") throw new Error("Invalid response structure");
+          // count only once
+          if(!questionStatus[id]){
+            questionStatus[id]=true;
+            if(j.pass) passN++; else failN++;
+            totN++;
+            updScore();
+          }
+          fb.className="mt-4 rounded-r-xl p-5 text-sm leading-relaxed "+(j.pass?"fb-pass":"fb-fail");
+          document.getElementById("fbhd-"+id).innerHTML = j.pass ? `<span class="text-success font-bold">✓ Passed</span> — ${j.summary}` : `<span class="text-error font-bold">✘ Needs Improvement</span> — ${j.summary}`;
+          let h="";
+          if(j.good?.length) h+=j.good.map(g=>`<div class="flex items-start gap-2 mt-2 text-xs text-on-surface"><span class="material-symbols-outlined text-success text-xs mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span>${g}</span></div>`).join("");
+          if(j.improve?.length) h+=j.improve.map(x=>`<div class="flex items-start gap-2 mt-2 text-xs text-on-surface"><span class="material-symbols-outlined text-error text-xs mt-0.5">warning</span><span>${x}</span></div>`).join("");
+          document.getElementById("fbb-"+id).innerHTML=h;
+          if(typeof window.saveAIResponse==="function"){
+            try{
+              const questionId="YSJ_"+id;
+              const answerText=document.getElementById("ans-"+id)?.value||"";
+              const score=Math.round((j.score/10)*10)/10; // normalise 0-100 to 0-10
+              const feedbackText=j.summary||j.good?.[0]||JSON.stringify(j);
+              const qTextEl=document.querySelector("#pc-"+id+" p.font-headline");
+              const qText=qTextEl?qTextEl.textContent.trim():q.q||"";
+              const saveResult = await window.saveAIResponse(questionId,answerText,score,feedbackText,qText);
+              console.log("✅ YSJ Saved:",questionId,"| Score:",score);
+            }catch(err){ console.warn("⚠️ YSJ Save Skipped:",err.message); }
+          }
+        }catch(e){
+          console.error("AI marking error:",e);
+          fb.className="mt-4 rounded-r-xl p-5 text-sm leading-relaxed fb-fail";
+          document.getElementById("fbhd-"+id).innerHTML='<span class="text-error font-bold">Service Unavailable</span>';
+          document.getElementById("fbb-"+id).innerHTML=`<div class="text-xs text-muted mt-2"><p class="mb-2">Unable to connect to the AI marking service. This could be because:</p><ul class="list-disc pl-4 space-y-1"><li>You need to sign in to Puter (free account) when prompted</li><li>Your internet connection is unstable</li><li>The service is temporarily busy</li></ul><p class="mt-2">Please try again in a moment.</p></div>`;
+        }
+        btn.disabled=false; btn.innerHTML='<span class="material-symbols-outlined text-sm">refresh</span><span class="ml-1">Check Again</span>';
+      }
+      function updScore() {
+        document.getElementById("sc-p").textContent=passN;
+        document.getElementById("sc-f").textContent=failN;
+        document.getElementById("sc-t").textContent=totN;
+        const pct=totN?Math.round((passN/totN)*100):0;
+        let msg="Answer questions to track your readiness.";
+        if(totN>0 && pct===100) msg="Perfect score! You are ready for the interview.";
+        else if(pct>=70) msg=`${pct}% pass rate — review the questions you missed.`;
+        else if(pct>=40) msg=`${pct}% pass rate — keep practising the weaker areas.`;
+        else if(totN>0) msg=`${pct}% pass rate — read the hints and try again.`;
+        document.getElementById("sc-msg").textContent=msg;
+      }
+      function buildChecklist() {
+        const groups=[
+          {title:"YSJ and Course", icon:"school", color:"text-primary", bg:"bg-primary-light", items:["Know the exact name of your course and duration","Know your campus name, full street address, and postcode","Name at least 2-3 modules and explain why each interests you","Know how your course is assessed — the specific methods","Compared YSJ with 2 other named UK universities with specific reasons","Know YSJ rankings: top 10 student satisfaction, Gold teaching excellence"]},
+          {title:"Why YSJ Specifically", icon:"star", color:"text-secondary", bg:"bg-secondary-light", items:["Can explain specific reasons for choosing YSJ (not generic)","Know about £100m facilities investment","Know about smaller cohort sizes and personalised feedback","Mention CMI accreditation if applicable to your course","Know campus location advantages (York historic city OR London business hub)"]},
+          {title:"Career Plans", icon:"work", color:"text-accent", bg:"bg-cyan-50", items:["Named at least 2-3 specific real companies you will apply to","Have a specific job title ready","Can explain how the course qualifies you for this role","Clear plan to return to home country after graduation","Expected salary range in home currency"]},
+          {title:"Finance and Accommodation", icon:"currency_pound", color:"text-primary", bg:"bg-primary-light", items:["Know exact tuition fee (£11,800 York / £14,000 London)","Know how much deposit you have paid","Know UKVI living cost requirement (£1,171 York / £1,529 London)","Know who is funding you, their occupation and income","Have specific accommodation: hall name (York) or area (London)","Know weekly/monthly accommodation costs"]},
+          {title:"Living in the UK", icon:"home", color:"text-secondary", bg:"bg-secondary-light", items:["Know specific attractions in York (Minster, museums) OR London business areas","Know transport options from accommodation to campus","Know distance from accommodation to campus","Aware of clubs, societies, or student activities you might join"]},
+          {title:"Visa Rules", icon:"verified_user", color:"text-accent", bg:"bg-cyan-50", items:["Know the 20 hours per week working limit during term time","Know full-time work allowed during official holidays","Know you must attend all classes","Know you must report address changes","Know you cannot claim public funds"]}
+        ];
+        let html="", n=0;
+        groups.forEach(g=>{
+          html+=`<div class="panel p-6 shadow-sm"><div class="flex items-center gap-2 mb-4"><span class="material-symbols-outlined text-sm ${g.color}">${g.icon}</span><span class="font-label text-xs font-bold uppercase tracking-widest ${g.color}">${g.title}</span></div><div>`;
+          g.items.forEach(item=>{ html+=`<div class="check-item flex items-start gap-3 py-3" id="ci${n}"><div class="check-box" onclick="togCB(this)"></div><span class="text-on-surface text-sm leading-relaxed ct">${item}</span></div>`; n++; });
+          html+=`</div></div>`;
+        });
+        document.getElementById("chk-content").innerHTML=html;
+        updProg();
+      }
+      function togCB(cb) {
+        cb.classList.toggle("done");
+        const isChecked = cb.classList.contains("done");
+        const ct = cb.parentElement.querySelector(".ct");
+        if (isChecked) { ct.style.textDecoration = "line-through"; ct.style.color = "#94a3b8"; }
+        else { ct.style.textDecoration = ""; ct.style.color = ""; }
+        updProg();
+        const checkItem = cb.closest(".check-item");
+        const itemId = checkItem ? checkItem.id : null;
+        const itemText = ct ? ct.textContent.trim() : null;
+        if (itemId && typeof window.saveChecklistItem === "function") {
+          window.saveChecklistItem(itemId, isChecked, itemText);
+        }
+      }
+      function updProg() {
+        const all=document.querySelectorAll("#chk-content .check-box");
+        const done=document.querySelectorAll("#chk-content .check-box.done");
+        const pct=all.length?Math.round((done.length/all.length)*100):0;
+        document.getElementById("prog-lbl").textContent=`${done.length} of ${all.length} completed`;
+        document.getElementById("prog-pct").textContent=pct+"%";
+        document.getElementById("prog-fill").style.width=pct+"%";
+      }
+      async function restoreChecklist() {
+        if (typeof window.loadChecklistForCurrentPage !== 'function') return;
+        const items = await window.loadChecklistForCurrentPage();
+        if (!items || !Object.keys(items).length) return;
+        document.querySelectorAll('.check-box').forEach((cb, index) => {
+          const checkItem = cb.closest('.check-item');
+          const titleEl = checkItem
+            ? (checkItem.querySelector('.ct') || checkItem.querySelector('.font-medium') || checkItem.querySelector('p'))
+            : null;
+          const itemText = titleEl ? titleEl.textContent.trim() : null;
+          const itemId = checkItem?.id || null;
+          const key = itemText || itemId;
+          if (key && items[key]) {
+            cb.classList.add('done');
+            if (titleEl) { titleEl.style.textDecoration = 'line-through'; titleEl.style.color = 'var(--text-muted, #94a3b8)'; }
+          }
+        });
+        updProg();
+      }
+      async function restoreAIScores() {
+        const progress=await window.loadSavedProgress();
+        if(!progress?.ai_scores) return;
+        const scores=progress.ai_scores;
+        let newPass=0,newFail=0;
+        const newStatus={};
+        for(const [qId,data] of Object.entries(scores)){
+          const score=data.score;
+          if(typeof score==='number'){
+            if(score>=7) newPass++;
+            else newFail++;
+            newStatus[qId]=true;
+          }
+          // Restore answer text into textarea permanently
+          if(data.answer){
+            const qShortId=qId.replace('YSJ_','');
+            const ta=document.getElementById('ans-'+qShortId);
+            if(ta && !ta.value) ta.value=data.answer;
+            // Show pass/fail badge on the question card
+            const btn=document.getElementById('btn-'+qShortId);
+            if(btn && score>=7){
+              btn.classList.remove('btn-primary');
+              btn.classList.add('btn-success');
+              btn.innerHTML='<span class="material-symbols-outlined text-sm" style="font-variation-settings: \'FILL\' 1;">check_circle</span> Passed';
+            }
+          }
+        }
+        passN=newPass; failN=newFail; totN=newPass+newFail; questionStatus=newStatus;
+        updScore();
+      }
+      document.addEventListener("DOMContentLoaded", async ()=>{
+
+        localStorage.setItem('last_school', 'yorkstjohn');
+        if (window.sessionReady) await window.sessionReady;
+        await window.lockToSchool('yorkstjohn', null);
+        // auto-select last course if any
+        const lastCourse=localStorage.getItem('last_course');
+        if(lastCourse && !course) selectCourse(lastCourse);
+        await window._initChecklist('#chk-content', 'ysj_chk_');
+        const readyBtn=document.getElementById("ysj-ready-btn");
+        const readyStatus=document.getElementById("ysj-ready-status");
+        if(readyBtn && typeof window.sendReadyEmail==="function"){
+          readyBtn.addEventListener("click",async ()=>{
+            readyBtn.disabled=true; readyBtn.innerHTML='<span class="spinner"></span> Sending...';
+            const progress=await window.loadSavedProgress?.();
+            const responses=progress?.ai_scores||{};
+            const checklist=progress?.checklist_status||{};
+            const scores=Object.values(responses).map(s=>s.score).filter(n=>!isNaN(n));
+            const avg=scores.length?(scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1):"N/A";
+            const res=await window.sendReadyEmail?.(responses,checklist,avg,'Student clicked "I\'m Ready" in YSJ Prep');
+            if(res?.success){
+              const pct = res.percentScore ?? 0;
+              const lvl = res.readinessLevel ?? 'Submitted';
+              const emoji = pct >= 90 ? '✅' : pct >= 70 ? '⚠️' : '❌';
+              if(readyStatus){
+                readyStatus.textContent = emoji + ' ' + lvl + ' — ' + pct + '% (' + (pct >= 90 ? 'Ready!' : pct >= 70 ? 'Keep practising' : 'More practice needed') + ')';
+                readyStatus.className = "mt-3 text-sm font-medium " + (pct >= 70 ? "text-green-600" : "text-red-500");
+              }
+              readyBtn.innerHTML='<span class="material-symbols-outlined">verified</span> Report Sent';
+              readyBtn.disabled=true;
+            }else{
+              if(readyStatus){ readyStatus.textContent="⚠️ Could not send. Please try again."; readyStatus.className="mt-3 text-sm font-medium text-error"; }
+              readyBtn.disabled=false;
+              readyBtn.innerHTML='<span class="material-symbols-outlined">check_circle</span> I\'m Ready for Interview';
+            }
+          });
+        }else if(readyBtn){ readyBtn.addEventListener("click",()=>{ if(typeof window.sendReadyEmail==="function"){ readyBtn.click(); } else { alert("Please make sure you are logged in and try again."); } }); }
+        await restoreAIScores();
+      });
+    </script>
+  </body>
+</html>
+
+// Guide sections with added resources
+const GUIDE_RESOURCES = {
+  0: [ // Understanding the Interview
+    {icon:'link',label:'YSJ Pre-CAS Interview Guide',href:'https://www.yorksj.ac.uk/international/'},
+    {icon:'link',label:'UKVI Credibility Interview Info',href:'https://www.gov.uk/student-visa'},
+  ],
+  1: [ // Why the UK
+    {icon:'link',label:'British Council — Benefits of UK Study',href:'https://www.britishcouncil.org/study-work-abroad/in-uk'},
+    {icon:'link',label:'UKCISA — Student Visa & Immigration Advice',href:'https://www.ukcisa.org.uk/student-advice/visas-and-immigration'},
+  ],
+  2: [ // Why York St John
+    {icon:'school',label:'About York St John University',href:'https://www.yorksj.ac.uk/about/'},
+    {icon:'link',label:'YSJ Course Listings',href:'https://www.yorksj.ac.uk/courses/'},
+    {icon:'link',label:'YSJ Programme Specifications',href:'https://www.yorksj.ac.uk/programme-specifications/'},
+  ],
+  3: [ // Your Course
+    {icon:'link',label:'YSJ Programme Specifications',href:'https://www.yorksj.ac.uk/programme-specifications/'},
+    {icon:'link',label:'Search All YSJ Courses',href:'https://www.yorksj.ac.uk/courses/'},
+  ],
+  4: [ // Finance & Funding
+    {icon:'payments',label:'YSJ Tuition Fees & Scholarships',href:'https://www.yorksj.ac.uk/international/funding-scholarships-and-paying-tuition-fees/'},
+    {icon:'link',label:'UKVI Maintenance Requirements',href:'https://www.gov.uk/student-visa/money'},
+  ],
+  5: [ // Accommodation
+    {icon:'home',label:'YSJ York Campus Accommodation',href:'https://www.yorksj.ac.uk/study/accommodation/'},
+    {icon:'apartment',label:'YSJ London Campus Accommodation',href:'https://www.yorksj.ac.uk/london-campus/welcome/before-you-start-at-our-london-campus/'},
+    {icon:'train',label:'Check Train Costs — Trainline',href:'https://www.thetrainline.com/'},
+  ],
+  6: [ // Career Plans
+    {icon:'badge',label:'Graduate Route Visa (2 Years After Graduation)',href:'https://www.gov.uk/graduate-visa'},
+    {icon:'link',label:'Gov UK — Working in the UK After Study',href:'https://www.gov.uk/guidance/international-students-in-the-uk'},
+  ],
+  7: [ // Prior UK Study
+    {icon:'link',label:'UKCISA — Prior Study Guidance',href:'https://www.ukcisa.org.uk/student-advice/'},
+  ],
+  8: [ // Visa Rules
+    {icon:'badge',label:'Student Visa Requirements',href:'https://www.gov.uk/student-visa'},
+    {icon:'badge',label:'Graduate Route Visa',href:'https://www.gov.uk/graduate-visa'},
+    {icon:'link',label:'UKCISA Visa Advice',href:'https://www.ukcisa.org.uk/student-advice/visas-and-immigration'},
+  ],
+};
+
 const readSet = new Set(JSON.parse(localStorage.getItem('ysj_guide_read')||'[]'));
 
-function updateProgress(){
-  const pct = Math.round(readSet.size/GUIDE_SECTIONS.length*100);
-  document.getElementById('guide-progress').style.width=pct+'%';
-  document.getElementById('guide-progress-label').textContent=readSet.size+' of '+GUIDE_SECTIONS.length+' sections read';
+function updateProgress() {
+  const n = readSet.size, t = GUIDE_SECTIONS.length;
+  const pct = Math.round(n/t*100);
+  document.getElementById('prog-label').textContent = n+' of '+t+' sections read';
+  document.getElementById('prog-pct').textContent = pct+'%';
+  document.getElementById('prog-fill').style.width = pct+'%';
+  localStorage.setItem('ysj_guide_opened', n);
 }
 
-function markAllRead(){
-  GUIDE_SECTIONS.forEach(s=>readSet.add(s.id));
-  localStorage.setItem('ysj_guide_read',JSON.stringify([...readSet]));
-  localStorage.setItem('ysj_guide_opened',GUIDE_SECTIONS.length);
+function markAllRead() {
+  GUIDE_SECTIONS.forEach(s => readSet.add(s.id));
+  localStorage.setItem('ysj_guide_read', JSON.stringify([...readSet]));
   updateProgress();
-  document.querySelectorAll('.guide-num').forEach(el=>el.classList.add('done'));
+  document.querySelectorAll('.acc-card').forEach((c,i)=>c.classList.add('read'));
+  document.querySelectorAll('.acc-num').forEach(n=>{n.innerHTML='<span class="mi fill xs" style="color:#fff">check</span>';n.style.background='var(--green)';});
+  showToast('All sections marked as read ✅');
 }
 
-function toggleSection(id){
-  const body=document.getElementById('body-'+id);
-  const chevron=document.getElementById('chev-'+id);
-  const num=document.getElementById('num-'+id);
-  const isOpen=body.classList.contains('open');
+let openIdx = null;
+function toggleAcc(idx) {
+  const wasOpen = openIdx===idx;
   // Close all
-  document.querySelectorAll('.guide-body').forEach(b=>b.classList.remove('open'));
-  document.querySelectorAll('.guide-chevron').forEach(c=>c.classList.remove('open'));
-  if(!isOpen){
-    body.classList.add('open');
-    chevron.classList.add('open');
+  document.querySelectorAll('.acc-card').forEach(c=>c.classList.remove('open'));
+  openIdx = wasOpen ? null : idx;
+  if (openIdx!==null) {
+    const card = document.getElementById('acc-'+openIdx);
+    card.classList.add('open');
     // Mark as read
-    if(!readSet.has(id)){
-      readSet.add(id);
-      num.classList.add('done');
-      openCount=Math.min(GUIDE_SECTIONS.length,openCount+1);
-      localStorage.setItem('ysj_guide_opened',openCount);
-      localStorage.setItem('ysj_guide_read',JSON.stringify([...readSet]));
+    const sec = GUIDE_SECTIONS[openIdx];
+    if (sec && !readSet.has(sec.id)) {
+      readSet.add(sec.id);
+      localStorage.setItem('ysj_guide_read', JSON.stringify([...readSet]));
+      card.classList.add('read');
+      const num = card.querySelector('.acc-num');
+      if (num) { num.innerHTML='<span class="mi fill xs" style="color:#fff">check</span>'; }
       updateProgress();
+      // XP
+      const xp = parseInt(localStorage.getItem('ysj_xp')||'0')+3;
+      localStorage.setItem('ysj_xp', xp);
     }
+    // Scroll into view
+    setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
   }
 }
 
-document.addEventListener('DOMContentLoaded',()=>{
-  const list=document.getElementById('guideList');
-  list.innerHTML=GUIDE_SECTIONS.map(s=>{
-    const done=readSet.has(s.id);
-    return `<div class="guide-card">
-      <div class="guide-header" onclick="toggleSection('${s.id}')" aria-expanded="false">
-        <div class="guide-num${done?' done':''}" id="num-${s.id}">${s.num}</div>
-        <div class="guide-title-wrap">
-          <div class="guide-title">${s.title}</div>
-          <div class="guide-sub">${s.sub}</div>
+document.addEventListener('DOMContentLoaded', () => {
+  const list = document.getElementById('guideList');
+  list.innerHTML = GUIDE_SECTIONS.map((s,i) => {
+    const isRead = readSet.has(s.id);
+    const res = (GUIDE_RESOURCES[i]||[]).map(r=>`
+      <a href="${r.href}" target="_blank" rel="noopener" class="res-link">
+        <span class="mi fill sm">${r.icon}</span>
+        <span class="res-link-text">${r.label}</span>
+        <span class="mi arr">open_in_new</span>
+      </a>`).join('');
+    return `<div class="acc-card${isRead?' read':''}" id="acc-${i}">
+      <div class="acc-header" onclick="toggleAcc(${i})"
+        role="button" aria-expanded="false" aria-controls="acc-body-${i}">
+        <div class="acc-num" aria-hidden="true">${isRead?'<span class="mi fill xs" style="color:#fff">check</span>':s.num}</div>
+        <div class="acc-title-wrap">
+          <div class="acc-title">${s.title}</div>
+          <div class="acc-subtitle">${s.sub||''}</div>
         </div>
-        <span class="mat guide-chevron" id="chev-${s.id}">expand_more</span>
+        <span class="mi acc-chevron sm" aria-hidden="true">expand_more</span>
       </div>
-      <div class="guide-body" id="body-${s.id}">${s.content}</div>
+      <div class="acc-body" id="acc-body-${i}" role="region">
+        <div class="acc-content">
+          ${s.content||''}
+          ${res ? '<div class="res-section"><div class="res-title">Official Resources</div>'+res+'</div>' : ''}
+        </div>
+      </div>
     </div>`;
   }).join('');
   updateProgress();
