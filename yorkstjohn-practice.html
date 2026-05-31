@@ -4,160 +4,474 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <base href="/UK-INTERVIEW-HUB/">
-<title>AI Practice | YSJ Prep</title>
+<title>AI Practice | York St John</title>
 <script src="https://js.puter.com/v2/"></script>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
 <style>
-:root{--red:#c41230;--red-dk:#9e0e25;--navy:#1a1a2e;--surface:#fff;--bg:#f0f2f5;--border:#e5e7eb;--txt:#111827;--muted:#6b7280;--green:#16a34a;}
+/* ═══════════════════════════════════════════════════════════
+   WhiteRock × York St John — Design System v2
+   UI/UX Pro Max: 8dp grid · 44px targets · system fonts
+   Style: Clean flat + subtle depth (EdTech / Apple-like)
+═══════════════════════════════════════════════════════════ */
+:root{
+  /* Brand */
+  --red:#c41230; --red-dk:#9e0e25; --red-lt:#fff5f5; --red-mid:#fecaca;
+  --navy:#1a1a2e; --navy2:#0f172a;
+  /* Neutrals */
+  --bg:#f5f5f7; --surface:#ffffff; --surface2:#fafafa;
+  --border:#e5e7eb; --divider:#f3f4f6;
+  /* Text */
+  --t1:#1d1d1f; --t2:#3c3c43; --t3:#6e6e73; --t4:#aeaeb2;
+  /* Semantic */
+  --green:#1c7c54; --green-lt:#d1fae5; --green-bg:#f0fdf4;
+  --amber:#b45309; --amber-lt:#fef3c7; --amber-bg:#fffbeb;
+  --blue:#1d4ed8; --blue-lt:#dbeafe; --blue-bg:#eff6ff;
+  --purple:#5b21b6; --purple-lt:#ede9fe; --purple-bg:#faf5ff;
+  --teal:#0d7377; --teal-lt:#ccfbf1; --teal-bg:#f0fdfa;
+  /* Spacing (8dp) */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px;
+  --s6:24px; --s7:28px; --s8:32px; --s10:40px; --s12:48px;
+  /* Radii */
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-pill:99px;
+  /* Elevation */
+  --sh-1:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh-2:0 4px 12px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
+  --sh-3:0 12px 32px rgba(0,0,0,.1),0 4px 8px rgba(0,0,0,.06);
+  /* Layout */
+  --topbar:56px; --bottomnav:60px;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{font-family:-apple-system,BlinkMacSystemFont,"Inter",sans-serif;background:var(--bg);-webkit-font-smoothing:antialiased;}
-.mat{font-family:"Material Symbols Outlined";font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;vertical-align:middle;line-height:1;}
-.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
-/* Top bar */
-.top-bar{position:fixed;top:0;left:0;right:0;height:calc(56px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding-left:8px;padding-right:16px;gap:8px;z-index:100;}
-.back-btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.back-btn .mat{font-size:22px;color:var(--navy);}
-.top-title{font-size:16px;font-weight:800;color:var(--navy);flex:1;}
-.q-counter{font-size:13px;font-weight:700;color:var(--muted);background:var(--bg);border-radius:99px;padding:4px 12px;}
-/* Progress */
-.q-progress{position:sticky;top:calc(56px + env(safe-area-inset-top));z-index:90;background:var(--surface);border-bottom:1px solid var(--border);padding:8px 16px;}
-.q-prog-bar{height:5px;background:#f3f4f6;border-radius:99px;overflow:hidden;}
-.q-prog-fill{height:100%;background:var(--red);border-radius:99px;transition:width .4s;}
-/* Body */
-.page-body{padding-top:calc(56px + env(safe-area-inset-top) + 37px);padding-bottom:calc(80px + env(safe-area-inset-bottom));padding-left:16px;padding-right:16px;}
+html{font-size:16px;-webkit-text-size-adjust:100%;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--t1);line-height:1.5;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+/* Material Symbols */
+.mi{
+  font-family:"Material Symbols Outlined";
+  font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;
+  vertical-align:middle;line-height:1;user-select:none;
+  font-size:22px; /* prevents shift */
+}
+.mi.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
+.mi.sm{font-size:18px;}
+.mi.xs{font-size:16px;}
+.mi.lg{font-size:26px;}
+.mi.xl{font-size:32px;}
+/* Headings */
+h1{font-size:clamp(22px,5vw,28px);font-weight:800;line-height:1.15;letter-spacing:-.3px;color:var(--t1);}
+h2{font-size:18px;font-weight:800;line-height:1.2;letter-spacing:-.2px;color:var(--t1);}
+h3{font-size:16px;font-weight:700;line-height:1.3;color:var(--t1);}
+p{color:var(--t3);line-height:1.5;}
+/* Links */
+a{text-decoration:none;color:inherit;}
+/* Buttons */
+button{font-family:inherit;cursor:pointer;border:none;background:none;font-size:16px;}
+button:disabled{opacity:.5;cursor:not-allowed;}
+/* ── TOP BAR ─────────────────────────────────────────── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:calc(var(--topbar) + env(safe-area-inset-top));
+  padding-top:env(safe-area-inset-top);
+  background:rgba(255,255,255,.92);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding-left:var(--s2);padding-right:var(--s4);gap:var(--s2);
+}
+.topbar-back{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--navy);-webkit-tap-highlight-color:transparent;
+  transition:background .15s;flex-shrink:0;
+}
+.topbar-back:hover,.topbar-back:active{background:var(--divider);}
+.topbar-title{font-size:17px;font-weight:700;color:var(--t1);flex:1;letter-spacing:-.2px;}
+.topbar-action{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;transition:background .15s;
+}
+.topbar-action:hover,.topbar-action:active{background:var(--divider);}
+.topbar-badge-wrap{position:relative;}
+.notif-badge{
+  position:absolute;top:6px;right:6px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--red);border:2px solid #fff;
+  display:none;
+}
+.notif-badge.on{display:block;}
+/* ── PAGE BODY ───────────────────────────────────────── */
+.page{
+  padding-top:calc(var(--topbar) + env(safe-area-inset-top) + var(--s4));
+  padding-bottom:calc(var(--bottomnav) + env(safe-area-inset-bottom) + var(--s6));
+}
+.pad{padding-left:var(--s4);padding-right:var(--s4);}
+/* ── BOTTOM NAV ──────────────────────────────────────── */
+.bottomnav{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  height:calc(var(--bottomnav) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(255,255,255,.95);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  align-items:start;
+}
+.bn-tab{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:10px var(--s2) 6px;
+  color:var(--t4);font-size:10px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.04em;
+  text-decoration:none;-webkit-tap-highlight-color:transparent;
+  transition:color .15s;
+}
+.bn-tab .mi{font-size:24px;transition:all .15s;}
+.bn-tab.active{color:var(--red);}
+.bn-tab.active .mi{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
+/* ── CARD ────────────────────────────────────────────── */
+.card{
+  background:var(--surface);border-radius:var(--r-xl);
+  border:1px solid var(--border);overflow:hidden;
+}
+.card+.card{margin-top:var(--s3);}
+/* ── SECTION HEADER ──────────────────────────────────── */
+.sec-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:var(--s4);
+}
+.sec-title{font-size:18px;font-weight:800;color:var(--t1);letter-spacing:-.2px;}
+.sec-sub{font-size:13px;color:var(--t3);margin-top:2px;}
+.sec-link{
+  font-size:13px;font-weight:700;color:var(--red);
+  display:flex;align-items:center;gap:2px;
+}
+/* ── BUTTONS ─────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:var(--s2);border-radius:var(--r-md);font-weight:700;
+  min-height:44px;padding:0 var(--s5);font-size:15px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:filter .15s, opacity .15s;
+  touch-action:manipulation;
+}
+.btn:active{filter:brightness(.93);}
+.btn.full{width:100%;}
+.btn.red{background:var(--red);color:#fff;}
+.btn.navy{background:var(--navy);color:#fff;}
+.btn.outline{border:1.5px solid var(--border);background:var(--surface);color:var(--t1);}
+.btn.ghost{background:transparent;color:var(--red);border:none;}
+.btn.lg{min-height:52px;font-size:16px;border-radius:14px;}
+/* ── CHIPS / BADGES ──────────────────────────────────── */
+.chip{
+  display:inline-flex;align-items:center;gap:var(--s1);
+  border-radius:var(--r-pill);padding:5px 12px;
+  font-size:12px;font-weight:700;
+}
+.chip.red{background:var(--red-lt);color:var(--red);}
+.chip.green{background:var(--green-lt);color:var(--green);}
+.chip.navy{background:#e8eaf2;color:var(--navy);}
+.chip.muted{background:var(--divider);color:var(--t3);}
+.chip.border{background:var(--surface);border:1.5px solid var(--border);color:var(--t2);}
+/* ── INPUT ───────────────────────────────────────────── */
+.input{
+  width:100%;border:1.5px solid var(--border);
+  border-radius:var(--r-md);padding:12px 14px;
+  font-size:16px;font-family:inherit;
+  outline:none;background:var(--surface);
+  transition:border-color .15s;color:var(--t1);
+}
+.input:focus{border-color:var(--red);}
+.textarea{resize:none;min-height:120px;line-height:1.5;}
+/* ── DIVIDER ─────────────────────────────────────────── */
+.hr{height:1px;background:var(--divider);margin:var(--s4) 0;}
+/* ── SHIMMER SKELETON ────────────────────────────────── */
+.skeleton{
+  background:linear-gradient(90deg,var(--divider) 25%,#ebebeb 50%,var(--divider) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.4s infinite;
+  border-radius:var(--r-sm);
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* ── SPINNER ─────────────────────────────────────────── */
+.spinner{
+  width:20px;height:20px;
+  border:2.5px solid var(--divider);
+  border-top-color:var(--red);
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+  display:inline-block;flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+/* ── TOAST ───────────────────────────────────────────── */
+#toast{
+  display:none;position:fixed;bottom:80px;left:50%;
+  transform:translateX(-50%);
+  background:var(--t1);color:#fff;
+  padding:10px 20px;border-radius:var(--r-pill);
+  font-size:14px;font-weight:600;z-index:9999;
+  box-shadow:var(--sh-3);white-space:nowrap;
+}
+/* ── PROGRESS BAR ────────────────────────────────────── */
+.prog-track{
+  height:6px;background:var(--divider);
+  border-radius:var(--r-pill);overflow:hidden;
+}
+.prog-fill{
+  height:100%;border-radius:var(--r-pill);
+  transition:width .5s cubic-bezier(.4,0,.2,1);
+}
+/* ── SAFE AREAS ──────────────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important;}
+}
+/* ── RESPONSIVE ──────────────────────────────────────── */
+@media(min-width:768px){
+  .page{max-width:560px;margin:0 auto;}
+  .topbar{max-width:560px;left:50%;transform:translateX(-50%);}
+  .bottomnav{max-width:560px;left:50%;transform:translateX(-50%);}
+}
+</style>
+<style>
+/* Progress header strip */
+.q-strip{
+  position:sticky;top:calc(var(--topbar) + env(safe-area-inset-top));z-index:90;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:8px var(--s4);
+  display:flex;align-items:center;gap:var(--s3);
+}
+.q-strip-counter{font-size:13px;font-weight:700;color:var(--t2);white-space:nowrap;}
+.q-strip-bar{flex:1;}
 /* Question card */
-.q-card{background:var(--surface);border-radius:16px;border:1px solid var(--border);padding:20px;margin-bottom:14px;}
-.q-cat-tag{display:inline-flex;align-items:center;gap:6px;background:var(--bg);border-radius:8px;padding:5px 10px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;}
-.q-cat-tag .mat{font-size:14px;}
-.q-num{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;}
-.q-text{font-size:17px;font-weight:800;color:var(--navy);line-height:1.4;margin-bottom:10px;}
-.q-hint-toggle{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--red);margin-bottom:10px;background:none;border:none;cursor:pointer;padding:0;}
-.q-hint-toggle .mat{font-size:16px;}
-.q-hint{background:#fff8f0;border-left:3px solid #f97316;border-radius:0 8px 8px 0;padding:12px;font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:12px;display:none;}
-.q-hint.show{display:block;}
-.q-textarea{width:100%;border:1.5px solid var(--border);border-radius:12px;padding:14px;font-size:15px;font-family:inherit;resize:none;outline:none;line-height:1.5;min-height:120px;transition:border-color .15s;}
-.q-textarea:focus{border-color:var(--red);}
-.q-actions{display:flex;gap:10px;margin-top:12px;}
-.btn-check{flex:1;background:var(--red);color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;}
-.btn-check:disabled{opacity:.5;cursor:not-allowed;}
-.btn-check .mat{font-size:20px;}
-.btn-next{background:var(--bg);border:1.5px solid var(--border);color:var(--navy);border-radius:12px;padding:14px 20px;font-size:15px;font-weight:700;cursor:pointer;min-height:52px;}
-/* Feedback */
-.feedback-card{border-radius:14px;padding:16px;margin-top:12px;}
-.feedback-card.pass{background:#f0fdf4;border:1.5px solid #86efac;}
-.feedback-card.fail{background:#fef2f2;border:1.5px solid #fca5a5;}
-.fb-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-.fb-score{font-size:28px;font-weight:900;line-height:1;}
+.q-card{
+  background:var(--surface);border-radius:var(--r-xl);
+  border:1px solid var(--border);overflow:hidden;
+  margin-bottom:var(--s4);
+}
+.q-card-top{padding:var(--s5) var(--s5) var(--s4);}
+.q-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--bg);border-radius:var(--r-pill);
+  padding:5px 12px;font-size:11px;font-weight:800;
+  color:var(--t3);text-transform:uppercase;
+  letter-spacing:.05em;margin-bottom:var(--s4);
+}
+.q-tag .mi{font-size:15px;}
+.q-question{font-size:clamp(16px,4vw,20px);font-weight:800;color:var(--t1);
+  line-height:1.4;margin-bottom:var(--s3);}
+.q-hint-toggle{
+  display:flex;align-items:center;gap:6px;
+  font-size:14px;font-weight:700;color:var(--red);
+  padding:0;-webkit-tap-highlight-color:transparent;
+}
+.q-hint-toggle .mi{font-size:18px;}
+.q-hint-box{
+  background:var(--amber-bg);border-left:3px solid var(--amber);
+  border-radius:0 var(--r-md) var(--r-md) 0;
+  padding:var(--s4);margin:var(--s3) var(--s5) 0;
+  font-size:13px;color:var(--t2);line-height:1.5;display:none;
+}
+.q-hint-box.show{display:block;}
+.q-answer-wrap{padding:var(--s4) var(--s5) var(--s5);}
+.q-answer{
+  width:100%;border:1.5px solid var(--border);
+  border-radius:var(--r-lg);padding:var(--s4);
+  font-size:16px;font-family:inherit;resize:none;
+  outline:none;background:var(--surface);color:var(--t1);
+  min-height:140px;line-height:1.5;
+  transition:border-color .15s;
+}
+.q-answer:focus{border-color:var(--red);}
+.q-char-count{font-size:11px;color:var(--t4);text-align:right;margin-top:4px;}
+/* Action row */
+.q-actions{display:flex;gap:var(--s3);margin-top:var(--s4);}
+.q-actions .btn{flex:1;}
+/* Feedback card */
+.fb-card{
+  border-radius:var(--r-xl);overflow:hidden;
+  margin-bottom:var(--s4);border:1.5px solid;
+}
+.fb-card.pass{background:var(--green-bg);border-color:#86efac;}
+.fb-card.fail{background:var(--red-lt);border-color:#fca5a5;}
+.fb-top{
+  padding:var(--s5) var(--s5) var(--s3);
+  display:flex;align-items:center;gap:var(--s4);
+}
+.fb-score{font-size:40px;font-weight:900;line-height:1;}
 .fb-score.pass{color:var(--green);}
 .fb-score.fail{color:var(--red);}
-.fb-verdict{font-size:14px;font-weight:700;}
-.fb-section{margin-bottom:8px;}
-.fb-section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px;}
-.fb-text{font-size:13px;color:var(--txt);line-height:1.5;}
-/* Spinner */
-.spinner{display:none;text-align:center;padding:24px;color:var(--muted);}
-.spinner.show{display:flex;align-items:center;justify-content:center;gap:10px;}
-.spin{width:20px;height:20px;border:2px solid #e5e7eb;border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-/* Bottom */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.97);border-top:1px solid var(--border);backdrop-filter:blur(20px);display:grid;grid-template-columns:repeat(5,1fr);}
-.nav-tab{display:flex;flex-direction:column;align-items:center;padding:10px 4px;text-decoration:none;color:var(--muted);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;gap:3px;}
-.nav-tab.active{color:var(--red);}
-.nav-tab .mat{font-size:22px;}
-.nav-tab.active .mat{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
-#toast{display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;font-weight:600;z-index:9999;white-space:nowrap;}
+.fb-score-lbl{font-size:12px;color:var(--t3);margin-top:2px;}
+.fb-verdict{font-size:16px;font-weight:800;color:var(--t1);}
+.fb-summary{font-size:14px;color:var(--t2);margin-top:4px;line-height:1.5;}
+.fb-sections{padding:0 var(--s5) var(--s5);}
+.fb-section{margin-bottom:var(--s4);}
+.fb-section-lbl{font-size:11px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--t3);margin-bottom:6px;
+  display:flex;align-items:center;gap:6px;}
+.fb-section-lbl .mi{font-size:15px;}
+.fb-section-text{font-size:14px;color:var(--t2);line-height:1.5;
+  background:rgba(255,255,255,.6);border-radius:var(--r-md);
+  padding:var(--s3) var(--s4);}
+/* AI loading */
+.ai-loading{
+  background:var(--surface);border-radius:var(--r-xl);
+  border:1px solid var(--border);padding:var(--s8) var(--s5);
+  text-align:center;margin-bottom:var(--s4);display:none;
+}
+.ai-loading.show{display:block;}
+.ai-anim{
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--red-lt),#ede9fe);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto var(--s4);animation:pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.ai-loading-text{font-size:15px;font-weight:700;color:var(--t2);}
+.ai-loading-sub{font-size:13px;color:var(--t3);margin-top:4px;}
 </style>
 </head>
 <body>
-<header class="top-bar">
-  <a href="yorkstjohn-hub.html" class="back-btn"><span class="mat">arrow_back_ios_new</span></a>
-  <h1 class="top-title">AI Practice</h1>
-  <span class="q-counter" id="qCounter">Q 1 / 22</span>
+
+<header class="topbar">
+  <a href="yorkstjohn-hub.html" class="topbar-back" aria-label="Back to dashboard">
+    <span class="mi">arrow_back_ios_new</span>
+  </a>
+  <span class="topbar-title">AI Practice</span>
+  <span class="chip muted" id="q-label" style="font-size:12px">Q 1 / 22</span>
 </header>
 
-<div class="q-progress">
-  <div class="q-prog-bar"><div class="q-prog-fill" id="qProg" style="width:0%"></div></div>
+<!-- Progress strip -->
+<div class="q-strip">
+  <div class="q-strip-counter" id="q-counter">Question 1 of 22</div>
+  <div class="q-strip-bar">
+    <div class="prog-track">
+      <div class="prog-fill" id="q-prog" style="width:5%;background:var(--red)"></div>
+    </div>
+  </div>
 </div>
 
-<div class="page-body">
-  <div id="qArea"><!-- JS renders --></div>
+<div class="page" style="padding-top:calc(var(--topbar) + env(safe-area-inset-top) + 42px);">
+  <div class="pad">
+    <div id="q-area"></div>
+  </div>
 </div>
 
-<nav class="bottom-nav">
-  <a href="yorkstjohn-hub.html" class="nav-tab"><span class="mat">home</span>Home</a>
-  <a href="yorkstjohn-guide.html" class="nav-tab"><span class="mat">menu_book</span>Guide</a>
-  <a href="yorkstjohn-practice.html" class="nav-tab active"><span class="mat">mic</span>Practice</a>
-  <a href="yorkstjohn-questions.html" class="nav-tab"><span class="mat">quiz</span>Questions</a>
-  <a href="yorkstjohn-checklist.html" class="nav-tab"><span class="mat">checklist</span>Checklist</a>
-</nav>
-<div id="toast"></div>
-
+<nav class="bottomnav" aria-label="Main navigation"><a href="yorkstjohn-hub.html" class="bn-tab" aria-label="Home"><span class="mi">home</span>Home</a><a href="yorkstjohn-guide.html" class="bn-tab" aria-label="Guide"><span class="mi">menu_book</span>Guide</a><a href="yorkstjohn-practice.html" class="bn-tab active" aria-label="Practice"><span class="mi">mic</span>Practice</a><a href="yorkstjohn-questions.html" class="bn-tab" aria-label="Questions"><span class="mi">quiz</span>Questions</a><a href="yorkstjohn-checklist.html" class="bn-tab" aria-label="Checklist"><span class="mi">checklist</span>Checklist</a></nav>
+<div id="toast" role="alert" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 <script src="yorkstjohn-data.js"></script>
+
+<script>
+function showToast(msg,dur=2500){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',dur);}
+</script>
 <script>
 let currentIdx = 0;
-let hintVisible = {};
+let hintShown = false;
+
+// Check if coming from question bank with a specific question
+const fromQBank = location.search.includes('from=qbank');
+const storedQ = fromQBank ? JSON.parse(sessionStorage.getItem('ysj_practice_q')||'null') : null;
+
+function getQueue() {
+  if (storedQ) return [{id:'custom',cat:'custom',q:storedQ.q,hint:'Answer specifically and give a concrete example.',cr:'Give a complete, personalised answer with specific examples and comparisons.'}];
+  return PQS;
+}
 
 function showQ(idx) {
   currentIdx = idx;
-  const q = PQS[idx];
+  const queue = getQueue();
+  const q = queue[idx];
   if (!q) return;
-  document.getElementById('qCounter').textContent = 'Q '+(idx+1)+' / '+PQS.length;
-  document.getElementById('qProg').style.width = ((idx+1)/PQS.length*100)+'%';
+  hintShown = false;
 
-  const area = document.getElementById('qArea');
-  const catLabel = {uk:'Why the UK',ysj:'Why York St John',course:'Course Knowledge',
-    career:'Career Plans',finance:'Finance',living:'Accommodation',visa:'Visa Rules'}[q.cat] || q.cat;
-  const catIcon = {uk:'public',ysj:'account_balance',course:'menu_book',
-    career:'trending_up',finance:'payments',living:'home',visa:'badge'}[q.cat] || 'quiz';
+  // Update progress
+  const pct = Math.round((idx+1)/queue.length*100);
+  document.getElementById('q-label').textContent = 'Q '+(idx+1)+'/'+queue.length;
+  document.getElementById('q-counter').textContent = 'Question '+(idx+1)+' of '+queue.length;
+  document.getElementById('q-prog').style.width = pct+'%';
 
+  const catIcons = {uk:'public',ysj:'account_balance',course:'menu_book',
+    career:'trending_up',finance:'payments',living:'home',visa:'badge',custom:'mic'};
+  const catNames = {uk:'Why the UK',ysj:'Why York St John',course:'Course Knowledge',
+    career:'Career Plans',finance:'Finance',living:'Accommodation',visa:'Visa Rules',custom:'Your Question'};
+
+  const area = document.getElementById('q-area');
   area.innerHTML = `
     <div class="q-card">
-      <div class="q-cat-tag"><span class="mat fill">${catIcon}</span>${catLabel}</div>
-      <div class="q-num">Question ${idx+1} of ${PQS.length}</div>
-      <div class="q-text">${q.q}</div>
-      <button class="q-hint-toggle" onclick="toggleHint('${q.id}')">
-        <span class="mat">tips_and_updates</span> Show hint
-      </button>
-      <div class="q-hint" id="hint-${q.id}">${q.hint}</div>
-      <textarea class="q-textarea" id="ans-${q.id}" placeholder="Type your answer here... Be specific, include examples and compare with alternatives." rows="5"></textarea>
-      <div class="q-actions">
-        <button class="btn-check" id="check-btn" onclick="checkAnswer('${q.id}','${q.cat}',${JSON.stringify(q.cr).replace(/"/g,'&quot;')})">
-          <span class="mat fill">psychology</span> Check with AI
+      <div class="q-card-top">
+        <div class="q-tag">
+          <span class="mi fill" aria-hidden="true">${catIcons[q.cat]||'quiz'}</span>
+          ${catNames[q.cat]||q.cat}
+        </div>
+        <h2 class="q-question">${q.q}</h2>
+        <button class="q-hint-toggle" onclick="toggleHint()" aria-expanded="false" id="hint-btn">
+          <span class="mi sm">tips_and_updates</span>
+          Show hint
         </button>
-        ${idx < PQS.length-1 ? '<button class="btn-next" onclick="showQ('+(idx+1)+')">Skip <span class="mat">skip_next</span></button>' : ''}
+      </div>
+      <div class="q-hint-box" id="hint-box">${q.hint}</div>
+      <div class="q-answer-wrap">
+        <textarea class="q-answer" id="q-ans"
+          placeholder="Write your answer here. Be specific — give examples for every statement, name the university address, mention comparisons with at least one other country or university…"
+          rows="6"
+          oninput="updateCharCount(this)"
+          aria-label="Your answer"></textarea>
+        <div class="q-char-count" id="char-count">0 characters</div>
+        <div class="q-actions">
+          <button class="btn red" id="check-btn" onclick="checkAnswer()"
+            aria-label="Check answer with AI">
+            <span class="mi fill sm">psychology</span>
+            Check with AI
+          </button>
+          ${idx < queue.length-1
+            ? `<button class="btn outline" onclick="showQ(${idx+1})" aria-label="Skip to next question">
+                <span class="mi sm">skip_next</span> Skip
+               </button>`
+            : ''}
+        </div>
       </div>
     </div>
-    <div class="spinner" id="spinner-${q.id}">
-      <div class="spin"></div> AI is evaluating your answer...
+    <div class="ai-loading" id="ai-loading">
+      <div class="ai-anim"><span class="mi xl fill" style="color:var(--red)">psychology</span></div>
+      <div class="ai-loading-text">AI is evaluating your answer…</div>
+      <div class="ai-loading-sub">This takes about 5–10 seconds</div>
     </div>
-    <div id="fb-${q.id}"></div>
+    <div id="fb-area"></div>
   `;
 }
 
-function toggleHint(id) {
-  const h = document.getElementById('hint-'+id);
-  const isShow = h.classList.contains('show');
-  h.classList.toggle('show');
-  document.querySelector('.q-hint-toggle').innerHTML =
-    `<span class="mat">tips_and_updates</span> ${isShow?'Show hint':'Hide hint'}`;
+function updateCharCount(el) {
+  document.getElementById('char-count').textContent = el.value.length + ' characters';
 }
 
-async function checkAnswer(qId, cat, criteria) {
-  const ans = document.getElementById('ans-'+qId)?.value?.trim();
-  if (!ans || ans.length < 15) {
-    showToast('Please write a more detailed answer');
-    return;
-  }
-  const btn = document.getElementById('check-btn');
-  const spinner = document.getElementById('spinner-'+qId);
-  btn.disabled = true;
-  spinner.classList.add('show');
+function toggleHint() {
+  hintShown = !hintShown;
+  const box = document.getElementById('hint-box');
+  const btn = document.getElementById('hint-btn');
+  box.classList.toggle('show', hintShown);
+  btn.setAttribute('aria-expanded', hintShown);
+  btn.innerHTML = `<span class="mi sm">tips_and_updates</span> ${hintShown?'Hide hint':'Show hint'}`;
+}
+
+async function checkAnswer() {
+  const ans = document.getElementById('q-ans')?.value?.trim();
+  if (!ans || ans.length < 20) { showToast('Please write a longer answer (at least a few sentences)'); return; }
+
+  const checkBtn = document.getElementById('check-btn');
+  const loading = document.getElementById('ai-loading');
+  checkBtn.disabled = true;
+  loading.classList.add('show');
 
   try {
+    const queue = getQueue();
+    const q = queue[currentIdx];
     const course = window.getCurrentCourse?.() || {};
-    const q = PQS.find(p=>p.id===qId);
     const prompt = `You are a strict UK student visa credibility interview examiner. You assess answers exactly as a UKVI Entry Clearance Officer would — applying the same scrutiny used in real credibility interview refusals.
 
 Course: "${course.name}" at ${course.campus}.
@@ -222,50 +536,88 @@ Return ONLY valid JSON — no markdown, no explanation, nothing else:
 {"pass": boolean, "score": integer 0-100, "summary": "one sentence about the answer", "good": ["one specific strength"], "improve": ["one specific improvement needed"]}
 
 CRITICAL: Evaluate the ACTUAL student answer. Do NOT return a default or template score. Every answer gets a DIFFERENT score based on its specific content.`;
-    const response = await puter.ai.chat(prompt, {model:'gpt-4o-mini', stream:false});
-    spinner.classList.remove('show');
-    let raw = typeof response === 'string' ? response : response?.message?.content || JSON.stringify(response);
+    const resp = await puter.ai.chat(prompt, {model:'gpt-4o-mini'});
+    loading.classList.remove('show');
+    let raw = typeof resp==='string' ? resp : resp?.message?.content || JSON.stringify(resp);
     const match = raw.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('No JSON');
+    if (!match) throw new Error('No JSON in response');
     const j = JSON.parse(match[0]);
-
     const passed = j.pass || j.score >= 70;
-    const score = Math.round((j.score || 0) / 10);
-    const fbEl = document.getElementById('fb-'+qId);
-    fbEl.innerHTML = `<div class="feedback-card ${passed?'pass':'fail'}">
-      <div class="fb-header">
-        <div class="fb-score ${passed?'pass':'fail'}">${j.score || 0}<span style="font-size:16px;font-weight:500;opacity:.6;">/100</span></div>
+    const score = j.score || 0;
+
+    // Render feedback
+    const fbArea = document.getElementById('fb-area');
+    fbArea.innerHTML = `<div class="fb-card ${passed?'pass':'fail'}">
+      <div class="fb-top">
         <div>
-          <div class="fb-verdict">${passed?'✅ Good answer!':'❌ Needs improvement'}</div>
+          <div class="fb-score ${passed?'pass':'fail'}">${score}</div>
+          <div class="fb-score-lbl">out of 100</div>
+        </div>
+        <div style="flex:1">
+          <div class="fb-verdict">${passed?'&#9989; Good answer!':'&#10060; Needs improvement'}</div>
+          ${j.summary ? `<div class="fb-summary">${j.summary}</div>` : ''}
         </div>
       </div>
-      ${j.summary ? '<div class="fb-section"><div class="fb-section-title">Summary</div><div class="fb-text">'+j.summary+'</div></div>' : ''}
-      ${j.good?.[0] ? '<div class="fb-section"><div class="fb-section-title">✅ What worked</div><div class="fb-text">'+j.good[0]+'</div></div>' : ''}
-      ${j.improve?.[0] ? '<div class="fb-section"><div class="fb-section-title">💡 Improve</div><div class="fb-text">'+j.improve[0]+'</div></div>' : ''}
-      ${currentIdx < PQS.length-1 ? '<button onclick="showQ('+(currentIdx+1)+')" style="width:100%;background:var(--navy);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;">Next Question <span class="mat">arrow_forward</span></button>' : '<p style="text-align:center;font-weight:700;color:var(--green);margin-top:10px;">🎉 All questions done!</p>'}
+      <div class="fb-sections">
+        ${j.good?.[0] ? `<div class="fb-section">
+          <div class="fb-section-lbl"><span class="mi fill sm" style="color:var(--green)">check_circle</span>What worked</div>
+          <div class="fb-section-text">${j.good[0]}</div>
+        </div>` : ''}
+        ${j.improve?.[0] ? `<div class="fb-section">
+          <div class="fb-section-lbl"><span class="mi fill sm" style="color:var(--amber)">tips_and_updates</span>Improve this</div>
+          <div class="fb-section-text">${j.improve[0]}</div>
+        </div>` : ''}
+        <div style="display:flex;gap:var(--s3);margin-top:var(--s2)">
+          ${currentIdx < getQueue().length-1
+            ? `<button class="btn red" style="flex:1" onclick="showQ(${currentIdx+1})">
+                <span class="mi fill sm">arrow_forward</span> Next Question
+               </button>`
+            : `<button class="btn red" style="flex:1" onclick="location.href='yorkstjohn-hub.html'">
+                <span class="mi fill sm">check_circle</span> Back to Dashboard
+               </button>`}
+          <button class="btn outline" onclick="retryQ()" aria-label="Try this question again">
+            <span class="mi sm">refresh</span> Retry
+          </button>
+        </div>
+      </div>
     </div>`;
 
-    // Save via app.js
+    // XP + Save
     if (typeof window.saveAIResponse === 'function') {
-      const scoreNorm = Math.round((j.score||0)/10);
-      await window.saveAIResponse('YSJ_'+qId, ans, scoreNorm, j.summary||'', q?.q||'');
+      const normScore = Math.round(score/10);
+      await window.saveAIResponse('YSJ_'+q.id, ans, normScore, j.summary||'', q.q);
+      const xp = parseInt(localStorage.getItem('ysj_xp')||'0') + (passed?20:10);
+      localStorage.setItem('ysj_xp', xp);
     }
+    // Streak
+    const today = new Date().toDateString();
+    if (localStorage.getItem('ysj_streak_date')!==today) {
+      const streak = parseInt(localStorage.getItem('ysj_streak')||'0')+1;
+      localStorage.setItem('ysj_streak', streak);
+      localStorage.setItem('ysj_streak_date', today);
+    }
+    fbArea.scrollIntoView({behavior:'smooth',block:'start'});
+
   } catch(e) {
-    spinner.classList.remove('show');
-    document.getElementById('fb-'+qId).innerHTML = `<div class="feedback-card fail">
-      <p>Could not connect to AI. Make sure you are signed in to Puter and try again.</p>
+    loading.classList.remove('show');
+    checkBtn.disabled = false;
+    document.getElementById('fb-area').innerHTML = `<div class="card" style="padding:var(--s5);text-align:center">
+      <span class="mi xl" style="color:var(--t4);display:block;margin-bottom:var(--s3)">wifi_off</span>
+      <p style="font-size:14px;font-weight:700;color:var(--t2)">Could not connect to AI</p>
+      <p style="font-size:13px;color:var(--t3);margin-top:4px">Make sure you are signed in to Puter and have internet access.</p>
     </div>`;
-    btn.disabled = false;
   }
 }
 
-function showToast(msg) {
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.style.display='block';
-  setTimeout(()=>t.style.display='none',2500);
+function retryQ() {
+  document.getElementById('fb-area').innerHTML='';
+  document.getElementById('q-ans').value='';
+  document.getElementById('char-count').textContent='0 characters';
+  const checkBtn = document.getElementById('check-btn');
+  if (checkBtn) checkBtn.disabled=false;
 }
 
-document.addEventListener('DOMContentLoaded',()=>{ showQ(0); });
+document.addEventListener('DOMContentLoaded', () => { showQ(0); });
 </script>
 </body>
 </html>
