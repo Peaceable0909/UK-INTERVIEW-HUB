@@ -6,372 +6,781 @@
 <base href="/UK-INTERVIEW-HUB/">
 <title>Dashboard | York St John Interview Prep</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-<style>
-:root{--red:#c41230;--red-dk:#9e0e25;--navy:#1a1a2e;--surface:#fff;--bg:#f0f2f5;--border:#e5e7eb;--txt:#111827;--muted:#6b7280;--green:#16a34a;--amber:#d97706;--purple:#7c3aed;--teal:#0d9488;--blue:#1d4ed8;}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,"Inter",sans-serif;background:var(--bg);-webkit-font-smoothing:antialiased;}
-.mat{font-family:"Material Symbols Outlined";font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;vertical-align:middle;line-height:1;}
-.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
 
-/* Top bar */
-.top-bar{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  background:var(--navy);
-  padding:env(safe-area-inset-top) 16px 0;
-  padding-top:calc(env(safe-area-inset-top) + 14px);
-  padding-bottom:14px;
+<style>
+/* ═══════════════════════════════════════════════════════════
+   WhiteRock × York St John — Design System v2
+   UI/UX Pro Max: 8dp grid · 44px targets · system fonts
+   Style: Clean flat + subtle depth (EdTech / Apple-like)
+═══════════════════════════════════════════════════════════ */
+:root{
+  /* Brand */
+  --red:#c41230; --red-dk:#9e0e25; --red-lt:#fff5f5; --red-mid:#fecaca;
+  --navy:#1a1a2e; --navy2:#0f172a;
+  /* Neutrals */
+  --bg:#f5f5f7; --surface:#ffffff; --surface2:#fafafa;
+  --border:#e5e7eb; --divider:#f3f4f6;
+  /* Text */
+  --t1:#1d1d1f; --t2:#3c3c43; --t3:#6e6e73; --t4:#aeaeb2;
+  /* Semantic */
+  --green:#1c7c54; --green-lt:#d1fae5; --green-bg:#f0fdf4;
+  --amber:#b45309; --amber-lt:#fef3c7; --amber-bg:#fffbeb;
+  --blue:#1d4ed8; --blue-lt:#dbeafe; --blue-bg:#eff6ff;
+  --purple:#5b21b6; --purple-lt:#ede9fe; --purple-bg:#faf5ff;
+  --teal:#0d7377; --teal-lt:#ccfbf1; --teal-bg:#f0fdfa;
+  /* Spacing (8dp) */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px;
+  --s6:24px; --s7:28px; --s8:32px; --s10:40px; --s12:48px;
+  /* Radii */
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-pill:99px;
+  /* Elevation */
+  --sh-1:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh-2:0 4px 12px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
+  --sh-3:0 12px 32px rgba(0,0,0,.1),0 4px 8px rgba(0,0,0,.06);
+  /* Layout */
+  --topbar:56px; --bottomnav:60px;
 }
-.top-bar-inner{display:flex;align-items:center;justify-content:space-between;}
-.top-left{display:flex;align-items:center;gap:10px;}
-.logo-pill{display:flex;align-items:center;gap:8px;}
-.logo-mark{width:30px;height:30px;border-radius:8px;background:var(--red);display:flex;align-items:center;justify-content:center;}
-.logo-mark .mat{font-size:16px;color:#fff;}
-.logo-name{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.2px;}
-.top-right{display:flex;align-items:center;gap:8px;}
-.top-icon-btn{
-  width:36px;height:36px;border-radius:50%;
-  background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;
-  position:relative;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;-webkit-text-size-adjust:100%;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--t1);line-height:1.5;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overflow-x:hidden;
 }
-.top-icon-btn .mat{font-size:18px;color:#fff;}
-.notif-dot{
-  position:absolute;top:0;right:0;width:10px;height:10px;
-  border-radius:50%;background:var(--red);border:2px solid var(--navy);
+/* Material Symbols */
+.mi{
+  font-family:"Material Symbols Outlined";
+  font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;
+  vertical-align:middle;line-height:1;user-select:none;
+  font-size:22px; /* prevents shift */
+}
+.mi.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
+.mi.sm{font-size:18px;}
+.mi.xs{font-size:16px;}
+.mi.lg{font-size:26px;}
+.mi.xl{font-size:32px;}
+/* Headings */
+h1{font-size:clamp(22px,5vw,28px);font-weight:800;line-height:1.15;letter-spacing:-.3px;color:var(--t1);}
+h2{font-size:18px;font-weight:800;line-height:1.2;letter-spacing:-.2px;color:var(--t1);}
+h3{font-size:16px;font-weight:700;line-height:1.3;color:var(--t1);}
+p{color:var(--t3);line-height:1.5;}
+/* Links */
+a{text-decoration:none;color:inherit;}
+/* Buttons */
+button{font-family:inherit;cursor:pointer;border:none;background:none;font-size:16px;}
+button:disabled{opacity:.5;cursor:not-allowed;}
+/* ── TOP BAR ─────────────────────────────────────────── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:calc(var(--topbar) + env(safe-area-inset-top));
+  padding-top:env(safe-area-inset-top);
+  background:rgba(255,255,255,.92);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding-left:var(--s2);padding-right:var(--s4);gap:var(--s2);
+}
+.topbar-back{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--navy);-webkit-tap-highlight-color:transparent;
+  transition:background .15s;flex-shrink:0;
+}
+.topbar-back:hover,.topbar-back:active{background:var(--divider);}
+.topbar-title{font-size:17px;font-weight:700;color:var(--t1);flex:1;letter-spacing:-.2px;}
+.topbar-action{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;transition:background .15s;
+}
+.topbar-action:hover,.topbar-action:active{background:var(--divider);}
+.topbar-badge-wrap{position:relative;}
+.notif-badge{
+  position:absolute;top:6px;right:6px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--red);border:2px solid #fff;
   display:none;
 }
-.notif-dot.show{display:block;}
-.avatar{
-  width:32px;height:32px;border-radius:50%;
-  background:linear-gradient(135deg,var(--red),var(--purple));
-  color:#fff;font-size:12px;font-weight:800;
-  display:flex;align-items:center;justify-content:center;
+.notif-badge.on{display:block;}
+/* ── PAGE BODY ───────────────────────────────────────── */
+.page{
+  padding-top:calc(var(--topbar) + env(safe-area-inset-top) + var(--s4));
+  padding-bottom:calc(var(--bottomnav) + env(safe-area-inset-bottom) + var(--s6));
 }
-
-/* Scroll body */
-.page-body{
-  padding-top:74px;padding-bottom:calc(68px + env(safe-area-inset-bottom));
-  padding-top:calc(74px + env(safe-area-inset-top));
+.pad{padding-left:var(--s4);padding-right:var(--s4);}
+/* ── BOTTOM NAV ──────────────────────────────────────── */
+.bottomnav{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  height:calc(var(--bottomnav) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(255,255,255,.95);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  align-items:start;
 }
-
-/* Hero */
+.bn-tab{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:10px var(--s2) 6px;
+  color:var(--t4);font-size:10px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.04em;
+  text-decoration:none;-webkit-tap-highlight-color:transparent;
+  transition:color .15s;
+}
+.bn-tab .mi{font-size:24px;transition:all .15s;}
+.bn-tab.active{color:var(--red);}
+.bn-tab.active .mi{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
+/* ── CARD ────────────────────────────────────────────── */
+.card{
+  background:var(--surface);border-radius:var(--r-xl);
+  border:1px solid var(--border);overflow:hidden;
+}
+.card+.card{margin-top:var(--s3);}
+/* ── SECTION HEADER ──────────────────────────────────── */
+.sec-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:var(--s4);
+}
+.sec-title{font-size:18px;font-weight:800;color:var(--t1);letter-spacing:-.2px;}
+.sec-sub{font-size:13px;color:var(--t3);margin-top:2px;}
+.sec-link{
+  font-size:13px;font-weight:700;color:var(--red);
+  display:flex;align-items:center;gap:2px;
+}
+/* ── BUTTONS ─────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:var(--s2);border-radius:var(--r-md);font-weight:700;
+  min-height:44px;padding:0 var(--s5);font-size:15px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:filter .15s, opacity .15s;
+  touch-action:manipulation;
+}
+.btn:active{filter:brightness(.93);}
+.btn.full{width:100%;}
+.btn.red{background:var(--red);color:#fff;}
+.btn.navy{background:var(--navy);color:#fff;}
+.btn.outline{border:1.5px solid var(--border);background:var(--surface);color:var(--t1);}
+.btn.ghost{background:transparent;color:var(--red);border:none;}
+.btn.lg{min-height:52px;font-size:16px;border-radius:14px;}
+/* ── CHIPS / BADGES ──────────────────────────────────── */
+.chip{
+  display:inline-flex;align-items:center;gap:var(--s1);
+  border-radius:var(--r-pill);padding:5px 12px;
+  font-size:12px;font-weight:700;
+}
+.chip.red{background:var(--red-lt);color:var(--red);}
+.chip.green{background:var(--green-lt);color:var(--green);}
+.chip.navy{background:#e8eaf2;color:var(--navy);}
+.chip.muted{background:var(--divider);color:var(--t3);}
+.chip.border{background:var(--surface);border:1.5px solid var(--border);color:var(--t2);}
+/* ── INPUT ───────────────────────────────────────────── */
+.input{
+  width:100%;border:1.5px solid var(--border);
+  border-radius:var(--r-md);padding:12px 14px;
+  font-size:16px;font-family:inherit;
+  outline:none;background:var(--surface);
+  transition:border-color .15s;color:var(--t1);
+}
+.input:focus{border-color:var(--red);}
+.textarea{resize:none;min-height:120px;line-height:1.5;}
+/* ── DIVIDER ─────────────────────────────────────────── */
+.hr{height:1px;background:var(--divider);margin:var(--s4) 0;}
+/* ── SHIMMER SKELETON ────────────────────────────────── */
+.skeleton{
+  background:linear-gradient(90deg,var(--divider) 25%,#ebebeb 50%,var(--divider) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.4s infinite;
+  border-radius:var(--r-sm);
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* ── SPINNER ─────────────────────────────────────────── */
+.spinner{
+  width:20px;height:20px;
+  border:2.5px solid var(--divider);
+  border-top-color:var(--red);
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+  display:inline-block;flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+/* ── TOAST ───────────────────────────────────────────── */
+#toast{
+  display:none;position:fixed;bottom:80px;left:50%;
+  transform:translateX(-50%);
+  background:var(--t1);color:#fff;
+  padding:10px 20px;border-radius:var(--r-pill);
+  font-size:14px;font-weight:600;z-index:9999;
+  box-shadow:var(--sh-3);white-space:nowrap;
+}
+/* ── PROGRESS BAR ────────────────────────────────────── */
+.prog-track{
+  height:6px;background:var(--divider);
+  border-radius:var(--r-pill);overflow:hidden;
+}
+.prog-fill{
+  height:100%;border-radius:var(--r-pill);
+  transition:width .5s cubic-bezier(.4,0,.2,1);
+}
+/* ── SAFE AREAS ──────────────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important;}
+}
+/* ── RESPONSIVE ──────────────────────────────────────── */
+@media(min-width:768px){
+  .page{max-width:560px;margin:0 auto;}
+  .topbar{max-width:560px;left:50%;transform:translateX(-50%);}
+  .bottomnav{max-width:560px;left:50%;transform:translateX(-50%);}
+}
+</style>
+<style>
+/* Hub-specific */
 .hero{
-  background:linear-gradient(150deg,var(--navy) 0%,#2d1b69 100%);
-  padding:20px;
+  background:linear-gradient(150deg,#1a1a2e 0%,#2d1b69 55%,#c41230 130%);
+  padding:var(--s6) var(--s5) var(--s5);
+  position:relative;overflow:hidden;
 }
-.hero-greeting{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:4px;}
-.hero-name{font-size:22px;font-weight:900;color:#fff;margin-bottom:2px;}
-.hero-course{
+.hero::before{content:"";position:absolute;top:-80px;right:-60px;
+  width:240px;height:240px;border-radius:50%;
+  background:rgba(255,255,255,.04);pointer-events:none;}
+.hero-greeting{font-size:14px;color:rgba(255,255,255,.6);font-weight:600;margin-bottom:4px;}
+.hero-name{font-size:clamp(22px,5vw,28px);font-weight:900;color:#fff;
+  line-height:1.15;margin-bottom:var(--s2);letter-spacing:-.3px;}
+.hero-course-pill{
   display:inline-flex;align-items:center;gap:6px;
-  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);
-  border-radius:8px;padding:5px 10px;
-  font-size:12px;font-weight:700;color:rgba(255,255,255,.85);
-  cursor:pointer;margin-bottom:20px;margin-top:6px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+  border-radius:var(--r-pill);padding:6px 14px;
+  font-size:13px;font-weight:700;color:rgba(255,255,255,.9);
+  cursor:pointer;margin-bottom:var(--s6);max-width:100%;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .15s;touch-action:manipulation;
 }
-.hero-course .mat{font-size:14px;}
-
-/* KPI row */
-.kpi-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:0;}
-.kpi-card{
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);
-  border-radius:12px;padding:12px;text-align:center;
-}
-.kpi-val{font-size:22px;font-weight:900;color:#fff;line-height:1;}
-.kpi-val sub{font-size:12px;font-weight:500;opacity:.6;}
-.kpi-lbl{font-size:10px;color:rgba(255,255,255,.55);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
+.hero-course-pill:active{background:rgba(255,255,255,.2);}
+.hero-course-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px;}
+.hero-kpis{display:grid;grid-template-columns:auto 1fr 1fr;gap:var(--s4);align-items:center;}
+.kpi-ring{position:relative;width:76px;height:76px;flex-shrink:0;}
+.kpi-ring svg{transform:rotate(-90deg);}
+.ring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:800;color:#fff;}
+.kpi{text-align:center;}
+.kpi-val{font-size:clamp(20px,5vw,26px);font-weight:900;color:#fff;line-height:1;}
+.kpi-val small{font-size:12px;font-weight:500;opacity:.55;}
+.kpi-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.55);
+  text-transform:uppercase;letter-spacing:.06em;margin-top:3px;}
+.kpi-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px;}
 
 /* XP strip */
 .xp-strip{
-  background:var(--surface);padding:12px 20px;
-  display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid var(--border);
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:12px var(--s5);
+  display:flex;align-items:center;justify-content:center;gap:var(--s8);
 }
-.xp-chip{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;}
-.xp-chip .mat{font-size:18px;}
-.xp-chip.streak .mat{color:#f97316;}
-.xp-chip.xp .mat{color:#eab308;}
-
-/* Section */
-.section{padding:20px 16px 0;}
-.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.sec-title{font-size:17px;font-weight:800;color:var(--navy);letter-spacing:-.2px;}
-.sec-link{font-size:13px;font-weight:700;color:var(--red);}
+.xp-item{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--t1);}
+.xp-item .mi{font-size:20px;}
 
 /* Module grid */
-.mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);}
 .mod-card{
-  background:var(--surface);border-radius:14px;border:2px solid var(--border);
-  padding:14px;cursor:pointer;transition:all .18s;
-  -webkit-tap-highlight-color:transparent;
+  background:var(--surface);border-radius:var(--r-lg);
+  border:1.5px solid var(--border);
+  padding:var(--s4) var(--s3) var(--s3);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+  touch-action:manipulation;
 }
 .mod-card:active{transform:scale(.97);}
-.mod-card.done{border-color:var(--c,var(--border));}
-.mod-num{font-size:10px;font-weight:800;color:var(--c,var(--muted));letter-spacing:.08em;margin-bottom:8px;}
+.mod-card.started{border-color:var(--mc);}
+.mod-num{font-size:11px;font-weight:800;color:var(--mc);
+  letter-spacing:.08em;margin-bottom:var(--s3);}
 .mod-icon{
-  width:40px;height:40px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;margin-bottom:10px;
+  width:42px;height:42px;border-radius:var(--r-md);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:var(--s3);
 }
-.mod-icon .mat{font-size:20px;}
-.mod-title{font-size:13px;font-weight:700;color:var(--navy);line-height:1.3;margin-bottom:6px;}
-.mod-bar-wrap{height:4px;background:#f3f4f6;border-radius:99px;margin-bottom:5px;overflow:hidden;}
-.mod-bar{height:100%;border-radius:99px;background:var(--c,var(--muted));}
-.mod-foot{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
-.mod-pct{font-size:11px;font-weight:700;color:var(--muted);}
-.mod-status{font-size:11px;font-weight:800;color:var(--c,var(--muted));}
+.mod-icon .mi{font-size:22px;}
+.mod-title{font-size:13px;font-weight:700;color:var(--t1);
+  line-height:1.35;margin-bottom:var(--s2);}
+.mod-track{height:4px;background:var(--divider);border-radius:var(--r-pill);
+  overflow:hidden;margin-bottom:4px;}
+.mod-fill{height:100%;background:var(--mc);border-radius:var(--r-pill);
+  transition:width .5s;}
+.mod-footer{display:flex;align-items:center;justify-content:space-between;}
+.mod-pct{font-size:11px;color:var(--t3);font-weight:600;}
+.mod-action{font-size:11px;font-weight:800;color:var(--mc);}
 
 /* Quick actions */
-.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;}
-.quick-btn{
-  background:var(--surface);border:1px solid var(--border);border-radius:14px;
-  padding:16px;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;
-  transition:all .15s;
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-bottom:var(--s3);}
+.qa-card{
+  background:var(--surface);border-radius:var(--r-lg);
+  border:1px solid var(--border);
+  padding:var(--s4) var(--s4) var(--s3);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:transform .15s;touch-action:manipulation;
 }
-.quick-btn:active{transform:scale(.97);}
-.quick-icon{
-  width:40px;height:40px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;margin-bottom:10px;
-}
-.quick-icon .mat{font-size:22px;}
-.quick-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:2px;}
-.quick-sub{font-size:11px;color:var(--muted);}
-.btn-mock{
-  width:100%;background:var(--navy);color:#fff;
-  border:none;border-radius:14px;padding:16px;
-  font-size:15px;font-weight:800;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  margin-top:0;-webkit-tap-highlight-color:transparent;
-}
-.btn-mock .mat{font-size:20px;}
-.btn-mock:active{opacity:.9;}
+.qa-card:active{transform:scale(.97);}
+.qa-icon{width:40px;height:40px;border-radius:var(--r-md);
+  display:flex;align-items:center;justify-content:center;margin-bottom:var(--s3);}
+.qa-icon .mi{font-size:22px;}
+.qa-label{font-size:14px;font-weight:700;color:var(--t1);margin-bottom:2px;}
+.qa-sub{font-size:12px;color:var(--t3);}
 
-/* Bottom nav */
-.bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;
-  padding-bottom:env(safe-area-inset-bottom);
-  background:rgba(255,255,255,.97);border-top:1px solid var(--border);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  display:grid;grid-template-columns:repeat(5,1fr);
-  align-items:start;z-index:100;
+/* Video card */
+.video-card{
+  background:var(--surface);border-radius:var(--r-xl);
+  border:1px solid var(--border);overflow:hidden;margin-bottom:var(--s5);
 }
-.nav-tab{
-  display:flex;flex-direction:column;align-items:center;
-  padding:10px 4px;text-decoration:none;
-  color:var(--muted);font-size:9px;font-weight:700;
-  text-transform:uppercase;letter-spacing:.05em;gap:3px;
-}
-.nav-tab:hover{color:var(--txt);}
-.nav-tab.active{color:var(--red);}
-.nav-tab .mat{font-size:22px;}
-.nav-tab.active .mat{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
+.video-header{padding:var(--s4) var(--s5) var(--s3);}
+.video-label{font-size:11px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--t3);margin-bottom:4px;}
+.video-title{font-size:16px;font-weight:800;color:var(--t1);}
+.video-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;}
+.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
 
-#toast{display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
-  background:var(--navy);color:#fff;padding:10px 20px;border-radius:99px;
-  font-size:13px;font-weight:600;z-index:9999;white-space:nowrap;}
+/* Ready card */
+.ready-card{
+  background:linear-gradient(135deg,var(--navy) 0%,#1e3a8a 100%);
+  border-radius:var(--r-xl);padding:var(--s6) var(--s5);
+  margin-bottom:var(--s5);
+  position:relative;overflow:hidden;
+}
+.ready-card::before{content:"";position:absolute;bottom:-40px;right:-40px;
+  width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.04);}
+.ready-icon{
+  width:52px;height:52px;border-radius:var(--r-lg);
+  background:rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:var(--s4);
+}
+.ready-icon .mi{font-size:28px;color:#fff;}
+.ready-title{font-size:20px;font-weight:900;color:#fff;margin-bottom:var(--s2);}
+.ready-desc{font-size:14px;color:rgba(255,255,255,.7);margin-bottom:var(--s5);line-height:1.5;}
+.ready-scores{
+  display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);
+  margin-bottom:var(--s5);
+}
+.ready-score-item{
+  background:rgba(255,255,255,.1);border-radius:var(--r-md);padding:var(--s3) var(--s4);
+}
+.ready-score-val{font-size:22px;font-weight:900;color:#fff;line-height:1;}
+.ready-score-lbl{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px;}
+.btn-ready{
+  width:100%;background:#fff;color:var(--navy);
+  border:none;border-radius:var(--r-md);padding:0 var(--s5);
+  font-size:16px;font-weight:800;min-height:52px;
+  display:flex;align-items:center;justify-content:center;gap:var(--s2);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:opacity .15s;touch-action:manipulation;
+}
+.btn-ready:active{opacity:.9;}
+.btn-ready .mi{font-size:22px;color:var(--navy);}
+.ready-status{
+  margin-top:var(--s3);text-align:center;font-size:13px;
+  font-weight:700;color:rgba(255,255,255,.8);min-height:20px;
+}
+
+/* Space sections */
+.section{padding:0 var(--s4);margin-bottom:var(--s6);}
+.section:first-of-type{margin-top:var(--s5);}
 </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
-<header class="top-bar">
-  <div class="top-bar-inner">
-    <div class="top-left">
-      <div class="logo-pill">
-        <div class="logo-mark"><span class="mat fill">school</span></div>
-        <span class="logo-name">YSJ Interview</span>
-      </div>
-    </div>
-    <div class="top-right">
-      <button class="top-icon-btn" id="notifBtn" aria-label="Notifications">
-        <span class="mat">notifications</span>
-        <span class="notif-dot" id="notifBadge"></span>
-      </button>
-      <div class="avatar" id="avatarInitials">AC</div>
-    </div>
+<header class="topbar">
+  <a href="index.html" class="topbar-back" aria-label="Back to home">
+    <span class="mi">arrow_back_ios_new</span>
+  </a>
+  <span class="topbar-title">Interview Prep</span>
+  <div class="topbar-badge-wrap">
+    <button class="topbar-action" id="notifBtn" aria-label="Notifications">
+      <span class="mi">notifications</span>
+    </button>
+    <span class="notif-badge" id="notifBadge" aria-hidden="true"></span>
   </div>
+  <a href="dashboard.html" class="topbar-action" aria-label="My dashboard">
+    <div id="topbar-avatar"
+      style="width:30px;height:30px;border-radius:50%;
+        background:linear-gradient(135deg,#c41230,#5b21b6);
+        display:flex;align-items:center;justify-content:center;
+        font-size:12px;font-weight:800;color:#fff;cursor:pointer;">
+      AC
+    </div>
+  </a>
 </header>
 
-<!-- BODY -->
-<div class="page-body">
+<div class="page">
 
   <!-- HERO -->
   <div class="hero">
-    <p class="hero-greeting">Welcome back 👋</p>
-    <h1 class="hero-name" id="studentName">Student</h1>
-    <div class="hero-course" onclick="location.href='yorkstjohn.html'" role="button" tabindex="0">
-      <span class="mat">school</span>
-      <span id="hero-course-name">Select your course</span>
-      <span class="mat">expand_more</span>
-    </div>
-    <div class="kpi-row">
-      <div class="kpi-card">
-        <div class="kpi-val" id="hero-pct">0<sub>%</sub></div>
-        <div class="kpi-lbl">Complete</div>
+    <p class="hero-greeting" id="hero-greeting">Welcome back</p>
+    <h1 class="hero-name" id="hero-name">Loading...</h1>
+    <button class="hero-course-pill" onclick="location.href='yorkstjohn.html'"
+      aria-label="Change course">
+      <span class="mi xs fill">school</span>
+      <span class="hero-course-name" id="hero-course">Select your course</span>
+      <span class="mi xs">edit</span>
+    </button>
+    <div class="hero-kpis">
+      <div class="kpi-ring">
+        <svg width="76" height="76" viewBox="0 0 76 76" aria-hidden="true">
+          <circle cx="38" cy="38" r="31" stroke="rgba(255,255,255,.15)"
+            stroke-width="7" fill="none"/>
+          <circle cx="38" cy="38" r="31" stroke="#c41230"
+            stroke-width="7" fill="none"
+            stroke-dasharray="194.8"
+            stroke-dashoffset="194.8"
+            id="ring-circle" stroke-linecap="round"/>
+        </svg>
+        <div class="ring-pct" id="ring-pct" aria-label="Overall progress">0%</div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-val" id="hero-days">—</div>
+      <div class="kpi">
+        <div class="kpi-val" id="kpi-days">—</div>
         <div class="kpi-lbl">Days Left</div>
+        <div class="kpi-sub" id="kpi-date">Set interview date</div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-val" id="hero-score">0<sub>/10</sub></div>
+      <div class="kpi">
+        <div class="kpi-val" id="kpi-readiness">0<small>/10</small></div>
         <div class="kpi-lbl">Readiness</div>
+        <div class="kpi-sub" id="kpi-stars" aria-hidden="true">——</div>
       </div>
     </div>
   </div>
 
   <!-- XP STRIP -->
   <div class="xp-strip">
-    <div class="xp-chip streak">
-      <span class="mat fill">local_fire_department</span>
-      <span id="ysj-streak-display">0</span> Day Streak
+    <div class="xp-item">
+      <span class="mi fill" style="color:#f97316">local_fire_department</span>
+      <span><strong id="xp-streak">0</strong> day streak</span>
     </div>
-    <div class="xp-chip xp">
-      <span class="mat fill">emoji_events</span>
-      <span id="ysj-xp-display">0</span> XP Points
+    <div style="width:1px;height:20px;background:var(--border)"></div>
+    <div class="xp-item">
+      <span class="mi fill" style="color:#eab308">emoji_events</span>
+      <span><strong id="xp-pts">0</strong> XP</span>
     </div>
   </div>
 
-  <!-- MODULES -->
+  <!-- LEARNING PATH -->
   <div class="section">
     <div class="sec-hdr">
-      <span class="sec-title">Your Learning Path</span>
-      <a href="yorkstjohn-questions.html" class="sec-link">View all</a>
+      <div>
+        <h2 class="sec-title">Your Learning Path</h2>
+        <p class="sec-sub">Complete each module to build your readiness</p>
+      </div>
+      <a href="yorkstjohn-questions.html" class="sec-link">
+        View all <span class="mi xs">chevron_right</span>
+      </a>
     </div>
-    <div class="mod-grid" id="modGrid"><!-- JS renders --></div>
+    <div class="mod-grid" id="mod-grid" role="list" aria-label="Training modules">
+      <!-- JS renders -->
+    </div>
   </div>
 
   <!-- QUICK ACTIONS -->
-  <div class="section" style="padding-bottom:20px;">
-    <div class="sec-hdr"><span class="sec-title">Quick Actions</span></div>
-    <div class="quick-grid">
-      <button class="quick-btn" onclick="location.href='yorkstjohn-guide.html'">
-        <div class="quick-icon" style="background:#ede9fe;"><span class="mat fill" style="color:#7c3aed">menu_book</span></div>
-        <div class="quick-title">Interview Guide</div>
-        <div class="quick-sub">Key facts to know</div>
+  <div class="section">
+    <h2 class="sec-title" style="margin-bottom:var(--s4)">Quick Actions</h2>
+    <div class="qa-grid">
+      <button class="qa-card" onclick="location.href='yorkstjohn-guide.html'"
+        aria-label="Interview Guide">
+        <div class="qa-icon" style="background:var(--purple-lt)">
+          <span class="mi fill" style="color:var(--purple)">menu_book</span>
+        </div>
+        <div class="qa-label">Interview Guide</div>
+        <div class="qa-sub">Key facts to know</div>
       </button>
-      <button class="quick-btn" onclick="location.href='yorkstjohn-checklist.html'">
-        <div class="quick-icon" style="background:#f0fdf4;"><span class="mat fill" style="color:#16a34a">checklist</span></div>
-        <div class="quick-title">Checklist</div>
-        <div class="quick-sub">Track your prep</div>
+      <button class="qa-card" onclick="location.href='yorkstjohn-questions.html'"
+        aria-label="Question Bank">
+        <div class="qa-icon" style="background:var(--blue-lt)">
+          <span class="mi fill" style="color:var(--blue)">quiz</span>
+        </div>
+        <div class="qa-label">Question Bank</div>
+        <div class="qa-sub">Browse by topic</div>
       </button>
-      <button class="quick-btn" onclick="location.href='yorkstjohn-questions.html'">
-        <div class="quick-icon" style="background:#eff6ff;"><span class="mat fill" style="color:#1d4ed8">quiz</span></div>
-        <div class="quick-title">Question Bank</div>
-        <div class="quick-sub">All categories</div>
+      <button class="qa-card" onclick="location.href='yorkstjohn-practice.html'"
+        aria-label="AI Practice">
+        <div class="qa-icon" style="background:var(--red-lt)">
+          <span class="mi fill" style="color:var(--red)">mic</span>
+        </div>
+        <div class="qa-label">AI Practice</div>
+        <div class="qa-sub">Get scored live</div>
       </button>
-      <button class="quick-btn" onclick="location.href='yorkstjohn-practice.html'">
-        <div class="quick-icon" style="background:#fff7ed;"><span class="mat fill" style="color:#ea580c">mic</span></div>
-        <div class="quick-title">AI Practice</div>
-        <div class="quick-sub">Get scored live</div>
+      <button class="qa-card" onclick="location.href='yorkstjohn-checklist.html'"
+        aria-label="Checklist">
+        <div class="qa-icon" style="background:var(--green-lt)">
+          <span class="mi fill" style="color:var(--green)">checklist</span>
+        </div>
+        <div class="qa-label">Checklist</div>
+        <div class="qa-sub">Track your prep</div>
       </button>
     </div>
-    <button class="btn-mock" onclick="location.href='yorkstjohn-practice.html'">
-      <span class="mat fill">play_circle</span> Start Mock Interview
+    <button class="btn navy lg full" onclick="location.href='yorkstjohn-practice.html'"
+      style="border-radius:var(--r-xl);">
+      <span class="mi fill">play_circle</span>
+      Start Full Mock Interview
     </button>
   </div>
 
-</div><!-- /page-body -->
+  <!-- INTRO VIDEO -->
+  <div class="section">
+    <h2 class="sec-title" style="margin-bottom:var(--s4)">Introduction Video</h2>
+    <div class="video-card">
+      <div class="video-header">
+        <div class="video-label">York St John University</div>
+        <div class="video-title">Pre-CAS Interview Training Guide</div>
+      </div>
+      <div class="video-wrap">
+        <iframe
+          src="https://www.youtube.com/embed/J6-8pD3uI84?si=B9fwYiZkCgDUjQX9"
+          title="York St John University — Pre-CAS Interview Training"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
 
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav" aria-label="Main navigation">
-  <a href="yorkstjohn-hub.html" class="nav-tab active"><span class="mat">home</span>Home</a>
-  <a href="yorkstjohn-guide.html" class="nav-tab"><span class="mat">menu_book</span>Guide</a>
-  <a href="yorkstjohn-practice.html" class="nav-tab"><span class="mat">mic</span>Practice</a>
-  <a href="yorkstjohn-questions.html" class="nav-tab"><span class="mat">quiz</span>Questions</a>
-  <a href="yorkstjohn-checklist.html" class="nav-tab"><span class="mat">checklist</span>Checklist</a>
-</nav>
+  <!-- READY FOR INTERVIEW -->
+  <div class="section">
+    <div class="ready-card">
+      <div class="ready-icon">
+        <span class="mi fill lg">verified</span>
+      </div>
+      <h2 class="ready-title">Ready for Interview?</h2>
+      <p class="ready-desc">
+        When you feel prepared, submit your readiness report to the WhiteRock team.
+        They will review your answers and get in touch before your interview date.
+      </p>
+      <div class="ready-scores">
+        <div class="ready-score-item">
+          <div class="ready-score-val" id="ready-q-score">0/0</div>
+          <div class="ready-score-lbl">Questions passed</div>
+        </div>
+        <div class="ready-score-item">
+          <div class="ready-score-val" id="ready-chk-score">0/24</div>
+          <div class="ready-score-lbl">Checklist done</div>
+        </div>
+      </div>
+      <button class="btn-ready" id="readyBtn" aria-label="Submit readiness report to WhiteRock">
+        <span class="mi fill">send</span>
+        I'm Ready — Notify WhiteRock
+      </button>
+      <div class="ready-status" id="ysj-ready-status"></div>
+    </div>
+  </div>
 
-<div id="toast"></div>
+</div><!-- /page -->
+
+<nav class="bottomnav" aria-label="Main navigation"><a href="yorkstjohn-hub.html" class="bn-tab active" aria-label="Home"><span class="mi">home</span>Home</a><a href="yorkstjohn-guide.html" class="bn-tab" aria-label="Guide"><span class="mi">menu_book</span>Guide</a><a href="yorkstjohn-practice.html" class="bn-tab" aria-label="Practice"><span class="mi">mic</span>Practice</a><a href="yorkstjohn-questions.html" class="bn-tab" aria-label="Questions"><span class="mi">quiz</span>Questions</a><a href="yorkstjohn-checklist.html" class="bn-tab" aria-label="Checklist"><span class="mi">checklist</span>Checklist</a></nav>
+<div id="toast" role="alert" aria-live="polite"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 <script src="yorkstjohn-data.js"></script>
+<script src="https://js.puter.com/v2/"></script>
 <script>
-const MODULES = [
-  {id:'M1',num:'01',title:'Understanding the Interview',icon:'psychology',color:'#6366f1',bg:'#ede9fe',mins:12,href:'yorkstjohn-guide.html'},
-  {id:'M2',num:'02',title:'Why the UK',icon:'public',color:'#7c3aed',bg:'#f5f3ff',mins:15,href:'yorkstjohn-questions.html#uk'},
-  {id:'M3',num:'03',title:'Why York St John',icon:'account_balance',color:'#0891b2',bg:'#ecfeff',mins:18,href:'yorkstjohn-questions.html#ysj'},
-  {id:'M4',num:'04',title:'Your Course',icon:'menu_book',color:'#d97706',bg:'#fefce8',mins:16,href:'yorkstjohn-questions.html#course'},
-  {id:'M5',num:'05',title:'Finance',icon:'payments',color:'#dc2626',bg:'#fef2f2',mins:14,href:'yorkstjohn-questions.html#finance'},
-  {id:'M6',num:'06',title:'Accommodation',icon:'home',color:'#0d9488',bg:'#f0fdf4',mins:16,href:'yorkstjohn-questions.html#living'},
-  {id:'M7',num:'07',title:'Career Plans',icon:'trending_up',color:'#7c3aed',bg:'#faf5ff',mins:14,href:'yorkstjohn-questions.html#career'},
-  {id:'M8',num:'08',title:'Mock Interview',icon:'mic',color:'#1d4ed8',bg:'#eff6ff',mins:25,href:'yorkstjohn-practice.html'},
+function showToast(msg,dur=2500){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',dur);}
+</script>
+<script>
+// ── MODULE DEFINITIONS ────────────────────────────────────────────
+const MODS = [
+  {id:'M1',n:'01',title:'Understanding the Interview',icon:'psychology',
+   color:'#6366f1',bg:'#ede9fe',href:'yorkstjohn-guide.html'},
+  {id:'M2',n:'02',title:'Why the UK',icon:'public',
+   color:'#7c3aed',bg:'#f5f3ff',href:'yorkstjohn-questions.html#uk'},
+  {id:'M3',n:'03',title:'Why York St John',icon:'account_balance',
+   color:'#0891b2',bg:'#ecfeff',href:'yorkstjohn-questions.html#ysj'},
+  {id:'M4',n:'04',title:'Your Course',icon:'menu_book',
+   color:'#d97706',bg:'#fefce8',href:'yorkstjohn-questions.html#course'},
+  {id:'M5',n:'05',title:'Finance & Funding',icon:'payments',
+   color:'#c41230',bg:'#fff5f5',href:'yorkstjohn-questions.html#finance'},
+  {id:'M6',n:'06',title:'Accommodation',icon:'home',
+   color:'#0d9488',bg:'#f0fdf4',href:'yorkstjohn-questions.html#living'},
+  {id:'M7',n:'07',title:'Career Plans',icon:'trending_up',
+   color:'#7c3aed',bg:'#faf5ff',href:'yorkstjohn-questions.html#career'},
+  {id:'M8',n:'08',title:'Mock Interview',icon:'mic',
+   color:'#1d4ed8',bg:'#eff6ff',href:'yorkstjohn-practice.html'},
 ];
 
-function getXP(){return parseInt(localStorage.getItem('ysj_xp')||'0');}
-function getStreak(){
-  const d=localStorage.getItem('ysj_streak_date'),today=new Date().toDateString();
-  const yesterday=new Date(Date.now()-86400000).toDateString();
-  if(d===today||d===yesterday) return parseInt(localStorage.getItem('ysj_streak')||'0');
-  return 0;
+// ── XP / STREAK ───────────────────────────────────────────────────
+const getXP = () => parseInt(localStorage.getItem('ysj_xp')||'0');
+const getStreak = () => {
+  const d=localStorage.getItem('ysj_streak_date'),
+        today=new Date().toDateString(),
+        yest=new Date(Date.now()-86400000).toDateString();
+  return (d===today||d===yest) ? parseInt(localStorage.getItem('ysj_streak')||'0') : 0;
+};
+
+// ── MODULE PROGRESS ───────────────────────────────────────────────
+function getModPct(mod, scores) {
+  if (mod.id==='M1') return Math.min(100, parseInt(localStorage.getItem('ysj_guide_opened')||'0')*10);
+  if (mod.id==='M8') {
+    const pqsKeys = Object.keys(scores).filter(k=>k.startsWith('YSJ_p'));
+    return Math.min(100, Math.round(pqsKeys.length/22*100));
+  }
+  // Approximate by question prefix
+  const total = mod.id==='M2'?6:mod.id==='M3'?8:mod.id==='M4'?7:
+                mod.id==='M5'?8:mod.id==='M6'?7:mod.id==='M7'?7:6;
+  const catPrefixes = {
+    M2:['uk'],M3:['ysj','YSJ_ysj'],M4:['course'],
+    M5:['fin'],M6:['living'],M7:['career']
+  };
+  return Math.min(100, Math.round(Object.keys(scores).filter(k=>
+    (catPrefixes[mod.id]||[]).some(p=>k.toLowerCase().includes(p))
+  ).length/total*100));
 }
 
-function renderModules(){
-  const scores=JSON.parse(localStorage.getItem('ysj_scores')||'{}');
-  const grid=document.getElementById('modGrid');
-  grid.innerHTML=MODULES.map(m=>{
-    const keys=Object.keys(scores).filter(k=>k.startsWith('YSJ_'));
-    const pct=m.id==='M1'?Math.min(100,parseInt(localStorage.getItem('ysj_guide_opened')||'0')*10):
-              m.id==='M8'?Math.round(Object.keys(scores).filter(k=>k.startsWith('p')).length/22*100):0;
-    const done=pct>=80;
-    const status=done?'Completed':pct>0?'Resume':'Start';
-    return `<div class="mod-card${done?' done':''}" style="--c:${m.color}" onclick="location.href='${m.href}'">
-      <div class="mod-num">${m.num}</div>
-      <div class="mod-icon" style="background:${m.bg}"><span class="mat fill" style="color:${m.color}">${m.icon}</span></div>
+// ── RENDER MODULES ────────────────────────────────────────────────
+function renderMods(scores) {
+  const g = document.getElementById('mod-grid');
+  if (!g) return;
+  g.innerHTML = MODS.map(m => {
+    const pct = getModPct(m, scores);
+    const done = pct >= 100;
+    const started = pct > 0;
+    const lbl = done ? 'Completed' : started ? 'Resume' : 'Start';
+    return `<div class="mod-card${started?' started':''}" style="--mc:${m.color}"
+      role="listitem" onclick="location.href='${m.href}'"
+      aria-label="${m.title}, ${pct}% complete">
+      <div class="mod-num">${m.n}</div>
+      <div class="mod-icon" style="background:${m.bg}">
+        <span class="mi fill" style="color:${m.color}" aria-hidden="true">${m.icon}</span>
+      </div>
       <div class="mod-title">${m.title}</div>
-      <div class="mod-bar-wrap"><div class="mod-bar" style="width:${pct}%"></div></div>
-      <div class="mod-foot">
+      <div class="mod-track"><div class="mod-fill" style="width:${pct}%"></div></div>
+      <div class="mod-footer">
         <span class="mod-pct">${pct}%</span>
-        <span class="mod-status">${status}</span>
+        <span class="mod-action">${lbl}</span>
       </div>
     </div>`;
   }).join('');
 }
 
-document.addEventListener('DOMContentLoaded', async ()=>{
+// ── UPDATE HERO ───────────────────────────────────────────────────
+function updateHero(scores, interviewDate) {
+  const total = 80, answered = Object.keys(scores).filter(k=>k.startsWith('YSJ_')).length;
+  const pct = Math.min(100, Math.round(answered/total*100));
+  const avg = answered ? Object.keys(scores).filter(k=>k.startsWith('YSJ_'))
+    .reduce((s,k)=>s+(scores[k]?.score||0),0) / answered : 0;
+
+  // Ring
+  const r = 31, circ = 2*Math.PI*r;
+  const circle = document.getElementById('ring-circle');
+  if (circle) circle.style.strokeDashoffset = circ - (circ*pct/100);
+  const rPct = document.getElementById('ring-pct');
+  if (rPct) rPct.textContent = pct+'%';
+
+  // Readiness
+  const rd = document.getElementById('kpi-readiness');
+  if (rd) rd.innerHTML = Math.round(avg)+'<small>/10</small>';
+  const stars = document.getElementById('kpi-stars');
+  if (stars) {
+    const n = Math.round(avg/2);
+    stars.textContent = '★'.repeat(n)+'☆'.repeat(5-n);
+  }
+
+  // Interview date
+  if (interviewDate) {
+    const days = Math.ceil((new Date(interviewDate)-new Date())/86400000);
+    const d = document.getElementById('kpi-days');
+    const dateEl = document.getElementById('kpi-date');
+    if (d) d.textContent = days>0 ? days : 0;
+    if (dateEl) dateEl.textContent = new Date(interviewDate)
+      .toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  }
+
+  // Ready scores
+  const rq = document.getElementById('ready-q-score');
+  const passed = Object.keys(scores).filter(k=>k.startsWith('YSJ_')&&(scores[k]?.finalStatus===1||scores[k]?.score>=7));
+  if (rq) rq.textContent = passed.length+'/'+Math.max(answered,22);
+}
+
+// ── READY BUTTON ──────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  // Greet by time
+  const h=new Date().getHours();
+  const g=document.getElementById('hero-greeting');
+  if(g) g.textContent=h<12?'Good morning':'h<17?Good afternoon':'Good evening';
+
   // XP + Streak
-  document.getElementById('ysj-xp-display').textContent=getXP();
-  document.getElementById('ysj-streak-display').textContent=getStreak();
-  
+  document.getElementById('xp-pts').textContent=getXP();
+  document.getElementById('xp-streak').textContent=getStreak();
+
+  // Session check
   await (window.sessionReady||Promise.resolve());
   const s=window.getCurrentStudent?.();
-  if(s){
-    document.getElementById('studentName').textContent=s.name||'Student';
-    document.getElementById('avatarInitials').textContent=(s.name||'S').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-  }
-  
+  if (!s) { location.href='index.html'; return; }
+
+  // Update UI with student
+  document.getElementById('hero-name').textContent=s.name||'Student';
+  const av=document.getElementById('topbar-avatar');
+  if(av) av.textContent=(s.name||'S').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+
+  // Course
   const cid=localStorage.getItem('last_course');
-  if(cid&&COURSES[cid]){
-    document.getElementById('hero-course-name').textContent=COURSES[cid].name;
-  }
-  
-  // Scores
-  if(s?.id){
-    try{
-      const {data}=await (window.supabaseClient||window.getDB?.())
-        .from('student_progress').select('ai_scores,interview_date').eq('user_id',s.id).single();
-      if(data){
-        const scores=data.ai_scores||{};
-        localStorage.setItem('ysj_scores',JSON.stringify(scores));
-        const keys=Object.keys(scores).filter(k=>k.startsWith('YSJ_'));
-        const pct=Math.round(keys.length/60*100);
-        const avg=keys.length?keys.reduce((a,k)=>a+(scores[k]?.score||0),0)/keys.length:0;
-        document.getElementById('hero-pct').innerHTML=pct+'<sub>%</sub>';
-        document.getElementById('hero-score').innerHTML=Math.round(avg)+'<sub>/10</sub>';
-        if(data.interview_date){
-          const days=Math.ceil((new Date(data.interview_date)-new Date())/86400000);
-          document.getElementById('hero-days').textContent=days>0?days:'Today';
-        }
-      }
-    }catch(e){}
-  }
-  renderModules();
-  
+  if (!cid) { location.href='yorkstjohn.html'; return; }
+  const course=COURSES[cid];
+  if (course) document.getElementById('hero-course').textContent=course.name;
+
+  // Load scores
+  let scores={}, interviewDate=null;
+  try {
+    const {data}=await supabaseClient.from('student_progress')
+      .select('ai_scores,interview_date').eq('user_id',s.id).single();
+    if (data) {
+      scores=data.ai_scores||{};
+      interviewDate=data.interview_date;
+      localStorage.setItem('ysj_scores',JSON.stringify(scores));
+    }
+  } catch(e){}
+
+  updateHero(scores, interviewDate);
+  renderMods(scores);
+
+  // Checklist count
+  const chkDone=new Set(JSON.parse(localStorage.getItem('ysj_chk')||'[]')).size;
+  document.getElementById('ready-chk-score').textContent=chkDone+'/24';
+
   // Notifications
-  if(s?.id){
-    try{
-      const {data}=await (window.supabaseClient||window.getDB?.())
-        .from('student_notifications').select('id').eq('target_user_id',s.id).limit(1);
-      if(data?.length) document.getElementById('notifBadge').classList.add('show');
-    }catch(e){}
+  try {
+    const {data}=await supabaseClient.from('student_notifications')
+      .select('id,is_read').eq('target_user_id',s.id).eq('is_read',false).limit(1);
+    if (data?.length) document.getElementById('notifBadge').classList.add('on');
+  } catch(e){}
+
+  // Ready button
+  const readyBtn=document.getElementById('readyBtn');
+  const readyStatus=document.getElementById('ysj-ready-status');
+  if (readyBtn && typeof window.sendReadyEmail==='function') {
+    readyBtn.addEventListener('click', async () => {
+      readyBtn.disabled=true;
+      readyBtn.innerHTML='<span class="spinner"></span><span style="margin-left:8px">Sending report...</span>';
+      try {
+        const progress=await window.loadSavedProgress?.();
+        const responses=progress?.ai_scores||{};
+        const checklist=progress?.checklist_status||{};
+        const scoreVals=Object.values(responses).map(a=>a?.score).filter(n=>!isNaN(n));
+        const avg=scoreVals.length?(scoreVals.reduce((a,b)=>a+b,0)/scoreVals.length).toFixed(1):'N/A';
+        const res=await window.sendReadyEmail?.(responses,checklist,avg,'Student clicked "I\'m Ready" on YSJ Hub');
+        if (res?.success||res?.sent) {
+          const pct=res.percentScore??0;
+          const emoji=pct>=90?'✅':pct>=70?'⚠️':'📚';
+          readyBtn.innerHTML='<span class="mi fill">check_circle</span><span>Report Sent!</span>';
+          readyBtn.style.background='#dcfce7';readyBtn.style.color='#166534';
+          if (readyStatus) {
+            readyStatus.textContent=emoji+' '+(res.readinessLevel||'Report submitted')
+              +' — WhiteRock will be in touch';
+          }
+          showToast('✅ Report sent to WhiteRock!');
+        } else {
+          throw new Error(res?.error||'Failed');
+        }
+      } catch(e) {
+        readyBtn.disabled=false;
+        readyBtn.innerHTML='<span class="mi fill">send</span><span>I\'m Ready — Notify WhiteRock</span>';
+        if (readyStatus) readyStatus.textContent='⚠️ Could not send — please try again';
+        showToast('Could not send report. Please try again.');
+      }
+    });
   }
 });
 </script>
