@@ -6,6 +6,7 @@
 <base href="/UK-INTERVIEW-HUB/">
 <title>Question Bank | York St John</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ysj.css">
 
 <style>
 /* ═══════════════════════════════════════════════════════════
@@ -343,7 +344,7 @@ button:disabled{opacity:.5;cursor:not-allowed;}
   </div>
 </div>
 
-<div class="page" style="padding-top:calc(var(--topbar) + env(safe-area-inset-top) + 52px);">
+<div class="page anim-up" style="padding-top:calc(var(--topbar) + env(safe-area-inset-top) + 52px);">
   <div class="pad" id="qBody"></div>
 </div>
 
@@ -458,6 +459,14 @@ function render() {
 }
 
 document.addEventListener('DOMContentLoaded', () => { render(); });
+</script>
+
+<script>
+// Scroll-aware topbar shadow
+window.addEventListener('scroll', () => {
+  const tb = document.querySelector('.topbar,.ysj-topbar');
+  if (tb) tb.classList.toggle('scrolled', window.scrollY > 10);
+}, { passive: true });
 </script>
 </body>
 </html>
