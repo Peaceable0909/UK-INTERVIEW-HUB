@@ -8,197 +8,420 @@
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="ysj.css">
 <style>
-:root{
-  --red:#c41230;--red-dk:#9e0e25;--red-lt:#fff5f5;
-  --navy:#1a1a2e;--surface:#fff;--bg:#f5f5f7;
-  --border:#e5e7eb;--divider:#f3f4f6;
-  --t1:#1d1d1f;--t2:#374151;--t3:#6e6e73;--t4:#aeaeb2;
-  --green:#1c7c54;--green-lt:#d1fae5;--amber:#b45309;--amber-bg:#fffbeb;
-  --s2:8px;--s3:12px;--s4:16px;--s5:20px;--s6:24px;--s8:32px;
-  --r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:20px;--r-pill:99px;
-  --topbar:56px;--bottomnav:60px;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{font-size:16px;-webkit-text-size-adjust:100%;}
-body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
-  background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
-.mi{font-family:"Material Symbols Outlined";
-  font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;
-  vertical-align:middle;line-height:1;user-select:none;}
-.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
-button{font-family:inherit;cursor:pointer;border:none;background:none;}
-a{text-decoration:none;color:inherit;}
+/* ── GUIDE-SPECIFIC STYLES ──────────────────────────────────────── */
 
-/* TOP BAR */
-.topbar{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  height:calc(var(--topbar) + env(safe-area-inset-top));
-  padding-top:env(safe-area-inset-top);
-  background:rgba(255,255,255,.96);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:4px;
-  padding-left:4px;padding-right:var(--s4);
-}
-.tb-back{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--navy);-webkit-tap-highlight-color:transparent;}
-.tb-back:active{background:var(--divider);}
-.tb-title{font-size:17px;font-weight:700;color:var(--t1);flex:1;}
-.tb-action{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
-.tb-action:active{background:var(--divider);}
+/* Topbar scroll shadow handled by ysj.css .scrolled */
 
-/* PROGRESS STRIP */
-.prog-strip{
-  position:sticky;top:calc(var(--topbar) + env(safe-area-inset-top));z-index:90;
-  background:var(--surface);border-bottom:1px solid var(--border);
-  padding:10px var(--s4) var(--s3);
+/* ── PROGRESS HEADER ─────────────────────────────────────────────── */
+.guide-prog {
+  position: sticky;
+  top: calc(var(--topbar-h) + env(safe-area-inset-top));
+  z-index: 90;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: var(--s3) var(--s5);
 }
-.prog-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-.prog-lbl{font-size:13px;font-weight:700;color:var(--t2);}
-.prog-pct{font-size:14px;font-weight:800;color:var(--green);}
-.prog-track{height:6px;background:var(--divider);border-radius:var(--r-pill);overflow:hidden;}
-.prog-fill{height:100%;border-radius:var(--r-pill);background:var(--green);transition:width .4s;}
-
-/* PAGE BODY */
-.page{
-  padding-top:calc(var(--topbar) + env(safe-area-inset-top) + 54px);
-  padding-bottom:calc(var(--bottomnav) + env(safe-area-inset-bottom) + 16px);
-  padding-left:var(--s4);padding-right:var(--s4);
+.guide-prog-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: var(--s2);
+}
+.guide-prog-label { font-size: 13px; font-weight: 700; color: var(--t2); }
+.guide-prog-right  { display: flex; align-items: center; gap: var(--s3); }
+.guide-prog-pct    { font-size: 14px; font-weight: 900; color: var(--green); }
+.guide-prog-xp     {
+  font-size: 11px; font-weight: 800; color: var(--amber);
+  background: var(--amber-bg); border-radius: var(--r-pill);
+  padding: 3px 10px; display: flex; align-items: center; gap: 4px;
 }
 
-/* COURSE DETAIL CARD */
-.course-card{
-  background:var(--surface);border-radius:var(--r-xl);
-  border:1px solid var(--border);padding:var(--s5);
-  margin-bottom:var(--s5);
+/* ── PAGE LAYOUT ─────────────────────────────────────────────────── */
+.guide-page {
+  padding-top: calc(var(--topbar-h) + env(safe-area-inset-top) + 60px);
+  padding-bottom: calc(var(--bottomnav-h) + env(safe-area-inset-bottom) + var(--s6));
 }
-.course-card-head{display:flex;align-items:center;gap:var(--s3);margin-bottom:var(--s4);}
-.course-icon{width:40px;height:40px;border-radius:var(--r-md);background:var(--red-lt);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.course-icon .mi{font-size:22px;color:var(--red);}
-.course-tag{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);}
-.course-name{font-size:16px;font-weight:800;color:var(--t1);}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-bottom:var(--s4);}
-.stat-cell{background:var(--bg);border-radius:var(--r-md);padding:var(--s3) var(--s4);}
-.stat-val{font-size:15px;font-weight:800;color:var(--t1);line-height:1;}
-.stat-lbl{font-size:11px;color:var(--t3);margin-top:3px;}
-.detail-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:6px;}
-.detail-value{font-size:14px;color:var(--t2);background:var(--bg);border-radius:var(--r-md);padding:var(--s3) var(--s4);margin-bottom:var(--s4);line-height:1.5;}
-.module-item{display:flex;align-items:flex-start;gap:var(--s3);background:var(--bg);border-radius:var(--r-md);padding:var(--s3) var(--s4);margin-bottom:var(--s2);}
-.mod-num{width:24px;height:24px;border-radius:6px;background:var(--navy);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
-.mod-name{font-size:13px;font-weight:700;color:var(--t1);}
-.mod-why{font-size:12px;color:var(--t3);margin-top:2px;line-height:1.4;}
-.role-chips{display:flex;flex-wrap:wrap;gap:var(--s2);}
-.role-chip{background:var(--navy);color:#fff;border-radius:var(--r-pill);padding:5px 12px;font-size:12px;font-weight:700;}
-.res-link{display:flex;align-items:center;gap:var(--s3);background:var(--bg);border-radius:var(--r-md);padding:var(--s3) var(--s4);margin-bottom:var(--s2);text-decoration:none;-webkit-tap-highlight-color:transparent;}
-.res-link:active{background:var(--divider);}
-.res-link .mi{font-size:18px;color:var(--red);flex-shrink:0;}
-.res-link-lbl{flex:1;font-size:13px;font-weight:600;color:var(--t1);}
-.res-link .arr{font-size:14px;color:var(--t4);}
+.guide-inner { max-width: 720px; margin: 0 auto; padding: 0 var(--s4); }
 
-/* ACCORDION CARDS */
-.acc{background:var(--surface);border-radius:var(--r-lg);border:1.5px solid var(--border);margin-bottom:var(--s3);overflow:hidden;transition:border-color .2s;}
-.acc.read{border-color:var(--green);}
-.acc-header{display:flex;align-items:center;gap:var(--s3);padding:var(--s4) var(--s4) var(--s4) var(--s3);cursor:pointer;min-height:64px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
-.acc-header:active{background:var(--divider);}
-.acc-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;background:var(--divider);color:var(--t3);transition:all .2s;}
-.acc.read .acc-num{background:var(--green);color:#fff;}
-.acc-titles{flex:1;}
-.acc-title{font-size:15px;font-weight:700;color:var(--t1);line-height:1.3;}
-.acc-sub{font-size:12px;color:var(--t3);margin-top:2px;}
-.acc-chev{color:var(--t4);flex-shrink:0;transition:transform .25s;font-size:22px;}
-.acc.open .acc-chev{transform:rotate(180deg);}
-.acc-body{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1);}
-.acc.open .acc-body{max-height:2400px;}
-.acc-content{padding:0 var(--s4) var(--s5);border-top:1px solid var(--divider);font-size:14px;color:var(--t2);line-height:1.65;}
-.acc-content p{margin-bottom:var(--s3);}
-.acc-content ul{padding-left:var(--s5);margin-bottom:var(--s3);}
-.acc-content li{margin-bottom:var(--s2);}
-.acc-content strong{color:var(--t1);}
-.tip-box{background:var(--amber-bg);border-left:3px solid var(--amber);border-radius:0 var(--r-sm) var(--r-sm) 0;padding:var(--s3) var(--s4);margin:var(--s3) 0;font-size:13px;}
-.warn-box{background:var(--red-lt);border-left:3px solid var(--red);border-radius:0 var(--r-sm) var(--r-sm) 0;padding:var(--s3) var(--s4);margin:var(--s3) 0;font-size:13px;}
-.res-section{margin-top:var(--s4);}
-.res-sec-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:var(--s2);}
+/* Desktop: nav sidebar + content */
+@media (min-width: 1024px) {
+  .guide-page {
+    padding-left: var(--sidebar-w);
+    padding-bottom: var(--s8);
+  }
+  .guide-prog { left: var(--sidebar-w); right: 0; }
+  .guide-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 0;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 var(--s6);
+  }
+  .guide-sidebar-nav {
+    display: block !important;
+    position: sticky;
+    top: calc(var(--topbar-h) + 60px + var(--s6));
+    height: fit-content;
+    padding-right: var(--s5);
+  }
+  .guide-content { padding-left: var(--s5); border-left: 1px solid var(--border); }
+  .guide-inner { max-width: 100%; padding: 0; }
+}
+@media (max-width: 1023px) {
+  .guide-sidebar-nav { display: none !important; }
+  .guide-layout { display: block; }
+  .guide-content { padding: 0; }
+}
 
-/* BOTTOM NAV */
-.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:100;
-  height:calc(var(--bottomnav) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);
-  background:rgba(255,255,255,.96);backdrop-filter:blur(20px);border-top:1px solid var(--border);
-  display:grid;grid-template-columns:repeat(5,1fr);}
-.bn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 6px;
-  color:var(--t4);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;
-  text-decoration:none;-webkit-tap-highlight-color:transparent;}
-.bn .mi{font-size:24px;}
-.bn.active{color:var(--red);}
-.bn.active .mi{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
+/* Section nav (desktop left sidebar) */
+.sec-nav { list-style: none; }
+.sec-nav-title { font-size: 11px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--t3); margin-bottom: var(--s3); }
+.sec-nav-item {
+  display: flex; align-items: center; gap: var(--s2);
+  padding: 8px var(--s3); border-radius: var(--r-sm);
+  font-size: 13px; font-weight: 600; color: var(--t3);
+  cursor: pointer; transition: all var(--dur-micro) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+.sec-nav-item:hover { background: var(--divider); color: var(--t1); }
+.sec-nav-item.active { background: var(--red-lt); color: var(--red); font-weight: 700; }
+.sec-nav-item.done  { color: var(--green); }
+.sec-nav-item.done .sec-nav-dot { background: var(--green); }
+.sec-nav-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  background: var(--border); transition: background var(--dur-base);
+}
 
-#toast{display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
-  background:var(--navy);color:#fff;padding:10px 20px;border-radius:var(--r-pill);
-  font-size:14px;font-weight:600;z-index:9999;white-space:nowrap;}
+/* ── COURSE DETAIL CARD ──────────────────────────────────────────── */
+.cd-card {
+  background: linear-gradient(135deg, #fff 60%, var(--red-lt) 100%);
+  border: 1px solid var(--red-mid);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  margin-bottom: var(--s6);
+  animation: fadeUp var(--dur-slow) var(--ease-out) both;
+}
+.cd-header {
+  display: flex; align-items: center; gap: var(--s4);
+  padding: var(--s5) var(--s5) var(--s4);
+  border-bottom: 1px solid rgba(196,18,48,.1);
+}
+.cd-icon {
+  width: 48px; height: 48px; border-radius: var(--r-md);
+  background: var(--red); display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(196,18,48,.3);
+}
+.cd-icon .mi { font-size: 24px; color: #fff; }
+.cd-badge { font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--red); margin-bottom: 3px; }
+.cd-name  { font-size: 17px; font-weight: 800; color: var(--navy); letter-spacing: -.2px; }
+.cd-stats {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  border-bottom: 1px solid rgba(196,18,48,.08);
+}
+@media (max-width:480px) { .cd-stats { grid-template-columns: repeat(2,1fr); } }
+.cd-stat {
+  padding: var(--s4) var(--s4);
+  border-right: 1px solid rgba(196,18,48,.08);
+}
+.cd-stat:last-child { border-right: none; }
+.cd-stat-val  { font-size: 15px; font-weight: 800; color: var(--navy); line-height: 1.1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cd-stat-lbl  { font-size: 11px; color: var(--t3); margin-top: 2px; }
+.cd-body { padding: var(--s4) var(--s5) var(--s5); }
+.cd-section { margin-bottom: var(--s4); }
+.cd-section:last-child { margin-bottom: 0; }
+.cd-sec-lbl { font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--t3); margin-bottom: var(--s2); }
+.cd-sec-val  { font-size: 14px; color: var(--t2); line-height: 1.5;
+  background: rgba(255,255,255,.7); border-radius: var(--r-sm);
+  padding: var(--s3) var(--s4); }
+.cd-modules { display: flex; flex-direction: column; gap: var(--s2); }
+.cd-module {
+  display: flex; align-items: flex-start; gap: var(--s3);
+  background: rgba(255,255,255,.7); border-radius: var(--r-md);
+  padding: var(--s3) var(--s4);
+}
+.cd-mod-num {
+  width: 22px; height: 22px; border-radius: 6px; background: var(--navy);
+  color: #fff; font-size: 10px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.cd-mod-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+.cd-mod-why  { font-size: 12px; color: var(--t3); margin-top: 2px; line-height: 1.4; }
+.cd-roles { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.cd-role {
+  background: var(--navy); color: #fff; border-radius: var(--r-pill);
+  padding: 4px 12px; font-size: 12px; font-weight: 700;
+}
+.cd-links { display: flex; flex-direction: column; gap: var(--s2); }
+.cd-link {
+  display: flex; align-items: center; gap: var(--s3);
+  background: rgba(255,255,255,.8); border-radius: var(--r-md);
+  padding: 10px var(--s4); text-decoration: none;
+  border: 1px solid rgba(196,18,48,.1);
+  transition: all var(--dur-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+.cd-link:hover  { background: #fff; box-shadow: var(--sh-1); transform: translateX(3px); }
+.cd-link:active { transform: scale(.98); }
+.cd-link .mi    { font-size: 18px; color: var(--red); flex-shrink: 0; }
+.cd-link-lbl    { flex: 1; font-size: 13px; font-weight: 600; color: var(--t1); }
+.cd-link .arr   { font-size: 14px; color: var(--t3); transition: transform var(--dur-fast); }
+.cd-link:hover .arr { transform: translateX(3px); }
 
-@media(min-width:640px){.page,.topbar,.bottomnav,.prog-strip{max-width:560px;left:50%;transform:translateX(-50%);right:auto;width:100%;}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+/* ── ACCORDION SECTION CARDS ─────────────────────────────────────── */
+.acc {
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  border: 1.5px solid var(--border);
+  margin-bottom: var(--s3);
+  overflow: hidden;
+  transition: border-color var(--dur-base) var(--ease-out),
+              box-shadow   var(--dur-base) var(--ease-out);
+  animation: fadeUp var(--dur-slow) var(--ease-out) both;
+}
+.acc:hover      { box-shadow: var(--sh-1); }
+.acc.read       { border-color: var(--green); background: linear-gradient(to right, #f0fdf4, #fff); }
+.acc.open       { box-shadow: var(--sh-2); border-color: var(--red); }
+.acc.read.open  { border-color: var(--green); }
+
+.acc-header {
+  display: flex; align-items: center; gap: var(--s3);
+  padding: var(--s4) var(--s5) var(--s4) var(--s4);
+  cursor: pointer; min-height: 72px;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: background var(--dur-micro) var(--ease-out);
+}
+.acc-header:active { background: var(--divider); }
+
+/* Number badge */
+.acc-badge {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 900; flex-shrink: 0;
+  background: var(--divider); color: var(--t3);
+  transition: all var(--dur-base) var(--ease-spring);
+  border: 2px solid transparent;
+}
+.acc.read   .acc-badge { background: var(--green); color: #fff; border-color: transparent; }
+.acc.open:not(.read) .acc-badge { background: var(--red-lt); color: var(--red); border-color: var(--red); }
+
+/* Section meta */
+.acc-meta { flex: 1; min-width: 0; }
+.acc-title { font-size: 15px; font-weight: 800; color: var(--t1); line-height: 1.3;
+  letter-spacing: -.1px; }
+.acc-subtitle { font-size: 12px; color: var(--t3); margin-top: 2px; }
+.acc-tags { display: flex; align-items: center; gap: var(--s2); margin-top: var(--s2); flex-wrap: wrap; }
+.acc-tag {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 10px; font-weight: 800; border-radius: var(--r-pill);
+  padding: 3px 8px; text-transform: uppercase; letter-spacing: .05em;
+}
+.acc-tag.xp     { background: var(--amber-bg); color: var(--amber); }
+.acc-tag.mins   { background: var(--divider);  color: var(--t3); }
+.acc-tag.ukvi   { background: var(--blue-bg);  color: var(--blue); }
+.acc-tag.done   { background: var(--green-lt); color: var(--green); }
+.acc-tag .mi    { font-size: 11px; }
+
+/* Chevron */
+.acc-chev { color: var(--t4); flex-shrink: 0; transition: transform var(--dur-base) var(--ease-out); font-size: 22px; }
+.acc.open .acc-chev { transform: rotate(180deg); color: var(--t2); }
+
+/* Body */
+.acc-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height .4s cubic-bezier(.4,0,.2,1);
+}
+.acc.open .acc-body { max-height: 3200px; }
+.acc-content {
+  border-top: 1px solid var(--divider);
+  padding: var(--s5) var(--s5) var(--s6);
+}
+
+/* Typography inside sections */
+.acc-content p { font-size: 14px; color: var(--t2); line-height: 1.7; margin-bottom: var(--s4); }
+.acc-content h4 { font-size: 14px; font-weight: 800; color: var(--navy); margin-bottom: var(--s2); }
+.acc-content ul, .acc-content ol {
+  padding-left: var(--s5); margin-bottom: var(--s4);
+}
+.acc-content li { font-size: 14px; color: var(--t2); line-height: 1.6; margin-bottom: var(--s2); }
+.acc-content strong { color: var(--navy); font-weight: 700; }
+
+/* Tip / Warning boxes */
+.acc-content .tip-box {
+  background: var(--amber-bg); border-left: 3px solid var(--amber);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: var(--s4) var(--s5); margin: var(--s4) 0;
+  font-size: 13px; color: var(--amber); line-height: 1.5;
+}
+.acc-content .warn-box {
+  background: var(--red-lt); border-left: 3px solid var(--red);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: var(--s4) var(--s5); margin: var(--s4) 0;
+  font-size: 13px; color: var(--red-dk); line-height: 1.5;
+}
+.acc-content .info-box {
+  background: var(--blue-bg); border-left: 3px solid var(--blue);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: var(--s4) var(--s5); margin: var(--s4) 0;
+  font-size: 13px; color: var(--blue); line-height: 1.5;
+}
+
+/* Read-more divider inside content */
+.acc-divider { height: 1px; background: var(--divider); margin: var(--s5) 0; }
+
+/* Resource links inside sections */
+.acc-resources { margin-top: var(--s5); }
+.acc-res-lbl {
+  font-size: 11px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--t3); margin-bottom: var(--s3);
+  display: flex; align-items: center; gap: var(--s2);
+}
+.acc-res-lbl .mi { font-size: 15px; color: var(--red); }
+.acc-res-link {
+  display: flex; align-items: center; gap: var(--s3);
+  background: var(--bg); border-radius: var(--r-md);
+  padding: 11px var(--s4); margin-bottom: var(--s2);
+  text-decoration: none; border: 1px solid transparent;
+  transition: all var(--dur-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.acc-res-link:hover  { background: #fff; border-color: var(--border); box-shadow: var(--sh-1); }
+.acc-res-link:active { transform: scale(.99); }
+.acc-res-link .mi    { font-size: 18px; color: var(--red); flex-shrink: 0; }
+.acc-res-lbl-text    { flex: 1; font-size: 13px; font-weight: 600; color: var(--t1); }
+.acc-res-link .arrow { font-size: 14px; color: var(--t4);
+  transition: transform var(--dur-fast) var(--ease-out); }
+.acc-res-link:hover .arrow { transform: translateX(4px); }
+
+/* Practice button at bottom of section */
+.acc-practice-btn {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: var(--s5); padding: var(--s4) var(--s5);
+  background: var(--navy); border-radius: var(--r-lg);
+  cursor: pointer; border: none; width: 100%;
+  font-family: inherit; text-decoration: none;
+  transition: filter var(--dur-fast), transform var(--dur-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+.acc-practice-btn:hover  { filter: brightness(1.1); }
+.acc-practice-btn:active { transform: scale(.98); }
+.acc-prac-left { display: flex; align-items: center; gap: var(--s3); }
+.acc-prac-text strong { display: block; font-size: 13px; font-weight: 800; color: #fff; }
+.acc-prac-text span   { font-size: 11px; color: rgba(255,255,255,.55); }
+.acc-prac-icon { width: 36px; height: 36px; border-radius: var(--r-sm);
+  background: rgba(255,255,255,.12); display: flex; align-items: center; justify-content: center; }
+.acc-prac-icon .mi { font-size: 20px; color: #fff; }
+
+/* Empty state */
+.guide-empty {
+  text-align: center; padding: var(--s12) var(--s6);
+  color: var(--t3);
+}
+.guide-empty .mi { font-size: 48px; color: var(--border); display: block; margin-bottom: var(--s4); }
+
+/* Section metadata config */
+/* Mins per section estimated */
 </style>
 </head>
 <body>
 
-<header class="topbar">
-  <a href="yorkstjohn-hub.html" class="tb-back" aria-label="Back">
-    <span class="mi" style="font-size:22px">arrow_back_ios_new</span>
+<!-- TOPBAR -->
+<header class="ysj-topbar" id="topbar">
+  <a href="yorkstjohn-hub.html" class="tb-back" aria-label="Back to dashboard">
+    <span class="mi">arrow_back_ios_new</span>
   </a>
   <span class="tb-title">Interview Guide</span>
-  <button class="tb-action" onclick="markAllRead()" aria-label="Mark all read">
-    <span class="mi fill" style="font-size:22px;color:var(--green)">done_all</span>
+  <button class="tb-action" id="markAllBtn" onclick="markAllRead()" aria-label="Mark all sections as read">
+    <span class="mi fill" style="color:var(--green)">done_all</span>
   </button>
 </header>
 
-<div class="prog-strip">
-  <div class="prog-row">
-    <span class="prog-lbl" id="prog-lbl">0 of 11 sections read</span>
-    <span class="prog-pct" id="prog-pct">0%</span>
+<!-- PROGRESS STRIP -->
+<div class="guide-prog" id="prog-strip">
+  <div class="guide-prog-row">
+    <span class="guide-prog-label" id="prog-label">0 of 11 sections read</span>
+    <div class="guide-prog-right">
+      <span class="guide-prog-xp">
+        <span class="mi" style="font-size:13px">emoji_events</span>
+        <span id="prog-xp">0 XP earned</span>
+      </span>
+      <span class="guide-prog-pct" id="prog-pct">0%</span>
+    </div>
   </div>
-  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  <div class="prog-track">
+    <div class="prog-fill" id="prog-fill" style="width:0%;background:var(--green)"></div>
+  </div>
 </div>
 
-<div class="page anim-up">
-  <!-- Course detail section (hidden until course selected) -->
-  <div id="course-detail" style="display:none;margin-bottom:var(--s5)">
-    <div class="course-card">
-      <div class="course-card-head">
-        <div class="course-icon"><span class="mi fill">school</span></div>
-        <div>
-          <div class="course-tag">Your Course</div>
-          <div class="course-name" id="cd-name">—</div>
+<!-- PAGE -->
+<div class="guide-page">
+  <div class="guide-layout">
+
+    <!-- DESKTOP LEFT NAV -->
+    <nav class="guide-sidebar-nav" aria-label="Guide sections">
+      <div class="sec-nav-title">Sections</div>
+      <ul class="sec-nav" id="sec-nav-list"></ul>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="guide-content">
+      <div class="guide-inner">
+
+        <!-- COURSE DETAIL CARD -->
+        <div id="course-detail" style="display:none">
+          <div class="cd-card">
+            <div class="cd-header">
+              <div class="cd-icon"><span class="mi fill">school</span></div>
+              <div>
+                <div class="cd-badge">Your Course</div>
+                <div class="cd-name" id="cd-name">Loading…</div>
+              </div>
+            </div>
+            <div class="cd-stats" id="cd-stats"></div>
+            <div class="cd-body">
+              <div class="cd-section">
+                <div class="cd-sec-lbl">Campus Address</div>
+                <div class="cd-sec-val" id="cd-address"></div>
+              </div>
+              <div class="cd-section">
+                <div class="cd-sec-lbl">How You Will Be Assessed</div>
+                <div class="cd-sec-val" id="cd-assess"></div>
+              </div>
+              <div id="cd-mods-wrap" class="cd-section">
+                <div class="cd-sec-lbl">Key Modules</div>
+                <div class="cd-modules" id="cd-mods"></div>
+              </div>
+              <div id="cd-roles-wrap" class="cd-section">
+                <div class="cd-sec-lbl">Graduate Career Options</div>
+                <div class="cd-roles" id="cd-roles"></div>
+              </div>
+              <div class="cd-section">
+                <div class="cd-sec-lbl">Official Links</div>
+                <div class="cd-links" id="cd-links"></div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="stats-grid" id="cd-stats"></div>
-      <div class="detail-label">Campus Address</div>
-      <div class="detail-value" id="cd-address"></div>
-      <div class="detail-label">How You Will Be Assessed</div>
-      <div class="detail-value" id="cd-assess"></div>
-      <div id="cd-mods-wrap">
-        <div class="detail-label" style="margin-bottom:var(--s3)">Key Modules</div>
-        <div id="cd-mods" style="margin-bottom:var(--s4)"></div>
-      </div>
-      <div id="cd-roles-wrap" style="margin-bottom:var(--s4)">
-        <div class="detail-label" style="margin-bottom:var(--s3)">Graduate Career Options</div>
-        <div class="role-chips" id="cd-roles"></div>
-      </div>
-      <div>
-        <div class="detail-label" style="margin-bottom:var(--s3)">Official Links</div>
-        <div id="cd-links"></div>
+
+        <!-- ACCORDION SECTIONS -->
+        <div id="guide-list" role="list" aria-label="Interview guide sections"></div>
+
       </div>
     </div>
   </div>
-
-  <!-- Guide accordions -->
-  <div id="guide-list"></div>
 </div>
 
-<nav class="bottomnav">
-  <a href="yorkstjohn-hub.html" class="bn"><span class="mi">home</span>Home</a>
-  <a href="yorkstjohn-guide.html" class="bn active"><span class="mi">menu_book</span>Guide</a>
-  <a href="yorkstjohn-practice.html" class="bn"><span class="mi">mic</span>Practice</a>
-  <a href="yorkstjohn-questions.html" class="bn"><span class="mi">quiz</span>Questions</a>
-  <a href="yorkstjohn-checklist.html" class="bn"><span class="mi">checklist</span>Checklist</a>
+<!-- BOTTOM NAV -->
+<nav class="ysj-bottomnav" aria-label="Main navigation">
+  <a href="yorkstjohn-hub.html" class="bn-tab"><span class="mi">home</span>Home</a>
+  <a href="yorkstjohn-guide.html" class="bn-tab active"><span class="mi">menu_book</span>Guide</a>
+  <a href="yorkstjohn-practice.html" class="bn-tab"><span class="mi">mic</span>Practice</a>
+  <a href="yorkstjohn-questions.html" class="bn-tab"><span class="mi">quiz</span>Questions</a>
+  <a href="yorkstjohn-checklist.html" class="bn-tab"><span class="mi">checklist</span>Checklist</a>
 </nav>
 
 <div id="toast" role="alert" aria-live="polite"></div>
@@ -207,7 +430,7 @@ a{text-decoration:none;color:inherit;}
 <script src="app.js?v=4"></script>
 <script src="yorkstjohn-data.js"></script>
 <script>
-// ── ALL JS IN ONE SCRIPT BLOCK ──────────────────────────────────
+// ── ALL GUIDE JS ────────────────────────────────────────────────────
 
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -215,205 +438,317 @@ function showToast(msg) {
   setTimeout(() => t.style.display = 'none', 2500);
 }
 
-// ── GUIDE RESOURCES PER SECTION ─────────────────────────────────
+// Scroll-aware topbar
+window.addEventListener('scroll', () => {
+  document.getElementById('topbar').classList.toggle('scrolled', window.scrollY > 10);
+}, { passive: true });
+
+// ── SECTION METADATA (mins, UKVI focus, which questions page it links to) ──
+const SECTION_META = [
+  { mins: 5,  ukvi: false, link: null,                           cat: 'Foundation' },
+  { mins: 8,  ukvi: true,  link: 'yorkstjohn-questions.html#uk', cat: 'Why the UK' },
+  { mins: 10, ukvi: true,  link: 'yorkstjohn-questions.html#ysj', cat: 'Why YSJ' },
+  { mins: 12, ukvi: true,  link: 'yorkstjohn-questions.html#course', cat: 'Course' },
+  { mins: 8,  ukvi: true,  link: 'yorkstjohn-questions.html#finance', cat: 'Finance' },
+  { mins: 7,  ukvi: false, link: 'yorkstjohn-questions.html#living', cat: 'Accommodation' },
+  { mins: 8,  ukvi: true,  link: 'yorkstjohn-questions.html#career', cat: 'Career' },
+  { mins: 5,  ukvi: false, link: null,                            cat: 'Prior Study' },
+  { mins: 10, ukvi: true,  link: null,                            cat: 'Visa Rules' },
+  { mins: 6,  ukvi: false, link: null,                            cat: 'Gaps' },
+  { mins: 5,  ukvi: false, link: null,                            cat: 'Tips' },
+];
+
+// ── GUIDE RESOURCES ────────────────────────────────────────────────
 const GUIDE_RESOURCES = {
   0: [
-    {icon:'link', label:'UKVI Credibility Interview Info', href:'https://www.gov.uk/student-visa'},
-    {icon:'link', label:'YSJ International Students', href:'https://www.yorksj.ac.uk/international/'},
+    { icon:'link', label:'UKVI Credibility Interview Info', href:'https://www.gov.uk/student-visa' },
+    { icon:'link', label:'YSJ International Students', href:'https://www.yorksj.ac.uk/international/' },
   ],
   1: [
-    {icon:'link', label:'British Council — Study in the UK', href:'https://www.britishcouncil.org/study-work-abroad/in-uk'},
-    {icon:'link', label:'UKCISA — Visa & Immigration Advice', href:'https://www.ukcisa.org.uk/student-advice/visas-and-immigration'},
+    { icon:'link', label:'British Council — Study in the UK', href:'https://www.britishcouncil.org/study-work-abroad/in-uk' },
+    { icon:'link', label:'UKCISA — Visa & Immigration Advice', href:'https://www.ukcisa.org.uk/student-advice/visas-and-immigration' },
   ],
   2: [
-    {icon:'school', label:'About York St John University', href:'https://www.yorksj.ac.uk/about/'},
-    {icon:'link',   label:'All YSJ Courses', href:'https://www.yorksj.ac.uk/courses/'},
-    {icon:'link',   label:'YSJ Programme Specifications', href:'https://www.yorksj.ac.uk/programme-specifications/'},
+    { icon:'school', label:'About York St John University', href:'https://www.yorksj.ac.uk/about/' },
+    { icon:'link',   label:'All YSJ Courses', href:'https://www.yorksj.ac.uk/courses/' },
+    { icon:'link',   label:'YSJ Programme Specifications', href:'https://www.yorksj.ac.uk/programme-specifications/' },
   ],
   3: [
-    {icon:'link', label:'YSJ Programme Specifications', href:'https://www.yorksj.ac.uk/programme-specifications/'},
-    {icon:'link', label:'Search All YSJ Courses', href:'https://www.yorksj.ac.uk/courses/'},
+    { icon:'link',   label:'YSJ Programme Specifications', href:'https://www.yorksj.ac.uk/programme-specifications/' },
+    { icon:'link',   label:'Search All YSJ Courses', href:'https://www.yorksj.ac.uk/courses/' },
   ],
   4: [
-    {icon:'payments', label:'YSJ Tuition Fees & Scholarships', href:'https://www.yorksj.ac.uk/international/funding-scholarships-and-paying-tuition-fees/'},
-    {icon:'link',     label:'UKVI Maintenance Requirements', href:'https://www.gov.uk/student-visa/money'},
+    { icon:'payments', label:'YSJ Tuition Fees & Scholarships', href:'https://www.yorksj.ac.uk/international/funding-scholarships-and-paying-tuition-fees/' },
+    { icon:'link',     label:'UKVI Maintenance Requirements', href:'https://www.gov.uk/student-visa/money' },
   ],
   5: [
-    {icon:'home', label:'YSJ York Campus Accommodation', href:'https://www.yorksj.ac.uk/study/accommodation/'},
-    {icon:'apartment', label:'YSJ London Campus Accommodation', href:'https://www.yorksj.ac.uk/london-campus/welcome/before-you-start-at-our-london-campus/'},
+    { icon:'home',     label:'YSJ York Campus Accommodation', href:'https://www.yorksj.ac.uk/study/accommodation/' },
+    { icon:'apartment',label:'YSJ London Campus Accommodation', href:'https://www.yorksj.ac.uk/london-campus/welcome/before-you-start-at-our-london-campus/' },
   ],
   6: [
-    {icon:'badge', label:'Graduate Route Visa (2 years after graduation)', href:'https://www.gov.uk/graduate-visa'},
-    {icon:'link',  label:'Gov UK — Working in the UK After Study', href:'https://www.gov.uk/guidance/international-students-in-the-uk'},
+    { icon:'badge', label:'Graduate Route Visa (2 years after graduation)', href:'https://www.gov.uk/graduate-visa' },
+    { icon:'link',  label:'Gov UK — Working in the UK After Study', href:'https://www.gov.uk/guidance/international-students-in-the-uk' },
   ],
   7: [
-    {icon:'link', label:'UKCISA — Prior Study Guidance', href:'https://www.ukcisa.org.uk/student-advice/'},
+    { icon:'link', label:'UKCISA — Prior Study Guidance', href:'https://www.ukcisa.org.uk/student-advice/' },
   ],
   8: [
-    {icon:'badge', label:'Student Visa Requirements', href:'https://www.gov.uk/student-visa'},
-    {icon:'badge', label:'Graduate Route Visa', href:'https://www.gov.uk/graduate-visa'},
-    {icon:'link',  label:'UKCISA Visa & Immigration Advice', href:'https://www.ukcisa.org.uk/student-advice/visas-and-immigration'},
+    { icon:'badge', label:'Student Visa Requirements', href:'https://www.gov.uk/student-visa' },
+    { icon:'badge', label:'Graduate Route Visa', href:'https://www.gov.uk/graduate-visa' },
+    { icon:'link',  label:'UKCISA Visa & Immigration Advice', href:'https://www.ukcisa.org.uk/student-advice/visas-and-immigration' },
   ],
 };
 
-// ── PROGRESS ─────────────────────────────────────────────────────
+// ── PROGRESS ────────────────────────────────────────────────────────
 const readSet = new Set(JSON.parse(localStorage.getItem('ysj_guide_read') || '[]'));
 
 function updateProgress() {
-  const n = readSet.size, t = GUIDE_SECTIONS ? GUIDE_SECTIONS.length : 11;
+  const n   = readSet.size;
+  const t   = GUIDE_SECTIONS ? GUIDE_SECTIONS.length : 11;
   const pct = Math.round(n / t * 100);
-  const lbl = document.getElementById('prog-lbl');
-  const pctEl = document.getElementById('prog-pct');
-  const fill = document.getElementById('prog-fill');
-  if (lbl) lbl.textContent = n + ' of ' + t + ' sections read';
-  if (pctEl) pctEl.textContent = pct + '%';
-  if (fill) fill.style.width = pct + '%';
+  const xp  = n * 3;
+  const label   = document.getElementById('prog-label');
+  const pctEl   = document.getElementById('prog-pct');
+  const fill    = document.getElementById('prog-fill');
+  const xpEl    = document.getElementById('prog-xp');
+  if (label) label.textContent  = n + ' of ' + t + ' sections read';
+  if (pctEl) pctEl.textContent  = pct + '%';
+  if (fill)  fill.style.width   = pct + '%';
+  if (xpEl)  xpEl.textContent   = xp + ' XP earned';
   localStorage.setItem('ysj_guide_opened', n);
+
+  // Update desktop nav dots
+  document.querySelectorAll('.sec-nav-item').forEach((el, i) => {
+    const sec = GUIDE_SECTIONS?.[i];
+    if (sec && readSet.has(sec.id)) {
+      el.classList.add('done');
+    }
+  });
+}
+
+function markRead(idx) {
+  if (!GUIDE_SECTIONS) return;
+  const sec = GUIDE_SECTIONS[idx];
+  if (!sec || readSet.has(sec.id)) return;
+  readSet.add(sec.id);
+  localStorage.setItem('ysj_guide_read', JSON.stringify([...readSet]));
+
+  const card  = document.getElementById('acc-' + idx);
+  const badge = card?.querySelector('.acc-badge');
+  if (card)  card.classList.add('read');
+  if (badge) badge.innerHTML = '<span class="mi fill" style="font-size:16px;color:#fff">check</span>';
+
+  updateProgress();
+
+  // Award XP
+  const xp = parseInt(localStorage.getItem('ysj_xp') || '0') + 3;
+  localStorage.setItem('ysj_xp', xp);
 }
 
 function markAllRead() {
   if (!GUIDE_SECTIONS) return;
-  GUIDE_SECTIONS.forEach(s => readSet.add(s.id));
-  localStorage.setItem('ysj_guide_read', JSON.stringify([...readSet]));
-  updateProgress();
-  document.querySelectorAll('.acc').forEach(c => c.classList.add('read'));
-  document.querySelectorAll('.acc-num').forEach(el => {
-    el.innerHTML = '<span class="mi fill" style="font-size:15px;color:#fff">check</span>';
-    el.style.background = 'var(--green)';
-  });
-  showToast('All sections marked as read ✅');
+  GUIDE_SECTIONS.forEach((_, i) => markRead(i));
+  // Close all, briefly flash confirmation
+  document.querySelectorAll('.acc.open').forEach(c => c.classList.remove('open'));
+  showToast('All 11 sections marked as read · +33 XP');
 }
 
-// ── ACCORDION ────────────────────────────────────────────────────
+// ── ACCORDION ────────────────────────────────────────────────────────
 let openIdx = null;
 
 function toggleAcc(idx) {
   const wasOpen = openIdx === idx;
+  // Close all
   document.querySelectorAll('.acc').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.sec-nav-item').forEach(el => el.classList.remove('active'));
   openIdx = wasOpen ? null : idx;
+
   if (openIdx !== null) {
     const card = document.getElementById('acc-' + openIdx);
     if (card) {
       card.classList.add('open');
-      // Mark as read
-      if (GUIDE_SECTIONS) {
-        const sec = GUIDE_SECTIONS[openIdx];
-        if (sec && !readSet.has(sec.id)) {
-          readSet.add(sec.id);
-          localStorage.setItem('ysj_guide_read', JSON.stringify([...readSet]));
-          card.classList.add('read');
-          const num = card.querySelector('.acc-num');
-          if (num) {
-            num.innerHTML = '<span class="mi fill" style="font-size:15px;color:#fff">check</span>';
-            num.style.background = 'var(--green)';
-          }
-          updateProgress();
-          // Award XP
-          const xp = parseInt(localStorage.getItem('ysj_xp') || '0') + 3;
-          localStorage.setItem('ysj_xp', xp);
-        }
-      }
+      // Update desktop nav active
+      const navItem = document.getElementById('nav-item-' + openIdx);
+      if (navItem) navItem.classList.add('active');
+      // Mark as read on open
+      markRead(openIdx);
+      // Smooth scroll
       setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
     }
   }
 }
 
-// ── COURSE DETAIL RENDERER ───────────────────────────────────────
+// ── RENDER ────────────────────────────────────────────────────────────
+function renderGuide() {
+  if (!GUIDE_SECTIONS) return;
+
+  const list    = document.getElementById('guide-list');
+  const navList = document.getElementById('sec-nav-list');
+  if (!list) return;
+
+  list.innerHTML = GUIDE_SECTIONS.map((s, i) => {
+    const isRead  = readSet.has(s.id);
+    const meta    = SECTION_META[i] || { mins: 8, ukvi: false, link: null, cat: '' };
+    const res     = GUIDE_RESOURCES[i] || [];
+
+    const badgeHtml = isRead
+      ? '<span class="mi fill" style="font-size:16px;color:#fff">check</span>'
+      : s.num;
+
+    const resHtml = res.map(r =>
+      `<a href="${r.href}" target="_blank" rel="noopener" class="acc-res-link">
+        <span class="mi fill" aria-hidden="true">${r.icon}</span>
+        <span class="acc-res-lbl-text">${r.label}</span>
+        <span class="mi arrow">arrow_forward_ios</span>
+      </a>`
+    ).join('');
+
+    const practiceHtml = meta.link
+      ? `<a href="${meta.link}" class="acc-practice-btn" aria-label="Practise ${s.title} questions">
+          <div class="acc-prac-left">
+            <div class="acc-prac-icon"><span class="mi fill">psychology</span></div>
+            <div class="acc-prac-text">
+              <strong>Practise These Questions</strong>
+              <span>Open AI-graded question bank</span>
+            </div>
+          </div>
+          <span class="mi" style="color:rgba(255,255,255,.6)">arrow_forward_ios</span>
+        </a>`
+      : '';
+
+    return `<div class="acc${isRead ? ' read' : ''}" id="acc-${i}" role="listitem"
+      style="animation-delay:${i * 40}ms">
+      <div class="acc-header" onclick="toggleAcc(${i})"
+        role="button" aria-expanded="false" aria-controls="acc-body-${i}"
+        aria-label="${s.title}${isRead ? ', read' : ''}">
+        <div class="acc-badge" aria-hidden="true">${badgeHtml}</div>
+        <div class="acc-meta">
+          <div class="acc-title">${s.title}</div>
+          ${s.sub ? `<div class="acc-subtitle">${s.sub}</div>` : ''}
+          <div class="acc-tags">
+            <span class="acc-tag mins">
+              <span class="mi" style="font-size:11px">schedule</span>${meta.mins} mins
+            </span>
+            <span class="acc-tag xp">
+              <span class="mi" style="font-size:11px">emoji_events</span>+3 XP
+            </span>
+            ${meta.ukvi ? '<span class="acc-tag ukvi"><span class="mi" style="font-size:11px">verified_user</span>UKVI Focus</span>' : ''}
+            ${isRead    ? '<span class="acc-tag done"><span class="mi" style="font-size:11px">check_circle</span>Read</span>' : ''}
+          </div>
+        </div>
+        <span class="mi acc-chev" aria-hidden="true">expand_more</span>
+      </div>
+      <div class="acc-body" id="acc-body-${i}" role="region">
+        <div class="acc-content">
+          ${s.content || '<p>No content available.</p>'}
+          ${resHtml ? `<div class="acc-resources">
+            <div class="acc-res-lbl"><span class="mi">link</span>Official Resources</div>
+            ${resHtml}
+          </div>` : ''}
+          ${practiceHtml}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Desktop nav
+  if (navList) {
+    navList.innerHTML = GUIDE_SECTIONS.map((s, i) => {
+      const isRead = readSet.has(s.id);
+      return `<li><button class="sec-nav-item${isRead ? ' done' : ''}" id="nav-item-${i}"
+        onclick="toggleAcc(${i});this.scrollIntoView({block:'nearest'})" aria-label="${s.title}">
+        <span class="sec-nav-dot"></span>${s.title}
+      </button></li>`;
+    }).join('');
+  }
+}
+
+// ── COURSE DETAIL ───────────────────────────────────────────────────
 function renderCourseDetail() {
   const cid = localStorage.getItem('last_course');
   if (!cid || !COURSES || !COURSES[cid]) return;
-  const c = COURSES[cid];
+  const c   = COURSES[cid];
   const sec = document.getElementById('course-detail');
   if (sec) sec.style.display = 'block';
+
   const nameEl = document.getElementById('cd-name');
   if (nameEl) nameEl.textContent = c.name;
-  const stats = document.getElementById('cd-stats');
-  if (stats) stats.innerHTML = [
-    { v: c.tuition || '—', l: 'Per year tuition' },
-    { v: c.livingCost || '—', l: 'UKVI living cost' },
-    { v: c.accommodation || '—', l: 'Accommodation/wk' },
-    { v: c.salary || '—', l: 'Graduate salary' },
-  ].map(s => `<div class="stat-cell"><div class="stat-val">${s.v}</div><div class="stat-lbl">${s.l}</div></div>`).join('');
-  const addr = document.getElementById('cd-address');
-  if (addr) addr.textContent = c.address || c.city || '';
-  const assess = document.getElementById('cd-assess');
-  if (assess) assess.textContent = c.assessment || 'Coursework and examinations.';
-  const mods = document.getElementById('cd-mods');
-  if (mods) {
-    if (c.modules && c.modules.length) {
-      mods.innerHTML = c.modules.map((m, i) => `<div class="module-item"><div class="mod-num">${i + 1}</div><div><div class="mod-name">${m.name}</div>${m.why ? '<div class="mod-why">' + m.why + '</div>' : ''}</div></div>`).join('');
+
+  const statsEl = document.getElementById('cd-stats');
+  if (statsEl) statsEl.innerHTML = [
+    { v: c.tuition       || '—', l: 'Per year tuition' },
+    { v: c.livingCost    || '—', l: 'UKVI living cost'  },
+    { v: c.accommodation || '—', l: 'Accommodation/wk'  },
+    { v: c.salary        || '—', l: 'Graduate salary'   },
+  ].map(s =>
+    `<div class="cd-stat">
+      <div class="cd-stat-val">${s.v}</div>
+      <div class="cd-stat-lbl">${s.l}</div>
+    </div>`
+  ).join('');
+
+  const addrEl = document.getElementById('cd-address');
+  if (addrEl) addrEl.textContent = c.address || c.city || '';
+
+  const assessEl = document.getElementById('cd-assess');
+  if (assessEl) assessEl.textContent = c.assessment || 'Coursework and examinations.';
+
+  const modsEl = document.getElementById('cd-mods');
+  if (modsEl) {
+    if (c.modules?.length) {
+      modsEl.innerHTML = c.modules.map((m, i) =>
+        `<div class="cd-module">
+          <div class="cd-mod-num">${i + 1}</div>
+          <div>
+            <div class="cd-mod-name">${m.name}</div>
+            ${m.why ? `<div class="cd-mod-why">${m.why}</div>` : ''}
+          </div>
+        </div>`
+      ).join('');
     } else {
       const w = document.getElementById('cd-mods-wrap');
       if (w) w.style.display = 'none';
     }
   }
-  const roles = document.getElementById('cd-roles');
-  if (roles) {
-    if (c.roles && c.roles.length) {
-      roles.innerHTML = c.roles.map(r => `<span class="role-chip">${r}</span>`).join('');
+
+  const rolesEl = document.getElementById('cd-roles');
+  if (rolesEl) {
+    if (c.roles?.length) {
+      rolesEl.innerHTML = c.roles.map(r => `<span class="cd-role">${r}</span>`).join('');
     } else {
       const w = document.getElementById('cd-roles-wrap');
       if (w) w.style.display = 'none';
     }
   }
+
   const isLondon = c.city === 'London';
   const links = [
-    { icon: 'open_in_new', label: 'Programme Specification', href: c.specUrl || 'https://www.yorksj.ac.uk/programme-specifications/' },
-    { icon: 'apartment',   label: 'Campus Information', href: c.campusUrl || 'https://www.yorksj.ac.uk/campus-and-facilities/' },
-    { icon: 'payments',    label: 'Tuition Fees & Funding', href: 'https://www.yorksj.ac.uk/international/funding-scholarships-and-paying-tuition-fees/' },
-    { icon: 'home', label: isLondon ? 'London Accommodation' : 'York Accommodation',
+    { icon:'open_in_new', label:'Programme Specification',     href: c.specUrl  || 'https://www.yorksj.ac.uk/programme-specifications/' },
+    { icon:'apartment',   label:'Campus Information',         href: c.campusUrl|| 'https://www.yorksj.ac.uk/campus-and-facilities/' },
+    { icon:'payments',    label:'Tuition Fees & Funding',     href: 'https://www.yorksj.ac.uk/international/funding-scholarships-and-paying-tuition-fees/' },
+    { icon:'home',  label: isLondon ? 'London Accommodation' : 'York Accommodation',
       href: isLondon ? 'https://www.yorksj.ac.uk/london-campus/welcome/before-you-start-at-our-london-campus/' : 'https://www.yorksj.ac.uk/study/accommodation/' },
-    { icon: 'badge', label: 'Student Visa Requirements', href: 'https://www.gov.uk/student-visa' },
-    { icon: 'badge', label: 'Graduate Route Visa', href: 'https://www.gov.uk/graduate-visa' },
-    { icon: 'link',  label: 'UKCISA Visa & Immigration Advice', href: 'https://www.ukcisa.org.uk/student-advice/visas-and-immigration' },
+    { icon:'badge',      label:'Student Visa Requirements',   href: 'https://www.gov.uk/student-visa' },
+    { icon:'badge',      label:'Graduate Route Visa',         href: 'https://www.gov.uk/graduate-visa' },
+    { icon:'link',       label:'UKCISA Visa & Immigration',   href: 'https://www.ukcisa.org.uk/student-advice/visas-and-immigration' },
   ];
-  const lnks = document.getElementById('cd-links');
-  if (lnks) lnks.innerHTML = links.map(l => `<a href="${l.href}" target="_blank" rel="noopener" class="res-link"><span class="mi fill" style="font-size:18px;color:var(--red)">${l.icon}</span><span class="res-link-lbl">${l.label}</span><span class="mi arr">open_in_new</span></a>`).join('');
+
+  const linksEl = document.getElementById('cd-links');
+  if (linksEl) linksEl.innerHTML = links.map(l =>
+    `<a href="${l.href}" target="_blank" rel="noopener" class="cd-link">
+      <span class="mi fill" style="font-size:18px">${l.icon}</span>
+      <span class="cd-link-lbl">${l.label}</span>
+      <span class="mi arr">arrow_forward_ios</span>
+    </a>`
+  ).join('');
 }
 
-// ── RENDER GUIDE SECTIONS ────────────────────────────────────────
-function renderGuide() {
-  if (!GUIDE_SECTIONS) return;
-  const list = document.getElementById('guide-list');
-  if (!list) return;
-  list.innerHTML = GUIDE_SECTIONS.map((s, i) => {
-    const isRead = readSet.has(s.id);
-    const res = (GUIDE_RESOURCES[i] || []).map(r => `<a href="${r.href}" target="_blank" rel="noopener" class="res-link"><span class="mi fill" style="font-size:18px;color:var(--red)">${r.icon}</span><span class="res-link-lbl">${r.label}</span><span class="mi arr">open_in_new</span></a>`).join('');
-    const numContent = isRead ? '<span class="mi fill" style="font-size:15px;color:#fff">check</span>' : s.num;
-    const numStyle = isRead ? 'background:var(--green);' : '';
-    return `<div class="acc${isRead ? ' read' : ''}" id="acc-${i}">
-      <div class="acc-header" onclick="toggleAcc(${i})" role="button" aria-expanded="false">
-        <div class="acc-num" style="${numStyle}">${numContent}</div>
-        <div class="acc-titles">
-          <div class="acc-title">${s.title}</div>
-          ${s.sub ? '<div class="acc-sub">' + s.sub + '</div>' : ''}
-        </div>
-        <span class="mi acc-chev">expand_more</span>
-      </div>
-      <div class="acc-body">
-        <div class="acc-content">
-          ${s.content || ''}
-          ${res ? '<div class="res-section"><div class="res-sec-lbl">Official Resources</div>' + res + '</div>' : ''}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ── INIT ─────────────────────────────────────────────────────────
+// ── INIT ────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   renderCourseDetail();
   renderGuide();
   updateProgress();
 });
-</script>
-
-<script>
-// Scroll-aware topbar shadow
-window.addEventListener('scroll', () => {
-  const tb = document.querySelector('.topbar,.ysj-topbar');
-  if (tb) tb.classList.toggle('scrolled', window.scrollY > 10);
-}, { passive: true });
 </script>
 </body>
 </html>
