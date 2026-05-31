@@ -650,11 +650,38 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Render module skeletons are already in HTML; render real cards immediately with empty scores
   renderMods({});
 
-  // Session check with 6s timeout (fix stuck loading)
-  const sessionTimeout = new Promise(r => setTimeout(r, 6000));
-  await Promise.race([window.sessionReady || Promise.resolve(), sessionTimeout]);
+  // ── Robust auth: wait for sessionReady, then fall back to direct Supabase call ──
+  // (avoids redirect when localStorage isn't populated yet)
+  if (window.sessionReady) {
+    await Promise.race([window.sessionReady, new Promise(r => setTimeout(r, 5000))]);
+  }
 
-  const s = window.getCurrentStudent?.();
+  let s = window.getCurrentStudent?.();
+
+  if (!s) {
+    // localStorage not populated yet — fetch directly from Supabase auth
+    try {
+      const { data: { user } } = await supabaseClient.auth.getUser();
+      if (!user) { location.href = 'index.html'; return; }
+
+      const { data: profile } = await supabaseClient
+        .from('student_progress')
+        .select('user_id, full_name, email, student_id, interview_date')
+        .eq('user_id', user.id).single();
+
+      s = {
+        id:         user.id,
+        name:       profile?.full_name || user.email?.split('@')[0] || 'Student',
+        email:      profile?.email     || user.email,
+        student_id: profile?.student_id || ''
+      };
+      localStorage.setItem('student', JSON.stringify(s));
+    } catch(e) {
+      console.warn('Auth fallback failed:', e.message);
+      location.href = 'index.html'; return;
+    }
+  }
+
   if (!s) { location.href = 'index.html'; return; }
 
   // Show hero content
