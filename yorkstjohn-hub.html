@@ -678,6 +678,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('xp-pts').textContent=getXP();
   document.getElementById('xp-streak').textContent=getStreak();
 
+  // Always render modules immediately (shows skeleton-like placeholders)
+  renderMods({});
+
   // Session check
   await (window.sessionReady||Promise.resolve());
   const s=window.getCurrentStudent?.();
