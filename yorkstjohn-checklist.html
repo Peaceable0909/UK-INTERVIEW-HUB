@@ -342,6 +342,14 @@ button:disabled{opacity:.5;cursor:not-allowed;}
   color:rgba(255,255,255,.85);margin-top:var(--s3);min-height:22px;
   position:relative;z-index:1;
 }
+
+/* CHECKLIST ITEMS */
+.chk-row{display:flex;align-items:center;gap:16px;padding:14px 20px;min-height:56px;border-bottom:1px solid #f3f4f6;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.chk-row:last-child{border-bottom:none;}
+.chk-row:active{background:#f5f5f7;}
+.check-box{width:26px;height:26px;border-radius:8px;flex-shrink:0;border:2.5px solid #d1d5db;background:#fff;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.check-box.done{background:#1c7c54!important;border-color:#1c7c54!important;}
+.check-box.done::after{content:"\2713";font-size:16px;font-weight:900;color:#fff;line-height:1;}
 </style>
 </head>
 <body>
@@ -592,36 +600,7 @@ window.updateProgress = updateChkProgress;
 window.updProg        = updateChkProgress;
 
 // Style for check-box and check-item to match design
-const chkStyle = document.createElement('style');
-chkStyle.textContent = `
-  .chk-row{
-    display:flex;align-items:center;gap:var(--s4);
-    padding:var(--s4) var(--s5);min-height:56px;
-    border-bottom:1px solid var(--divider);cursor:pointer;
-    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
-  }
-  .chk-row:last-child{border-bottom:none;}
-  .chk-row:active{background:var(--bg);}
-  .check-box{
-    width:26px;height:26px;border-radius:8px;flex-shrink:0;
-    border:2px solid var(--border);
-    display:flex;align-items:center;justify-content:center;
-    transition:all .2s;
-  }
-  .check-box.done{
-    background:var(--green);border-color:var(--green);
-  }
-  .check-box.done::after{
-    content:"\e876";font-family:"Material Symbols Outlined";
-    font-variation-settings:"FILL" 1,"wght" 600;
-    font-size:15px;color:#fff;
-  }
-  .chk-label{
-    font-size:14px;color:var(--t1);flex:1;line-height:1.4;
-    transition:color .2s;margin:0;
-  }
-`;
-document.head.appendChild(chkStyle);
+// check-box CSS moved to <style> tag
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Let checklist-init.js handle the .check-box toggling and persistence
