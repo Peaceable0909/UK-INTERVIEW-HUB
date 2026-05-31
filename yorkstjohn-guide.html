@@ -6,6 +6,7 @@
 <base href="/UK-INTERVIEW-HUB/">
 <title>Interview Guide | York St John</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ysj.css">
 <style>
 :root{
   --red:#c41230;--red-dk:#9e0e25;--red-lt:#fff5f5;
@@ -157,7 +158,7 @@ a{text-decoration:none;color:inherit;}
   <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
 </div>
 
-<div class="page">
+<div class="page anim-up">
   <!-- Course detail section (hidden until course selected) -->
   <div id="course-detail" style="display:none;margin-bottom:var(--s5)">
     <div class="course-card">
@@ -405,6 +406,14 @@ document.addEventListener('DOMContentLoaded', () => {
   renderGuide();
   updateProgress();
 });
+</script>
+
+<script>
+// Scroll-aware topbar shadow
+window.addEventListener('scroll', () => {
+  const tb = document.querySelector('.topbar,.ysj-topbar');
+  if (tb) tb.classList.toggle('scrolled', window.scrollY > 10);
+}, { passive: true });
 </script>
 </body>
 </html>
