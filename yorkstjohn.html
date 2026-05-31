@@ -6,276 +6,662 @@
 <base href="/UK-INTERVIEW-HUB/">
 <title>Choose Your Course | York St John</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
 <style>
+/* ═══════════════════════════════════════════════════════════
+   WhiteRock × York St John — Design System v2
+   UI/UX Pro Max: 8dp grid · 44px targets · system fonts
+   Style: Clean flat + subtle depth (EdTech / Apple-like)
+═══════════════════════════════════════════════════════════ */
 :root{
-  --red:#c41230;--red-dk:#9e0e25;--navy:#1a1a2e;
-  --surface:#fff;--bg:#f0f2f5;--border:#e5e7eb;
-  --txt:#111827;--muted:#6b7280;
+  /* Brand */
+  --red:#c41230; --red-dk:#9e0e25; --red-lt:#fff5f5; --red-mid:#fecaca;
+  --navy:#1a1a2e; --navy2:#0f172a;
+  /* Neutrals */
+  --bg:#f5f5f7; --surface:#ffffff; --surface2:#fafafa;
+  --border:#e5e7eb; --divider:#f3f4f6;
+  /* Text */
+  --t1:#1d1d1f; --t2:#3c3c43; --t3:#6e6e73; --t4:#aeaeb2;
+  /* Semantic */
+  --green:#1c7c54; --green-lt:#d1fae5; --green-bg:#f0fdf4;
+  --amber:#b45309; --amber-lt:#fef3c7; --amber-bg:#fffbeb;
+  --blue:#1d4ed8; --blue-lt:#dbeafe; --blue-bg:#eff6ff;
+  --purple:#5b21b6; --purple-lt:#ede9fe; --purple-bg:#faf5ff;
+  --teal:#0d7377; --teal-lt:#ccfbf1; --teal-bg:#f0fdfa;
+  /* Spacing (8dp) */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px;
+  --s6:24px; --s7:28px; --s8:32px; --s10:40px; --s12:48px;
+  /* Radii */
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-pill:99px;
+  /* Elevation */
+  --sh-1:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh-2:0 4px 12px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
+  --sh-3:0 12px 32px rgba(0,0,0,.1),0 4px 8px rgba(0,0,0,.06);
+  /* Layout */
+  --topbar:56px; --bottomnav:60px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,"Inter",sans-serif;
-  background:var(--bg);-webkit-font-smoothing:antialiased;}
-.mat{font-family:"Material Symbols Outlined";font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;vertical-align:middle;line-height:1;}
-
-/* Header */
-.header{
-  background:var(--navy);color:#fff;
-  padding:48px 20px 24px;
-  padding-top:calc(48px + env(safe-area-inset-top));
+html{font-size:16px;-webkit-text-size-adjust:100%;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--t1);line-height:1.5;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overflow-x:hidden;
 }
-.header-logo{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
-.logo-mark{width:36px;height:36px;border-radius:10px;background:var(--red);
+/* Material Symbols */
+.mi{
+  font-family:"Material Symbols Outlined";
+  font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;
+  vertical-align:middle;line-height:1;user-select:none;
+  font-size:22px; /* prevents shift */
+}
+.mi.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
+.mi.sm{font-size:18px;}
+.mi.xs{font-size:16px;}
+.mi.lg{font-size:26px;}
+.mi.xl{font-size:32px;}
+/* Headings */
+h1{font-size:clamp(22px,5vw,28px);font-weight:800;line-height:1.15;letter-spacing:-.3px;color:var(--t1);}
+h2{font-size:18px;font-weight:800;line-height:1.2;letter-spacing:-.2px;color:var(--t1);}
+h3{font-size:16px;font-weight:700;line-height:1.3;color:var(--t1);}
+p{color:var(--t3);line-height:1.5;}
+/* Links */
+a{text-decoration:none;color:inherit;}
+/* Buttons */
+button{font-family:inherit;cursor:pointer;border:none;background:none;font-size:16px;}
+button:disabled{opacity:.5;cursor:not-allowed;}
+/* ── TOP BAR ─────────────────────────────────────────── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:calc(var(--topbar) + env(safe-area-inset-top));
+  padding-top:env(safe-area-inset-top);
+  background:rgba(255,255,255,.92);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding-left:var(--s2);padding-right:var(--s4);gap:var(--s2);
+}
+.topbar-back{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--navy);-webkit-tap-highlight-color:transparent;
+  transition:background .15s;flex-shrink:0;
+}
+.topbar-back:hover,.topbar-back:active{background:var(--divider);}
+.topbar-title{font-size:17px;font-weight:700;color:var(--t1);flex:1;letter-spacing:-.2px;}
+.topbar-action{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;transition:background .15s;
+}
+.topbar-action:hover,.topbar-action:active{background:var(--divider);}
+.topbar-badge-wrap{position:relative;}
+.notif-badge{
+  position:absolute;top:6px;right:6px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--red);border:2px solid #fff;
+  display:none;
+}
+.notif-badge.on{display:block;}
+/* ── PAGE BODY ───────────────────────────────────────── */
+.page{
+  padding-top:calc(var(--topbar) + env(safe-area-inset-top) + var(--s4));
+  padding-bottom:calc(var(--bottomnav) + env(safe-area-inset-bottom) + var(--s6));
+}
+.pad{padding-left:var(--s4);padding-right:var(--s4);}
+/* ── BOTTOM NAV ──────────────────────────────────────── */
+.bottomnav{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  height:calc(var(--bottomnav) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(255,255,255,.95);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  align-items:start;
+}
+.bn-tab{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:10px var(--s2) 6px;
+  color:var(--t4);font-size:10px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.04em;
+  text-decoration:none;-webkit-tap-highlight-color:transparent;
+  transition:color .15s;
+}
+.bn-tab .mi{font-size:24px;transition:all .15s;}
+.bn-tab.active{color:var(--red);}
+.bn-tab.active .mi{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
+/* ── CARD ────────────────────────────────────────────── */
+.card{
+  background:var(--surface);border-radius:var(--r-xl);
+  border:1px solid var(--border);overflow:hidden;
+}
+.card+.card{margin-top:var(--s3);}
+/* ── SECTION HEADER ──────────────────────────────────── */
+.sec-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:var(--s4);
+}
+.sec-title{font-size:18px;font-weight:800;color:var(--t1);letter-spacing:-.2px;}
+.sec-sub{font-size:13px;color:var(--t3);margin-top:2px;}
+.sec-link{
+  font-size:13px;font-weight:700;color:var(--red);
+  display:flex;align-items:center;gap:2px;
+}
+/* ── BUTTONS ─────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:var(--s2);border-radius:var(--r-md);font-weight:700;
+  min-height:44px;padding:0 var(--s5);font-size:15px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:filter .15s, opacity .15s;
+  touch-action:manipulation;
+}
+.btn:active{filter:brightness(.93);}
+.btn.full{width:100%;}
+.btn.red{background:var(--red);color:#fff;}
+.btn.navy{background:var(--navy);color:#fff;}
+.btn.outline{border:1.5px solid var(--border);background:var(--surface);color:var(--t1);}
+.btn.ghost{background:transparent;color:var(--red);border:none;}
+.btn.lg{min-height:52px;font-size:16px;border-radius:14px;}
+/* ── CHIPS / BADGES ──────────────────────────────────── */
+.chip{
+  display:inline-flex;align-items:center;gap:var(--s1);
+  border-radius:var(--r-pill);padding:5px 12px;
+  font-size:12px;font-weight:700;
+}
+.chip.red{background:var(--red-lt);color:var(--red);}
+.chip.green{background:var(--green-lt);color:var(--green);}
+.chip.navy{background:#e8eaf2;color:var(--navy);}
+.chip.muted{background:var(--divider);color:var(--t3);}
+.chip.border{background:var(--surface);border:1.5px solid var(--border);color:var(--t2);}
+/* ── INPUT ───────────────────────────────────────────── */
+.input{
+  width:100%;border:1.5px solid var(--border);
+  border-radius:var(--r-md);padding:12px 14px;
+  font-size:16px;font-family:inherit;
+  outline:none;background:var(--surface);
+  transition:border-color .15s;color:var(--t1);
+}
+.input:focus{border-color:var(--red);}
+.textarea{resize:none;min-height:120px;line-height:1.5;}
+/* ── DIVIDER ─────────────────────────────────────────── */
+.hr{height:1px;background:var(--divider);margin:var(--s4) 0;}
+/* ── SHIMMER SKELETON ────────────────────────────────── */
+.skeleton{
+  background:linear-gradient(90deg,var(--divider) 25%,#ebebeb 50%,var(--divider) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.4s infinite;
+  border-radius:var(--r-sm);
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* ── SPINNER ─────────────────────────────────────────── */
+.spinner{
+  width:20px;height:20px;
+  border:2.5px solid var(--divider);
+  border-top-color:var(--red);
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+  display:inline-block;flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+/* ── TOAST ───────────────────────────────────────────── */
+#toast{
+  display:none;position:fixed;bottom:80px;left:50%;
+  transform:translateX(-50%);
+  background:var(--t1);color:#fff;
+  padding:10px 20px;border-radius:var(--r-pill);
+  font-size:14px;font-weight:600;z-index:9999;
+  box-shadow:var(--sh-3);white-space:nowrap;
+}
+/* ── PROGRESS BAR ────────────────────────────────────── */
+.prog-track{
+  height:6px;background:var(--divider);
+  border-radius:var(--r-pill);overflow:hidden;
+}
+.prog-fill{
+  height:100%;border-radius:var(--r-pill);
+  transition:width .5s cubic-bezier(.4,0,.2,1);
+}
+/* ── SAFE AREAS ──────────────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important;}
+}
+/* ── RESPONSIVE ──────────────────────────────────────── */
+@media(min-width:768px){
+  .page{max-width:560px;margin:0 auto;}
+  .topbar{max-width:560px;left:50%;transform:translateX(-50%);}
+  .bottomnav{max-width:560px;left:50%;transform:translateX(-50%);}
+}
+</style>
+<style>
+/* Course selection specific */
+.sel-hero{
+  background:var(--navy);
+  padding:calc(var(--s7) + env(safe-area-inset-top)) var(--s5) var(--s6);
+}
+.sel-logo{display:flex;align-items:center;gap:var(--s3);margin-bottom:var(--s5);}
+.sel-logo-mark{width:36px;height:36px;border-radius:var(--r-sm);background:var(--red);
   display:flex;align-items:center;justify-content:center;}
-.logo-mark .mat{font-size:20px;color:#fff;}
-.logo-text{font-size:12px;font-weight:800;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.06em;}
-.header h1{font-size:26px;font-weight:900;line-height:1.2;margin-bottom:6px;}
-.header h1 em{color:#fca5a5;font-style:normal;}
-.header p{font-size:14px;color:rgba(255,255,255,.65);line-height:1.5;}
+.sel-logo-mark .mi{font-size:20px;color:#fff;}
+.sel-logo-text{font-size:13px;font-weight:800;color:rgba(255,255,255,.65);
+  text-transform:uppercase;letter-spacing:.06em;}
+.sel-hero h1{font-size:clamp(24px,6vw,30px);font-weight:900;color:#fff;
+  line-height:1.15;margin-bottom:var(--s2);}
+.sel-hero h1 em{color:#fca5a5;font-style:normal;}
+.sel-hero p{font-size:14px;color:rgba(255,255,255,.6);line-height:1.5;}
 
-/* User strip */
-.user-strip{
+/* If logged in user strip */
+.user-bar{
   background:var(--surface);border-bottom:1px solid var(--border);
-  padding:12px 20px;display:flex;align-items:center;justify-content:space-between;
+  padding:12px var(--s5);
+  display:flex;align-items:center;gap:var(--s3);
 }
-.user-info{display:flex;align-items:center;gap:10px;}
-.avatar{width:32px;height:32px;border-radius:50%;
-  background:linear-gradient(135deg,var(--red),#7c3aed);
+.user-bar-avatar{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--red),#5b21b6);
   color:#fff;font-size:12px;font-weight:800;
-  display:flex;align-items:center;justify-content:center;}
-.user-name{font-size:14px;font-weight:700;color:var(--navy);}
-.user-email{font-size:11px;color:var(--muted);}
-.btn-dash{
-  display:flex;align-items:center;gap:6px;
-  background:var(--red);color:#fff;border:none;border-radius:8px;
-  padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;
-}
-
-/* Search */
-.search-wrap{padding:16px 20px 8px;background:var(--surface);position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);}
-.search-box{
-  display:flex;align-items:center;gap:10px;
-  background:var(--bg);border:1.5px solid var(--border);border-radius:12px;
-  padding:0 14px;height:44px;
-}
-.search-box .mat{font-size:20px;color:var(--muted);}
-.search-box input{flex:1;border:none;background:none;font-size:14px;outline:none;color:var(--txt);}
-
-/* Category tabs */
-.cat-scroll{display:flex;gap:8px;padding:12px 20px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
-.cat-scroll::-webkit-scrollbar{display:none;}
-.cat-btn{
-  flex-shrink:0;padding:7px 14px;border-radius:99px;
-  border:1.5px solid var(--border);background:var(--surface);
-  font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;
-  transition:all .15s;white-space:nowrap;
-}
-.cat-btn.active,.cat-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy);}
-
-/* Course list */
-.course-list{padding:8px 20px 120px;}
-.course-card{
-  background:var(--surface);border:1px solid var(--border);border-radius:14px;
-  padding:16px;margin-bottom:10px;cursor:pointer;
-  display:flex;align-items:center;gap:14px;
-  transition:all .18s;-webkit-tap-highlight-color:transparent;
-}
-.course-card:hover,.course-card:active{border-color:var(--red);transform:scale(.99);}
-.course-icon{
-  width:44px;height:44px;border-radius:12px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
 }
-.course-icon .mat{font-size:22px;}
-.course-info{flex:1;min-width:0;}
-.course-name{font-size:14px;font-weight:700;color:var(--navy);line-height:1.3;margin-bottom:3px;}
-.course-meta{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;}
-.campus-badge{
-  display:inline-flex;align-items:center;gap:4px;
-  background:#f3f4f6;border-radius:6px;padding:2px 8px;
-  font-size:11px;font-weight:700;color:var(--muted);
+.user-bar-info{flex:1;}
+.user-bar-name{font-size:14px;font-weight:700;color:var(--t1);}
+.user-bar-email{font-size:12px;color:var(--t3);}
+.user-bar-btn{
+  display:flex;align-items:center;gap:6px;
+  background:var(--red);color:#fff;border-radius:var(--r-sm);
+  padding:8px 14px;font-size:13px;font-weight:700;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
-.campus-badge.london{background:#eff6ff;color:#1d4ed8;}
-.course-arrow .mat{font-size:18px;color:var(--muted);}
 
+/* Search + filter */
+.search-sticky{
+  position:sticky;top:0;z-index:90;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:var(--s3) var(--s4) 0;
+}
+.search-bar{
+  display:flex;align-items:center;gap:var(--s2);
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:var(--r-pill);padding:0 var(--s4);
+  height:44px;margin-bottom:var(--s3);
+}
+.search-bar .mi{font-size:20px;color:var(--t3);flex-shrink:0;}
+.search-bar input{
+  flex:1;border:none;background:none;font-size:16px;
+  outline:none;color:var(--t1);font-family:inherit;
+}
+.search-bar input::placeholder{color:var(--t4);}
+.cat-row{
+  display:flex;gap:var(--s2);
+  padding-bottom:var(--s3);
+  overflow-x:auto;scrollbar-width:none;
+}
+.cat-row::-webkit-scrollbar{display:none;}
+.cat-btn{
+  flex-shrink:0;padding:7px 16px;border-radius:var(--r-pill);
+  border:1.5px solid var(--border);background:var(--surface);
+  font-size:13px;font-weight:700;color:var(--t3);
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:all .15s;
+}
+.cat-btn.on,.cat-btn:active{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+/* Course list */
+.course-list{padding:var(--s3) var(--s4) calc(var(--bottomnav) + 80px + env(safe-area-inset-bottom));}
+.course-row{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--r-lg);margin-bottom:var(--s3);
+  overflow:hidden;transition:border-color .2s;
+}
+.course-row.selected{border-color:var(--red);}
+.course-tap{
+  display:flex;align-items:center;gap:var(--s4);
+  padding:var(--s4);cursor:pointer;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.course-icon{
+  width:44px;height:44px;border-radius:var(--r-md);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.course-icon .mi{font-size:22px;}
+.course-info{flex:1;min-width:0;}
+.course-name{font-size:14px;font-weight:700;color:var(--t1);
+  line-height:1.3;margin-bottom:4px;}
+.course-meta{display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap;}
+.campus-tag{
+  display:inline-flex;align-items:center;gap:3px;
+  background:var(--divider);border-radius:var(--r-sm);
+  padding:3px 8px;font-size:11px;font-weight:700;color:var(--t2);
+}
+.campus-tag.london{background:var(--blue-lt);color:var(--blue);}
+.campus-tag .mi{font-size:12px;}
+.fee-tag{font-size:12px;color:var(--t3);font-weight:500;}
+.course-chevron{
+  color:var(--t4);flex-shrink:0;transition:transform .25s;
+}
+.course-row.open .course-chevron{transform:rotate(180deg);}
+
+/* Course detail panel — slides open */
+.course-detail{
+  max-height:0;overflow:hidden;
+  transition:max-height .35s cubic-bezier(.4,0,.2,1);
+  border-top:0px solid var(--divider);
+}
+.course-row.open .course-detail{
+  max-height:1200px;
+  border-top-width:1px;
+}
+.detail-inner{padding:var(--s5) var(--s4) var(--s4);}
+.detail-section{margin-bottom:var(--s5);}
+.detail-label{font-size:11px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--t3);margin-bottom:var(--s2);}
+.detail-value{font-size:14px;font-weight:600;color:var(--t1);line-height:1.5;}
+.detail-value a{color:var(--red);text-decoration:underline;}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-bottom:var(--s5);}
+.detail-cell{background:var(--bg);border-radius:var(--r-md);padding:var(--s3) var(--s4);}
+.detail-cell-val{font-size:16px;font-weight:800;color:var(--t1);line-height:1;}
+.detail-cell-lbl{font-size:11px;color:var(--t3);margin-top:3px;}
+/* Modules list */
+.module-list{display:flex;flex-direction:column;gap:var(--s2);}
+.module-item{
+  display:flex;align-items:flex-start;gap:var(--s3);
+  background:var(--bg);border-radius:var(--r-md);padding:var(--s3) var(--s4);
+}
+.module-num-badge{
+  width:24px;height:24px;border-radius:6px;background:var(--navy);
+  color:#fff;font-size:11px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
+}
+.module-item-text{flex:1;}
+.module-item-name{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:2px;}
+.module-item-why{font-size:12px;color:var(--t3);line-height:1.4;}
+/* Resources */
+.resource-list{display:flex;flex-direction:column;gap:var(--s2);}
+.resource-link{
+  display:flex;align-items:center;gap:var(--s3);
+  background:var(--bg);border-radius:var(--r-md);padding:var(--s3) var(--s4);
+  text-decoration:none;color:var(--t1);-webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;transition:background .15s;
+}
+.resource-link:active{background:var(--divider);}
+.resource-link .mi{font-size:18px;color:var(--red);flex-shrink:0;}
+.resource-link-text{flex:1;font-size:13px;font-weight:600;color:var(--t1);}
+.resource-link .mi.arrow{font-size:16px;color:var(--t4);}
+/* Career chips */
+.role-chips{display:flex;flex-wrap:wrap;gap:var(--s2);}
+.role-chip{
+  background:var(--navy);color:#fff;
+  border-radius:var(--r-pill);padding:5px 12px;
+  font-size:12px;font-weight:700;
+}
 /* Bottom CTA */
 .bottom-cta{
   position:fixed;bottom:0;left:0;right:0;
-  padding:12px 20px;padding-bottom:calc(12px + env(safe-area-inset-bottom));
+  padding:var(--s3) var(--s4);
+  padding-bottom:calc(var(--s3) + env(safe-area-inset-bottom));
   background:rgba(255,255,255,.97);border-top:1px solid var(--border);
-  backdrop-filter:blur(20px);display:none;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  display:none;z-index:100;
 }
 .bottom-cta.show{display:block;}
-.btn-select{
-  width:100%;background:var(--red);color:#fff;border:none;
-  border-radius:14px;padding:16px;font-size:16px;font-weight:800;
-  display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;
-}
-.btn-select .mat{font-size:20px;}
-.selected-name{font-size:12px;color:rgba(255,255,255,.75);margin-top:2px;}
+.cta-selected-name{font-size:12px;color:var(--t3);margin-bottom:6px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-logo">
-    <div class="logo-mark"><span class="mat fill">school</span></div>
-    <span class="logo-text">York St John University</span>
+<!-- HERO HEADER (not fixed — part of scroll) -->
+<div class="sel-hero">
+  <div class="sel-logo">
+    <div class="sel-logo-mark"><span class="mi fill">school</span></div>
+    <span class="sel-logo-text">York St John University</span>
   </div>
   <h1>Choose Your <em>Course</em></h1>
-  <p>Select the course you are preparing for your Pre-CAS credibility interview.</p>
+  <p>Select the course you are preparing for. You'll see full module details, fees, and resources.</p>
 </div>
 
-<div class="user-strip" id="userStrip" style="display:none">
-  <div class="user-info">
-    <div class="avatar" id="sel-avatar">AC</div>
-    <div>
-      <div class="user-name" id="sel-name">Student</div>
-      <div class="user-email" id="sel-email"></div>
-    </div>
+<!-- USER BAR (shown when logged in) -->
+<div class="user-bar" id="userBar" style="display:none">
+  <div class="user-bar-avatar" id="ub-avatar">AC</div>
+  <div class="user-bar-info">
+    <div class="user-bar-name" id="ub-name">Student</div>
+    <div class="user-bar-email" id="ub-email"></div>
   </div>
-  <button class="btn-dash" onclick="location.href='yorkstjohn-hub.html'">
-    <span class="mat">dashboard</span> Dashboard
+  <button class="user-bar-btn" onclick="location.href='yorkstjohn-hub.html'">
+    <span class="mi xs">dashboard</span> Dashboard
   </button>
 </div>
 
-<div class="search-wrap">
-  <div class="search-box">
-    <span class="mat">search</span>
-    <input type="text" placeholder="Search courses..." id="searchInput" oninput="filterCourses(this.value)">
+<!-- SEARCH + FILTER -->
+<div class="search-sticky">
+  <div class="search-bar">
+    <span class="mi">search</span>
+    <input type="text" placeholder="Search courses…" id="searchInput"
+      oninput="filterCourses(this.value)" autocomplete="off" aria-label="Search courses">
+    <button id="clearSearch" style="display:none;color:var(--t4);"
+      onclick="document.getElementById('searchInput').value='';clearSearch();this.style.display='none'">
+      <span class="mi xs">close</span>
+    </button>
   </div>
+  <div class="cat-row" id="catRow"></div>
 </div>
 
-<div class="cat-scroll" id="catScroll"></div>
+<!-- COURSE LIST -->
 <div class="course-list" id="courseList"></div>
 
+<!-- BOTTOM CTA -->
 <div class="bottom-cta" id="bottomCta">
-  <button class="btn-select" id="selectBtn" onclick="confirmSelect()">
-    <span class="mat fill">check_circle</span>
-    <div>
-      <div>Start Preparing</div>
-      <div class="selected-name" id="ctaCourseName"></div>
-    </div>
+  <p class="cta-selected-name" id="ctaName">Select a course above</p>
+  <button class="btn red lg full" id="ctaBtn" onclick="confirmCourse()"
+    aria-label="Continue with selected course">
+    <span class="mi fill">check_circle</span>
+    Continue with This Course
   </button>
 </div>
 
-<div id="toast"></div>
+<div id="toast" role="alert" aria-live="polite"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 <script src="yorkstjohn-data.js"></script>
+
 <script>
-// ── Category icons
-const catIcons = {
-  'MSc': {icon:'science', bg:'#ede9fe', color:'#7c3aed'},
-  'MBA': {icon:'business_center', bg:'#fef3c7', color:'#d97706'},
-  'MA': {icon:'history_edu', bg:'#fef2f2', color:'#dc2626'},
-  'MRes': {icon:'biotech', bg:'#f0fdf4', color:'#16a34a'},
-  'BSc': {icon:'computer', bg:'#eff6ff', color:'#1d4ed8'},
-  'BA': {icon:'book_2', bg:'#fff7ed', color:'#ea580c'},
+function showToast(msg,dur=2500){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',dur);}
+</script>
+<script>
+const CATS = ['All','MSc','MBA','MA','MRes','BSc','BA'];
+const CAT_ICONS = {
+  MSc:{icon:'science',color:'#7c3aed',bg:'#ede9fe'},
+  MBA:{icon:'business_center',color:'#d97706',bg:'#fef3c7'},
+  MA: {icon:'history_edu',color:'#dc2626',bg:'#fee2e2'},
+  MRes:{icon:'biotech',color:'#16a34a',bg:'#dcfce7'},
+  BSc:{icon:'computer',color:'#1d4ed8',bg:'#dbeafe'},
+  BA: {icon:'auto_stories',color:'#ea580c',bg:'#ffedd5'},
 };
-function getCatStyle(name) {
-  for (const [prefix, style] of Object.entries(catIcons)) {
-    if (name.startsWith(prefix)) return style;
-  }
-  return {icon:'school', bg:'#f3f4f6', color:'#6b7280'};
+function getStyle(name) {
+  for (const [k,v] of Object.entries(CAT_ICONS))
+    if (name.startsWith(k)) return v;
+  return {icon:'school',color:'#6b7280',bg:'#f3f4f6'};
 }
 
 let selectedId = localStorage.getItem('last_course') || null;
-let activeFilter = 'All';
+let activeCat = 'All';
+let openId = null;
 
-const categories = ['All', 'MSc', 'MBA', 'MA', 'MRes', 'BSc/BA'];
+// Build category tabs
+const catRow = document.getElementById('catRow');
+CATS.forEach(c => {
+  const btn = document.createElement('button');
+  btn.className = 'cat-btn' + (c===activeCat?' on':'');
+  btn.textContent = c;
+  btn.onclick = () => { activeCat=c; document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); filterCourses(document.getElementById('searchInput').value); };
+  catRow.appendChild(btn);
+});
 
-function buildCats() {
-  const c = document.getElementById('catScroll');
-  c.innerHTML = categories.map(cat =>
-    `<button class="cat-btn${cat===activeFilter?' active':''}" onclick="setFilter('${cat}')">${cat}</button>`
-  ).join('');
-}
-
-function setFilter(cat) {
-  activeFilter = cat;
-  buildCats();
-  filterCourses(document.getElementById('searchInput').value);
-}
-
-function filterCourses(q = '') {
-  const list = document.getElementById('courseList');
-  const entries = Object.entries(COURSES);
-  const results = entries.filter(([id, c]) => {
+function filterCourses(q='') {
+  document.getElementById('clearSearch').style.display = q ? 'block' : 'none';
+  const entries = Object.entries(COURSES).filter(([id,c]) => {
     const matchQ = !q || c.name.toLowerCase().includes(q.toLowerCase());
-    const matchCat = activeFilter === 'All' ||
-      (activeFilter === 'BSc/BA' ? c.name.startsWith('B') : c.name.startsWith(activeFilter));
-    return matchQ && matchCat;
+    const matchC = activeCat==='All' || c.name.startsWith(activeCat==='BSc'?'B':activeCat);
+    return matchQ && matchC;
   });
+  renderList(entries);
+}
 
-  list.innerHTML = results.map(([id, c]) => {
-    const s = getCatStyle(c.name);
+function renderList(entries) {
+  const list = document.getElementById('courseList');
+  list.innerHTML = entries.map(([id,c]) => {
+    const s = getStyle(c.name);
+    const isSel = id === selectedId;
+    const isOpen = id === openId;
     const isLondon = c.city === 'London';
-    const isSelected = id === selectedId;
-    return `<div class="course-card${isSelected?' selected':''}" onclick="selectCourse('${id}')"
-      style="${isSelected?'border-color:var(--red);background:#fff5f5;':''}">
-      <div class="course-icon" style="background:${s.bg}">
-        <span class="mat fill" style="color:${s.color}">${s.icon}</span>
-      </div>
-      <div class="course-info">
-        <div class="course-name">${c.name}</div>
-        <div class="course-meta">
-          <span class="campus-badge${isLondon?' london':''}">
-            <span class="mat" style="font-size:11px">${isLondon?'location_city':'park'}</span>
-            ${c.city}
-          </span>
-          ${c.tuition||''}
+    // Build modules HTML
+    const modsHtml = (c.modules||[]).map((m,i)=>`
+      <div class="module-item">
+        <div class="module-num-badge">${i+1}</div>
+        <div class="module-item-text">
+          <div class="module-item-name">${m.name}</div>
+          <div class="module-item-why">${m.why||''}</div>
         </div>
+      </div>`).join('');
+    // Roles
+    const rolesHtml = (c.roles||[]).map(r=>`<span class="role-chip">${r}</span>`).join('');
+    // Resources
+    const resources = [
+      {icon:'open_in_new', label:'Programme Specification', href:c.specUrl||'https://www.yorksj.ac.uk/programme-specifications/'},
+      {icon:'apartment',   label:'Campus Information',     href:c.campusUrl||'https://www.yorksj.ac.uk/campus-and-facilities/'},
+      {icon:'payments',    label:'Tuition Fees & Funding', href:'https://www.yorksj.ac.uk/international/funding-scholarships-and-paying-tuition-fees/'},
+      {icon:'home',        label:isLondon?'London Accommodation':'York Accommodation',
+        href:isLondon?'https://www.yorksj.ac.uk/london-campus/welcome/before-you-start-at-our-london-campus/':'https://www.yorksj.ac.uk/study/accommodation/'},
+      {icon:'badge',       label:'Student Visa Requirements', href:'https://www.gov.uk/student-visa'},
+      {icon:'school',      label:'Graduate Route Visa',       href:'https://www.gov.uk/graduate-visa'},
+    ];
+    const resHtml = resources.map(r=>`
+      <a href="${r.href}" target="_blank" rel="noopener" class="resource-link">
+        <span class="mi fill sm">${r.icon}</span>
+        <span class="resource-link-text">${r.label}</span>
+        <span class="mi arrow">open_in_new</span>
+      </a>`).join('');
+
+    return `<div class="course-row${isSel?' selected':''}${isOpen?' open':''}" id="row-${id}">
+      <div class="course-tap" onclick="toggleCourse('${id}')" role="button"
+        aria-expanded="${isOpen}" aria-controls="detail-${id}">
+        <div class="course-icon" style="background:${s.bg}">
+          <span class="mi fill" style="color:${s.color}" aria-hidden="true">${s.icon}</span>
+        </div>
+        <div class="course-info">
+          <div class="course-name">${c.name}</div>
+          <div class="course-meta">
+            <span class="campus-tag${isLondon?' london':''}">
+              <span class="mi" style="font-size:12px">${isLondon?'location_city':'park'}</span>
+              ${c.city}
+            </span>
+            <span class="fee-tag">${c.tuition||''}</span>
+          </div>
+        </div>
+        <span class="mi course-chevron sm" aria-hidden="true">expand_more</span>
       </div>
-      <div class="course-arrow">
-        <span class="mat${isSelected?' fill':''}" style="color:${isSelected?'var(--red)':'var(--muted)'}">
-          ${isSelected?'check_circle':'arrow_forward_ios'}
-        </span>
+      <div class="course-detail" id="detail-${id}" role="region" aria-label="${c.name} details">
+        <div class="detail-inner">
+          <!-- Key stats grid -->
+          <div class="detail-grid">
+            <div class="detail-cell">
+              <div class="detail-cell-val">${c.tuition||'—'}</div>
+              <div class="detail-cell-lbl">Per year tuition</div>
+            </div>
+            <div class="detail-cell">
+              <div class="detail-cell-val">${c.livingCost||'—'}</div>
+              <div class="detail-cell-lbl">UKVI living cost</div>
+            </div>
+            <div class="detail-cell">
+              <div class="detail-cell-val">${c.accommodation||'—'}</div>
+              <div class="detail-cell-lbl">Accommodation/wk</div>
+            </div>
+            <div class="detail-cell">
+              <div class="detail-cell-val" style="font-size:13px">${c.salary||'—'}</div>
+              <div class="detail-cell-lbl">Graduate salary</div>
+            </div>
+          </div>
+          <!-- Campus -->
+          <div class="detail-section">
+            <div class="detail-label">Campus Address</div>
+            <div class="detail-value">${c.address||c.city}</div>
+          </div>
+          <!-- Assessment -->
+          <div class="detail-section">
+            <div class="detail-label">How You Will Be Assessed</div>
+            <div class="detail-value">${c.assessment||'Coursework and examinations.'}</div>
+          </div>
+          <!-- Modules -->
+          ${modsHtml ? `<div class="detail-section">
+            <div class="detail-label">Key Modules</div>
+            <div class="module-list">${modsHtml}</div>
+          </div>` : ''}
+          <!-- Roles -->
+          ${rolesHtml ? `<div class="detail-section">
+            <div class="detail-label">Graduate Career Options</div>
+            <div class="role-chips">${rolesHtml}</div>
+          </div>` : ''}
+          <!-- Resources -->
+          <div class="detail-section">
+            <div class="detail-label">Official Resources</div>
+            <div class="resource-list">${resHtml}</div>
+          </div>
+          <!-- Select button -->
+          <button class="btn full lg ${isSel?'outline':'red'}"
+            onclick="selectCourse('${id}',event)"
+            aria-label="Select ${c.name}">
+            <span class="mi fill">${isSel?'check_circle':'arrow_forward'}</span>
+            ${isSel ? 'Currently Selected — Continue' : 'Select This Course'}
+          </button>
+        </div>
       </div>
     </div>`;
   }).join('');
 }
 
-function selectCourse(id) {
-  selectedId = id;
-  const c = COURSES[id];
-  localStorage.setItem('last_course', id);
-  localStorage.setItem('last_school', 'yorkstjohn');
-  // Update CTA
-  document.getElementById('ctaCourseName').textContent = c.name;
-  document.getElementById('bottomCta').classList.add('show');
+function toggleCourse(id) {
+  openId = openId===id ? null : id;
   filterCourses(document.getElementById('searchInput').value);
 }
 
-async function confirmSelect() {
-  const id = selectedId;
-  if (!id) return;
-  const student = window.getCurrentStudent?.();
-  if (student?.id) {
-    await window.onCourseSelected?.('yorkstjohn', id);
-  }
+function selectCourse(id, e) {
+  if (e) e.stopPropagation();
+  selectedId = id;
+  localStorage.setItem('last_course', id);
+  localStorage.setItem('last_school', 'yorkstjohn');
+  const c = COURSES[id];
+  document.getElementById('ctaName').textContent = c?.name || '';
+  document.getElementById('bottomCta').classList.add('show');
+  filterCourses(document.getElementById('searchInput').value);
+  showToast('Course selected: ' + (c?.name||''));
+}
+
+async function confirmCourse() {
+  if (!selectedId) return;
+  await window.onCourseSelected?.('yorkstjohn', selectedId);
   location.href = 'yorkstjohn-hub.html';
 }
 
-// Init
+// Pre-select if coming back
 document.addEventListener('DOMContentLoaded', async () => {
-  buildCats();
   filterCourses();
   if (selectedId) {
     const c = COURSES[selectedId];
     if (c) {
-      document.getElementById('ctaCourseName').textContent = c.name;
+      document.getElementById('ctaName').textContent = c.name;
       document.getElementById('bottomCta').classList.add('show');
     }
   }
-  // Show user if logged in
-  await (window.sessionReady || Promise.resolve());
+  await (window.sessionReady||Promise.resolve());
   const s = window.getCurrentStudent?.();
   if (s?.name) {
-    document.getElementById('userStrip').style.display = 'flex';
-    document.getElementById('sel-name').textContent = s.name;
-    document.getElementById('sel-email').textContent = s.email || '';
-    document.getElementById('sel-avatar').textContent =
-      s.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+    document.getElementById('userBar').style.display='flex';
+    document.getElementById('ub-name').textContent=s.name;
+    document.getElementById('ub-email').textContent=s.email||'';
+    document.getElementById('ub-avatar').textContent=(s.name||'S').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
   }
 });
 </script>
