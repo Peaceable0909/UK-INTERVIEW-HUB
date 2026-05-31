@@ -650,8 +650,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Render module skeletons are already in HTML; render real cards immediately with empty scores
   renderMods({});
 
-  // ── Robust auth: wait for sessionReady, then fall back to direct Supabase call ──
-  // (avoids redirect when localStorage isn't populated yet)
+  // ── Robust auth — never hard-redirect, show login banner instead ──
+  // Waits for app.js sessionReady, then tries Supabase directly as fallback.
+  // If still no auth, shows a login CTA instead of bouncing to index.html.
+
   if (window.sessionReady) {
     await Promise.race([window.sessionReady, new Promise(r => setTimeout(r, 5000))]);
   }
@@ -659,30 +661,44 @@ document.addEventListener('DOMContentLoaded', async () => {
   let s = window.getCurrentStudent?.();
 
   if (!s) {
-    // localStorage not populated yet — fetch directly from Supabase auth
     try {
-      const { data: { user } } = await supabaseClient.auth.getUser();
-      if (!user) { location.href = 'index.html'; return; }
-
-      const { data: profile } = await supabaseClient
-        .from('student_progress')
-        .select('user_id, full_name, email, student_id, interview_date')
-        .eq('user_id', user.id).single();
-
-      s = {
-        id:         user.id,
-        name:       profile?.full_name || user.email?.split('@')[0] || 'Student',
-        email:      profile?.email     || user.email,
-        student_id: profile?.student_id || ''
-      };
-      localStorage.setItem('student', JSON.stringify(s));
+      const authResult = await supabaseClient.auth.getUser();
+      const user = authResult?.data?.user;
+      if (user) {
+        // Session valid but localStorage not populated yet — fetch profile
+        const profileResult = await supabaseClient
+          .from('student_progress')
+          .select('user_id, full_name, email, student_id, interview_date')
+          .eq('user_id', user.id).single();
+        const profile = profileResult?.data;
+        s = {
+          id:         user.id,
+          name:       profile?.full_name || user.email?.split('@')[0] || 'Student',
+          email:      profile?.email || user.email,
+          student_id: profile?.student_id || ''
+        };
+        localStorage.setItem('student', JSON.stringify(s));
+      }
     } catch(e) {
-      console.warn('Auth fallback failed:', e.message);
-      location.href = 'index.html'; return;
+      console.warn('Auth fallback:', e?.message);
     }
   }
 
-  if (!s) { location.href = 'index.html'; return; }
+  // No auth — show login banner, keep hub visible (guest mode)
+  if (!s) {
+    document.getElementById('hero-skeleton').style.display = 'none';
+    document.getElementById('hero-content').style.display  = 'block';
+    document.getElementById('hero-name').textContent = 'Welcome';
+    document.getElementById('hero-greeting').textContent = 'Sign in to track your progress';
+    // Show login CTA in topbar area
+    const loginBanner = document.createElement('div');
+    loginBanner.style.cssText = 'background:#1a1a2e;color:#fff;text-align:center;padding:12px;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:12px;';
+    loginBanner.innerHTML = '<span>Sign in to track your progress and save your answers</span>'
+      + '<a href="index.html" style="background:#c41230;color:#fff;padding:7px 18px;border-radius:8px;font-size:13px;font-weight:800;text-decoration:none">Sign In</a>';
+    document.querySelector('.ysj-page').prepend(loginBanner);
+    renderMods({});
+    return; // Skip Supabase data fetch, show guest hub
+  }
 
   // Show hero content
   document.getElementById('hero-skeleton').style.display = 'none';
