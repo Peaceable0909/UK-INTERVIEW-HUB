@@ -4,168 +4,575 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <base href="/UK-INTERVIEW-HUB/">
-<title>Checklist | YSJ Prep</title>
+<title>Checklist | York St John</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
 <style>
-:root{--red:#c41230;--navy:#1a1a2e;--surface:#fff;--bg:#f0f2f5;--border:#e5e7eb;--txt:#111827;--muted:#6b7280;--green:#16a34a;}
+/* ═══════════════════════════════════════════════════════════
+   WhiteRock × York St John — Design System v2
+   UI/UX Pro Max: 8dp grid · 44px targets · system fonts
+   Style: Clean flat + subtle depth (EdTech / Apple-like)
+═══════════════════════════════════════════════════════════ */
+:root{
+  /* Brand */
+  --red:#c41230; --red-dk:#9e0e25; --red-lt:#fff5f5; --red-mid:#fecaca;
+  --navy:#1a1a2e; --navy2:#0f172a;
+  /* Neutrals */
+  --bg:#f5f5f7; --surface:#ffffff; --surface2:#fafafa;
+  --border:#e5e7eb; --divider:#f3f4f6;
+  /* Text */
+  --t1:#1d1d1f; --t2:#3c3c43; --t3:#6e6e73; --t4:#aeaeb2;
+  /* Semantic */
+  --green:#1c7c54; --green-lt:#d1fae5; --green-bg:#f0fdf4;
+  --amber:#b45309; --amber-lt:#fef3c7; --amber-bg:#fffbeb;
+  --blue:#1d4ed8; --blue-lt:#dbeafe; --blue-bg:#eff6ff;
+  --purple:#5b21b6; --purple-lt:#ede9fe; --purple-bg:#faf5ff;
+  --teal:#0d7377; --teal-lt:#ccfbf1; --teal-bg:#f0fdfa;
+  /* Spacing (8dp) */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px;
+  --s6:24px; --s7:28px; --s8:32px; --s10:40px; --s12:48px;
+  /* Radii */
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-pill:99px;
+  /* Elevation */
+  --sh-1:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh-2:0 4px 12px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
+  --sh-3:0 12px 32px rgba(0,0,0,.1),0 4px 8px rgba(0,0,0,.06);
+  /* Layout */
+  --topbar:56px; --bottomnav:60px;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{font-family:-apple-system,BlinkMacSystemFont,"Inter",sans-serif;background:var(--bg);-webkit-font-smoothing:antialiased;}
-.mat{font-family:"Material Symbols Outlined";font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;vertical-align:middle;line-height:1;}
-.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
-.top-bar{position:fixed;top:0;left:0;right:0;height:calc(56px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding-left:8px;padding-right:16px;gap:8px;z-index:100;}
-.back-btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;}
-.back-btn .mat{font-size:22px;color:var(--navy);}
-.top-title{font-size:16px;font-weight:800;color:var(--navy);flex:1;}
-.progress-strip{background:var(--surface);padding:16px;border-bottom:1px solid var(--border);}
-.prog-hdr{display:flex;justify-content:space-between;margin-bottom:8px;}
-.prog-label{font-size:13px;font-weight:700;color:var(--navy);}
-.prog-pct{font-size:13px;font-weight:800;color:var(--green);}
-.prog-bar{height:8px;background:#f3f4f6;border-radius:99px;overflow:hidden;}
-.prog-fill{height:100%;background:var(--green);border-radius:99px;transition:width .4s;}
-.page-body{padding-top:calc(56px + env(safe-area-inset-top) + 72px);padding-bottom:calc(68px + env(safe-area-inset-bottom));padding-left:16px;padding-right:16px;}
-.section-title{font-size:13px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:20px 0 10px;}
-.chk-card{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:10px;}
-.chk-item{display:flex;align-items:center;gap:14px;padding:15px 16px;min-height:52px;border-bottom:1px solid #f3f4f6;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s;}
+html{font-size:16px;-webkit-text-size-adjust:100%;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--t1);line-height:1.5;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+/* Material Symbols */
+.mi{
+  font-family:"Material Symbols Outlined";
+  font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;
+  vertical-align:middle;line-height:1;user-select:none;
+  font-size:22px; /* prevents shift */
+}
+.mi.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
+.mi.sm{font-size:18px;}
+.mi.xs{font-size:16px;}
+.mi.lg{font-size:26px;}
+.mi.xl{font-size:32px;}
+/* Headings */
+h1{font-size:clamp(22px,5vw,28px);font-weight:800;line-height:1.15;letter-spacing:-.3px;color:var(--t1);}
+h2{font-size:18px;font-weight:800;line-height:1.2;letter-spacing:-.2px;color:var(--t1);}
+h3{font-size:16px;font-weight:700;line-height:1.3;color:var(--t1);}
+p{color:var(--t3);line-height:1.5;}
+/* Links */
+a{text-decoration:none;color:inherit;}
+/* Buttons */
+button{font-family:inherit;cursor:pointer;border:none;background:none;font-size:16px;}
+button:disabled{opacity:.5;cursor:not-allowed;}
+/* ── TOP BAR ─────────────────────────────────────────── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:calc(var(--topbar) + env(safe-area-inset-top));
+  padding-top:env(safe-area-inset-top);
+  background:rgba(255,255,255,.92);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding-left:var(--s2);padding-right:var(--s4);gap:var(--s2);
+}
+.topbar-back{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--navy);-webkit-tap-highlight-color:transparent;
+  transition:background .15s;flex-shrink:0;
+}
+.topbar-back:hover,.topbar-back:active{background:var(--divider);}
+.topbar-title{font-size:17px;font-weight:700;color:var(--t1);flex:1;letter-spacing:-.2px;}
+.topbar-action{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;transition:background .15s;
+}
+.topbar-action:hover,.topbar-action:active{background:var(--divider);}
+.topbar-badge-wrap{position:relative;}
+.notif-badge{
+  position:absolute;top:6px;right:6px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--red);border:2px solid #fff;
+  display:none;
+}
+.notif-badge.on{display:block;}
+/* ── PAGE BODY ───────────────────────────────────────── */
+.page{
+  padding-top:calc(var(--topbar) + env(safe-area-inset-top) + var(--s4));
+  padding-bottom:calc(var(--bottomnav) + env(safe-area-inset-bottom) + var(--s6));
+}
+.pad{padding-left:var(--s4);padding-right:var(--s4);}
+/* ── BOTTOM NAV ──────────────────────────────────────── */
+.bottomnav{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  height:calc(var(--bottomnav) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(255,255,255,.95);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  align-items:start;
+}
+.bn-tab{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:10px var(--s2) 6px;
+  color:var(--t4);font-size:10px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.04em;
+  text-decoration:none;-webkit-tap-highlight-color:transparent;
+  transition:color .15s;
+}
+.bn-tab .mi{font-size:24px;transition:all .15s;}
+.bn-tab.active{color:var(--red);}
+.bn-tab.active .mi{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
+/* ── CARD ────────────────────────────────────────────── */
+.card{
+  background:var(--surface);border-radius:var(--r-xl);
+  border:1px solid var(--border);overflow:hidden;
+}
+.card+.card{margin-top:var(--s3);}
+/* ── SECTION HEADER ──────────────────────────────────── */
+.sec-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:var(--s4);
+}
+.sec-title{font-size:18px;font-weight:800;color:var(--t1);letter-spacing:-.2px;}
+.sec-sub{font-size:13px;color:var(--t3);margin-top:2px;}
+.sec-link{
+  font-size:13px;font-weight:700;color:var(--red);
+  display:flex;align-items:center;gap:2px;
+}
+/* ── BUTTONS ─────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:var(--s2);border-radius:var(--r-md);font-weight:700;
+  min-height:44px;padding:0 var(--s5);font-size:15px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:filter .15s, opacity .15s;
+  touch-action:manipulation;
+}
+.btn:active{filter:brightness(.93);}
+.btn.full{width:100%;}
+.btn.red{background:var(--red);color:#fff;}
+.btn.navy{background:var(--navy);color:#fff;}
+.btn.outline{border:1.5px solid var(--border);background:var(--surface);color:var(--t1);}
+.btn.ghost{background:transparent;color:var(--red);border:none;}
+.btn.lg{min-height:52px;font-size:16px;border-radius:14px;}
+/* ── CHIPS / BADGES ──────────────────────────────────── */
+.chip{
+  display:inline-flex;align-items:center;gap:var(--s1);
+  border-radius:var(--r-pill);padding:5px 12px;
+  font-size:12px;font-weight:700;
+}
+.chip.red{background:var(--red-lt);color:var(--red);}
+.chip.green{background:var(--green-lt);color:var(--green);}
+.chip.navy{background:#e8eaf2;color:var(--navy);}
+.chip.muted{background:var(--divider);color:var(--t3);}
+.chip.border{background:var(--surface);border:1.5px solid var(--border);color:var(--t2);}
+/* ── INPUT ───────────────────────────────────────────── */
+.input{
+  width:100%;border:1.5px solid var(--border);
+  border-radius:var(--r-md);padding:12px 14px;
+  font-size:16px;font-family:inherit;
+  outline:none;background:var(--surface);
+  transition:border-color .15s;color:var(--t1);
+}
+.input:focus{border-color:var(--red);}
+.textarea{resize:none;min-height:120px;line-height:1.5;}
+/* ── DIVIDER ─────────────────────────────────────────── */
+.hr{height:1px;background:var(--divider);margin:var(--s4) 0;}
+/* ── SHIMMER SKELETON ────────────────────────────────── */
+.skeleton{
+  background:linear-gradient(90deg,var(--divider) 25%,#ebebeb 50%,var(--divider) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.4s infinite;
+  border-radius:var(--r-sm);
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* ── SPINNER ─────────────────────────────────────────── */
+.spinner{
+  width:20px;height:20px;
+  border:2.5px solid var(--divider);
+  border-top-color:var(--red);
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+  display:inline-block;flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+/* ── TOAST ───────────────────────────────────────────── */
+#toast{
+  display:none;position:fixed;bottom:80px;left:50%;
+  transform:translateX(-50%);
+  background:var(--t1);color:#fff;
+  padding:10px 20px;border-radius:var(--r-pill);
+  font-size:14px;font-weight:600;z-index:9999;
+  box-shadow:var(--sh-3);white-space:nowrap;
+}
+/* ── PROGRESS BAR ────────────────────────────────────── */
+.prog-track{
+  height:6px;background:var(--divider);
+  border-radius:var(--r-pill);overflow:hidden;
+}
+.prog-fill{
+  height:100%;border-radius:var(--r-pill);
+  transition:width .5s cubic-bezier(.4,0,.2,1);
+}
+/* ── SAFE AREAS ──────────────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important;}
+}
+/* ── RESPONSIVE ──────────────────────────────────────── */
+@media(min-width:768px){
+  .page{max-width:560px;margin:0 auto;}
+  .topbar{max-width:560px;left:50%;transform:translateX(-50%);}
+  .bottomnav{max-width:560px;left:50%;transform:translateX(-50%);}
+}
+</style>
+<style>
+/* Progress header */
+.prog-header{
+  position:sticky;top:calc(var(--topbar) + env(safe-area-inset-top));z-index:90;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:var(--s3) var(--s4);
+}
+.prog-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.prog-label{font-size:13px;font-weight:700;color:var(--t2);}
+.prog-pct{font-size:14px;font-weight:900;color:var(--green);}
+/* Checklist groups */
+.chk-group{margin-bottom:var(--s5);}
+.chk-group-title{
+  font-size:12px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--t3);margin-bottom:var(--s3);
+  display:flex;align-items:center;gap:var(--s2);
+}
+.chk-group-title .mi{font-size:16px;}
+.chk-card{
+  background:var(--surface);border-radius:var(--r-xl);
+  border:1px solid var(--border);overflow:hidden;
+}
+.chk-item{
+  display:flex;align-items:center;gap:var(--s4);
+  padding:var(--s4) var(--s5);min-height:56px;
+  border-bottom:1px solid var(--divider);cursor:pointer;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:background .1s;
+}
 .chk-item:last-child{border-bottom:none;}
-.chk-item:active{background:#f9f9f9;}
-.chk-box{width:24px;height:24px;border-radius:7px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
-.chk-box.checked{background:var(--green);border-color:var(--green);}
-.chk-box.checked .mat{font-size:14px;color:#fff;}
-.chk-label{font-size:14px;color:var(--txt);flex:1;line-height:1.4;}
-.chk-label.done{color:var(--muted);text-decoration:line-through;}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.97);border-top:1px solid var(--border);backdrop-filter:blur(20px);display:grid;grid-template-columns:repeat(5,1fr);}
-.nav-tab{display:flex;flex-direction:column;align-items:center;padding:10px 4px;text-decoration:none;color:var(--muted);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;gap:3px;}
-.nav-tab.active{color:var(--red);}
-.nav-tab .mat{font-size:22px;}
-.nav-tab.active .mat{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
+.chk-item:active{background:var(--bg);}
+.chk-box{
+  width:26px;height:26px;border-radius:8px;flex-shrink:0;
+  border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.chk-box.checked{background:var(--red);border-color:var(--red);}
+.chk-box.checked .mi{font-size:15px;color:#fff;}
+.chk-label{font-size:14px;color:var(--t1);flex:1;line-height:1.4;
+  transition:color .2s;}
+.chk-label.done{color:var(--t3);text-decoration:line-through;}
+
+/* Ready section */
+.ready-section{
+  background:linear-gradient(135deg,var(--navy) 0%,#1e3a8a 100%);
+  border-radius:var(--r-xl);padding:var(--s6) var(--s5);
+  margin-bottom:var(--s5);position:relative;overflow:hidden;
+}
+.ready-section::after{
+  content:"";position:absolute;bottom:-50px;right:-50px;
+  width:180px;height:180px;border-radius:50%;
+  background:rgba(255,255,255,.04);pointer-events:none;
+}
+.ready-header{display:flex;align-items:center;gap:var(--s4);margin-bottom:var(--s4);}
+.ready-icon-wrap{
+  width:52px;height:52px;border-radius:var(--r-lg);
+  background:rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.ready-icon-wrap .mi{font-size:28px;color:#fff;}
+.ready-title{font-size:20px;font-weight:900;color:#fff;}
+.ready-subtitle{font-size:13px;color:rgba(255,255,255,.65);margin-top:2px;line-height:1.5;}
+.ready-progress{margin-bottom:var(--s5);}
+.ready-progress-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:6px;
+}
+.ready-progress-lbl{font-size:13px;color:rgba(255,255,255,.7);}
+.ready-progress-val{font-size:13px;font-weight:700;color:#fff;}
+.ready-prog-track{
+  height:8px;background:rgba(255,255,255,.15);
+  border-radius:var(--r-pill);overflow:hidden;margin-bottom:var(--s3);
+}
+.ready-prog-fill{height:100%;background:#c41230;border-radius:var(--r-pill);transition:width .5s;}
+.ready-prog-fill.good{background:#22c55e;}
+.ready-scores-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);
+  margin-bottom:var(--s5);
+}
+.ready-score-cell{
+  background:rgba(255,255,255,.1);border-radius:var(--r-md);
+  padding:var(--s3) var(--s4);
+}
+.ready-score-num{font-size:22px;font-weight:900;color:#fff;line-height:1;}
+.ready-score-lbl{font-size:11px;color:rgba(255,255,255,.55);margin-top:3px;}
+.btn-ready-final{
+  width:100%;background:#fff;color:var(--navy);
+  border:none;border-radius:var(--r-lg);
+  padding:0 var(--s5);font-size:16px;font-weight:800;min-height:56px;
+  display:flex;align-items:center;justify-content:center;gap:var(--s3);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;transition:opacity .15s;position:relative;z-index:1;
+}
+.btn-ready-final:active{opacity:.9;}
+.btn-ready-final .mi{font-size:22px;}
+.ready-footnote{
+  text-align:center;font-size:12px;
+  color:rgba(255,255,255,.5);margin-top:var(--s3);
+  line-height:1.5;position:relative;z-index:1;
+}
+.ready-sent-status{
+  text-align:center;font-size:14px;font-weight:700;
+  color:rgba(255,255,255,.85);margin-top:var(--s3);min-height:22px;
+  position:relative;z-index:1;
+}
 </style>
 </head>
 <body>
-<header class="top-bar">
-  <a href="yorkstjohn-hub.html" class="back-btn"><span class="mat">arrow_back_ios_new</span></a>
-  <h1 class="top-title">Interview Checklist</h1>
+
+<header class="topbar">
+  <a href="yorkstjohn-hub.html" class="topbar-back" aria-label="Back to dashboard">
+    <span class="mi">arrow_back_ios_new</span>
+  </a>
+  <span class="topbar-title">Interview Checklist</span>
 </header>
 
-<div style="position:sticky;top:calc(56px + env(safe-area-inset-top));z-index:90;">
-  <div class="progress-strip">
-    <div class="prog-hdr">
-      <span class="prog-label" id="prog-label">0 of 0 items complete</span>
-      <span class="prog-pct" id="prog-pct">0%</span>
-    </div>
-    <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+<!-- Progress header -->
+<div class="prog-header">
+  <div class="prog-header-row">
+    <span class="prog-label" id="prog-label">0 of 24 complete</span>
+    <span class="prog-pct" id="prog-pct">0%</span>
+  </div>
+  <div class="prog-track">
+    <div class="prog-fill" id="prog-fill" style="width:0%;background:var(--red)"></div>
   </div>
 </div>
 
-<div class="page-body" id="chkBody"><!-- JS renders --></div>
+<div class="page" style="padding-top:calc(var(--topbar) + env(safe-area-inset-top) + 56px);">
+  <div class="pad">
+    <div id="chkBody"></div>
 
-<nav class="bottom-nav">
-  <a href="yorkstjohn-hub.html" class="nav-tab"><span class="mat">home</span>Home</a>
-  <a href="yorkstjohn-guide.html" class="nav-tab"><span class="mat">menu_book</span>Guide</a>
-  <a href="yorkstjohn-practice.html" class="nav-tab"><span class="mat">mic</span>Practice</a>
-  <a href="yorkstjohn-questions.html" class="nav-tab"><span class="mat">quiz</span>Questions</a>
-  <a href="yorkstjohn-checklist.html" class="nav-tab active"><span class="mat">checklist</span>Checklist</a>
-</nav>
+    <!-- READY FOR INTERVIEW -->
+    <div class="ready-section" id="readySection">
+      <div class="ready-header">
+        <div class="ready-icon-wrap">
+          <span class="mi fill">verified</span>
+        </div>
+        <div>
+          <div class="ready-title">Ready for Interview?</div>
+          <div class="ready-subtitle">Submit your report to the WhiteRock team at applications.whiterock@gmail.com</div>
+        </div>
+      </div>
+      <div class="ready-progress">
+        <div class="ready-progress-row">
+          <span class="ready-progress-lbl">Overall readiness</span>
+          <span class="ready-progress-val" id="ready-overall-pct">0%</span>
+        </div>
+        <div class="ready-prog-track">
+          <div class="ready-prog-fill" id="ready-prog" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="ready-scores-row">
+        <div class="ready-score-cell">
+          <div class="ready-score-num" id="ready-q">0/22</div>
+          <div class="ready-score-lbl">Questions passed</div>
+        </div>
+        <div class="ready-score-cell">
+          <div class="ready-score-num" id="ready-chk">0/24</div>
+          <div class="ready-score-lbl">Checklist done</div>
+        </div>
+      </div>
+      <button class="btn-ready-final" id="readyBtn" aria-label="Submit readiness report to WhiteRock">
+        <span class="mi fill">send</span>
+        I'm Ready — Notify WhiteRock
+      </button>
+      <p class="ready-footnote">
+        Your answers, scores, and checklist will be sent to the WhiteRock team.
+        They will review and contact you before your interview.
+      </p>
+      <div class="ready-sent-status" id="ysj-ready-status"></div>
+    </div>
 
+  </div><!-- /pad -->
+</div>
+
+<nav class="bottomnav" aria-label="Main navigation"><a href="yorkstjohn-hub.html" class="bn-tab" aria-label="Home"><span class="mi">home</span>Home</a><a href="yorkstjohn-guide.html" class="bn-tab" aria-label="Guide"><span class="mi">menu_book</span>Guide</a><a href="yorkstjohn-practice.html" class="bn-tab" aria-label="Practice"><span class="mi">mic</span>Practice</a><a href="yorkstjohn-questions.html" class="bn-tab" aria-label="Questions"><span class="mi">quiz</span>Questions</a><a href="yorkstjohn-checklist.html" class="bn-tab active" aria-label="Checklist"><span class="mi">checklist</span>Checklist</a></nav>
+<div id="toast" role="alert" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 <script src="yorkstjohn-data.js"></script>
-<script src="checklist-init.js"></script>
+
 <script>
-// Checklist items per category
-const CHECKLIST = [
-  {group:'Before the Interview',items:[
-    {id:'c1',label:'I know my exact campus address and postcode'},
-    {id:'c2',label:'I can name at least 3 specific modules in my course'},
-    {id:'c3',label:'I know how my course is assessed (essays, exams, dissertation etc.)'},
-    {id:'c4',label:'I have compared YSJ with at least 2 other UK universities'},
-    {id:'c5',label:'I can explain why I chose the UK over other countries'},
-    {id:'c6',label:'I know my tuition fee amount and how much I have paid'},
+function showToast(msg,dur=2500){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',dur);}
+</script>
+<script>
+const GROUPS = [
+  {title:'Before the Interview',icon:'event_available',items:[
+    {id:'c1', label:'I know my exact campus address and postcode'},
+    {id:'c2', label:'I can name at least 3 specific modules in my course'},
+    {id:'c3', label:'I know how my course is assessed (essays, exams, dissertation, group work)'},
+    {id:'c4', label:'I have compared YSJ with at least 2 other UK universities — and know why YSJ won'},
+    {id:'c5', label:'I can explain why I chose the UK over other countries (with specific reasons)'},
+    {id:'c6', label:'I know my exact tuition fee amount and how much has been paid'},
   ]},
-  {group:'Career & Finance',items:[
-    {id:'c7',label:'I have a short-term, medium-term, and long-term career plan'},
-    {id:'c8',label:'I can name specific job roles and companies I will target'},
-    {id:'c9',label:'I know the UKVI minimum living cost for my city'},
-    {id:'c10',label:'I can clearly explain the source of my funding'},
-    {id:'c11',label:'I know my expected salary range after graduation'},
+  {title:'Career & Finance',icon:'payments',items:[
+    {id:'c7', label:'I have a short-term (0–2yr), medium-term (3–5yr), and long-term (5–10yr) career plan'},
+    {id:'c8', label:'I can name specific job roles and UK companies I will target after graduation'},
+    {id:'c9', label:'I know the UKVI minimum living cost requirement for my city of study'},
+    {id:'c10',label:'I can clearly explain the source of my funding (savings, family, scholarship — with details)'},
+    {id:'c11',label:'I know my expected salary range after graduation in GBP'},
   ]},
-  {group:'Accommodation & Life',items:[
-    {id:'c12',label:'I know where I will live and the weekly/monthly cost'},
-    {id:'c13',label:'I know how I will travel to campus from my accommodation'},
-    {id:'c14',label:'I know what life is like in York / London'},
-    {id:'c15',label:'I have researched nearby towns/areas for accommodation'},
+  {title:'Accommodation & Life in the UK',icon:'home',items:[
+    {id:'c12',label:'I know where I will live and the weekly or monthly cost of accommodation'},
+    {id:'c13',label:'I know how I will travel to campus (bus/train/walking) and the journey time'},
+    {id:'c14',label:'I have researched nearby towns/areas and can name at least one alternative to living on campus'},
+    {id:'c15',label:'I know what life is like in York / London — cost, culture, transport'},
   ]},
-  {group:'Visa & Compliance',items:[
-    {id:'c16',label:'I know I can work maximum 20 hours per week during term time'},
-    {id:'c17',label:'I know I must attend all scheduled classes'},
-    {id:'c18',label:'I know I cannot claim public funds'},
-    {id:'c19',label:'I know I must report any address changes to the university'},
-    {id:'c20',label:'I know about the Graduate Route visa (2 years after graduation)'},
+  {title:'Visa & UK Rules',icon:'badge',items:[
+    {id:'c16',label:'I know I can work maximum 20 hours per week during term time on a Student Visa'},
+    {id:'c17',label:'I know I must attend all scheduled classes and maintain satisfactory academic progress'},
+    {id:'c18',label:'I know I cannot claim public funds (benefits) while on a Student Visa'},
+    {id:'c19',label:'I know I must report any change of address to my university'},
+    {id:'c20',label:'I know about the Graduate Route visa — valid for 2 years after graduation (3 for PhD)'},
   ]},
-  {group:'Interview Skills',items:[
-    {id:'c21',label:'I can explain why I chose this course without using generic phrases'},
-    {id:'c22',label:'I have practised answering at least 10 practice questions with AI'},
-    {id:'c23',label:'I can back every statement with a specific concrete example'},
-    {id:'c24',label:'I have read all sections of the Interview Guide'},
+  {title:'Interview Skills & Mindset',icon:'psychology',items:[
+    {id:'c21',label:'I can explain why I chose this course without using generic phrases like "world-class education"'},
+    {id:'c22',label:'I have practised at least 10 questions on the AI Practice page and reviewed my feedback'},
+    {id:'c23',label:'I can back every statement I make with a specific, concrete example'},
+    {id:'c24',label:'I have read all 11 sections of the Interview Guide'},
   ]},
 ];
 
+const TOTAL = GROUPS.reduce((a,g)=>a+g.items.length,0);
 let checked = new Set(JSON.parse(localStorage.getItem('ysj_chk')||'[]'));
-const totalItems = CHECKLIST.reduce((a,g)=>a+g.items.length,0);
+
+function save() { localStorage.setItem('ysj_chk', JSON.stringify([...checked])); }
 
 function updateProgress() {
-  const pct = Math.round(checked.size/totalItems*100);
-  document.getElementById('prog-label').textContent = checked.size+' of '+totalItems+' items complete';
+  const n = checked.size, pct = Math.round(n/TOTAL*100);
+  document.getElementById('prog-label').textContent = n+' of '+TOTAL+' complete';
   document.getElementById('prog-pct').textContent = pct+'%';
   document.getElementById('prog-fill').style.width = pct+'%';
+  const fill = document.getElementById('prog-fill');
+  fill.style.background = pct>=80 ? 'var(--green)' : 'var(--red)';
+  // Ready section
+  document.getElementById('ready-chk').textContent = n+'/'+TOTAL;
+  const rprog = document.getElementById('ready-prog');
+  if (rprog) {
+    rprog.style.width = pct+'%';
+    rprog.className = 'ready-prog-fill' + (pct>=70?' good':'');
+  }
+  document.getElementById('ready-overall-pct').textContent = pct+'%';
 }
 
 function toggle(id) {
   if (checked.has(id)) checked.delete(id);
   else checked.add(id);
-  localStorage.setItem('ysj_chk', JSON.stringify([...checked]));
-  // Update UI
-  const box = document.getElementById('box-'+id);
-  const label = document.getElementById('lbl-'+id);
+  save();
+  updateProgress();
+  // Update the box and label
+  const box = document.getElementById('cbox-'+id);
+  const lbl = document.getElementById('clbl-'+id);
   if (checked.has(id)) {
     box.classList.add('checked');
-    box.innerHTML = '<span class="mat fill">check</span>';
-    label.classList.add('done');
+    box.innerHTML = '<span class="mi fill">check</span>';
+    lbl.classList.add('done');
   } else {
     box.classList.remove('checked');
     box.innerHTML = '';
-    label.classList.remove('done');
+    lbl.classList.remove('done');
   }
-  updateProgress();
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // Try to load from Supabase too
+  // Render checklist
+  const body = document.getElementById('chkBody');
+  body.innerHTML = GROUPS.map(g => `
+    <div class="chk-group">
+      <div class="chk-group-title">
+        <span class="mi sm fill" style="color:var(--red)">${g.icon}</span>
+        ${g.title}
+      </div>
+      <div class="chk-card">
+        ${g.items.map(item => `
+          <div class="chk-item" onclick="toggle('${item.id}')" role="checkbox"
+            aria-checked="${checked.has(item.id)}" aria-label="${item.label}">
+            <div class="chk-box${checked.has(item.id)?' checked':''}" id="cbox-${item.id}" aria-hidden="true">
+              ${checked.has(item.id)?'<span class="mi fill">check</span>':''}
+            </div>
+            <div class="chk-label${checked.has(item.id)?' done':''}" id="clbl-${item.id}">
+              ${item.label}
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  updateProgress();
+
+  // Load AI scores for ready section
   await (window.sessionReady||Promise.resolve());
   const s = window.getCurrentStudent?.();
   if (s?.id) {
     try {
-      const {data} = await (window.supabaseClient||window.getDB?.())
-        .from('student_checklists').select('item_id,is_checked')
-        .eq('user_id',s.id).eq('school','yorkstjohn');
-      if (data) data.filter(r=>r.is_checked).forEach(r=>checked.add(r.item_id));
+      const {data} = await supabaseClient.from('student_progress')
+        .select('ai_scores').eq('user_id',s.id).single();
+      if (data) {
+        const scores = data.ai_scores||{};
+        const keys = Object.keys(scores).filter(k=>k.startsWith('YSJ_'));
+        const passed = keys.filter(k=>scores[k]?.finalStatus===1||scores[k]?.score>=7);
+        document.getElementById('ready-q').textContent = passed.length+'/'+Math.max(keys.length,22);
+      }
     } catch(e) {}
   }
 
-  const body = document.getElementById('chkBody');
-  body.innerHTML = CHECKLIST.map(group => `
-    <div class="section-title">${group.group}</div>
-    <div class="chk-card">
-      ${group.items.map(item => `
-        <div class="chk-item" onclick="toggle('${item.id}')">
-          <div class="chk-box${checked.has(item.id)?' checked':''}" id="box-${item.id}">
-            ${checked.has(item.id)?'<span class="mat fill">check</span>':''}
-          </div>
-          <div class="chk-label${checked.has(item.id)?' done':''}" id="lbl-${item.id}">${item.label}</div>
-        </div>
-      `).join('')}
-    </div>
-  `).join('');
-  updateProgress();
+  // Ready button
+  const readyBtn = document.getElementById('readyBtn');
+  const readyStatus = document.getElementById('ysj-ready-status');
+  if (readyBtn && typeof window.sendReadyEmail === 'function') {
+    readyBtn.addEventListener('click', async () => {
+      readyBtn.disabled = true;
+      readyBtn.innerHTML = '<span class="spinner"></span><span style="margin-left:8px">Sending to WhiteRock…</span>';
+      try {
+        const progress = await window.loadSavedProgress?.();
+        const responses = progress?.ai_scores||{};
+        const checklistStatus = progress?.checklist_status||{};
+        const scores = Object.values(responses).map(a=>a?.score).filter(n=>!isNaN(n));
+        const avg = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1) : 'N/A';
+        const res = await window.sendReadyEmail?.(responses, checklistStatus, avg, 'Student submitted from Checklist page');
+        if (res?.success||res?.sent) {
+          readyBtn.innerHTML = '<span class="mi fill">check_circle</span><span>Report Sent to WhiteRock!</span>';
+          readyBtn.style.background = '#dcfce7';
+          readyBtn.style.color = '#166534';
+          if (readyStatus) {
+            const pct = res.percentScore??0;
+            readyStatus.textContent = (pct>=90?'✅':pct>=70?'⚠️':'📚')+' '+(res.readinessLevel||'Report submitted')+' — WhiteRock will be in touch';
+          }
+          showToast('✅ Report sent to applications.whiterock@gmail.com');
+        } else throw new Error(res?.error||'Failed');
+      } catch(e) {
+        readyBtn.disabled = false;
+        readyBtn.innerHTML = '<span class="mi fill">send</span><span>I'm Ready — Notify WhiteRock</span>';
+        if (readyStatus) readyStatus.textContent = '⚠️ Could not send — please try again';
+        showToast('Could not send. Check your connection.');
+      }
+    });
+  }
 });
 </script>
 </body>
