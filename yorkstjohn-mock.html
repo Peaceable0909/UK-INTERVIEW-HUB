@@ -530,7 +530,14 @@ button:disabled{opacity:.4;cursor:not-allowed;}
     <span>Speech recognition works best in <strong>Chrome</strong> or <strong>Edge</strong>. On other browsers you may need to tap the mic button to record.</span>
   </div>
 
-  <button class="btn-start" id="startBtn" onclick="beginInterview()">
+  <button class="btn-start" id="startBtn" onclick="
+    this.disabled=true;
+    this.innerHTML='<span class=\'spinner\' style=\'border-color:rgba(255,255,255,.3);border-top-color:#fff;width:22px;height:22px;\'></span><span style=\'margin-left:10px\'>Starting…</span>';
+    beginInterview().catch(e=>{
+      console.error(e);
+      this.disabled=false;
+      this.innerHTML='<span class=\'mi fill\'>play_circle</span> Start Interview';
+    });">
     <span class="mi fill">play_circle</span>
     Start Interview
   </button>
@@ -693,6 +700,7 @@ button:disabled{opacity:.4;cursor:not-allowed;}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.puter.com/v2/"></script>
 <script src="app.js?v=4"></script>
 <script src="yorkstjohn-data.js"></script>
 <script>
@@ -743,9 +751,8 @@ let autoRecord = false; // true = Chrome/Edge auto-start
 
 // ── INIT ──────────────────────────────────────────────────────────
 window.addEventListener('load', () => {
-  // Load saved Gemini key
-  const saved = localStorage.getItem('gemini_api_key') || '';
-  if (saved) document.getElementById('gemini-key').value = saved;
+  // (Gemini key is stored server-side in Supabase — no input needed)
+  localStorage.removeItem('gemini_api_key'); // clear any old key from localStorage
 
   // Course name
   const cid = localStorage.getItem('last_course');
