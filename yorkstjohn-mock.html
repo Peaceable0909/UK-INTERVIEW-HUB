@@ -363,12 +363,23 @@ function initRecog(){
     var fin='';
     var interim='';
     for(var i=e.resultIndex;i<e.results.length;i++){
-      if(e.results[i].isFinal) fin+=e.results[i][0].transcript+' ';
-      else interim+=e.results[i][0].transcript;
+      var t = e.results[i][0].transcript;
+      if(e.results[i].isFinal) fin += t + ' ';
+      else interim += t;
     }
-    if(fin) finalText+=fin;
-    currentInterim=interim; // Update global interim
+    if(fin) finalText += fin;
+    currentInterim = interim;
     
+    // De-duplicate final text segments to prevent "I am I am" issues
+    var words = finalText.split(/\s+/);
+    var uniqueWords = [];
+    for(var j=0; j<words.length; j++){
+      if(words[j] && (j===0 || words[j].toLowerCase() !== words[j-1].toLowerCase())){
+        uniqueWords.push(words[j]);
+      }
+    }
+    finalText = uniqueWords.join(' ') + (finalText.endsWith(' ') ? ' ' : '');
+
     var display=(finalText+currentInterim).trim();
     var tx=document.getElementById('txtxt');
     if(tx) tx.textContent=display;
@@ -384,19 +395,29 @@ function initRecog(){
     }
   };
   recog.onend=function(){
-    // If we have leftover interim when the session ends, commit it to finalText
-    // This is critical for mobile browsers that stop frequently
+    // Commit interim to final to prevent loss on pause
     if(currentInterim.trim()){
-      finalText+=currentInterim.trim()+' ';
+      var words = currentInterim.trim().split(/\s+/);
+      var lastFinalWord = finalText.trim().split(/\s+/).pop();
+      // Simple de-dupe for the transition
+      if(words[0].toLowerCase() === (lastFinalWord||'').toLowerCase()) words.shift();
+      if(words.length) finalText += words.join(' ') + ' ';
       currentInterim='';
       var tx=document.getElementById('txtxt');
       if(tx) tx.textContent=finalText.trim();
     }
-    // Automatically restart if we are still in recording mode
+    // Robust restart
     if(isRecording){
-      setTimeout(function(){
-        if(isRecording&&recog)try{recog.start()}catch(e){}
-      },300);
+      var now = Date.now();
+      if(!window._lastSRStart || (now - window._lastSRStart > 1000)){
+        window._lastSRStart = now;
+        try{recog.start()}catch(e){
+          // If already started, ignore. If failed, retry once more.
+          setTimeout(function(){ if(isRecording) try{recog.start()}catch(err){} }, 500);
+        }
+      } else {
+        setTimeout(function(){ if(isRecording) try{recog.start()}catch(err){} }, 1000);
+      }
     }
   };
 }
@@ -469,12 +490,8 @@ async function submitAns(){
 
   thinking(true);setStatus('Evaluating\u2026','thk');
 
-  // 1. Clean repetitive transcript
-  try{
-    var cr=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'clean',text:ans})});
-    var cd=await cr.json();
-    if(cd.text&&cd.text.length>10){ans=cd.text;var tx=document.getElementById('txtxt');if(tx)tx.textContent=ans}
-  }catch(e){}
+  // Removed cleaning step to reduce delay as requested.
+  // The LLM grader can handle raw transcripts efficiently.
 
   var q=activeQ[qIdx];
   var prompt='You are a strict UK student visa credibility interview examiner.\n\nQuestion: "'+q.text+'"\nStudent answer: "'+ans+'"\n\nCriteria: '+q.criteria+'\n\nPASS THRESHOLD: 70+. Most first attempts should NOT pass.\nReturn ONLY valid JSON: {"score":0-100,"pass":boolean,"feedback_text":"2-3 spoken sentences. Start with one strength. Then state what was missing. End with one instruction. Coach voice. No Thank you at the start.","good":["one strength"],"missing":["one gap"]}';
