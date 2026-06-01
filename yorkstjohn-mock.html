@@ -456,7 +456,7 @@ button:disabled{opacity:.4;cursor:not-allowed;}
 <body>
 
 <!-- ════════════ INTRO ════════════ -->
-<div class="phase on" id="intro">
+<div id="intro" style="display:flex;flex-direction:column;min-height:100dvh;overflow-y:auto">
 <div class="intro-inner">
   <a href="yorkstjohn-hub.html" class="intro-back">
     <span class="mi">arrow_back_ios_new</span>Back
@@ -530,14 +530,7 @@ button:disabled{opacity:.4;cursor:not-allowed;}
     <span>Speech recognition works best in <strong>Chrome</strong> or <strong>Edge</strong>. On other browsers you may need to tap the mic button to record.</span>
   </div>
 
-  <button class="btn-start" id="startBtn" onclick="
-    this.disabled=true;
-    this.innerHTML='<span class=\'spinner\' style=\'border-color:rgba(255,255,255,.3);border-top-color:#fff;width:22px;height:22px;\'></span><span style=\'margin-left:10px\'>Starting…</span>';
-    beginInterview().catch(e=>{
-      console.error(e);
-      this.disabled=false;
-      this.innerHTML='<span class=\'mi fill\'>play_circle</span> Start Interview';
-    });">
+  <button class="btn-start" id="startBtn" onclick="startMockInterview()">
     <span class="mi fill">play_circle</span>
     Start Interview
   </button>
@@ -545,7 +538,7 @@ button:disabled{opacity:.4;cursor:not-allowed;}
 </div>
 
 <!-- ════════════ COUNTDOWN ════════════ -->
-<div class="phase" id="countdown">
+<div id="countdown" style="display:none;flex-direction:column;height:100dvh;align-items:center;justify-content:center;background:#08080f">
   <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;">
     <div class="cd-num" id="cd-num">3</div>
     <div class="cd-lbl">Get ready to speak…</div>
@@ -553,7 +546,7 @@ button:disabled{opacity:.4;cursor:not-allowed;}
 </div>
 
 <!-- ════════════ INTERVIEW ════════════ -->
-<div class="phase" id="interview">
+<div id="interview" style="display:none;flex-direction:column;min-height:100dvh;background:#0c0c1a">
   <!-- Top bar -->
   <div class="iv-topbar">
     <div class="iv-progress-wrap">
@@ -663,7 +656,7 @@ button:disabled{opacity:.4;cursor:not-allowed;}
 </button>
 
 <!-- ════════════ RESULTS ════════════ -->
-<div class="phase" id="results">
+<div id="results" style="display:none;flex-direction:column;min-height:100dvh">
 <div class="results-inner">
   <div class="res-ring-wrap">
     <div class="res-ring">
@@ -770,14 +763,19 @@ window.addEventListener('load', () => {
   if (!autoRecord) document.getElementById('compat-warn').style.display = 'flex';
 });
 
-function phase(id) {
-  // Use inline style directly — more reliable than classList on Android Chrome
-  document.querySelectorAll('.phase').forEach(el => el.style.display = 'none');
-  const target = document.getElementById(id);
+// Direct show/hide by ID — no class tricks
+function showOnly(id) {
+  ['intro','countdown','interview','results'].forEach(function(name) {
+    var el = document.getElementById(name);
+    if (el) el.style.display = 'none';
+  });
+  var target = document.getElementById(id);
   if (target) target.style.display = 'flex';
-  const muteWrap = document.getElementById('float-mute');
-  if (muteWrap) muteWrap.style.display = id === 'interview' ? 'flex' : 'none';
+  var mute = document.getElementById('float-mute');
+  if (mute) mute.style.display = id === 'interview' ? 'flex' : 'none';
 }
+// Keep phase() as alias for any remaining calls
+function phase(id) { showOnly(id); }
 
 // ── GEMINI TTS ────────────────────────────────────────────────────
 // Gemini returns raw PCM16 at 24kHz mono. We wrap it in a WAV header to play.
@@ -1016,62 +1014,60 @@ function toggleRecording() {
 }
 
 // ── MAIN FLOW ─────────────────────────────────────────────────────
-async function beginInterview() {
-  // Dead-simple reliable version — no abstraction, explicit steps
-  const showPhase = (id) => {
-    document.querySelectorAll('.phase').forEach(el => el.style.display = 'none');
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'flex';
-  };
+// Wrapper called by button — gives instant feedback before async work
+function startMockInterview() {
+  var btn = document.getElementById('startBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Starting…'; }
+  beginInterview();
+}
 
+async function beginInterview() {
+  var btn = document.getElementById('startBtn');
   try {
-    // 1. Build question list
-    const countEl = document.getElementById('q-count');
-    const n = parseInt(countEl ? countEl.value : '8') || 8;
+    // Build question list
+    var countEl = document.getElementById('q-count');
+    var n = parseInt(countEl ? countEl.value : '8') || 8;
     ACTIVE_Q = n === 0 ? ALL_QUESTIONS : ALL_QUESTIONS.slice(0, Math.min(n, ALL_QUESTIONS.length));
     results = []; qIdx = 0;
 
-    // 2. Show countdown IMMEDIATELY
-    showPhase('countdown');
+    // IMMEDIATELY show countdown — direct style, no class tricks
+    document.getElementById('intro').style.display = 'none';
+    document.getElementById('countdown').style.display = 'flex';
 
-    // 3. Start mic permission request in background (non-blocking)
+    // Request mic in background — do NOT await (non-blocking)
     if (window.SpeechRecognition || window.webkitSpeechRecognition) {
-      navigator.mediaDevices?.getUserMedia({ audio: true })
-        .then(() => initRecognition())
-        .catch(e => console.warn('Mic permission:', e.message));
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(function() { initRecognition(); })
+          .catch(function(e) { console.warn('Mic:', e.message); });
+      }
     }
 
-    // 4. Countdown 3-2-1
-    for (let i = 3; i >= 1; i--) {
-      const numEl = document.getElementById('cd-num');
-      if (numEl) {
-        numEl.style.animation = 'none';
-        numEl.textContent = String(i);
-        void numEl.offsetWidth; // force reflow for animation restart
-        numEl.style.animation = 'countPop .85s cubic-bezier(.34,1.56,.64,1) both';
-      }
+    // Countdown 3 → 2 → 1
+    for (var i = 3; i >= 1; i--) {
+      var numEl = document.getElementById('cd-num');
+      if (numEl) numEl.textContent = String(i);
       await wait(1000);
     }
 
-    // 5. Switch to interview screen
-    showPhase('interview');
-    const muteWrap = document.getElementById('float-mute');
-    if (muteWrap) muteWrap.style.display = 'flex';
+    // Show interview screen
+    document.getElementById('countdown').style.display = 'none';
+    document.getElementById('interview').style.display = 'flex';
+    var muteEl = document.getElementById('float-mute');
+    if (muteEl) muteEl.style.display = 'flex';
 
-    // 6. Start first question
+    // Start first question
     await startQ(0);
 
   } catch(e) {
-    console.error('beginInterview crashed:', e);
-    // Show intro again with reset button
-    document.querySelectorAll('.phase').forEach(el => el.style.display = 'none');
-    const introEl = document.getElementById('intro');
-    if (introEl) introEl.style.display = 'flex';
-    const btn = document.getElementById('startBtn');
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = '<span class="mi fill">play_circle</span> Start Interview';
-    }
+    console.error('Interview error:', e);
+    // Reset to intro
+    ['countdown','interview','results'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    document.getElementById('intro').style.display = 'flex';
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span class="mi fill">play_circle</span> Start Interview'; }
   }
 }
 
@@ -1373,16 +1369,13 @@ async function submitAdmin() {
 function restart() {
   stopSpeech(); stopRecording();
   results=[]; qIdx=0; transcript='';
-  document.querySelectorAll('.phase').forEach(el => el.style.display = 'none');
-  const introEl = document.getElementById('intro');
-  if (introEl) introEl.style.display = 'flex';
-  document.getElementById('float-mute').style.display = 'none';
-  // Reset button
-  const btn = document.getElementById('startBtn');
-  if (btn) {
-    btn.disabled = false;
-    btn.innerHTML = '<span class="mi fill">play_circle</span> Start Interview';
-  }
+  ['countdown','interview','results'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.display='none';
+  });
+  document.getElementById('intro').style.display='flex';
+  var mute=document.getElementById('float-mute'); if(mute) mute.style.display='none';
+  var btn=document.getElementById('startBtn');
+  if(btn){btn.disabled=false;btn.innerHTML='<span class="mi fill">play_circle</span> Start Interview';}
 }
 
 function wait(ms) { return new Promise(r=>setTimeout(r,ms)); }
