@@ -355,60 +355,79 @@ function initRecog(){
   if(!SR)return;
   recog=new SR();
   recog.continuous=true;recog.interimResults=true;recog.lang='en-GB';
+  recog.maxAlternatives=1;
+  
+  var pauseTimer=null;
+  var lastResultTime=0;
+  
   recog.onstart=function(){
-    // Don't clear currentInterim here, it might have been set by onend
     setStatus('Listening\u2026','lst');
   };
+  
   recog.onresult=function(e){
+    // Clear any pending pause timer when we get new results
+    if(pauseTimer)clearTimeout(pauseTimer);
+    lastResultTime=Date.now();
+    
     var fin='';
     var interim='';
     for(var i=e.resultIndex;i<e.results.length;i++){
-      var t = e.results[i][0].transcript;
-      if(e.results[i].isFinal) fin += t + ' ';
-      else interim += t;
+      var t=e.results[i][0].transcript;
+      if(e.results[i].isFinal)fin+=t+' ';
+      else interim+=t;
     }
     
-    // Absolute preservation: only add to finalText, never subtract
-    if(fin) finalText += fin;
-    currentInterim = interim;
+    // CRITICAL: Only add NEW final results, never clear finalText
+    if(fin)finalText+=fin;
+    currentInterim=interim;
 
     var display=(finalText+currentInterim).trim();
     var tx=document.getElementById('txtxt');
-    if(tx) tx.textContent=display;
+    if(tx)tx.textContent=display;
     var sb=document.getElementById('btnsub');
-    if(sb) sb.disabled=display.length<20;
+    if(sb)sb.disabled=display.length<20;
+    
+    // If we got a final result, set a pause detection timer
+    // If no new results arrive within 1.2 seconds, we'll restart recognition
+    if(fin && isRecording){
+      pauseTimer=setTimeout(function(){
+        if(isRecording && recog && (Date.now()-lastResultTime>1000)){
+          try{recog.stop()}catch(e){}
+          setTimeout(function(){if(isRecording)try{recog.start()}catch(e){}},200);
+        }
+      },1200);
+    }
   };
+  
   recog.onerror=function(e){
     console.error('SR Error:',e.error);
     if(e.error==='not-allowed')setStatus('Mic blocked','');
     // Restart on common errors that stop the engine
     if(isRecording && (e.error==='no-speech' || e.error==='audio-capture' || e.error==='network')){
-      setTimeout(function(){if(isRecording&&recog)try{recog.start()}catch(err){}},500);
+      setTimeout(function(){if(isRecording&&recog)try{recog.start()}catch(err){}},600);
     }
   };
+  
   recog.onend=function(){
+    if(pauseTimer)clearTimeout(pauseTimer);
     // Commit any leftover interim to final to prevent data loss
     if(currentInterim.trim()){
-      finalText += currentInterim.trim() + ' ';
-      currentInterim = '';
+      finalText+=currentInterim.trim()+' ';
+      currentInterim='';
       var tx=document.getElementById('txtxt');
-      if(tx) tx.textContent = finalText.trim();
+      if(tx)tx.textContent=finalText.trim();
     }
     // Continuous restart if still in recording mode
     if(isRecording){
-      var now = Date.now();
-      // Ensure we don't spam start calls
-      if(!window._lastSRStart || (now - window._lastSRStart > 1000)){
-        window._lastSRStart = now;
-        try {
-          recog.start();
-        } catch(e) {
-          // If already running or error, retry briefly
-          setTimeout(function(){ if(isRecording) try{recog.start()}catch(err){} }, 400);
+      var now=Date.now();
+      // Add a small delay to avoid rapid restart loops
+      var delay=Math.max(300,(now-lastResultTime<500?500:200));
+      setTimeout(function(){
+        if(isRecording&&recog){
+          try{recog.start()}
+          catch(e){setTimeout(function(){if(isRecording)try{recog.start()}catch(e){}},400)}
         }
-      } else {
-        setTimeout(function(){ if(isRecording) try{recog.start()}catch(err){} }, 800);
-      }
+      },delay);
     }
   };
 }
