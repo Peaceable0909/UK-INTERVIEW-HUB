@@ -771,10 +771,12 @@ window.addEventListener('load', () => {
 });
 
 function phase(id) {
-  document.querySelectorAll('.phase').forEach(el => el.classList.remove('on'));
-  document.getElementById(id).classList.add('on');
-  const isInterview = id === 'interview';
-  document.getElementById('float-mute').classList.toggle('visible', isInterview);
+  // Use inline style directly — more reliable than classList on Android Chrome
+  document.querySelectorAll('.phase').forEach(el => el.style.display = 'none');
+  const target = document.getElementById(id);
+  if (target) target.style.display = 'flex';
+  const muteWrap = document.getElementById('float-mute');
+  if (muteWrap) muteWrap.style.display = id === 'interview' ? 'flex' : 'none';
 }
 
 // ── GEMINI TTS ────────────────────────────────────────────────────
@@ -1015,55 +1017,62 @@ function toggleRecording() {
 
 // ── MAIN FLOW ─────────────────────────────────────────────────────
 async function beginInterview() {
-  // ── IMMEDIATELY switch to countdown so the button feels responsive ──
-  // (getUserMedia and voice loading happen IN BACKGROUND during countdown)
-  results = []; qIdx = 0;
+  // Dead-simple reliable version — no abstraction, explicit steps
+  const showPhase = (id) => {
+    document.querySelectorAll('.phase').forEach(el => el.style.display = 'none');
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'flex';
+  };
 
-  const n = parseInt(document.getElementById('q-count').value) || 8;
-  ACTIVE_Q = n === 0 ? ALL_QUESTIONS : ALL_QUESTIONS.slice(0, Math.min(n, ALL_QUESTIONS.length));
+  try {
+    // 1. Build question list
+    const countEl = document.getElementById('q-count');
+    const n = parseInt(countEl ? countEl.value : '8') || 8;
+    ACTIVE_Q = n === 0 ? ALL_QUESTIONS : ALL_QUESTIONS.slice(0, Math.min(n, ALL_QUESTIONS.length));
+    results = []; qIdx = 0;
 
-  // Show countdown right away — no waiting
-  phase('countdown');
+    // 2. Show countdown IMMEDIATELY
+    showPhase('countdown');
 
-  // Request mic permission and load voices IN PARALLEL with the countdown
-  // so the user never sees a frozen screen
-  const micReady = (async () => {
-    if (!hasSpeechRecog) return;
-    try {
-      await navigator.mediaDevices.getUserMedia({ audio: true });
-    } catch(e) {
-      console.warn('Mic permission:', e.message);
+    // 3. Start mic permission request in background (non-blocking)
+    if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+      navigator.mediaDevices?.getUserMedia({ audio: true })
+        .then(() => initRecognition())
+        .catch(e => console.warn('Mic permission:', e.message));
     }
-    initRecognition();
-  })();
 
-  const voicesReady = new Promise(resolve => {
-    if (window.speechSynthesis.getVoices().length > 0) { resolve(null); return; }
-    window.speechSynthesis.addEventListener('voiceschanged', () => resolve(null), { once: true });
-    setTimeout(() => resolve(null), 1800); // 1.8s max — well within the 3s countdown
-  });
-
-  // Run countdown (3 seconds) — mic and voices load during this time
-  for (let i = 3; i >= 1; i--) {
-    const numEl = document.getElementById('cd-num');
-    if (numEl) {
-      numEl.style.animation = 'none';
-      numEl.textContent = String(i);
-      // Force reflow to restart animation
-      void numEl.offsetWidth;
-      numEl.style.animation = 'countPop .85s cubic-bezier(.34,1.56,.64,1) both';
+    // 4. Countdown 3-2-1
+    for (let i = 3; i >= 1; i--) {
+      const numEl = document.getElementById('cd-num');
+      if (numEl) {
+        numEl.style.animation = 'none';
+        numEl.textContent = String(i);
+        void numEl.offsetWidth; // force reflow for animation restart
+        numEl.style.animation = 'countPop .85s cubic-bezier(.34,1.56,.64,1) both';
+      }
+      await wait(1000);
     }
-    await wait(1000);
+
+    // 5. Switch to interview screen
+    showPhase('interview');
+    const muteWrap = document.getElementById('float-mute');
+    if (muteWrap) muteWrap.style.display = 'flex';
+
+    // 6. Start first question
+    await startQ(0);
+
+  } catch(e) {
+    console.error('beginInterview crashed:', e);
+    // Show intro again with reset button
+    document.querySelectorAll('.phase').forEach(el => el.style.display = 'none');
+    const introEl = document.getElementById('intro');
+    if (introEl) introEl.style.display = 'flex';
+    const btn = document.getElementById('startBtn');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<span class="mi fill">play_circle</span> Start Interview';
+    }
   }
-
-  // Wait for mic + voices (should be done by now, but just in case)
-  await Promise.race([
-    Promise.all([micReady, voicesReady]),
-    wait(500) // never block more than 500ms extra
-  ]);
-
-  phase('interview');
-  await startQ(0);
 }
 
 async function startQ(idx) {
@@ -1364,7 +1373,16 @@ async function submitAdmin() {
 function restart() {
   stopSpeech(); stopRecording();
   results=[]; qIdx=0; transcript='';
-  phase('intro');
+  document.querySelectorAll('.phase').forEach(el => el.style.display = 'none');
+  const introEl = document.getElementById('intro');
+  if (introEl) introEl.style.display = 'flex';
+  document.getElementById('float-mute').style.display = 'none';
+  // Reset button
+  const btn = document.getElementById('startBtn');
+  if (btn) {
+    btn.disabled = false;
+    btn.innerHTML = '<span class="mi fill">play_circle</span> Start Interview';
+  }
 }
 
 function wait(ms) { return new Promise(r=>setTimeout(r,ms)); }
