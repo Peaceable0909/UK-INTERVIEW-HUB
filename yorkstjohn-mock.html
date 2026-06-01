@@ -574,6 +574,11 @@ button:disabled{opacity:.4;cursor:not-allowed;}
       <div class="sw b6"></div>
     </div>
     <div class="ai-status" id="ai-status">Ready</div>
+    <div id="audio-error"
+      style="display:none;margin-top:8px;background:rgba(251,191,36,.15);
+        border:1px solid rgba(251,191,36,.35);border-radius:8px;
+        padding:8px 14px;font-size:11px;color:#fbbf24;text-align:center;max-width:340px">
+    </div>
 
     <div class="q-card" style="margin-top:16px">
       <div class="q-cat" id="q-cat">
@@ -784,17 +789,15 @@ function pcm16ToWavBlob(base64pcm) {
 }
 
 async function speakGemini(text, voiceName) {
-  // Call gemini-proxy Edge Function — Gemini key is server-side in Supabase secrets
-  const session = await supabaseClient.auth.getSession();
-  const token   = session?.data?.session?.access_token || '';
+  // No JWT needed — gemini-proxy uses verify_jwt=false
   const resp = await fetch('https://okshteetxmmphgjgvrwt.supabase.co/functions/v1/gemini-proxy', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+token },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'tts', text, voice: voiceName })
   });
-  if (!resp.ok) throw new Error('gemini-proxy TTS HTTP '+resp.status);
   const data = await resp.json();
-  if (data.error) throw new Error(data.error);
+  if (!resp.ok || data.error) throw new Error(data.error || 'HTTP ' + resp.status);
+  if (!data.audio) throw new Error('No audio returned');
   return pcm16ToWavBlob(data.audio);
 }
 
@@ -823,6 +826,13 @@ function speak(text, onEnd) {
       })
       .catch(err => {
         console.warn('Gemini TTS failed:', err.message);
+        // Show visible warning, then fall back to browser TTS
+        const errEl = document.getElementById('audio-error');
+        if (errEl) {
+          errEl.textContent = '⚠️ Gemini voice unavailable (' + err.message + ') — using browser voice';
+          errEl.style.display = 'block';
+          setTimeout(() => errEl.style.display = 'none', 5000);
+        }
         speakBrowser(text, onEnd);
       });
   } else {
@@ -1124,7 +1134,7 @@ Return ONLY valid JSON — nothing else:
     const token   = session?.data?.session?.access_token || '';
     const resp = await fetch('https://okshteetxmmphgjgvrwt.supabase.co/functions/v1/gemini-proxy', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+token },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: 'grade', prompt })
     });
     if (resp.ok) {
