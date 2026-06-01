@@ -367,18 +367,10 @@ function initRecog(){
       if(e.results[i].isFinal) fin += t + ' ';
       else interim += t;
     }
+    
+    // Absolute preservation: only add to finalText, never subtract
     if(fin) finalText += fin;
     currentInterim = interim;
-    
-    // De-duplicate final text segments to prevent "I am I am" issues
-    var words = finalText.split(/\s+/);
-    var uniqueWords = [];
-    for(var j=0; j<words.length; j++){
-      if(words[j] && (j===0 || words[j].toLowerCase() !== words[j-1].toLowerCase())){
-        uniqueWords.push(words[j]);
-      }
-    }
-    finalText = uniqueWords.join(' ') + (finalText.endsWith(' ') ? ' ' : '');
 
     var display=(finalText+currentInterim).trim();
     var tx=document.getElementById('txtxt');
@@ -395,28 +387,27 @@ function initRecog(){
     }
   };
   recog.onend=function(){
-    // Commit interim to final to prevent loss on pause
+    // Commit any leftover interim to final to prevent data loss
     if(currentInterim.trim()){
-      var words = currentInterim.trim().split(/\s+/);
-      var lastFinalWord = finalText.trim().split(/\s+/).pop();
-      // Simple de-dupe for the transition
-      if(words[0].toLowerCase() === (lastFinalWord||'').toLowerCase()) words.shift();
-      if(words.length) finalText += words.join(' ') + ' ';
-      currentInterim='';
+      finalText += currentInterim.trim() + ' ';
+      currentInterim = '';
       var tx=document.getElementById('txtxt');
-      if(tx) tx.textContent=finalText.trim();
+      if(tx) tx.textContent = finalText.trim();
     }
-    // Robust restart
+    // Continuous restart if still in recording mode
     if(isRecording){
       var now = Date.now();
+      // Ensure we don't spam start calls
       if(!window._lastSRStart || (now - window._lastSRStart > 1000)){
         window._lastSRStart = now;
-        try{recog.start()}catch(e){
-          // If already started, ignore. If failed, retry once more.
-          setTimeout(function(){ if(isRecording) try{recog.start()}catch(err){} }, 500);
+        try {
+          recog.start();
+        } catch(e) {
+          // If already running or error, retry briefly
+          setTimeout(function(){ if(isRecording) try{recog.start()}catch(err){} }, 400);
         }
       } else {
-        setTimeout(function(){ if(isRecording) try{recog.start()}catch(err){} }, 1000);
+        setTimeout(function(){ if(isRecording) try{recog.start()}catch(err){} }, 800);
       }
     }
   };
@@ -486,7 +477,18 @@ async function submitAns(){
   stopRec();stopAudio();
   var ans=(document.getElementById('txtxt')||{}).textContent||'';
   ans=ans.trim();
-  if(ans.length<15){speakBrowser('Please give a longer answer before submitting.',function(){startRec()});return}
+  
+  // Clean up repetitious speech before submitting to LLM
+  var words = ans.split(/\s+/);
+  var uniqueWords = [];
+  for(var j=0; j<words.length; j++){
+    if(words[j] && (j===0 || words[j].toLowerCase() !== words[j-1].toLowerCase())){
+      uniqueWords.push(words[j]);
+    }
+  }
+  ans = uniqueWords.join(' ');
+
+  if(ans.length<15){speakBrowser('Please give a longer answer before submitting.',function(){startRec(false)});return}
 
   thinking(true);setStatus('Evaluating\u2026','thk');
 
