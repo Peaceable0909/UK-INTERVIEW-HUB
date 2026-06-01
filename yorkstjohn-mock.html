@@ -355,39 +355,58 @@ function initRecog(){
   if(!SR)return;
   recog=new SR();
   recog.continuous=true;recog.interimResults=true;recog.lang='en-GB';
-  recog.onstart=function(){currentInterim='';/* finalText preserved across restarts */};
-  recog.onresult=function(e){
-    var fin='';currentInterim='';
-    for(var i=e.resultIndex;i<e.results.length;i++){
-      if(e.results[i].isFinal)fin+=e.results[i][0].transcript+' ';
-      else currentInterim+=e.results[i][0].transcript;
-    }
-    if(fin)finalText+=fin;
-    var display=(finalText+currentInterim).trim();
-    var tx=document.getElementById('txtxt');if(tx)tx.textContent=display;
-    var sb=document.getElementById('btnsub');if(sb)sb.disabled=display.length<20;
+  recog.onstart=function(){
+    // Don't clear currentInterim here, it might have been set by onend
+    setStatus('Listening\u2026','lst');
   };
-  recog.onerror=function(e){if(e.error==='not-allowed')setStatus('Mic blocked','')};
+  recog.onresult=function(e){
+    var fin='';
+    var interim='';
+    for(var i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal) fin+=e.results[i][0].transcript+' ';
+      else interim+=e.results[i][0].transcript;
+    }
+    if(fin) finalText+=fin;
+    currentInterim=interim; // Update global interim
+    
+    var display=(finalText+currentInterim).trim();
+    var tx=document.getElementById('txtxt');
+    if(tx) tx.textContent=display;
+    var sb=document.getElementById('btnsub');
+    if(sb) sb.disabled=display.length<20;
+  };
+  recog.onerror=function(e){
+    console.error('SR Error:',e.error);
+    if(e.error==='not-allowed')setStatus('Mic blocked','');
+    // Restart on common errors that stop the engine
+    if(isRecording && (e.error==='no-speech' || e.error==='audio-capture' || e.error==='network')){
+      setTimeout(function(){if(isRecording&&recog)try{recog.start()}catch(err){}},500);
+    }
+  };
   recog.onend=function(){
-    // Save any interim text as final BEFORE restarting — prevents deletion on pause
+    // If we have leftover interim when the session ends, commit it to finalText
+    // This is critical for mobile browsers that stop frequently
     if(currentInterim.trim()){
       finalText+=currentInterim.trim()+' ';
       currentInterim='';
-      // Update display so text stays visible
       var tx=document.getElementById('txtxt');
-      if(tx)tx.textContent=(finalText).trim();
-      var sb=document.getElementById('btnsub');
-      if(sb)sb.disabled=finalText.trim().length<20;
-    } else {
-      currentInterim='';
+      if(tx) tx.textContent=finalText.trim();
     }
-    if(isRecording)setTimeout(function(){if(isRecording&&recog)try{recog.start()}catch(e){}},300);
+    // Automatically restart if we are still in recording mode
+    if(isRecording){
+      setTimeout(function(){
+        if(isRecording&&recog)try{recog.start()}catch(e){}
+      },300);
+    }
   };
 }
-function startRec(){
-  isRecording=true;finalText='';currentInterim='';
-  var tx=document.getElementById('txtxt');if(tx)tx.textContent='';
-  var sb=document.getElementById('btnsub');if(sb)sb.disabled=true;
+function startRec(reset){
+  isRecording=true;
+  if(reset!==false){
+    finalText='';currentInterim='';
+    var tx=document.getElementById('txtxt');if(tx)tx.textContent='';
+    var sb=document.getElementById('btnsub');if(sb)sb.disabled=true;
+  }
   document.getElementById('txcard').classList.add('recording');
   document.getElementById('micicon').textContent='stop_circle';
   document.getElementById('miclbl').textContent='Recording — tap to stop';
@@ -403,7 +422,7 @@ function stopRec(){
   document.getElementById('miclbl').textContent='Tap to Record';
   document.getElementById('btnmic').classList.remove('rec');
 }
-function toggleRec(){if(isRecording)stopRec();else startRec()}
+function toggleRec(){if(isRecording)stopRec();else startRec(false)}
 
 // ── Interview flow ───────────────────────────────────
 function goToQ(idx,preBlob){
@@ -427,7 +446,7 @@ function goToQ(idx,preBlob){
 
   var afterSpeak=function(){
     var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-    if(SR)startRec();else setStatus('Tap mic to answer','');
+    if(SR)startRec(true);else setStatus('Tap mic to answer','');
   };
   function reveal(blob){
     document.getElementById('qcat').textContent=q.cat;
@@ -516,7 +535,7 @@ function retryQ(){
   document.getElementById('rowaft').style.display='none';
   document.getElementById('txtxt').textContent='';
   document.getElementById('btnsub').disabled=true;
-  if(window.SpeechRecognition||window.webkitSpeechRecognition)startRec();
+  if(window.SpeechRecognition||window.webkitSpeechRecognition)startRec(true);
 }
 
 function nextQ(){
