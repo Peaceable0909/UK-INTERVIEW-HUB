@@ -528,6 +528,39 @@
     Preparing for: <strong id="course-name-text" style="color:rgba(255,255,255,.8)">—</strong>
   </div>
 
+  <!-- Voice + count options -->
+  <div style="display:flex;gap:10px;margin-bottom:16px">
+    <div style="flex:1">
+      <label style="font-size:11px;font-weight:800;color:rgba(255,255,255,.4);
+        text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:6px">
+        Questions
+      </label>
+      <select id="q-count-select"
+        style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+          border-radius:10px;padding:10px 14px;font-size:14px;color:#fff;font-family:inherit;
+          appearance:none;-webkit-appearance:none;outline:none;">
+        <option value="3" style="background:#1a1a2e">3 questions (quick)</option>
+        <option value="5" style="background:#1a1a2e">5 questions</option>
+        <option value="8" selected style="background:#1a1a2e">8 questions (recommended)</option>
+        <option value="0" style="background:#1a1a2e">All questions</option>
+      </select>
+    </div>
+    <div style="flex:1">
+      <label style="font-size:11px;font-weight:800;color:rgba(255,255,255,.4);
+        text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:6px">
+        AI Voice
+      </label>
+      <select id="voice-select"
+        style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+          border-radius:10px;padding:10px 14px;font-size:14px;color:#fff;font-family:inherit;
+          appearance:none;-webkit-appearance:none;outline:none;">
+        <option value="female-uk" selected style="background:#1a1a2e">Female (British)</option>
+        <option value="male-uk" style="background:#1a1a2e">Male (British)</option>
+        <option value="female-us" style="background:#1a1a2e">Female (American)</option>
+      </select>
+    </div>
+  </div>
+
   <button class="btn-start-mock" id="startBtn" onclick="beginInterview()">
     <span class="mi fill">play_circle</span>
     Start Interview
@@ -715,27 +748,27 @@ const QUESTIONS = [
       'Institution name mentioned',
       'Qualification or degree mentioned',
       'Graduation month AND year stated',
-      'Employment listed in chronological order',
-      'Each job: company name mentioned',
-      'Each job: job title mentioned',
-      'Each job: start and end dates mentioned',
-      'No unexplained gap longer than six months',
-      'Timeline continues to current position',
+      'Employment in chronological order',
+      'Each job: company name',
+      'Each job: job title',
+      'Each job: start and end dates',
+      'No unexplained gap over six months',
+      'Timeline up to current position',
     ],
     prompt_extra: `
-MANDATORY CRITERIA — check each one:
+MANDATORY CRITERIA — each missing item deducts 10-15 points:
 1. Institution name (the university/college attended)
 2. Qualification/degree name
-3. Graduation MONTH mentioned (not just year)
+3. Graduation MONTH mentioned (not just year) — this is very common to miss
 4. Graduation YEAR mentioned
-5. Employment in chronological order (earliest first)
-6. Each employer: company name
-7. Each employer: job title/position
-8. Each employer: employment dates (start and end)
-9. No unexplained gap longer than 6 months between jobs
-10. Timeline up to current employment
+5. Employment in chronological order (earliest first, most recent last)
+6. Each employer: company/organisation name
+7. Each employer: job title or position held
+8. Each employer: employment dates (start AND end, or "currently work there")
+9. No unexplained gap longer than 6 months between roles
+10. Timeline continues to current employment
 
-The student should NOT explain what companies do. That is unnecessary.`
+IMPORTANT: Students should NOT explain what companies do. Only name, title and dates matter.`
   },
   {
     id: 'q_programme',
@@ -744,18 +777,20 @@ The student should NOT explain what companies do. That is unnecessary.`
     hint: 'State the full programme title, what it covers, key areas of study, and why it connects to your interests or career.',
     criteria: [
       'Full programme title stated clearly',
-      'Brief explanation of what the programme covers',
-      'Key areas of study or modules mentioned',
-      'Connection to personal interests or experience',
+      'What the programme covers explained',
+      'At least two key study areas or modules named',
+      'Connection to personal interests or background',
       'Connection to career goals',
     ],
     prompt_extra: `
-MANDATORY CRITERIA — check each one:
-1. Full programme title stated (e.g. "MSc International Business Management" — not just "business management")
-2. Brief explanation of what the programme covers or focuses on
-3. At least two key areas of study or module topics mentioned
-4. Personal connection: links to their background, interests, or experience
-5. Career connection: explains how it supports future goals`
+MANDATORY CRITERIA:
+1. Full programme title stated precisely (e.g. "MSc International Business Management" not "business")
+2. Brief explanation of what the programme focuses on
+3. At least two specific key areas of study or module names
+4. Personal connection: links to the student's background, interests, or experience
+5. Career connection: how it aligns with their future goals
+
+PENALISE if the student only says the programme name without explaining it.`
   },
   {
     id: 'q_why_programme',
@@ -770,14 +805,126 @@ MANDATORY CRITERIA — check each one:
       'Explains how programme supports future plans',
     ],
     prompt_extra: `
-MANDATORY CRITERIA — check each one:
-1. Explicitly linked to current work experience (not vague — specific connection)
-2. Linked to future career plans (not generic like "better job" — specific role or industry)
-3. Connects to a professional ambition or business goal they already have
-4. At least one specific, realistic example given
-5. Clearly explains how studying this programme will help them achieve their goals
+MANDATORY CRITERIA:
+1. Explicitly linked to current work experience (specific, not vague)
+2. Linked to future career plans (specific role or industry, not generic "better job")
+3. Connected to a professional ambition or business goal they have
+4. At least one specific, realistic example
+5. Clearly explains how studying this programme will help achieve their goals
 
 PENALISE heavily if the answer is generic and could apply to any programme at any university.`
+  },
+  {
+    id: 'q_why_uk',
+    category: 'Why the UK',
+    text: 'Why did you choose to study in the United Kingdom rather than in another country?',
+    hint: 'Compare the UK with at least one other country. Give specific reasons like programme quality, recognition in your industry, career opportunities, or personal goals. Avoid generic phrases.',
+    criteria: [
+      'At least one specific reason for choosing the UK',
+      'Comparison with at least one other country',
+      'UK reason linked to career goals',
+      'Avoids generic phrases like "world-class education"',
+      'Reason is specific to the UK, not equally true of other countries',
+    ],
+    prompt_extra: `
+MANDATORY CRITERIA:
+1. At least one specific reason for choosing the UK (not generic)
+2. Comparison with at least one alternative country considered (e.g. Canada, Australia, USA, home country)
+3. The UK reason connects to their career or industry — why the UK specifically matters
+4. Does NOT use banned generic phrases like "world-class education", "highly renowned", "good processing times"
+5. The reason could NOT apply equally to another country — it is UK-specific
+
+PENALISE heavily for: "world-class education", "highly renowned globally", "strong reputation without evidence", "fees are less", "good processing times".`
+  },
+  {
+    id: 'q_why_ysj',
+    category: 'Why York St John',
+    text: 'Why did you choose York St John University specifically?',
+    hint: 'Mention specific things about YSJ: campus location (York or London), specific programme features, campus facilities, links to industry. Compare with at least one other UK university you considered.',
+    criteria: [
+      'Specific reasons for YSJ mentioned',
+      'Campus location or facilities referenced',
+      'Programme-specific features at YSJ mentioned',
+      'Comparison with at least one other UK university',
+      'Reason is specific to YSJ, not applicable to any university',
+    ],
+    prompt_extra: `
+MANDATORY CRITERIA:
+1. Specific reason(s) for choosing York St John University (not generic praise)
+2. Mentions campus — either York campus or London campus by name
+3. At least one programme-specific feature, module, or strength at YSJ
+4. Compared with at least one other UK university they considered (and why YSJ won)
+5. The reason given is specific to YSJ and would not apply to any other university
+
+PENALISE if the student gives reasons that could apply to any UK university.`
+  },
+  {
+    id: 'q_career',
+    category: 'Career Plans',
+    text: 'What are your career plans after completing this programme?',
+    hint: 'Give a short-term plan (0–2 years), medium-term plan (3–5 years), and long-term plan (5–10 years). Name specific roles, industries, or organisations.',
+    criteria: [
+      'Short-term career plan mentioned (0–2 years)',
+      'Medium-term plan mentioned (3–5 years)',
+      'Long-term plan mentioned (5–10 years)',
+      'Specific roles or job titles named',
+      'Plan connects to the programme studied',
+      'Plan shows intention to return to home country or credible reason to stay',
+    ],
+    prompt_extra: `
+MANDATORY CRITERIA:
+1. Short-term plan (0–2 years after graduation) — specific role/position
+2. Medium-term plan (3–5 years) — progression or career development
+3. Long-term plan (5+ years) — ultimate career goal or business ambition
+4. Specific job titles, industries, or named organisations mentioned
+5. Career plan logically follows from studying this programme
+6. The student explains whether they plan to return to their home country (important for visa credibility) or gives a credible reason to remain in the UK
+
+PENALISE heavily for: vague plans like "I want a good job", no timeline, or no connection to the programme.`
+  },
+  {
+    id: 'q_funding',
+    category: 'Finance & Funding',
+    text: 'How will you fund your studies and living expenses in the UK?',
+    hint: 'Name the exact source of funds — personal savings, family support, employer sponsorship, or scholarship. Mention the amount and how it covers tuition plus living costs.',
+    criteria: [
+      'Source of funds clearly named',
+      'Amount available or mentioned',
+      'Covers both tuition and living costs',
+      'Documentary evidence mentioned (savings, sponsorship letter, etc.)',
+      'Plan is realistic and credible',
+    ],
+    prompt_extra: `
+MANDATORY CRITERIA:
+1. Source of funds clearly identified — personal savings, family savings, employer sponsorship, scholarship, property sale, inheritance, salary
+2. The amount available is mentioned or described (even approximately)
+3. Covers both tuition fees AND living/accommodation costs
+4. Documentary proof mentioned — e.g. bank statements, sponsorship letter, scholarship award letter
+5. The funding plan is realistic and credible for the cost of study in the UK
+
+PENALISE: "my family will pay" without specifying the source (savings? salary? property?). PENALISE vague amounts.`
+  },
+  {
+    id: 'q_accommodation',
+    category: 'Accommodation',
+    text: 'Where will you live during your studies, and how much will it cost?',
+    hint: 'Name the area or type of accommodation. Give a realistic weekly or monthly cost. Explain how you will travel to campus.',
+    criteria: [
+      'Accommodation location or area named',
+      'Type of accommodation described',
+      'Weekly or monthly cost mentioned',
+      'Travel to campus explained',
+      'Cost is realistic for York or London',
+    ],
+    prompt_extra: `
+MANDATORY CRITERIA:
+1. Location or area named (e.g. city centre York, near the campus in London)
+2. Type of accommodation described (student halls, private flat, shared house)
+3. Weekly or monthly cost stated (realistic for UK — York approx £100–£200/week, London £150–£300/week)
+4. How the student will travel to campus (bus, walk, tube, train — with approximate time)
+5. Overall cost is realistic for the UK city they will study in
+
+PENALISE: no location, no cost, or a cost that is wildly inaccurate for the UK.`
   },
 ];
 
@@ -809,18 +956,41 @@ function detectBrowserSupport() {
 // ── VOICE SELECTION ──────────────────────────────────────────────
 function getVoice() {
   const voices = synth.getVoices();
-  // Prefer British or Irish female voice
-  const prefs = [
-    v => v.name.includes('Google UK English Female'),
-    v => v.name.includes('Microsoft Hazel'),
-    v => v.name.includes('Moira'),
-    v => v.lang === 'en-GB' && v.name.toLowerCase().includes('female'),
-    v => v.lang === 'en-GB',
-    v => v.lang === 'en-IE',
-    v => v.lang.startsWith('en'),
-  ];
-  for (const pref of prefs) {
-    const v = voices.find(pref);
+  const pref = window._voicePref || 'female-uk';
+  const isFemale = pref.includes('female');
+  const isUS     = pref.includes('us');
+
+  let prefs;
+  if (!isUS) {
+    // British voice
+    if (isFemale) {
+      prefs = [
+        v => v.name === 'Google UK English Female',
+        v => v.name.includes('Hazel'),
+        v => v.name.includes('Moira'),
+        v => v.lang === 'en-GB' && (v.name.toLowerCase().includes('female') || v.name.includes('f')),
+        v => v.lang === 'en-GB',
+        v => v.lang === 'en-IE',
+        v => v.lang.startsWith('en'),
+      ];
+    } else {
+      prefs = [
+        v => v.name === 'Google UK English Male',
+        v => v.name.includes('Daniel') && v.lang === 'en-GB',
+        v => v.lang === 'en-GB' && v.name.toLowerCase().includes('male'),
+        v => v.lang === 'en-GB',
+        v => v.lang.startsWith('en'),
+      ];
+    }
+  } else {
+    // American voice
+    prefs = isFemale
+      ? [v => v.name.includes('Samantha'), v => v.name.includes('Zira'), v => v.lang === 'en-US' && v.name.toLowerCase().includes('female'), v => v.lang === 'en-US']
+      : [v => v.name.includes('Alex'),     v => v.name.includes('David'), v => v.lang === 'en-US', v => v.lang.startsWith('en')];
+  }
+
+  for (const p of prefs) {
+    const v = voices.find(p);
     if (v) return v;
   }
   return voices[0] || null;
@@ -979,7 +1149,20 @@ function toggleMute() {
 }
 
 // ── MAIN FLOW ────────────────────────────────────────────────────
+// Subset of questions based on count select
+let ACTIVE_QUESTIONS = QUESTIONS;
+
 async function beginInterview() {
+  // Respect question count
+  const countSel = document.getElementById('q-count-select');
+  const n = parseInt(countSel?.value || '8');
+  ACTIVE_QUESTIONS = n === 0 ? QUESTIONS : QUESTIONS.slice(0, Math.min(n, QUESTIONS.length));
+
+  // Respect voice preference
+  const voiceSel = document.getElementById('voice-select');
+  const voicePref = voiceSel?.value || 'female-uk';
+  window._voicePref = voicePref;
+
   // Request mic permission early
   if (hasSpeechRecog) {
     try { await navigator.mediaDevices.getUserMedia({ audio: true }); } catch(e) {}
@@ -1007,11 +1190,11 @@ async function beginInterview() {
 
 async function startQuestion(idx) {
   currentQIdx = idx;
-  const q = QUESTIONS[idx];
+  const q = ACTIVE_QUESTIONS[idx];
   if (!q) { showResults(); return; }
 
   // Update UI
-  const total = QUESTIONS.length;
+  const total = ACTIVE_QUESTIONS.length;
   document.getElementById('mock-q-progress-label').textContent = `Question ${idx+1} of ${total}`;
   document.getElementById('mock-progress-fill').style.width = ((idx+1)/total*100) + '%';
   document.getElementById('mock-q-num').textContent = `Q${idx+1}`;
@@ -1068,7 +1251,7 @@ async function submitAnswer() {
   showThinking(true);
 
   try {
-    const q = QUESTIONS[currentQIdx];
+    const q = ACTIVE_QUESTIONS[currentQIdx];
     const result = await gradeAnswer(q, answer);
     showThinking(false);
     await showFeedback(result, answer);
@@ -1150,7 +1333,7 @@ async function showFeedback(result, answer) {
 
   // Update next button label
   const nextBtn = document.getElementById('next-q-btn');
-  const isLast  = currentQIdx >= QUESTIONS.length - 1;
+  const isLast  = currentQIdx >= ACTIVE_QUESTIONS.length - 1;
   if (nextBtn) nextBtn.innerHTML = isLast
     ? '<span class="mi fill">bar_chart</span>See Results'
     : 'Next Question <span class="mi">arrow_forward</span>';
@@ -1183,7 +1366,7 @@ async function nextQuestion() {
   synth.cancel();
   stopRecording();
   const next = currentQIdx + 1;
-  if (next >= QUESTIONS.length) {
+  if (next >= ACTIVE_QUESTIONS.length) {
     await showResults();
   } else {
     await startQuestion(next);
