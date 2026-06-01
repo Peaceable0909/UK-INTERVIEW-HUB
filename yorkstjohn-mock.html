@@ -427,6 +427,10 @@ function toggleMute() {
 }
 
 // ── Speech Recognition ─────────────────────────────────
+// Keeps FINALS separate from INTERIM to prevent duplicate accumulation on restart
+var finalText = '';       // confirmed final text from this recording session
+var currentInterim = '';  // interim text from the current recognition sub-session
+
 function initRecog() {
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) return;
@@ -434,34 +438,63 @@ function initRecog() {
   recog.continuous = true;
   recog.interimResults = true;
   recog.lang = 'en-GB';
+  recog.maxAlternatives = 1;
+
+  recog.onstart = function() {
+    currentInterim = ''; // clear interim on each new sub-session start
+  };
+
   recog.onresult = function(e) {
-    var fin = '', int = '';
+    // Only process results from this event batch
+    var newFinal = '';
+    currentInterim = '';
     for (var i = e.resultIndex; i < e.results.length; i++) {
-      if (e.results[i].isFinal) fin += e.results[i][0].transcript;
-      else int += e.results[i][0].transcript;
+      if (e.results[i].isFinal) {
+        newFinal += e.results[i][0].transcript + ' ';
+      } else {
+        currentInterim += e.results[i][0].transcript;
+      }
     }
-    if (fin) transcript += fin + ' ';
-    var full = (transcript + int).trim();
+    if (newFinal) finalText += newFinal;
+    // Display: confirmed finals + current interim only
+    var display = (finalText + currentInterim).trim();
     var tx = document.getElementById('tx-text');
-    if (tx) tx.textContent = full;
+    if (tx) tx.textContent = display;
+    // Enable submit once we have enough text
     var sb = document.getElementById('btn-submit');
-    if (sb) sb.disabled = full.length < 20;
+    if (sb) sb.disabled = display.length < 20;
+    // Update shared transcript for submitAns()
+    transcript = display;
   };
+
   recog.onerror = function(e) {
-    if (e.error === 'not-allowed') setStatus('Mic blocked','');
+    console.warn('STT error:', e.error);
+    if (e.error === 'not-allowed') {
+      setStatus('Mic blocked — allow mic in browser settings', '');
+    }
+    // On no-speech: just keep going (don't restart, let onend handle it)
   };
+
   recog.onend = function() {
+    // When the recognition session ends, restart ONLY if still recording
+    // Clear interim so we don't re-display old audio
+    currentInterim = '';
     if (isRecording) {
       setTimeout(function() {
-        if (isRecording && recog) try { recog.start(); } catch(e){}
-      }, 300);
+        if (isRecording && recog) {
+          try { recog.start(); }
+          catch(e) { /* already started */ }
+        }
+      }, 250);
     }
   };
 }
 
 function startRec() {
   isRecording = true;
-  transcript = '';
+  finalText = '';        // reset finals
+  currentInterim = '';   // reset interim
+  transcript = '';       // reset shared transcript
   var tx = document.getElementById('tx-text');
   if (tx) tx.textContent = '';
   var sb = document.getElementById('btn-submit');
@@ -471,14 +504,19 @@ function startRec() {
   document.getElementById('mic-lbl').textContent = 'Recording — tap to stop';
   document.getElementById('btn-mic').classList.add('recording');
   setStatus('Listening…', 'listening');
+  // 500ms delay so TTS audio clears before mic opens
   setTimeout(function() {
-    if (isRecording && recog) try { recog.start(); } catch(e){}
+    if (isRecording && recog) {
+      try { recog.start(); }
+      catch(e) { console.warn('STT start:', e.message); }
+    }
   }, 500);
 }
 
 function stopRec() {
   isRecording = false;
-  if (recog) recog.stop();
+  currentInterim = '';
+  if (recog) try { recog.stop(); } catch(e){}
   document.getElementById('tx-card').classList.remove('recording');
   document.getElementById('mic-icon').textContent = 'mic';
   document.getElementById('mic-lbl').textContent = 'Tap to Record';
