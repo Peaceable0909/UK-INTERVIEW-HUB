@@ -161,6 +161,13 @@ h1{font-size:clamp(24px,5vw,30px);font-weight:900;text-align:center;letter-spaci
     <div class="avatar"><span class="mi fill">support_agent</span></div>
     <h1>AI Mock Interview</h1>
     <p class="sub">Your AI interviewer will speak each question aloud, listen to your answer, and give you immediate spoken feedback.</p>
+    <div style="background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:12px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:10px;text-align:left">
+      <span class="mi fill" style="color:#fbbf24;font-size:22px;flex-shrink:0;margin-top:1px">laptop_mac</span>
+      <div>
+        <div style="font-size:13px;font-weight:800;color:#fbbf24;margin-bottom:3px">Best on laptop or desktop</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.5">Voice recording works best in <strong style="color:rgba(255,255,255,.8)">Chrome or Edge on a computer</strong>. On mobile the mic may restart between sentences — use a laptop for the most accurate experience.</div>
+      </div>
+    </div>
     <div class="steps">
       <div class="step"><div class="sn">1</div><div><strong>AI speaks each question</strong><span>Listen and read. Take your time before answering.</span></div></div>
       <div class="step"><div class="sn">2</div><div><strong>You answer verbally</strong><span>Speak clearly — your words appear on screen live.</span></div></div>
@@ -348,7 +355,7 @@ function initRecog(){
   if(!SR)return;
   recog=new SR();
   recog.continuous=true;recog.interimResults=true;recog.lang='en-GB';
-  recog.onstart=function(){currentInterim=''};
+  recog.onstart=function(){currentInterim='';/* finalText preserved across restarts */};
   recog.onresult=function(e){
     var fin='';currentInterim='';
     for(var i=e.resultIndex;i<e.results.length;i++){
@@ -362,7 +369,18 @@ function initRecog(){
   };
   recog.onerror=function(e){if(e.error==='not-allowed')setStatus('Mic blocked','')};
   recog.onend=function(){
-    currentInterim='';
+    // Save any interim text as final BEFORE restarting — prevents deletion on pause
+    if(currentInterim.trim()){
+      finalText+=currentInterim.trim()+' ';
+      currentInterim='';
+      // Update display so text stays visible
+      var tx=document.getElementById('txtxt');
+      if(tx)tx.textContent=(finalText).trim();
+      var sb=document.getElementById('btnsub');
+      if(sb)sb.disabled=finalText.trim().length<20;
+    } else {
+      currentInterim='';
+    }
     if(isRecording)setTimeout(function(){if(isRecording&&recog)try{recog.start()}catch(e){}},300);
   };
 }
