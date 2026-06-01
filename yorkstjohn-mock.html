@@ -124,6 +124,12 @@ h1 { font-size: clamp(24px,5vw,30px); font-weight: 900; text-align: center; lett
 @keyframes spin { to { transform: rotate(360deg); } }
 .spin { width: 48px; height: 48px; border-radius: 50%; border: 3px solid rgba(255,255,255,.08); border-top-color: #c41230; animation: spin .75s linear infinite; }
 
+.q-loading { text-align:center; padding:20px 0; }
+.q-loading-dots { display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:12px; }
+.q-dot { width:10px; height:10px; border-radius:50%; background:rgba(196,18,48,.5); animation:dotPulse 1.2s ease-in-out infinite; }
+.q-dot:nth-child(2){animation-delay:.2s} .q-dot:nth-child(3){animation-delay:.4s}
+@keyframes dotPulse{0%,80%,100%{transform:scale(.6);opacity:.3}40%{transform:scale(1);opacity:1}}
+.q-loading-lbl { font-size:13px; font-weight:700; color:rgba(255,255,255,.4); }
 /* ── RESULTS ─────────────────────────────────────── */
 #s-results { overflow-y: auto; background: linear-gradient(180deg,#0f0f1d,#08080f); }
 .res-wrap { max-width: 560px; margin: 0 auto; padding: calc(env(safe-area-inset-top)+20px) 20px calc(env(safe-area-inset-bottom)+24px); }
@@ -352,6 +358,39 @@ function setStatus(txt, cls) {
   else wrap.classList.remove('ai-speaking');
 }
 
+// ── Shared audio helpers ─────────────────────────────
+function pcmToWav(b64) {
+  var pcm = Uint8Array.from(atob(b64), function(c){ return c.charCodeAt(0); });
+  var buf = new ArrayBuffer(44 + pcm.byteLength);
+  var v = new DataView(buf);
+  var s = function(o,str){ for(var i=0;i<str.length;i++) v.setUint8(o+i,str.charCodeAt(i)); };
+  s(0,'RIFF'); v.setUint32(4,36+pcm.byteLength,true); s(8,'WAVE'); s(12,'fmt ');
+  v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+  v.setUint32(24,24000,true); v.setUint32(28,48000,true);
+  v.setUint16(32,2,true); v.setUint16(34,16,true);
+  s(36,'data'); v.setUint32(40,pcm.byteLength,true);
+  new Uint8Array(buf).set(pcm,44);
+  return new Blob([buf],{type:'audio/wav'});
+}
+function playBlob(blob, onDone) {
+  if (!blob) { if(onDone) onDone(); return; }
+  var url = URL.createObjectURL(blob);
+  if (currentAudio) currentAudio.pause();
+  currentAudio = new Audio(url);
+  currentAudio.onended = function(){ setStatus('Ready',''); URL.revokeObjectURL(url); if(onDone) onDone(); };
+  currentAudio.onerror = function(){ setStatus('Ready',''); URL.revokeObjectURL(url); if(onDone) onDone(); };
+  currentAudio.play().catch(function(){ setStatus('Ready',''); if(onDone) onDone(); });
+}
+function fetchTTS(text) {
+  var voice = (document.getElementById('voice-pref')||{}).value || 'Kore';
+  return fetch(PROXY, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({type:'tts', text:text, voice:voice})
+  }).then(function(r){ return r.json(); })
+    .then(function(d){ return d.audio ? pcmToWav(d.audio) : null; })
+    .catch(function(){ return null; });
+}
+
 // ── TTS via Gemini proxy ──────────────────────────────
 function speak(text, onDone) {
   if (isMuted) { if (onDone) onDone(); return; }
@@ -367,31 +406,8 @@ function speak(text, onDone) {
   .then(function(r) { return r.json(); })
   .then(function(data) {
     if (data.error || !data.audio) throw new Error(data.error || 'no audio');
-    // PCM16 → WAV
-    var pcm = Uint8Array.from(atob(data.audio), function(c) { return c.charCodeAt(0); });
-    var buf = new ArrayBuffer(44 + pcm.byteLength);
-    var v = new DataView(buf);
-    var s = function(o, str) { for (var i=0;i<str.length;i++) v.setUint8(o+i, str.charCodeAt(i)); };
-    s(0,'RIFF'); v.setUint32(4,36+pcm.byteLength,true); s(8,'WAVE'); s(12,'fmt ');
-    v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
-    v.setUint32(24,24000,true); v.setUint32(28,48000,true);
-    v.setUint16(32,2,true); v.setUint16(34,16,true);
-    s(36,'data'); v.setUint32(40,pcm.byteLength,true);
-    new Uint8Array(buf).set(pcm, 44);
-    var blob = new Blob([buf], { type: 'audio/wav' });
-    var url = URL.createObjectURL(blob);
-    if (currentAudio) { currentAudio.pause(); }
-    currentAudio = new Audio(url);
-    currentAudio.onended = function() {
-      setStatus('Ready', '');
-      URL.revokeObjectURL(url);
-      if (onDone) onDone();
-    };
-    currentAudio.onerror = function() {
-      setStatus('Ready', '');
-      speakFallback(text, onDone);
-    };
-    currentAudio.play().catch(function() { speakFallback(text, onDone); });
+    // Use shared pcmToWav helper + playBlob
+    playBlob(pcmToWav(data.audio), onDone);
   })
   .catch(function(e) {
     console.warn('Gemini TTS failed:', e.message);
@@ -535,11 +551,9 @@ function goToQ(idx, preloadedBlob) {
   if (!q) { showResults(); return; }
 
   var total = activeQ.length;
-  document.getElementById('iv-label').textContent = 'Question ' + (idx+1) + ' of ' + total;
-  document.getElementById('iv-qnum').textContent  = 'Q' + (idx+1);
-  document.getElementById('iv-fill').style.width  = ((idx+1)/total*100) + '%';
-  document.getElementById('q-cat').textContent    = q.cat;
-  document.getElementById('q-text').textContent   = q.text;
+  document.getElementById('iv-label').textContent = 'Question '+(idx+1)+' of '+total;
+  document.getElementById('iv-qnum').textContent  = 'Q'+(idx+1);
+  document.getElementById('iv-fill').style.width  = ((idx+1)/total*100)+'%';
   document.getElementById('tx-text').textContent  = '';
   document.getElementById('fb-card').className    = 'fb-card';
   document.getElementById('row-record').style.display = 'flex';
@@ -547,321 +561,36 @@ function goToQ(idx, preloadedBlob) {
   document.getElementById('btn-submit').disabled  = true;
   stopRec();
 
-  var onDone = function() {
+  // Show loading dots, hide question until audio ready
+  var loadEl = document.getElementById('q-loading');
+  var contEl = document.getElementById('q-content');
+  if (loadEl) loadEl.style.display = 'block';
+  if (contEl) contEl.style.display = 'none';
+  setStatus('Preparing…', '');
+
+  var afterSpeak = function() {
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SR) startRec();
-    else setStatus('Tap mic to answer', '');
+    if (SR) startRec(); else setStatus('Tap mic to answer', '');
   };
 
-  // If we have a pre-fetched blob, play it instantly (no network wait)
-  if (preloadedBlob) {
+  function revealAndPlay(blob) {
+    // Show question just as audio starts
+    if (document.getElementById('q-cat')) document.getElementById('q-cat').textContent = q.cat;
+    if (document.getElementById('q-text')) document.getElementById('q-text').textContent = q.text;
+    if (loadEl) loadEl.style.display = 'none';
+    if (contEl) contEl.style.display = 'block';
     setStatus('Speaking…', 'speaking');
-    var url = URL.createObjectURL(preloadedBlob);
-    if (currentAudio) currentAudio.pause();
-    currentAudio = new Audio(url);
-    currentAudio.onended = function() { setStatus('Ready',''); URL.revokeObjectURL(url); onDone(); };
-    currentAudio.onerror = function() { setStatus('Ready',''); speak('Question ' + (idx+1) + '. ' + q.text, onDone); };
-    currentAudio.play().catch(function() { speak('Question ' + (idx+1) + '. ' + q.text, onDone); });
+    if (blob) {
+      playBlob(blob, afterSpeak);
+    } else {
+      speakFallback('Question '+(idx+1)+'. '+q.text, afterSpeak);
+    }
+  }
+
+  if (preloadedBlob) {
+    revealAndPlay(preloadedBlob);
   } else {
-    speak('Question ' + (idx+1) + '. ' + q.text, onDone);
+    fetchTTS('Question '+(idx+1)+'. '+q.text).then(revealAndPlay);
   }
 }
-
-async function submitAns() {
-  stopRec();
-  stopSpeech();
-  var ans = document.getElementById('tx-text').textContent.trim() || transcript.trim();
-  if (ans.length < 15) {
-    speak('Please give a longer answer before submitting.', function() {
-      var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (SR) startRec();
-    });
-    return;
-  }
-
-  thinking(true);
-  setStatus('Cleaning transcript…', 'thinking');
-
-  var q = activeQ[qIdx];
-
-  // AI cleans the repetitive STT output before grading
-  try {
-    var cleanResp = await fetch(PROXY, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'clean', text: ans })
-    });
-    var cleanData = await cleanResp.json();
-    if (cleanData.text && cleanData.text.length > 10) {
-      ans = cleanData.text;
-      // Update display with cleaned text
-      var txEl = document.getElementById('tx-text');
-      if (txEl) txEl.textContent = ans;
-    }
-  } catch(e) { console.warn('Clean failed, using raw transcript'); }
-
-  setStatus('Evaluating…', 'thinking');
-
-  var prompt = 'You are a strict UK student visa credibility interview examiner.\n\nQuestion: "' + q.text + '"\nStudent answer: "' + ans + '"\n\nCriteria: ' + q.criteria + '\n\nPASS THRESHOLD: 70+. Most first attempts should not pass.\nReturn ONLY valid JSON: {"score":0-100,"pass":boolean,"feedback_text":"2-3 spoken sentences. What was good first, then what was missing, then one clear instruction. Coach voice. No \'Thank you\'","good":["one strength"],"missing":["one gap"]}';
-
-  var result = null;
-  // Try Gemini proxy first
-  try {
-    var r = await fetch(PROXY, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'grade', prompt: prompt })
-    });
-    var data = await r.json();
-    if (!data.error) result = typeof data === 'string' ? JSON.parse(data) : data;
-  } catch(e) { console.warn('Gemini grade failed, trying Puter:', e.message); }
-
-  // Puter fallback
-  if (!result) {
-    try {
-      var resp = await puter.ai.chat(prompt, { model: 'gpt-4o-mini' });
-      var raw = typeof resp === 'string' ? resp : resp?.message?.content || '{}';
-      var m = raw.match(/\{[\s\S]*\}/);
-      if (m) result = JSON.parse(m[0]);
-    } catch(e) { console.warn('Puter fallback failed:', e.message); }
-  }
-
-  thinking(false);
-
-  if (!result) {
-    speak('I could not evaluate your answer. Please check your connection and try again.', null);
-    startRec();
-    return;
-  }
-
-  var pass = result.pass || result.score >= 70;
-  var score = result.score || 0;
-
-  results.push({ question: q.text, cat: q.cat, transcript: ans, score: score, pass: pass, feedback: result.feedback_text || '' });
-
-  // Show feedback card
-  var fb = document.getElementById('fb-card');
-  fb.className = 'fb-card show ' + (pass ? 'pass' : 'fail');
-  var fn = document.getElementById('fb-num');
-  fn.textContent = score;
-  fn.className = 'fb-num ' + (pass ? 'pass' : 'fail');
-  document.getElementById('fb-verdict').textContent = pass ? '✅ Good answer' : '❌ Needs improvement';
-  document.getElementById('fb-sub').textContent = score + '/100';
-  document.getElementById('fb-msg').textContent = result.feedback_text || '';
-
-  document.getElementById('row-record').style.display = 'none';
-  document.getElementById('row-after').style.display  = 'flex';
-  var nb = document.getElementById('btn-next');
-  var isLast = qIdx >= activeQ.length - 1;
-  nb.innerHTML = isLast ? '<span class="mi fill">bar_chart</span>See Results' : 'Next<span class="mi">arrow_forward</span>';
-
-  // Speak feedback
-  setStatus('Feedback…', 'speaking');
-  speak(result.feedback_text || '', function() { setStatus('Ready', ''); });
-
-  // Save score
-  if (typeof window.saveAIResponse === 'function') {
-    window.saveAIResponse('YSJ_MOCK_q' + qIdx, ans, Math.round(score/10), result.feedback_text || '', q.text).catch(function(){});
-  }
-}
-
-function retryQ() {
-  stopSpeech();
-  results.pop();
-  document.getElementById('fb-card').className = 'fb-card';
-  document.getElementById('row-record').style.display = 'flex';
-  document.getElementById('row-after').style.display  = 'none';
-  document.getElementById('tx-text').textContent = '';
-  document.getElementById('btn-submit').disabled = true;
-  transcript = '';
-  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (SR) startRec();
-  else speak('Let us try that again. ' + activeQ[qIdx].text, null);
-}
-
-function nextQ() {
-  stopSpeech(); stopRec();
-  goToQ(qIdx + 1);
-}
-
-// ── Results ────────────────────────────────────────────
-function showResults() {
-  show('s-results');
-  var total = results.length;
-  var avg = total ? Math.round(results.reduce(function(s,r){return s+r.score;},0)/total) : 0;
-  var passed = results.filter(function(r){return r.pass;}).length;
-  var readiness = avg >= 80 ? 'ready' : avg >= 60 ? 'needs' : 'poor';
-  var vText = avg >= 80 ? 'Interview Ready' : avg >= 60 ? 'Needs Practice' : 'More Work Needed';
-
-  var circ = 2*Math.PI*53;
-  var ring = document.getElementById('res-ring-c');
-  if (ring) {
-    ring.style.stroke = avg>=80?'#22c55e':avg>=60?'#fbbf24':'#f87171';
-    setTimeout(function(){ ring.style.strokeDashoffset = circ-(circ*avg/100); }, 300);
-  }
-  document.getElementById('res-score').textContent = avg;
-  document.getElementById('res-verdict').textContent = vText;
-  var chip = document.getElementById('res-chip');
-  chip.className = 'res-chip ' + readiness;
-  document.getElementById('res-chip-txt').textContent = avg>=80?'✅ Ready for Interview':avg>=60?'⚠️ Needs Practice':'❌ More Work Needed';
-  document.getElementById('res-summary').textContent = 'You scored ' + avg + '/100, passing ' + passed + ' of ' + activeQ.length + ' questions. ' + (avg>=70?'Keep up the strong work.':'Focus on specific examples and covering all required details.');
-
-  document.getElementById('rq-list').innerHTML = results.map(function(r,i){
-    return '<div class="rq" id="rq'+i+'">'
-      + '<div class="rq-hdr" onclick="toggleRQ('+i+')">'
-      + '<div class="rq-badge ' + (r.pass?'pass':'fail') + '">' + (r.pass?'✓':'✗') + '</div>'
-      + '<div class="rq-title">' + r.question + '</div>'
-      + '<div class="rq-sc ' + (r.pass?'pass':'fail') + '">' + r.score + '</div>'
-      + '<span class="mi rq-chev">expand_more</span>'
-      + '</div>'
-      + '<div class="rq-body"><div class="rq-content">'
-      + '<div class="rq-sub">Your Answer</div><div class="rq-tx">"' + (r.transcript||'') + '"</div>'
-      + '<div class="rq-sub">Feedback</div><div class="rq-fb">' + r.feedback + '</div>'
-      + '</div></div></div>';
-  }).join('');
-
-  speak('You scored ' + avg + ' out of 100. ' + (avg>=70?'Well done, you are building strong interview skills.':'Keep practising. Focus on giving specific examples and covering all required details.'), null);
-
-  // Save session
-  try {
-    var s = window.getCurrentStudent && window.getCurrentStudent();
-    if (s && s.id) {
-      supabaseClient.from('mock_interview_sessions').insert({
-        user_id: s.id, school: 'yorkstjohn',
-        course_id: localStorage.getItem('last_course') || null,
-        completed_at: new Date().toISOString(),
-        questions: results, overall_score: avg, readiness: readiness
-      }).then(function(){}).catch(function(){});
-      // Notify admin
-      fetch(PROXY, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({ type:'mock_complete', user_id:s.id, student_name:s.name||'Student',
-          course_name:(COURSES&&localStorage.getItem('last_course')&&COURSES[localStorage.getItem('last_course')]&&COURSES[localStorage.getItem('last_course')].name)||'York St John',
-          overall_score:avg, readiness:readiness, passed:passed, total:activeQ.length })
-      }).catch(function(){});
-    }
-  } catch(e){}
-}
-
-function toggleRQ(i) {
-  var el = document.getElementById('rq'+i);
-  if (el) el.classList.toggle('open');
-}
-
-async function submitAdmin() {
-  var btn = document.getElementById('btn-admin');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<span style="width:18px;height:18px;border:2px solid #ccc;border-top-color:#333;border-radius:50%;display:inline-block;animation:spin .7s linear infinite"></span><span style="margin-left:10px">Sending…</span>'; }
-  try {
-    var p = await window.loadSavedProgress && window.loadSavedProgress();
-    var scores = p && p.ai_scores || {};
-    var checklist = p && p.checklist_status || {};
-    var total = results.length;
-    var avg = total ? (results.reduce(function(s,r){return s+r.score;},0)/total).toFixed(1) : '0';
-    var res = await window.sendReadyEmail && window.sendReadyEmail(scores, checklist, avg, 'Student submitted Mock Interview results');
-    if (res && (res.success || res.sent)) {
-      if (btn) { btn.innerHTML = '<span class="mi fill">check_circle</span>Sent to WhiteRock!'; btn.style.background='#dcfce7'; btn.style.color='#166534'; }
-    } else throw new Error('send failed');
-  } catch(e) {
-    if (btn) { btn.disabled=false; btn.innerHTML='<span class="mi fill">send</span>Submit Report to WhiteRock'; }
-  }
-}
-
-function goBack() {
-  stopSpeech(); stopRec();
-  results=[]; qIdx=0; transcript='';
-  show('s-intro');
-}
-
-// ── INIT — called when Start button is clicked ─────────
-function startInterview() {
-  // Get settings
-  var countEl = document.getElementById('q-count');
-  var n = parseInt(countEl ? countEl.value : '8');
-  activeQ = n >= 99 ? QS.slice() : QS.slice(0, Math.min(n, QS.length));
-  results=[]; qIdx=0; transcript='';
-
-  // Init speech recognition (non-blocking)
-  if (!recog) {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({audio:true})
-        .then(function(){ initRecog(); })
-        .catch(function(){ initRecog(); }); // init anyway, just without permission
-    } else {
-      initRecog();
-    }
-  }
-
-  // Pre-fetch Q1 audio while countdown runs — eliminates the delay
-  var q1 = activeQ[0];
-  var voice1 = document.getElementById('voice-pref');
-  var voiceName1 = voice1 ? voice1.value : 'Kore';
-  var q1AudioBlob = null; // will hold pre-fetched blob
-
-  if (q1) {
-    fetch(PROXY, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'tts', text: 'Question 1. ' + q1.text, voice: voiceName1 })
-    })
-    .then(function(r){ return r.json(); })
-    .then(function(data) {
-      if (data.audio) {
-        var pcm = Uint8Array.from(atob(data.audio), function(c){ return c.charCodeAt(0); });
-        var buf = new ArrayBuffer(44 + pcm.byteLength);
-        var v = new DataView(buf);
-        var s = function(o,str){ for(var i=0;i<str.length;i++) v.setUint8(o+i,str.charCodeAt(i)); };
-        s(0,'RIFF'); v.setUint32(4,36+pcm.byteLength,true); s(8,'WAVE'); s(12,'fmt ');
-        v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
-        v.setUint32(24,24000,true); v.setUint32(28,48000,true);
-        v.setUint16(32,2,true); v.setUint16(34,16,true);
-        s(36,'data'); v.setUint32(40,pcm.byteLength,true);
-        new Uint8Array(buf).set(pcm,44);
-        q1AudioBlob = new Blob([buf], { type:'audio/wav' });
-      }
-    })
-    .catch(function(){});
-  }
-
-  // Show countdown
-  show('s-count');
-  var i = 3;
-  var cd = document.getElementById('cd-num');
-  if (cd) cd.textContent = '3';
-
-  function tick() {
-    i--;
-    if (i > 0) {
-      if (cd) cd.textContent = String(i);
-      setTimeout(tick, 1000);
-    } else {
-      show('s-interview');
-      // Pass pre-fetched blob to goToQ so it plays instantly
-      goToQ(0, q1AudioBlob);
-    }
-  }
-  setTimeout(tick, 1000);
-}
-
-// ── Wire up the button ─────────────────────────────────
-document.addEventListener('DOMContentLoaded', function() {
-  var btn = document.getElementById('btn-start');
-  if (btn) {
-    btn.addEventListener('click', function() {
-      btn.disabled = true;
-      btn.innerHTML = '<span style="width:20px;height:20px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;display:inline-block;animation:spin .7s linear infinite"></span><span style="margin-left:10px">Starting…</span>';
-      startInterview();
-    });
-  }
-
-  // Show course name
-  try {
-    var cid = localStorage.getItem('last_course');
-    if (cid && COURSES && COURSES[cid]) {
-      var el = document.getElementById('intro-course-name');
-      // not in this HTML — skip
-    }
-  } catch(e){}
-});
-</script>
-</body>
-</html>
+>
