@@ -529,7 +529,7 @@ function toggleRec() {
 }
 
 // ── Interview flow ─────────────────────────────────────
-function goToQ(idx) {
+function goToQ(idx, preloadedBlob) {
   qIdx = idx;
   var q = activeQ[idx];
   if (!q) { showResults(); return; }
@@ -547,16 +547,24 @@ function goToQ(idx) {
   document.getElementById('btn-submit').disabled  = true;
   stopRec();
 
-  // Speak the question
-  var intro = idx === 0
-    ? 'Welcome to your mock interview. I will ask you ' + total + ' questions. After each answer I will give you feedback. Let us begin. '
-    : '';
-  speak(intro + 'Question ' + (idx+1) + '. ' + q.text, function() {
-    // Auto-start recording after AI finishes (if recog available)
+  var onDone = function() {
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SR) startRec();
     else setStatus('Tap mic to answer', '');
-  });
+  };
+
+  // If we have a pre-fetched blob, play it instantly (no network wait)
+  if (preloadedBlob) {
+    setStatus('Speaking…', 'speaking');
+    var url = URL.createObjectURL(preloadedBlob);
+    if (currentAudio) currentAudio.pause();
+    currentAudio = new Audio(url);
+    currentAudio.onended = function() { setStatus('Ready',''); URL.revokeObjectURL(url); onDone(); };
+    currentAudio.onerror = function() { setStatus('Ready',''); speak('Question ' + (idx+1) + '. ' + q.text, onDone); };
+    currentAudio.play().catch(function() { speak('Question ' + (idx+1) + '. ' + q.text, onDone); });
+  } else {
+    speak('Question ' + (idx+1) + '. ' + q.text, onDone);
+  }
 }
 
 async function submitAns() {
@@ -572,9 +580,28 @@ async function submitAns() {
   }
 
   thinking(true);
-  setStatus('Thinking…', 'thinking');
+  setStatus('Cleaning transcript…', 'thinking');
 
   var q = activeQ[qIdx];
+
+  // AI cleans the repetitive STT output before grading
+  try {
+    var cleanResp = await fetch(PROXY, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'clean', text: ans })
+    });
+    var cleanData = await cleanResp.json();
+    if (cleanData.text && cleanData.text.length > 10) {
+      ans = cleanData.text;
+      // Update display with cleaned text
+      var txEl = document.getElementById('tx-text');
+      if (txEl) txEl.textContent = ans;
+    }
+  } catch(e) { console.warn('Clean failed, using raw transcript'); }
+
+  setStatus('Evaluating…', 'thinking');
+
   var prompt = 'You are a strict UK student visa credibility interview examiner.\n\nQuestion: "' + q.text + '"\nStudent answer: "' + ans + '"\n\nCriteria: ' + q.criteria + '\n\nPASS THRESHOLD: 70+. Most first attempts should not pass.\nReturn ONLY valid JSON: {"score":0-100,"pass":boolean,"feedback_text":"2-3 spoken sentences. What was good first, then what was missing, then one clear instruction. Coach voice. No \'Thank you\'","good":["one strength"],"missing":["one gap"]}';
 
   var result = null;
@@ -764,10 +791,39 @@ function startInterview() {
     }
   }
 
+  // Pre-fetch Q1 audio while countdown runs — eliminates the delay
+  var q1 = activeQ[0];
+  var voice1 = document.getElementById('voice-pref');
+  var voiceName1 = voice1 ? voice1.value : 'Kore';
+  var q1AudioBlob = null; // will hold pre-fetched blob
+
+  if (q1) {
+    fetch(PROXY, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'tts', text: 'Question 1. ' + q1.text, voice: voiceName1 })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      if (data.audio) {
+        var pcm = Uint8Array.from(atob(data.audio), function(c){ return c.charCodeAt(0); });
+        var buf = new ArrayBuffer(44 + pcm.byteLength);
+        var v = new DataView(buf);
+        var s = function(o,str){ for(var i=0;i<str.length;i++) v.setUint8(o+i,str.charCodeAt(i)); };
+        s(0,'RIFF'); v.setUint32(4,36+pcm.byteLength,true); s(8,'WAVE'); s(12,'fmt ');
+        v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+        v.setUint32(24,24000,true); v.setUint32(28,48000,true);
+        v.setUint16(32,2,true); v.setUint16(34,16,true);
+        s(36,'data'); v.setUint32(40,pcm.byteLength,true);
+        new Uint8Array(buf).set(pcm,44);
+        q1AudioBlob = new Blob([buf], { type:'audio/wav' });
+      }
+    })
+    .catch(function(){});
+  }
+
   // Show countdown
   show('s-count');
-
-  // Run countdown then start
   var i = 3;
   var cd = document.getElementById('cd-num');
   if (cd) cd.textContent = '3';
@@ -779,7 +835,8 @@ function startInterview() {
       setTimeout(tick, 1000);
     } else {
       show('s-interview');
-      goToQ(0);
+      // Pass pre-fetched blob to goToQ so it plays instantly
+      goToQ(0, q1AudioBlob);
     }
   }
   setTimeout(tick, 1000);
