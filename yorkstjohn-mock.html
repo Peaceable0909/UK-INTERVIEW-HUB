@@ -519,14 +519,7 @@ button:disabled{opacity:.4;cursor:not-allowed;}
     </div>
   </div>
 
-  <div class="setting-group">
-    <label>Gemini API Key <span style="color:var(--t4);font-weight:500;text-transform:none;font-size:9px">(for AI voice &amp; grading)</span></label>
-    <input type="password" id="gemini-key" placeholder="AIzaSy…" autocomplete="off">
-    <p class="gemini-hint">
-      Free key at <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a> ·
-      Without it, browser TTS + Puter AI are used as fallback.
-    </p>
-  </div>
+  <!-- Gemini key is stored securely in Supabase — no input needed -->
 
   <div class="compat-warn" id="compat-warn" style="display:none">
     <span class="mi">info</span>
@@ -790,35 +783,29 @@ function pcm16ToWavBlob(base64pcm) {
   return new Blob([buf],{type:'audio/wav'});
 }
 
-async function speakGemini(text, voiceName, apiKey) {
-  const resp = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`,
-    { method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        contents:[{parts:[{text}]}],
-        generationConfig:{
-          responseModalities:['AUDIO'],
-          speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName}}}
-        }
-      })
-    }
-  );
-  if (!resp.ok) throw new Error('Gemini TTS HTTP '+resp.status);
+async function speakGemini(text, voiceName) {
+  // Call gemini-proxy Edge Function — Gemini key is server-side in Supabase secrets
+  const session = await supabaseClient.auth.getSession();
+  const token   = session?.data?.session?.access_token || '';
+  const resp = await fetch('https://okshteetxmmphgjgvrwt.supabase.co/functions/v1/gemini-proxy', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+token },
+    body: JSON.stringify({ type: 'tts', text, voice: voiceName })
+  });
+  if (!resp.ok) throw new Error('gemini-proxy TTS HTTP '+resp.status);
   const data = await resp.json();
-  const b64 = data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-  if (!b64) throw new Error('No audio data');
-  return pcm16ToWavBlob(b64);
+  if (data.error) throw new Error(data.error);
+  return pcm16ToWavBlob(data.audio);
 }
 
 // Unified speak — Gemini first, browser SpeechSynthesis as fallback
 function speak(text, onEnd) {
-  const key = localStorage.getItem('gemini_api_key');
   const voiceName = document.getElementById('voice-pref')?.value || 'Kore';
 
   setSpeaking(true);
 
-  if (key && voiceName !== 'browser') {
-    speakGemini(text, voiceName, key)
+  if (voiceName !== 'browser') {
+    speakGemini(text, voiceName)
       .then(blob => {
         const url = URL.createObjectURL(blob);
         if (currentAudio) { currentAudio.pause(); URL.revokeObjectURL(currentAudio.src); }
@@ -1007,12 +994,6 @@ function toggleRecording() {
 
 // ── MAIN FLOW ─────────────────────────────────────────────────────
 async function beginInterview() {
-  // Save Gemini key
-  const keyEl = document.getElementById('gemini-key');
-  const key   = keyEl?.value?.trim() || '';
-  if (key) localStorage.setItem('gemini_api_key', key);
-  else localStorage.removeItem('gemini_api_key');
-
   // Build active question set
   const n = parseInt(document.getElementById('q-count').value) || 8;
   ACTIVE_Q = n === 0 ? ALL_QUESTIONS : ALL_QUESTIONS.slice(0, Math.min(n, ALL_QUESTIONS.length));
@@ -1120,7 +1101,7 @@ async function submitAnswer() {
   }
 }
 
-// ── GRADING — Gemini first, Puter fallback ─────────────────────────
+// ── GRADING — gemini-proxy Edge Function (key is server-side) ────
 async function gradeAnswer(q, answer) {
   const prompt = `You are a strict UK student visa credibility interview examiner.
 
@@ -1135,33 +1116,30 @@ PASS THRESHOLD: 70+. Most first attempts should NOT pass.
 PENALISE heavily for: "world-class education", "highly renowned", "strong reputation" without evidence, "good processing times", "my family will pay" without naming the source.
 
 Return ONLY valid JSON — nothing else:
-{"score":0-100,"pass":boolean,"feedback_text":"2-3 spoken sentences. Start with one specific strength. Then state precisely what was missing. End with one clear instruction. Speak as a professional interviewer coach. Do NOT start with Thank you.","good":["one specific strength"],"missing":["one specific gap"]}`;
+{"score":0-100,"pass":boolean,"feedback_text":"2-3 spoken sentences. Start with one specific strength. Then state precisely what was missing. End with one clear instruction. Speak as a coach, not a robot. Do NOT start with Thank you.","good":["one specific strength"],"missing":["one specific gap"]}`;
 
-  const key = localStorage.getItem('gemini_api_key');
-
-  if (key) {
-    try {
-      const resp = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,
-        { method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({
-            contents:[{parts:[{text:prompt}]}],
-            generationConfig:{temperature:.25, maxOutputTokens:400}
-          })
-        }
-      );
+  // Try gemini-proxy first (uses server-side GEMINI_API_KEY)
+  try {
+    const session = await supabaseClient.auth.getSession();
+    const token   = session?.data?.session?.access_token || '';
+    const resp = await fetch('https://okshteetxmmphgjgvrwt.supabase.co/functions/v1/gemini-proxy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+token },
+      body: JSON.stringify({ type: 'grade', prompt })
+    });
+    if (resp.ok) {
       const data = await resp.json();
-      const raw  = data?.candidates?.[0]?.content?.parts?.[0]?.text||'';
-      const match = raw.match(/\{[\s\S]*\}/);
-      if (match) return JSON.parse(match[0]);
-    } catch(e) { console.warn('Gemini grade failed, using Puter:', e.message); }
-  }
+      if (!data.error) return JSON.parse(typeof data === 'string' ? data : JSON.stringify(data));
+    }
+    const errText = await resp.text().catch(()=>'');
+    console.warn('gemini-proxy grade failed:', resp.status, errText);
+  } catch(e) { console.warn('gemini-proxy error:', e.message); }
 
   // Puter fallback
-  const resp = await puter.ai.chat(prompt, {model:'gpt-4o-mini'});
-  const raw  = typeof resp==='string'?resp:resp?.message?.content||'{}';
+  const resp2 = await puter.ai.chat(prompt, {model:'gpt-4o-mini'});
+  const raw   = typeof resp2==='string'?resp2:resp2?.message?.content||'{}';
   const match = raw.match(/\{[\s\S]*\}/);
-  if (!match) throw new Error('No JSON');
+  if (!match) throw new Error('No JSON in Puter response');
   return JSON.parse(match[0]);
 }
 
@@ -1206,9 +1184,15 @@ async function showFeedback(res, answer) {
   if (!isMuted) await speakAsync(res.feedback_text||'');
   setStatus(pass?'Well done!':'Keep practising');
 
-  // Save score
+  // Save score — use YSJ_MOCK_ prefix so hub dashboard recognises it
   if (typeof window.saveAIResponse==='function') {
-    await window.saveAIResponse('MOCK_YSJ_'+qIdx, answer, Math.round(score/10), res.feedback_text||'', q.text).catch(()=>{});
+    await window.saveAIResponse(
+      'YSJ_MOCK_q'+qIdx,
+      answer,
+      Math.round(score/10),
+      res.feedback_text||'',
+      q.text
+    ).catch(e => console.warn('saveAIResponse:', e.message));
   }
 }
 
@@ -1280,17 +1264,41 @@ async function showResults() {
   await wait(800);
   speak(`You scored ${avg} out of 100. ${avg>=70?'Well done — you are building good interview skills.':'Keep practising. Focus on giving specific examples and covering all the required details for each answer.'}`, null);
 
-  // Save to DB
+  // Save session + notify admin + student
   try {
     await (window.sessionReady||Promise.resolve());
     const s = window.getCurrentStudent?.();
+    const cid = localStorage.getItem('last_course')||null;
+    const courseName = (COURSES&&cid&&COURSES[cid]?.name) || 'York St John';
+
     if (s?.id) {
+      // 1. Save mock_interview_sessions row
       await supabaseClient.from('mock_interview_sessions').insert({
-        user_id:s.id, school:'yorkstjohn',
-        course_id:localStorage.getItem('last_course')||null,
+        user_id:s.id, school:'yorkstjohn', course_id:cid,
         completed_at:new Date().toISOString(),
         questions:results, overall_score:avg, readiness, summary_text:summary
-      });
+      }).then(r => { if(r.error) console.warn('Session insert:', r.error.message); });
+
+      // 2. Notify admin + student via gemini-proxy (no Gemini call needed — just writes to student_notifications)
+      const session = await supabaseClient.auth.getSession();
+      const token   = session?.data?.session?.access_token || '';
+      await fetch('https://okshteetxmmphgjgvrwt.supabase.co/functions/v1/gemini-proxy', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+        body: JSON.stringify({
+          type:         'mock_complete',
+          user_id:      s.id,
+          student_name: s.name || 'Student',
+          course_name:  courseName,
+          overall_score:avg,
+          readiness,
+          passed,
+          total:        ACTIVE_Q.length
+        })
+      }).catch(e => console.warn('Notify error:', e.message));
+
+      // 3. Also send email to admin if student clicks Submit to WhiteRock
+      //    (admin email happens on button click, not here — keeps it intentional)
     }
   } catch(e) { console.warn('Session save:', e.message); }
 }
