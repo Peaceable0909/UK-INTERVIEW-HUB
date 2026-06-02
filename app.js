@@ -6,9 +6,10 @@ const EMAILJS_SERVICE_ID = 'service_v6wame2';
 const EMAILJS_TEMPLATE_ID = 'template_6lh9ond';
 
 // ===== INIT =====
+if (!window.supabase) { console.error('Supabase CDN failed to load'); }
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 window.supabaseClient = supabaseClient;
-emailjs.init(EMAILJS_PUBLIC_KEY);
+if (typeof emailjs !== 'undefined') emailjs.init(EMAILJS_PUBLIC_KEY);
 
 let _sessionReadyResolve;
 window.sessionReady = new Promise(resolve => { _sessionReadyResolve = resolve; });
