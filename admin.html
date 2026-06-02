@@ -349,7 +349,7 @@ tbody tr:hover{background:#f8fafc}
 <body>
 
 <!-- ═══════════ LOGIN ═══════════ -->
-<div id="loginScreen">
+<div id="loginScreen" style="display:none;">
   <div class="login-card">
     <div class="login-logo">WHITE <span>ROCK</span></div>
     <p class="login-subtitle">Admin Portal — Authorised Access Only</p>
@@ -1050,7 +1050,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // Reuse the shared client from app.js so sessions are shared across pages
+  const supabase = window.supabaseClient || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   window._adminDB = supabase; // expose for drawer functions outside this scope
 
   // ─────────────────────────────────────────────────────────────────────
