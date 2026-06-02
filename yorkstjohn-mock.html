@@ -206,10 +206,10 @@ h1{font-size:clamp(22px,5vw,28px);font-weight:900;text-align:center;letter-spaci
         </select></div>
       <div class="sg"><label>AI Voice</label>
         <select id="voicepref">
-          <option value="Aoede">Aoede (Female)</option>
-          <option value="Kore" selected>Kore (Female)</option>
-          <option value="Charon">Charon (Male)</option>
-          <option value="Fenrir">Fenrir (Male)</option>
+          <option value="Aoede">Asteria (Female, warm)</option>
+          <option value="Kore" selected>Luna (Female, professional)</option>
+          <option value="Charon">Orion (Male, deep)</option>
+          <option value="Fenrir">Arcas (Male, strong)</option>
         </select></div>
     </div>
     <button class="btn-start" id="btnstart"><span class="mi fill">play_circle</span>Start Interview</button>
@@ -396,6 +396,7 @@ function setStatus(txt,cls){
 
 // ── Audio helpers ─────────────────────────────────────────────────
 function pcmToWav(b64){
+  // Legacy PCM path — kept as fallback
   var pcm=Uint8Array.from(atob(b64),function(c){return c.charCodeAt(0)});
   var buf=new ArrayBuffer(44+pcm.byteLength),v=new DataView(buf);
   var s=function(o,str){for(var i=0;i<str.length;i++)v.setUint8(o+i,str.charCodeAt(i))};
@@ -406,6 +407,10 @@ function pcmToWav(b64){
   s(36,'data');v.setUint32(40,pcm.byteLength,true);
   new Uint8Array(buf).set(pcm,44);
   return new Blob([buf],{type:'audio/wav'});
+}
+function mp3FromBase64(b64){
+  var bytes=Uint8Array.from(atob(b64),function(c){return c.charCodeAt(0)});
+  return new Blob([bytes],{type:'audio/mpeg'});
 }
 function playBlob(blob,cb){
   if(!blob){if(cb)cb();return}
@@ -431,7 +436,7 @@ function _doTTS(text,voice,attempt){
     body:JSON.stringify({type:'tts',text:text,voice:voice})})
   .then(function(r){return r.json()})
   .then(function(d){
-    if(d.audio) return pcmToWav(d.audio);
+    if(d.audio) return d.format==='mp3' ? mp3FromBase64(d.audio) : pcmToWav(d.audio);
     // 502/error — retry once after 1s
     if(attempt<1){
       return new Promise(function(res){setTimeout(function(){res(_doTTS(text,voice,1))},1000)});
