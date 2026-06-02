@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<base href="/UK-INTERVIEW-HUB/">
+<title>Student Responses · Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ysj.css">
+<style>
+:root{--bg:#08080f;--bg2:#0f0f1d;--surface:rgba(255,255,255,.05);--border:rgba(255,255,255,.09);--red:#c41230;--green:#22c55e;--amber:#fbbf24}
+body{background:var(--bg);min-height:100vh}
+.mi{font-family:"Material Symbols Outlined";font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;vertical-align:middle;line-height:1;user-select:none}
+.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24}
+
+/* Layout */
+.page{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:320px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--bg2)}
+.main{flex:1;overflow-y:auto;background:var(--bg)}
+
+/* Sidebar header */
+.sb-header{padding:20px 16px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
+.sb-header h2{font-size:15px;font-weight:800;color:#fff;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sb-header h2 .mi{font-size:18px;color:var(--red)}
+.sb-search{width:100%;background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none}
+.sb-search::placeholder{color:rgba(255,255,255,.35)}
+.sb-count{font-size:11px;color:rgba(255,255,255,.35);margin-top:6px;font-weight:600}
+
+/* Student list */
+.sb-list{flex:1;overflow-y:auto;padding:8px}
+.student-card{padding:10px 12px;border-radius:10px;cursor:pointer;border:1px solid transparent;margin-bottom:4px;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.student-card:hover{background:var(--surface);border-color:var(--border)}
+.student-card.active{background:rgba(196,18,48,.1);border-color:rgba(196,18,48,.3)}
+.sc-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px}
+.sc-meta{font-size:11px;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sc-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:800}
+.sc-badge.practice{background:rgba(99,102,241,.15);color:#a5b4fc}
+.sc-badge.mock{background:rgba(196,18,48,.15);color:#f87171}
+.sc-badge.check{background:rgba(34,197,94,.15);color:#4ade80}
+
+/* Main area */
+.main-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,.25);gap:12px}
+.main-empty .mi{font-size:48px}
+.main-empty p{font-size:14px;font-weight:600}
+
+/* Student detail header */
+.detail-header{padding:24px 28px 16px;border-bottom:1px solid var(--border);background:var(--bg2);position:sticky;top:0;z-index:10}
+.dh-name{font-size:20px;font-weight:900;color:#fff;margin-bottom:4px;letter-spacing:-.3px}
+.dh-sub{font-size:13px;color:rgba(255,255,255,.45);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.dh-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.dh-tag{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:800}
+.dh-tag.practice{background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:#a5b4fc}
+.dh-tag.mock{background:rgba(196,18,48,.15);border:1px solid rgba(196,18,48,.3);color:#f87171}
+.dh-tag.checklist{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#4ade80}
+
+/* Tabs */
+.tab-bar{display:flex;gap:0;padding:0 28px;border-bottom:1px solid var(--border);background:var(--bg2);position:sticky;top:80px;z-index:9}
+.tab-btn{padding:12px 16px;font-size:13px;font-weight:700;color:rgba(255,255,255,.45);border:none;background:none;border-bottom:2.5px solid transparent;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s;display:flex;align-items:center;gap:6px}
+.tab-btn .mi{font-size:16px}
+.tab-btn.active{color:#fff;border-bottom-color:var(--red)}
+.tab-panel{display:none;padding:24px 28px}
+.tab-panel.active{display:block}
+
+/* Section title */
+.sec-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:12px;margin-top:20px}
+.sec-title:first-child{margin-top:0}
+
+/* Practice Q&A cards */
+.qa-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden}
+.qa-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.qa-num{width:28px;height:28px;border-radius:50%;background:rgba(99,102,241,.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#a5b4fc;flex-shrink:0}
+.qa-q{flex:1;font-size:13px;font-weight:700;color:rgba(255,255,255,.85);line-height:1.3}
+.qa-score-wrap{display:flex;align-items:center;gap:6px}
+.qa-score{font-size:16px;font-weight:900}
+.qa-score.pass{color:var(--green)}.qa-score.fail{color:#f87171}
+.qa-att{font-size:10px;font-weight:700;color:rgba(255,255,255,.3)}
+.qa-chev{font-size:17px;color:rgba(255,255,255,.3);transition:transform .25s}
+.qa-card.open .qa-chev{transform:rotate(180deg)}
+.qa-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.qa-card.open .qa-body{max-height:600px}
+.qa-content{padding:0 14px 14px;border-top:1px solid var(--border)}
+.qa-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);margin:10px 0 4px}
+.qa-answer{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;font-style:italic;background:rgba(255,255,255,.03);border-radius:8px;padding:10px 12px}
+.qa-feedback{font-size:13px;color:rgba(255,255,255,.7);line-height:1.55}
+.qa-date{font-size:10px;color:rgba(255,255,255,.2);margin-top:6px}
+
+/* Mock interview session cards */
+.mock-session{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden}
+.mock-session-hdr{display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mock-ring{position:relative;width:44px;height:44px;flex-shrink:0}
+.mock-ring svg{transform:rotate(-90deg)}
+.mock-ring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900}
+.mock-session-info{flex:1}
+.mock-session-date{font-size:12px;font-weight:700;color:rgba(255,255,255,.85)}
+.mock-session-sub{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
+.mock-chip{padding:3px 10px;border-radius:99px;font-size:10px;font-weight:800}
+.mock-chip.ready{background:rgba(34,197,94,.15);color:var(--green)}
+.mock-chip.needs{background:rgba(251,191,36,.12);color:var(--amber)}
+.mock-chip.poor{background:rgba(196,18,48,.15);color:#f87171}
+.mock-chev{font-size:17px;color:rgba(255,255,255,.3);transition:transform .25s}
+.mock-session.open .mock-chev{transform:rotate(180deg)}
+.mock-body{max-height:0;overflow:hidden;transition:max-height .5s ease}
+.mock-session.open .mock-body{max-height:3000px}
+.mock-content{padding:0 14px 14px;border-top:1px solid var(--border)}
+
+/* Mock question rows */
+.mq-row{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.mq-row:last-child{border-bottom:none}
+.mq-badge{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;margin-top:2px}
+.mq-badge.pass{background:var(--green)}.mq-badge.fail{background:var(--red)}
+.mq-info{flex:1}
+.mq-q{font-size:12px;font-weight:700;color:rgba(255,255,255,.8);margin-bottom:5px}
+.mq-transcript{font-size:12px;color:rgba(255,255,255,.5);line-height:1.5;font-style:italic;margin-bottom:4px}
+.mq-feedback{font-size:12px;color:rgba(255,255,255,.65);line-height:1.5}
+.mq-score{font-size:16px;font-weight:900;flex-shrink:0}
+.mq-score.pass{color:var(--green)}.mq-score.fail{color:#f87171}
+
+/* Checklist */
+.cl-group{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden}
+.cl-group-hdr{padding:12px 14px;font-size:13px;font-weight:800;color:rgba(255,255,255,.7);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.cl-group-label{display:flex;align-items:center;gap:8px}
+.cl-group-label .mi{font-size:16px;color:rgba(255,255,255,.4)}
+.cl-progress{font-size:11px;font-weight:700}
+.cl-progress.done{color:var(--green)}.cl-progress.part{color:var(--amber)}.cl-progress.none{color:rgba(255,255,255,.3)}
+.cl-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04)}
+.cl-item:last-child{border-bottom:none}
+.cl-check{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.cl-check.done{background:rgba(34,197,94,.2)}.cl-check.todo{background:rgba(255,255,255,.07)}
+.cl-check .mi{font-size:13px}.cl-check.done .mi{color:var(--green)}.cl-check.todo .mi{color:rgba(255,255,255,.2)}
+.cl-text{font-size:13px;color:rgba(255,255,255,.7);line-height:1.4;flex:1}
+.cl-text.done{color:rgba(255,255,255,.85)}
+
+/* Empty states */
+.empty-section{text-align:center;padding:32px;color:rgba(255,255,255,.25);font-size:13px}
+.empty-section .mi{font-size:32px;display:block;margin-bottom:8px}
+
+/* Loading */
+.loading{text-align:center;padding:40px;color:rgba(255,255,255,.3)}
+.spinner-sm{width:20px;height:20px;border-radius:50%;border:2.5px solid rgba(255,255,255,.1);border-top-color:var(--red);animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Mobile responsive */
+@media(max-width:768px){
+  .page{flex-direction:column}
+  .sidebar{width:100%;height:260px;border-right:none;border-bottom:1px solid var(--border)}
+  .main{overflow-y:auto}
+  .tab-panel{padding:16px}
+  .detail-header{padding:16px}
+  .tab-bar{padding:0 16px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- SIDEBAR: Student list -->
+  <div class="sidebar">
+    <div class="sb-header">
+      <h2><span class="mi fill">group</span>Student Responses</h2>
+      <input class="sb-search" type="search" id="search-input" placeholder="Search students…" oninput="filterStudents()">
+      <div class="sb-count" id="sb-count">Loading…</div>
+    </div>
+    <div class="sb-list" id="student-list">
+      <div class="loading"><span class="spinner-sm"></span>Loading students…</div>
+    </div>
+  </div>
+
+  <!-- MAIN: Student detail -->
+  <div class="main" id="main-panel">
+    <div class="main-empty">
+      <span class="mi fill">person_search</span>
+      <p>Select a student to view their responses</p>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js?v=4"></script>
+<script src="yorkstjohn-data.js"></script>
+<script>
+// ── State ──────────────────────────────────────────────────────────
+var allStudents = [];
+var selectedId  = null;
+
+// ── Load all students on start ────────────────────────────────────
+window.addEventListener('load', function(){
+  waitForSupabase(loadStudents);
+});
+
+function waitForSupabase(cb){
+  if(window.supabaseClient){ cb(); return; }
+  setTimeout(function(){ waitForSupabase(cb); }, 150);
+}
+
+async function loadStudents(){
+  try{
+    // Get profiles + student_progress summary in one go
+    var {data: students, error} = await supabaseClient
+      .from('profiles')
+      .select('id, full_name, email, created_at')
+      .order('full_name', {ascending: true});
+
+    if(error) throw error;
+
+    // Get ai_scores summary (just keys count)
+    var {data: progress} = await supabaseClient
+      .from('student_progress')
+      .select('user_id, ai_scores, updated_at');
+
+    // Get mock session counts
+    var {data: mocks} = await supabaseClient
+      .from('mock_interview_sessions')
+      .select('user_id, overall_score, readiness');
+
+    // Get checklist summary
+    var {data: checklists} = await supabaseClient
+      .from('student_checklists')
+      .select('user_id, items');
+
+    // Merge data
+    allStudents = (students||[]).map(function(s){
+      var prog  = (progress||[]).find(function(p){ return p.user_id === s.id; });
+      var smocks= (mocks||[]).filter(function(m){ return m.user_id === s.id; });
+      var schecks= (checklists||[]).filter(function(c){ return c.user_id === s.id; });
+      var aiKeys= prog && prog.ai_scores ? Object.keys(prog.ai_scores).length : 0;
+      var checkDone=0, checkTotal=0;
+      schecks.forEach(function(c){
+        if(c.items){ Object.values(c.items).forEach(function(v){ checkTotal++; if(v)checkDone++; }); }
+      });
+      return Object.assign({}, s, {
+        practiceCount: aiKeys,
+        mockCount:     smocks.length,
+        bestMock:      smocks.length ? Math.max.apply(null, smocks.map(function(m){return m.overall_score||0})) : null,
+        checkDone:     checkDone,
+        checkTotal:    checkTotal,
+        lastActivity:  prog ? prog.updated_at : null
+      });
+    });
+
+    renderStudentList(allStudents);
+  }catch(e){
+    document.getElementById('student-list').innerHTML = '<div class="loading" style="color:#f87171">Error: '+e.message+'</div>';
+  }
+}
+
+function renderStudentList(students){
+  var el = document.getElementById('student-list');
+  document.getElementById('sb-count').textContent = students.length + ' students';
+  if(!students.length){ el.innerHTML='<div class="loading">No students found</div>'; return; }
+  el.innerHTML = students.map(function(s){
+    var name = s.full_name || s.email || 'Unknown';
+    var initials = name.split(' ').map(function(w){return w[0]}).join('').toUpperCase().slice(0,2);
+    return '<div class="student-card" id="sc-'+s.id+'" onclick="selectStudent(\''+s.id+'\')">'
+      +'<div class="sc-name">'+escHtml(name)+'</div>'
+      +'<div class="sc-meta">'
+      +(s.email?'<span>'+escHtml(s.email)+'</span>':'')
+      +(s.practiceCount>0?'<span class="sc-badge practice"><span class="mi" style="font-size:11px">quiz</span>'+s.practiceCount+' Q&As</span>':'')
+      +(s.mockCount>0?'<span class="sc-badge mock"><span class="mi" style="font-size:11px">mic</span>'+s.mockCount+' session'+(s.mockCount>1?'s':'')+'</span>':'')
+      +(s.checkTotal>0?'<span class="sc-badge check"><span class="mi" style="font-size:11px">checklist</span>'+s.checkDone+'/'+s.checkTotal+'</span>':'')
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function filterStudents(){
+  var q = document.getElementById('search-input').value.toLowerCase();
+  var filtered = allStudents.filter(function(s){
+    return (s.full_name||'').toLowerCase().includes(q) || (s.email||'').toLowerCase().includes(q);
+  });
+  renderStudentList(filtered);
+}
+
+// ── Select a student and load their detail ────────────────────────
+async function selectStudent(userId){
+  selectedId = userId;
+  // Highlight in sidebar
+  document.querySelectorAll('.student-card').forEach(function(el){ el.classList.remove('active'); });
+  var card = document.getElementById('sc-'+userId);
+  if(card) card.classList.add('active');
+
+  var student = allStudents.find(function(s){ return s.id === userId; });
+  var name = student ? (student.full_name || student.email || 'Unknown') : 'Unknown';
+
+  // Show loading state
+  document.getElementById('main-panel').innerHTML = '<div class="loading"><span class="spinner-sm"></span>Loading '+escHtml(name)+'\'s data…</div>';
+
+  try{
+    // Load all data for this student in parallel
+    var [progRes, mocksRes, checksRes] = await Promise.all([
+      supabaseClient.from('student_progress').select('ai_scores, updated_at').eq('user_id', userId).single(),
+      supabaseClient.from('mock_interview_sessions').select('*').eq('user_id', userId).order('completed_at', {ascending:false}),
+      supabaseClient.from('student_checklists').select('*').eq('user_id', userId)
+    ]);
+
+    renderDetail(student, progRes.data, mocksRes.data||[], checksRes.data||[]);
+  }catch(e){
+    document.getElementById('main-panel').innerHTML = '<div class="loading" style="color:#f87171">Error loading data: '+e.message+'</div>';
+  }
+}
+
+function renderDetail(student, progress, mocks, checklists){
+  var name = student ? (student.full_name || student.email || 'Unknown') : 'Unknown';
+  var aiScores = (progress && progress.ai_scores) || {};
+  var aiKeys = Object.keys(aiScores);
+
+  // Summary tags
+  var tags = '';
+  if(aiKeys.length) tags += '<span class="dh-tag practice"><span class="mi fill" style="font-size:14px">quiz</span>'+aiKeys.length+' Practice Q&As</span>';
+  if(mocks.length)  tags += '<span class="dh-tag mock"><span class="mi fill" style="font-size:14px">mic</span>'+mocks.length+' Mock Interview'+(mocks.length>1?'s':'')+'</span>';
+  if(checklists.length){
+    var cd=0,ct=0;
+    checklists.forEach(function(c){ if(c.items){ Object.values(c.items).forEach(function(v){ct++;if(v)cd++;}); } });
+    tags += '<span class="dh-tag checklist"><span class="mi fill" style="font-size:14px">checklist</span>'+cd+'/'+ct+' Checklist</span>';
+  }
+
+  var html = '<div class="detail-header">'
+    +'<div class="dh-name">'+escHtml(name)+'</div>'
+    +'<div class="dh-sub">'
+    +(student&&student.email?'<span>'+escHtml(student.email)+'</span>':'')
+    +(progress&&progress.updated_at?'<span>Last active: '+fmtDate(progress.updated_at)+'</span>':'')
+    +'</div>'
+    +(tags?'<div class="dh-tags">'+tags+'</div>':'')
+    +'</div>'
+
+    // Tab bar
+    +'<div class="tab-bar">'
+    +'<button class="tab-btn active" onclick="switchTab(\'practice\',this)"><span class="mi fill">quiz</span>AI Practice</button>'
+    +'<button class="tab-btn" onclick="switchTab(\'mock\',this)"><span class="mi fill">mic</span>AI Coach</button>'
+    +'<button class="tab-btn" onclick="switchTab(\'checklist\',this)"><span class="mi fill">checklist</span>Checklist</button>'
+    +'</div>'
+
+    // Practice panel
+    +'<div class="tab-panel active" id="tab-practice">'
+    + renderPractice(aiScores)
+    +'</div>'
+
+    // Mock panel
+    +'<div class="tab-panel" id="tab-mock">'
+    + renderMocks(mocks)
+    +'</div>'
+
+    // Checklist panel
+    +'<div class="tab-panel" id="tab-checklist">'
+    + renderChecklists(checklists)
+    +'</div>';
+
+  document.getElementById('main-panel').innerHTML = html;
+}
+
+function renderPractice(aiScores){
+  var keys = Object.keys(aiScores);
+  if(!keys.length) return '<div class="empty-section"><span class="mi">quiz</span>No AI practice responses yet</div>';
+
+  // Group by school prefix (YSJ_p1 → YSJ, REGENT_p1 → REGENT)
+  var groups = {};
+  keys.forEach(function(k){
+    var prefix = k.split('_')[0];
+    if(!groups[prefix]) groups[prefix] = [];
+    groups[prefix].push(k);
+  });
+
+  var html = '';
+  Object.keys(groups).forEach(function(prefix){
+    html += '<div class="sec-title">'+escHtml(prefix)+' Practice Responses</div>';
+    groups[prefix].sort().forEach(function(k, idx){
+      var q = aiScores[k];
+      var score = q.score || 0;
+      var pass = score >= 6;
+      html += '<div class="qa-card" id="qac-'+k+'">'
+        +'<div class="qa-header" onclick="toggleQA(\''+k+'\')">'
+        +'<div class="qa-num">'+(idx+1)+'</div>'
+        +'<div class="qa-q">'+escHtml(q.questionText||k)+'</div>'
+        +'<div class="qa-score-wrap">'
+        +'<span class="qa-score '+(pass?'pass':'fail')+'">'+score+'</span>'
+        +'<span class="qa-att">×'+( q.attempts||1)+'</span>'
+        +'</div>'
+        +'<span class="mi qa-chev">expand_more</span>'
+        +'</div>'
+        +'<div class="qa-body"><div class="qa-content">'
+        +'<div class="qa-label">Student\'s Answer</div>'
+        +'<div class="qa-answer">'+escHtml(q.answer||'No answer recorded')+'</div>'
+        +'<div class="qa-label" style="margin-top:10px">AI Feedback</div>'
+        +'<div class="qa-feedback">'+escHtml(q.feedback||'No feedback')+'</div>'
+        +(q.date?'<div class="qa-date">'+fmtDate(q.date)+'</div>':'')
+        +'</div></div>'
+        +'</div>';
+    });
+  });
+  return html;
+}
+
+function renderMocks(mocks){
+  if(!mocks.length) return '<div class="empty-section"><span class="mi">mic</span>No mock interview sessions yet</div>';
+
+  return mocks.map(function(session, si){
+    var score = session.overall_score || 0;
+    var readiness = session.readiness || 'poor';
+    var questions = Array.isArray(session.questions) ? session.questions : [];
+    var passed = questions.filter(function(q){return q.pass}).length;
+    var circ = 2*Math.PI*18;
+    var offset = circ - (circ * score/100);
+    var colour = score>=80?'#22c55e':score>=60?'#fbbf24':'#f87171';
+    var chipClass = readiness==='ready'?'ready':readiness==='needs'?'needs':'poor';
+    var chipText = readiness==='ready'?'Interview Ready':readiness==='needs'?'Needs Practice':'More Work Needed';
+
+    var qRows = questions.map(function(q, qi){
+      var qpass = q.pass || (q.score>=70);
+      return '<div class="mq-row">'
+        +'<div class="mq-badge '+(qpass?'pass':'fail')+'">'+(qpass?'✓':'✗')+'</div>'
+        +'<div class="mq-info">'
+        +'<div class="mq-q">'+escHtml(q.question||'Question '+(qi+1))+'</div>'
+        +(q.transcript?'<div class="mq-transcript">"'+escHtml(q.transcript)+'"</div>':'')
+        +(q.feedback?'<div class="mq-feedback">'+escHtml(q.feedback)+'</div>':'')
+        +'</div>'
+        +'<div class="mq-score '+(qpass?'pass':'fail')+'">'+(q.score||0)+'</div>'
+        +'</div>';
+    }).join('');
+
+    return '<div class="mock-session" id="ms-'+si+'">'
+      +'<div class="mock-session-hdr" onclick="toggleMock('+si+')">'
+      +'<div class="mock-ring">'
+      +'<svg width="44" height="44" viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" stroke="rgba(255,255,255,.1)" stroke-width="5" fill="none"/><circle cx="22" cy="22" r="18" stroke="'+colour+'" stroke-width="5" fill="none" stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+offset.toFixed(1)+'" stroke-linecap="round"/></svg>'
+      +'<div class="mock-ring-pct" style="color:'+colour+'">'+score+'</div>'
+      +'</div>'
+      +'<div class="mock-session-info">'
+      +'<div class="mock-session-date">'+(session.completed_at?fmtDate(session.completed_at):'Unknown date')+'</div>'
+      +'<div class="mock-session-sub">'+passed+'/'+questions.length+' questions passed'+( session.school?' · '+escHtml(session.school):'')+'</div>'
+      +'</div>'
+      +'<span class="mock-chip '+chipClass+'">'+chipText+'</span>'
+      +'<span class="mi mock-chev">expand_more</span>'
+      +'</div>'
+      +'<div class="mock-body"><div class="mock-content">'
+      +(qRows||'<div class="empty-section">No question details</div>')
+      +'</div></div>'
+      +'</div>';
+  }).join('');
+}
+
+function renderChecklists(checklists){
+  if(!checklists.length) return '<div class="empty-section"><span class="mi">checklist</span>No checklist data yet</div>';
+
+  return checklists.map(function(cl){
+    var items = cl.items || {};
+    var keys = Object.keys(items);
+    var done = keys.filter(function(k){return items[k]}).length;
+    var pct = keys.length ? Math.round(done/keys.length*100) : 0;
+    var progClass = pct===100?'done':pct>0?'part':'none';
+    var school = cl.school || 'Unknown';
+    var course = cl.course || '';
+
+    return '<div class="cl-group">'
+      +'<div class="cl-group-hdr">'
+      +'<div class="cl-group-label"><span class="mi fill">school</span>'+escHtml(school)+(course?' · '+escHtml(course):'')+'</div>'
+      +'<span class="cl-progress '+progClass+'">'+done+'/'+keys.length+' ('+pct+'%)</span>'
+      +'</div>'
+      +keys.map(function(k){
+        var isDone = items[k];
+        return '<div class="cl-item">'
+          +'<div class="cl-check '+(isDone?'done':'todo')+'"><span class="mi '+(isDone?'fill':'')+'">'+(isDone?'check_circle':'radio_button_unchecked')+'</span></div>'
+          +'<div class="cl-text '+(isDone?'done':'')+'">'+escHtml(k)+'</div>'
+          +'</div>';
+      }).join('')
+      +'</div>';
+  }).join('');
+}
+
+// ── UI helpers ────────────────────────────────────────────────────
+function switchTab(name, btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  btn.classList.add('active');
+  var panel = document.getElementById('tab-'+name);
+  if(panel) panel.classList.add('active');
+}
+
+function toggleQA(key){
+  var el = document.getElementById('qac-'+key);
+  if(el) el.classList.toggle('open');
+}
+
+function toggleMock(idx){
+  var el = document.getElementById('ms-'+idx);
+  if(el) el.classList.toggle('open');
+}
+
+function escHtml(str){
+  if(!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fmtDate(str){
+  try{ return new Date(str).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
+  catch(e){ return str; }
+}
+</script>
+</body>
+</html>
