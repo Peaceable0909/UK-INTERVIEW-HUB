@@ -91,53 +91,9 @@ async function loadStudentProfile(user) {
 
 // ===== CHECK & PROMPT FOR STUDENT ID =====
 async function checkStudentId(user) {
-  try {
-    const student = JSON.parse(localStorage.getItem('student'));
-    if (student && student.student_id && student.student_id !== '') return true;
-
-    const modal = document.getElementById('studentIdModal');
-    const input = document.getElementById('studentIdInput');
-    const saveBtn = document.getElementById('saveStudentIdBtn');
-    const errorDiv = document.getElementById('studentIdError');
-
-    if (!modal || !input || !saveBtn) return true;
-
-    modal.style.display = 'flex';
-
-    return new Promise((resolve) => {
-      saveBtn.onclick = async () => {
-        const studentId = input.value.trim();
-        if (!studentId) {
-          if (errorDiv) errorDiv.textContent = 'Please enter a valid Counselor name.';
-          return;
-        }
-        const { error } = await supabaseClient
-          .from('student_progress')
-          .update({ student_id: studentId })
-          .eq('user_id', user.id);
-        if (error) {
-          if (errorDiv) errorDiv.textContent = error.message;
-          return;
-        }
-        const updatedStudent = { ...student, student_id: studentId };
-        localStorage.setItem('student', JSON.stringify(updatedStudent));
-        modal.style.display = 'none';
-        resolve(true);
-      };
-      // Skip button — don't block login if student skips
-      const skipBtn = document.getElementById('skipStudentIdBtn');
-      if (skipBtn) {
-        skipBtn.onclick = () => { modal.style.display = 'none'; resolve(true); };
-      } else {
-        // Auto-resolve after 0ms if no skip btn — don't block
-        // (modal stays open but auth proceeds)
-        resolve(true);
-      }
-    });
-  } catch (err) {
-    console.error('checkStudentId error:', err);
-    return true;
-  }
+  // Non-blocking — never show a modal that freezes the page.
+  // Students can update their counselor name from the dashboard.
+  return true;
 }
 
 // ===== SHOW AUTHENTICATED UI =====

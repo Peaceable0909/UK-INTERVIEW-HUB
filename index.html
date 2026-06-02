@@ -693,24 +693,19 @@
   <div class="spinner-el"></div>
 </div>
 
-<!-- STUDENT ID MODAL -->
-<div id="studentIdModal" class="modal-overlay" style="display:none;">
-  <div class="modal-box">
-    <div class="modal-title">📋 Complete Your Profile</div>
-    <p class="modal-sub">Please complete your details to continue.</p>
-    <div class="form-group"><label>Full Name</label><input type="text" id="compulsoryNameInput" placeholder="John Doe"/></div>
-    <div class="form-group"><label>Counselor</label><input type="text" id="studentIdInput" placeholder="e.g. Peaceable"/></div>
-    <button id="saveStudentIdBtn" class="btn-form-submit">Save &amp; Continue</button>
-    <button id="skipStudentIdBtn" style="width:100%;background:none;border:none;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;margin-top:10px;padding:8px;font-family:inherit;">Skip for now →</button>
-    <p id="studentIdError" style="color:#dc2626;font-size:13px;text-align:center;margin-top:10px;"></p>
-  </div>
+<!-- STUDENT ID MODAL — disabled, students update from dashboard -->
+<div id="studentIdModal" style="display:none;">
+  <input id="studentIdInput" type="hidden"/>
+  <button id="saveStudentIdBtn" style="display:none;"></button>
+  <button id="skipStudentIdBtn" style="display:none;"></button>
+  <p id="studentIdError" style="display:none;"></p>
 </div>
 
 <div id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script src="app.js?v=5"></script>
+<script src="app.js?v=6"></script>
 <script>
   // LOGO INJECTION (with fallback)
   const LOGO_URL = 'https://drive.google.com/uc?export=view&id=1i6JiVivuraPSUHAAb0Cwcsnm9w6_rYvt';
