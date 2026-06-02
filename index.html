@@ -798,11 +798,34 @@
   }
 
   (async () => {
-    let attempts = 0;
-    while (!window.getCurrentStudent && attempts < 40) { await new Promise(r => setTimeout(r, 100)); attempts++; }
-    updateUI(window.getCurrentStudent?.());
-    const poll = setInterval(() => { const s = window.getCurrentStudent?.(); if (s) { updateUI(s); } }, 1000);
-    setTimeout(() => clearInterval(poll), 10000);
+    // First: try localStorage immediately (fast path for returning users)
+    try {
+      const cached = JSON.parse(localStorage.getItem('student'));
+      if (cached?.id) { updateUI(cached); }
+    } catch(e) {}
+
+    // Then: confirm with Supabase directly (same pattern as dashboard.html)
+    try {
+      const SURL = 'https://okshteetxmmphgjgvrwt.supabase.co';
+      const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
+      const db = window.supabaseClient || window.supabase?.createClient(SURL, SKEY);
+      if (!db) return;
+      const { data: { session } } = await db.auth.getSession();
+      if (session?.user) {
+        const { data: profile } = await db.from('student_progress').select('full_name,email,student_id,selected_university').eq('user_id', session.user.id).single();
+        if (profile) {
+          const s = { id: session.user.id, name: profile.full_name, email: profile.email, student_id: profile.student_id, selected_university: profile.selected_university };
+          localStorage.setItem('student', JSON.stringify(s));
+          updateUI(s);
+        }
+      } else {
+        // No session — show login modal after short delay
+        setTimeout(() => {
+          if (document.getElementById('loginModal').style.display !== 'flex')
+            document.getElementById('loginModal').style.display = 'flex';
+        }, 800);
+      }
+    } catch(e) { console.warn('Session check:', e); }
   })();
 
   // GET STARTED
