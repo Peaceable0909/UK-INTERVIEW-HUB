@@ -1051,6 +1051,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  window._adminDB = supabase; // expose for drawer functions outside this scope
 
   // ─────────────────────────────────────────────────────────────────────
   // EMAIL HELPER — calls send-email Edge Function (Resend, $0)
@@ -2360,9 +2361,9 @@ async function loadDrawerData(userId) {
   if(content) content.innerHTML = '<div style="text-align:center;padding:40px;color:#9ca3af"><div style="width:32px;height:32px;border-radius:50%;border:3px solid #e5e7eb;border-top-color:#c41230;animation:spin .7s linear infinite;margin:0 auto 12px"></div><div style="font-size:13px">Loading\u2026</div></div>';
   try {
     var results = await Promise.all([
-      supabaseClient.from('student_progress').select('ai_scores,updated_at').eq('user_id', userId).single(),
-      supabaseClient.from('mock_interview_sessions').select('*').eq('user_id', userId).order('completed_at', {ascending:false}),
-      supabaseClient.from('student_checklists').select('*').eq('user_id', userId)
+      window._adminDB.from('student_progress').select('ai_scores,updated_at').eq('user_id', userId).single(),
+      window._adminDB.from('mock_interview_sessions').select('*').eq('user_id', userId).order('completed_at', {ascending:false}),
+      window._adminDB.from('student_checklists').select('*').eq('user_id', userId)
     ]);
     var data = { progress: results[0].data, mocks: results[1].data||[], checklists: results[2].data||[] };
     var dm = document.getElementById('drawer-meta');
