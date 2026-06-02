@@ -310,30 +310,66 @@ var MAX_ATTEMPTS = 3;
 
 // ── Questions ─────────────────────────────────────────────────────
 var QS = [
-  {id:'q1',cat:'Your Background',
-   text:'Tell me about yourself — your academic and professional background.',
-   criteria:'GUIDE: Mention institution name, qualification, graduation month and year. Employment history in chronological order with company name, job title, start and end dates. No unexplained gap over 6 months. Timeline up to current role. Students do NOT need to explain what companies do. EXAMPLE: I studied Computer Science at University of Ibadan and graduated in May 2015. I worked at Genesis Logistics as Sales Representative from September 2015 to June 2017. In August 2017 I joined ABC Limited as Business Development Officer until March 2021. In April 2021 I joined XYZ Company as Regional Sales Manager where I currently work. LENIENCY: Pass if they cover most details. Only fail for missing institution name, degree, or most job dates.'},
-  {id:'q2',cat:'Your Programme',
-   text:'Tell me about your programme.',
-   criteria:'GUIDE: State the full programme title. Briefly explain what the programme covers. Mention key areas of study. Connect to personal interests, experience or career goals. EXAMPLE: The programme I have chosen is MSc International Business Management. It focuses on international business operations, strategic management, leadership, marketing and global business development. It aligns with my experience in business administration and supports my long-term career goals. LENIENCY: Pass if they name the programme and explain it reasonably. Only fail if they clearly do not know what their programme is about.'},
-  {id:'q3',cat:'Why This Programme',
-   text:'Why did you choose this programme?',
-   criteria:'GUIDE: Link the programme to current work experience. Link to future career plans. Link to professional ambitions. Provide realistic examples. Explain how the programme supports their plans. EXAMPLE: I chose this programme because I currently work in business development and participate in strategic decision-making. My organisation is expanding and this programme will help me develop stronger management skills. The knowledge gained will help me contribute more effectively to my field. LENIENCY: Pass if they give a genuine personal reason connected to their work or career. Only fail if the answer has zero personal connection and is completely generic.'},
-  {id:'q4',cat:'Why the UK',
-   text:'Why did you choose to study in the United Kingdom rather than another country?',
-   criteria:'MUST: give at least one UK-specific reason (not generic), compare with at least one other country considered, link reason to career or industry goals. PENALISE: "world-class education", "highly renowned", "strong global reputation" without evidence, "good processing times", "cheaper fees".'},
-  {id:'q5',cat:'Why York St John',
-   text:'Why did you choose York St John University specifically?',
-   criteria:'MUST: give YSJ-specific reasons (not generic), name the campus (York or London), mention at least one programme-specific feature, compare with at least one other UK university considered. PENALISE if reason applies to any UK university.'},
-  {id:'q6',cat:'Career Plans',
-   text:'What are your career plans after completing this programme?',
-   criteria:'MUST INCLUDE: short-term plan 0-2 years (specific role), medium-term 3-5 years (career progression), long-term 5+ years (ultimate goal or ambition), specific job titles or industries, logical connection between programme and career plans, whether they plan to return home or stay in UK with a credible reason.'},
-  {id:'q7',cat:'Finance & Funding',
-   text:'How will you fund your studies and living expenses in the UK?',
-   criteria:'MUST: name the exact source of funds (personal savings, family savings, employer sponsorship, scholarship — be specific about SOURCE), mention the amount available, confirm it covers both tuition fees AND living costs, mention documentary evidence (bank statements, sponsorship letter etc). PENALISE: vague "my family will support me" without naming the source.'},
-  {id:'q8',cat:'Accommodation',
-   text:'Where will you live during your studies, and how much will it cost?',
-   criteria:'MUST: name the area or location, describe the type of accommodation (halls, private flat, shared house), state the weekly or monthly cost (realistic for UK — York approx £100-200/week, London £150-300/week), explain how to travel to campus with approximate journey time. PENALISE: no cost stated, unrealistic cost, no location.'}
+  {
+    id:'q1', cat:'Your Background',
+    text:'Tell me about yourself, your academic and professional background.',
+    criteria:'GUIDE: Mention previous studies only. State institution, qualification, graduation month and year. Employment history in chronological order with company name, position, and month/year for each role. Explain any gaps. No gaps longer than 6 months. Continue to current employment. Do NOT explain company activities in detail. EXAMPLE: I studied Business Administration at the University of Ibadan and graduated in May 2015. After graduation I joined Genesis Logistics as a Sales Representative in September 2015 and worked there until June 2017. In August 2017 I joined XYZ Limited as a Business Development Officer and worked until March 2021. In April 2021 I joined ABC Company as a Regional Sales Manager where I currently work. LENIENCY: Pass if student covers most details. Only fail for missing institution name, degree, or most employment dates.'
+  },
+  {
+    id:'q2', cat:'Your Programme',
+    text:'Tell me about your programme.',
+    criteria:'GUIDE: State the programme title correctly. Explain what the programme covers. Mention key knowledge and skills. Connect it to experience and future plans. EXAMPLE: The programme I will study is MSc International Business Management. This programme focuses on global business operations, international markets, strategic management, leadership, and business decision-making. It is important to me because I have experience in business operations and management. It will help me develop advanced knowledge needed for higher responsibilities and future business growth. LENIENCY: Pass if they name the programme and explain it reasonably. Only fail if they clearly do not know what the programme is about.'
+  },
+  {
+    id:'q3', cat:'Why This Programme',
+    text:'Why did you choose this programme?',
+    criteria:'GUIDE: Connect to current job. Connect to future promotion. Connect to business plans. Be specific. For employed: explain current role and how programme develops leadership or management skills. For business owners: explain business goals and how programme supports growth. Always finish with intention to return home after studies. EXAMPLE: I chose this programme because I currently work as a Business Development Manager. My company is expanding into new locations and I want to develop stronger leadership and strategic management skills. After completing my studies I intend to return to my company and pursue a senior management role. LENIENCY: Pass if they give a genuine personal reason connected to work or career and mention returning home. Only fail if completely generic with no personal connection.'
+  },
+  {
+    id:'q4', cat:'Programme Modules',
+    text:'List and explain your programme modules.',
+    criteria:'GUIDE: Mention every module by name. Explain what each module teaches. Explain how each module relates to career plans. EXAMPLE FOR ONE MODULE - Strategic Management: This module will help me understand business planning and long-term decision-making. These skills are important for managing teams and business growth. International Marketing: This module will improve my understanding of global markets and customer behaviour. Financial Management: This module will strengthen my ability to analyse financial performance. LENIENCY: Pass if they can name at least 3-4 modules and briefly explain what each covers. Only fail if they cannot name any modules or have no idea what the programme contains.'
+  },
+  {
+    id:'q5', cat:'Why This University',
+    text:'Why did you choose this university specifically?',
+    criteria:'GUIDE: Mention specific university strengths. Mention rankings if available. Mention facilities. Mention programme structure. Connect everything to goals. EXAMPLE: I chose this university because of its strong reputation in business education, industry-focused curriculum, experienced academic staff, and practical learning approach. The programme content aligns closely with my career objectives. The focus on employability and professional development makes it suitable for my academic and career goals. LENIENCY: Pass if they give specific reasons connected to the university and their goals. Only fail if they give completely generic reasons that apply to any university.'
+  },
+  {
+    id:'q6', cat:'Other UK Universities',
+    text:'Apart from this university, did you consider any other UK universities?',
+    criteria:'GUIDE: Name at least 3 other UK universities that offer the same programme. For each mention: programme offered, teaching approach, modules, ranking or reputation, class size if known. Explain why chosen university was stronger. Never compare tuition fees. EXAMPLE: I also considered University A, University B, and University C. All offered similar programmes. After comparing the curriculum, module structure, teaching approach, student support, and academic reputation, I found my chosen university offered the strongest alignment with my career objectives. LENIENCY: Pass if they name at least 2 other universities and give a reasonable reason for their final choice. Only fail if they cannot name any other universities.'
+  },
+  {
+    id:'q7', cat:'Why the UK',
+    text:'Why did you choose to study in the United Kingdom?',
+    criteria:'GUIDE: Avoid generic answers. Use specific reasons. Industry-focused education: UK universities emphasise practical application and case-study learning. Quality assurance: UK higher education is regulated with strong academic standards. Research and professional development: UK programmes integrate industry practices and professional skills. Always explain how each point benefits your specific goals. LENIENCY: Pass if they give at least 2 specific reasons connected to their goals. Only fail if the answer is completely generic with no specific connection to the UK or their goals.'
+  },
+  {
+    id:'q8', cat:'Other Countries',
+    text:'Apart from the UK, which other countries did you consider for your studies?',
+    criteria:'GUIDE: Mention at least 3 countries. For each country name at least 2 universities and mention programme availability and specific features. Compare: programme structure, research opportunities, industry engagement, academic reputation. Explain why UK was better. Avoid language and time difference arguments. LENIENCY: Pass if they mention at least 2 countries with universities and give a reason why UK was better. Only fail if they cannot name any alternative countries or universities.'
+  },
+  {
+    id:'q9', cat:'Home Country vs UK',
+    text:'You could study this programme in your home country. Why did you choose the UK instead?',
+    criteria:'GUIDE: Do not criticise the home country. Focus on programme differences. Say UK programme offers stronger combination of: practical learning, international case studies, industry engagement, and contemporary curriculum. Mention intention to return home after studies. EXAMPLE: I considered studying in my home country. However I found the UK programme offers a stronger combination of practical learning, international case studies, industry engagement, and contemporary curriculum content. My intention is to gain this international exposure and specialised knowledge then return home to apply it in my career and future business plans. LENIENCY: Pass if they explain a genuine programme-based reason for choosing UK and mention returning home. Only fail if they criticise their home country or give no programme-based reason.'
+  },
+  {
+    id:'q10', cat:'Career Plans',
+    text:'What are your career plans after completing this programme?',
+    criteria:'GUIDE: Show clear post-study plans. Show intention to return home after studies. Mention academic progression and career progression. Be specific about role or business goals. LENIENCY: Pass if they give a clear plan connected to the programme and mention returning home. Only fail if they have no plan at all or suggest they plan to stay in the UK permanently without justification.'
+  },
+  {
+    id:'q11', cat:'Finance & Funding',
+    text:'How will you fund your studies and living expenses in the UK?',
+    criteria:'GUIDE: Name the exact source of funds (personal savings, family savings, employer sponsorship, or scholarship — be specific about the source). Confirm it covers both tuition fees and living costs. Mention documentary evidence (bank statements, sponsorship letter etc). LENIENCY: Pass if they name a clear source and confirm it covers their costs. Only fail if they are completely vague with no source named at all.'
+  },
+  {
+    id:'q12', cat:'Accommodation',
+    text:'Where will you live during your studies and how much will it cost?',
+    criteria:'GUIDE: Name the area or location. Describe type of accommodation. State weekly or monthly cost (realistic for UK). Explain how to travel to campus. LENIENCY: Pass if they name a location, give an approximate cost, and explain how they will get to campus. Only fail if they have no idea where they will live or what it costs.'
+  }
 ];
 
 // ── State ──────────────────────────────────────────────────────────
