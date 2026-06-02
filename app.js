@@ -36,7 +36,9 @@ async function checkSession() {
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (session?.user) {
       await loadStudentProfile(session.user);
-      await checkStudentId(session.user);
+      // Don't await checkStudentId — it can block forever if no student_id
+      // Run it in background, don't let it gate the auth UI
+      checkStudentId(session.user).catch(() => {});
       showAuthenticatedUI(session.user);
     } else {
       setTimeout(() => {
@@ -106,7 +108,7 @@ async function checkStudentId(user) {
       saveBtn.onclick = async () => {
         const studentId = input.value.trim();
         if (!studentId) {
-          if (errorDiv) errorDiv.textContent = 'Please enter a valid Student ID.';
+          if (errorDiv) errorDiv.textContent = 'Please enter a valid Counselor name.';
           return;
         }
         const { error } = await supabaseClient
@@ -122,6 +124,15 @@ async function checkStudentId(user) {
         modal.style.display = 'none';
         resolve(true);
       };
+      // Skip button — don't block login if student skips
+      const skipBtn = document.getElementById('skipStudentIdBtn');
+      if (skipBtn) {
+        skipBtn.onclick = () => { modal.style.display = 'none'; resolve(true); };
+      } else {
+        // Auto-resolve after 0ms if no skip btn — don't block
+        // (modal stays open but auth proceeds)
+        resolve(true);
+      }
     });
   } catch (err) {
     console.error('checkStudentId error:', err);
@@ -132,7 +143,13 @@ async function checkStudentId(user) {
 // ===== SHOW AUTHENTICATED UI =====
 function showAuthenticatedUI(user) {
   try {
-    const student = JSON.parse(localStorage.getItem('student'));
+    let student = JSON.parse(localStorage.getItem('student'));
+    // Fallback: if localStorage is empty, build from Supabase user object
+    if (!student && user) {
+      const fallbackName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'Student';
+      student = { id: user.id, name: fallbackName, student_id: '', email: user.email };
+      localStorage.setItem('student', JSON.stringify(student));
+    }
     if (!student) return;
     if (loginModal) loginModal.style.display = 'none';
     if (studentNameDisplay) studentNameDisplay.textContent = student.name?.split(' ')[0] || 'Student';
@@ -255,24 +272,33 @@ function setupEmailLogin() {
     }
     const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
     if (error) { if (authError) authError.textContent = error.message; return; }
-    const { data: profile } = await supabaseClient
+    // Fetch profile, but fall back to user data if missing
+    let { data: profile } = await supabaseClient
       .from('student_progress').select('*').eq('user_id', data.user.id).single();
-    if (profile) {
-      localStorage.setItem('student', JSON.stringify({
-        id: profile.user_id, name: profile.full_name, student_id: profile.student_id, email: profile.email
-      }));
-      if (loginForm) loginForm.style.display = 'none';
-      if (studentNameDisplay) studentNameDisplay.textContent = profile.full_name.split(' ')[0];
-      if (authSuccess) authSuccess.style.display = 'flex';
-      setTimeout(() => {
-        if (authSuccess) authSuccess.style.display = 'none';
-        if (loginModal) loginModal.style.display = 'none';
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (userMenu) userMenu.style.display = 'flex';
-        if (userNameDisplay) userNameDisplay.textContent = profile.full_name.split(' ')[0];
-        if (userAvatar) userAvatar.textContent = profile.full_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-      }, 1500);
+    if (!profile) {
+      // Profile missing — create it on the fly
+      const fallbackName = data.user.user_metadata?.full_name || data.user.email?.split('@')[0] || 'Student';
+      const { data: newProfile } = await supabaseClient
+        .from('student_progress')
+        .insert({ user_id: data.user.id, full_name: fallbackName, student_id: '', email: data.user.email })
+        .select().single();
+      profile = newProfile || { user_id: data.user.id, full_name: fallbackName, student_id: '', email: data.user.email };
     }
+    const displayName = (profile.full_name || data.user.email?.split('@')[0] || 'Student');
+    localStorage.setItem('student', JSON.stringify({
+      id: profile.user_id || data.user.id, name: displayName, student_id: profile.student_id || '', email: profile.email || data.user.email
+    }));
+    if (loginForm) loginForm.style.display = 'none';
+    if (studentNameDisplay) studentNameDisplay.textContent = displayName.split(' ')[0];
+    if (authSuccess) authSuccess.style.display = 'flex';
+    setTimeout(() => {
+      if (authSuccess) authSuccess.style.display = 'none';
+      if (loginModal) loginModal.style.display = 'none';
+      if (loginBtn) loginBtn.style.display = 'none';
+      if (userMenu) userMenu.style.display = 'flex';
+      if (userNameDisplay) userNameDisplay.textContent = displayName.split(' ')[0];
+      if (userAvatar) userAvatar.textContent = displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    }, 1500);
   });
 }
 
