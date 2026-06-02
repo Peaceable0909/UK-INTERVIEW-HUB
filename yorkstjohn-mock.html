@@ -312,13 +312,13 @@ var MAX_ATTEMPTS = 3;
 var QS = [
   {id:'q1',cat:'Your Background',
    text:'Tell me about yourself — your academic and professional background.',
-   criteria:'MUST INCLUDE: institution name, qualification/degree, graduation MONTH and YEAR, each job in chronological order with company name, job title, and employment dates (start and end), no unexplained gap longer than 6 months, timeline up to current role. Do NOT explain what companies do.'},
+   criteria:'GUIDE: Mention institution name, qualification, graduation month and year. Employment history in chronological order with company name, job title, start and end dates. No unexplained gap over 6 months. Timeline up to current role. Students do NOT need to explain what companies do. EXAMPLE: I studied Computer Science at University of Ibadan and graduated in May 2015. I worked at Genesis Logistics as Sales Representative from September 2015 to June 2017. In August 2017 I joined ABC Limited as Business Development Officer until March 2021. In April 2021 I joined XYZ Company as Regional Sales Manager where I currently work. LENIENCY: Pass if they cover most details. Only fail for missing institution name, degree, or most job dates.'},
   {id:'q2',cat:'Your Programme',
    text:'Tell me about your programme.',
-   criteria:'MUST INCLUDE: full programme title (exact), brief explanation of what it covers, at least 2 specific key areas of study or module names, connection to personal background or interests, connection to career goals.'},
+   criteria:'GUIDE: State the full programme title. Briefly explain what the programme covers. Mention key areas of study. Connect to personal interests, experience or career goals. EXAMPLE: The programme I have chosen is MSc International Business Management. It focuses on international business operations, strategic management, leadership, marketing and global business development. It aligns with my experience in business administration and supports my long-term career goals. LENIENCY: Pass if they name the programme and explain it reasonably. Only fail if they clearly do not know what their programme is about.'},
   {id:'q3',cat:'Why This Programme',
    text:'Why did you choose this programme?',
-   criteria:'MUST: link explicitly to current work experience (specific, not vague), link to future career plans (specific role or industry), connect to a professional ambition, give at least one realistic specific example, explain HOW studying this programme will help achieve their goals. PENALISE heavily for generic answers.'},
+   criteria:'GUIDE: Link the programme to current work experience. Link to future career plans. Link to professional ambitions. Provide realistic examples. Explain how the programme supports their plans. EXAMPLE: I chose this programme because I currently work in business development and participate in strategic decision-making. My organisation is expanding and this programme will help me develop stronger management skills. The knowledge gained will help me contribute more effectively to my field. LENIENCY: Pass if they give a genuine personal reason connected to their work or career. Only fail if the answer has zero personal connection and is completely generic.'},
   {id:'q4',cat:'Why the UK',
    text:'Why did you choose to study in the United Kingdom rather than another country?',
    criteria:'MUST: give at least one UK-specific reason (not generic), compare with at least one other country considered, link reason to career or industry goals. PENALISE: "world-class education", "highly renowned", "strong global reputation" without evidence, "good processing times", "cheaper fees".'},
@@ -640,23 +640,38 @@ async function submitAns(){
   var summaryLine = cleanSummary
     ? '\nWhat the student said (summary): "' + cleanSummary + '"'
     : '';
-  var prompt = 'You are a strict, direct, warm UK student visa interview coach giving spoken audio feedback.\n\n'
-    + 'Question: "' + q.text + '"\n'
-    + 'Student answer: "' + ans + '"'
-    + summaryLine + '\n'
-    + attemptContext + '\n\n'
-    + 'Criteria:\n' + q.criteria + '\n\n'
-    + 'PASS THRESHOLD: 70+. Most first attempts should NOT pass.\n\n'
-    + 'FEEDBACK RULES (spoken audio, not text):\n'
-    + '- ALWAYS reference something SPECIFIC the student actually said. Use their exact words or details.\n'
-    + '- FAIL attempt 1: State exactly what they said wrong or missed. One clear instruction. End with: Try again.\n'
-    + '- FAIL attempt 2: Give a MODEL ANSWER spoken example using realistic details similar to theirs. Then say: Now you go.\n'
-    + '- FAIL attempt 3: Acknowledge any improvement. Encourage. Move them on.\n'
-    + '- PASS: Name specifically what worked. Brief and energetic.\n'
-    + '- NEVER start with Thank you. Max 3 sentences. No bullet points. Coach voice.\n\n'
-    + 'Return ONLY valid JSON: {"score":0-100,"pass":boolean,"feedback_text":"spoken feedback referencing what they said","good":["one strength"],"missing":["one gap"]}';
 
-  var result = null;
+  var prompt = [
+    'You are a warm, encouraging UK student visa interview coach — firm but fair.',
+    '',
+    'Question: "' + q.text + '"',
+    'Student answer: "' + ans + '"' + summaryLine,
+    attemptContext,
+    '',
+    'Marking guide (from the official WhiteRock interview preparation guide):',
+    q.criteria,
+    '',
+    'GRADING PRINCIPLES — be FAIR and REASONABLE:',
+    '- This is practice. Be encouraging, not harsh.',
+    '- PASS (score 60+) if the student covers the main required points, even imperfectly.',
+    '- Only FAIL if they are clearly missing essential information or the answer is too vague to be credible.',
+    '- Audio problems may have cut off words or caused gaps. Give benefit of the doubt if something seems missing.',
+    '- A student who gets most details right should always pass.',
+    '- PASS threshold: 60 or above.',
+    '',
+    'FEEDBACK RULES — spoken audio, conversational, max 3 sentences:',
+    '- ALWAYS reference something specific the student actually said by name or detail.',
+    '- FAIL attempt 1: Name what they said and what specific thing was missing. End with: Try again.',
+    '- FAIL attempt 2: Give a short model answer using details similar to theirs. Say: Now you go.',
+    '- FAIL attempt 3: Acknowledge improvement. Encourage. Move them on.',
+    '- PASS: Name exactly what worked. Brief and warm.',
+    '- NEVER start with Thank you. No bullet points. Natural coach voice.',
+    '',
+    'Return ONLY valid JSON:',
+    '{"score":0-100,"pass":boolean,"feedback_text":"spoken feedback referencing what they said","good":["one strength"],"missing":["one gap if any"]}'
+  ].join('\n');
+
+  var result = null;  var result = null;
   try {
     var gr = await fetch(GEMINI_PROXY, {method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({type:'grade', prompt:prompt})});
