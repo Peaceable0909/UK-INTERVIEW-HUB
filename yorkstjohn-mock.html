@@ -376,6 +376,10 @@ var QS = [
 var activeQ=[], qIdx=0, results=[];
 var attempt=0; // attempts on current question (0-based)
 var finalText='', partialText='', isRecording=false, isMuted=false;
+// Student context — set at interview start, used in greeting + grading
+var studentFirstName='there';
+var studentProgramme='your programme';
+var studentUniversity='York St John University';
 var dgSocket=null, dgKey=null, mediaStream=null, mediaRecorder=null, audioChunks=[];
 var curAudio=null, nextBlobP=null;
 var currentQText=''; // for replay
@@ -682,8 +686,15 @@ async function submitAns(){
     ? '\nWhat the student said (summary): "' + cleanSummary + '"'
     : '';
 
+  // Student context makes feedback specific to their actual programme
+  var studentContext = 'Student name: ' + studentFirstName + '. '
+    + 'Programme they are applying for: ' + studentProgramme + ' at ' + studentUniversity + '.';
+
   var prompt = [
     'You are a warm, encouraging UK student visa interview coach — firm but fair.',
+    '',
+    studentContext,
+    'Use this context to make your feedback specific. Reference their actual programme name when relevant.',
     '',
     'Question: "' + q.text + '"',
     'Student answer: "' + ans + '"' + summaryLine,
@@ -878,13 +889,26 @@ function startInterview(){
     if(i>0){if(cd)cd.textContent=String(i);setTimeout(tick,1000)}
     else{
       show('siv');
+      // Extract student name and programme for tailored experience
       var s=window.getCurrentStudent&&window.getCurrentStudent();
-      var name=s&&s.name?s.name.split(' ')[0]:'there';
-      var greeting='Hey '+name+'! Welcome to your mock interview. I\'ll ask you '+activeQ.length+' questions. After each answer I\'ll tell you exactly what to fix. Let\'s go.';
+      studentFirstName = s&&s.name ? s.name.split(' ')[0] : 'there';
+
+      // Get the programme from the selected course
+      var cid = localStorage.getItem('last_course');
+      var courseData = (typeof COURSES !== 'undefined' && cid && COURSES[cid]) ? COURSES[cid] : null;
+      studentProgramme = courseData ? (courseData.name || courseData.programme || 'your programme') : 'your programme';
+      studentUniversity = 'York St John University';
+
+      var greeting = 'Hey ' + studentFirstName + '! '
+        + 'Welcome to your mock interview for ' + studentProgramme + ' at ' + studentUniversity + '. '
+        + 'I will ask you ' + activeQ.length + ' questions, just like a real credibility interview. '
+        + 'After each answer I will tell you exactly what to fix, and we go again until it is right. '
+        + 'Let us begin.';
+
       if(!isMuted){
-        speakThen(greeting,function(){goToQ(0,null)});
+        speakThen(greeting, function(){ goToQ(0, null); });
       } else {
-        goToQ(0,null);
+        goToQ(0, null);
       }
     }
   }
