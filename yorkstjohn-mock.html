@@ -263,7 +263,7 @@ h1{font-size:clamp(22px,5vw,28px);font-weight:900;text-align:center;letter-spaci
         <div class="txchar" id="txchar"></div>
       </div>
       <div class="txtxt" id="txtxt"></div>
-      <textarea id="tx-edit-area" style="display:none;width:100%;background:transparent;border:none;border-bottom:1.5px solid rgba(196,18,48,.45);outline:none;color:rgba(255,255,255,.85);font-family:inherit;font-size:14px;line-height:1.6;font-weight:500;padding:0 0 4px 0;resize:none;min-height:60px;max-height:110px;overflow-y:auto" spellcheck="false"></textarea>
+      <textarea id="edit-area" style="display:none;width:100%;background:transparent;border:none;border-bottom:1.5px solid rgba(196,18,48,.45);outline:none;color:rgba(255,255,255,.85);font-family:inherit;font-size:14px;line-height:1.6;font-weight:500;padding:0 0 4px 0;resize:none;min-height:60px;max-height:110px;overflow-y:auto" spellcheck="false"></textarea>
     </div>
     <div id="edit-hint" style="display:none;font-size:11px;color:rgba(255,255,255,.3);text-align:right;margin-top:3px;font-style:italic">Tap text above to correct before submitting</div>
     <div class="fbcard" id="fbcard">
@@ -587,7 +587,6 @@ function startDG(){
 function stopDG(){
   isRecording=false;
   if(dgSocket){
-    // Send close message then close
     try{if(dgSocket.readyState===1)dgSocket.send(JSON.stringify({type:'CloseStream'}))}catch(e){}
     setTimeout(function(){try{dgSocket.close()}catch(e){}},300);
     dgSocket=null;
@@ -597,26 +596,27 @@ function stopDG(){
   document.getElementById('micicon').textContent='mic';
   document.getElementById('miclbl').textContent='Tap to Record';
   document.getElementById('btnmic').classList.remove('rec');
-  // Show the editable overlay once recording stops
-  var _txe=document.getElementById('txtxt');
-  var _txa=document.getElementById('tx-edit-area');
-  var _he=document.getElementById('edit-hint');
-  var _captured=(_txe&&_txe.textContent?_txe.textContent.trim():'')
-                ||(finalText+partialText).trim();
-  if(_captured.length>0&&_txa){
-    _txa.value=_captured;
-    _txa.style.display='block';
-    if(_txe)_txe.style.display='none';
-    if(_he)_he.style.display='block';
-    // Keep finalText in sync with textarea edits
-    _txa.oninput=function(){
-      finalText=_txa.value||'';
-      var sb=document.getElementById('btnsub');
-      if(sb)sb.disabled=finalText.trim().length<20;
-      var cc=document.getElementById('txchar');
-      if(cc)cc.textContent=finalText.trim().length>0?finalText.trim().length+' chars':'';
-    };
-  }
+  // 400ms after closing — Deepgram has sent all final results by then
+  // Show editable textarea so student can fix errors before submitting
+  setTimeout(function(){
+    var captured=(finalText+partialText).trim();
+    if(captured.length>0){
+      var ea=document.getElementById('edit-area');
+      var eh=document.getElementById('edit-hint');
+      if(ea){
+        ea.value=captured;
+        ea.style.display='block';
+        ea.oninput=function(){
+          var sb=document.getElementById('btnsub');
+          if(sb)sb.disabled=ea.value.trim().length<20;
+          var cc=document.getElementById('txchar');
+          if(cc)cc.textContent=ea.value.trim().length>0?ea.value.trim().length+' chars':'';
+        };
+        ea.oninput();
+      }
+      if(eh)eh.style.display='block';
+    }
+  },400);
 }
 
 function toggleRec(){
@@ -640,7 +640,7 @@ function doQuestion(q,preBlob,isRetry){
   document.getElementById('ivfill').style.width=((qIdx+1)/total*100)+'%';
   var _txr=document.getElementById('txtxt');
   if(_txr){_txr.innerHTML='';_txr.style.display='block';}
-  var _tar=document.getElementById('tx-edit-area');
+  var _tar=document.getElementById('edit-area');
   if(_tar){_tar.value='';_tar.style.display='none';_tar.oninput=null;}
   document.getElementById('txchar').textContent='';
   document.getElementById('fbcard').className='fbcard';
@@ -693,18 +693,22 @@ function replayQ(){
 
 async function submitAns(){
   stopDG();stopAudio();
-  // Read from textarea if student edited, otherwise from live div / finalText
-  var _tea=document.getElementById('tx-edit-area');
-  var _txd=document.getElementById('tx-text')||document.getElementById('txtxt');
-  var ans=(_tea&&_tea.style.display!=='none'&&_tea.value?_tea.value.trim():'')
-          ||(_txd&&_txd.textContent?_txd.textContent.trim():'')
-          ||(finalText+partialText).trim();
-  // Hide textarea, show div with final answer
-  if(_tea){_tea.style.display='none';_tea.oninput=null;}
-  var tx=document.getElementById('txtxt');
-  if(tx){tx.style.display='block';tx.innerHTML='<span class="final">'+ans+'</span>';}
-  var _hs=document.getElementById('edit-hint');if(_hs)_hs.style.display='none';
-  if(ans.length<15){speakThen('Please give a longer answer before submitting.',function(){startDG()});return}
+  // Read from edit-area if student corrected, else raw Deepgram output
+  var _ea=document.getElementById('edit-area');
+  var ans='';
+  if(_ea&&_ea.style.display!=='none'&&_ea.value.trim().length>0){
+    ans=_ea.value.trim();
+  } else {
+    ans=(finalText+partialText).trim();
+  }
+  // Update the transcript display with the final answer
+  var _tx=document.getElementById('txtxt');
+  if(_tx)_tx.innerHTML='<span class="final">'+ans+'</span>';
+  // Hide edit UI
+  if(_ea){_ea.style.display='none';_ea.oninput=null;}
+  var _esh=document.getElementById('edit-hint');if(_esh)_esh.style.display='none';
+
+    if(ans.length<15){speakThen('Please give a longer answer before submitting.',function(){startDG()});return}
 
   thinking(true);setStatus('Evaluating\u2026','thk');
 
@@ -838,7 +842,7 @@ function retryQ(){
   document.getElementById('rowaft').style.display='none';
   var _rttx=document.getElementById('txtxt');
   if(_rttx){_rttx.innerHTML='';_rttx.style.display='block';}
-  var _rtea=document.getElementById('tx-edit-area');
+  var _rtea=document.getElementById('edit-area');
   if(_rtea){_rtea.value='';_rtea.style.display='none';_rtea.oninput=null;}
   document.getElementById('txchar').textContent='';
   document.getElementById('btnsub').disabled=true;
