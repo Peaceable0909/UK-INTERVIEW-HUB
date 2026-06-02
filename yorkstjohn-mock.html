@@ -104,6 +104,7 @@ h1{font-size:clamp(22px,5vw,28px);font-weight:900;text-align:center;letter-spaci
 .txtxt{font-size:14px;line-height:1.6;font-weight:500;min-height:18px}
 .txtxt .partial{color:rgba(255,255,255,.45)}
 .txtxt .final{color:rgba(255,255,255,.85)}
+.txtxt[contenteditable="true"]{outline:none;border-bottom:1.5px solid rgba(196,18,48,.4);padding-bottom:3px;cursor:text}.txtxt[contenteditable="true"]:focus{border-bottom-color:#c41230}
 .txtxt:empty::before{content:"Your answer will appear here as you speak\2026";color:rgba(255,255,255,.2);font-style:italic;font-size:13px}
 /* Feedback */
 .fbcard{border-radius:12px;padding:12px 14px;display:none;animation:fadeIn .3s ease-out both}
@@ -263,6 +264,7 @@ h1{font-size:clamp(22px,5vw,28px);font-weight:900;text-align:center;letter-spaci
       </div>
       <div class="txtxt" id="txtxt"></div>
     </div>
+    <div id="edit-hint" style="display:none;font-size:11px;color:rgba(255,255,255,.3);text-align:right;margin-top:3px;font-style:italic">Tap text above to correct before submitting</div>
     <div class="fbcard" id="fbcard">
       <div class="fbtop"><div class="fbnum" id="fbnum">—</div><div><div class="fbvdict" id="fbvdict">—</div><div class="fbsub" id="fbsub">—</div></div></div>
       <div class="fbmsg" id="fbmsg"></div>
@@ -588,6 +590,20 @@ function stopDG(){
   document.getElementById('micicon').textContent='mic';
   document.getElementById('miclbl').textContent='Tap to Record';
   document.getElementById('btnmic').classList.remove('rec');
+  // Quietly enable editing once recording stops
+  var _txe=document.getElementById('txtxt');
+  var _he=document.getElementById('edit-hint');
+  if(_txe&&(_txe.textContent||'').trim().length>0){
+    _txe.contentEditable='true';
+    if(_he)_he.style.display='block';
+    _txe.oninput=function(){
+      finalText=_txe.textContent||'';
+      var sb=document.getElementById('btnsub');
+      if(sb)sb.disabled=finalText.trim().length<20;
+      var cc=document.getElementById('txchar');
+      if(cc)cc.textContent=finalText.trim().length>0?finalText.trim().length+' chars':'';
+    };
+  }
 }
 
 function toggleRec(){
@@ -609,12 +625,14 @@ function doQuestion(q,preBlob,isRetry){
   document.getElementById('ivlbl').textContent='Question '+(qIdx+1)+' of '+total;
   document.getElementById('ivqn').textContent='Q'+(qIdx+1);
   document.getElementById('ivfill').style.width=((qIdx+1)/total*100)+'%';
-  document.getElementById('txtxt').innerHTML='';
+  var _txr=document.getElementById('txtxt');
+  if(_txr){_txr.innerHTML='';_txr.contentEditable='false';_txr.oninput=null;}
   document.getElementById('txchar').textContent='';
   document.getElementById('fbcard').className='fbcard';
   document.getElementById('rowrec').style.display='flex';
   document.getElementById('rowaft').style.display='none';
   document.getElementById('btnsub').disabled=true;
+  var _hr=document.getElementById('edit-hint');if(_hr)_hr.style.display='none';
   document.getElementById('btnreplay').style.display='none';
   stopDG();finalText='';partialText='';
 
@@ -660,9 +678,10 @@ function replayQ(){
 
 async function submitAns(){
   stopDG();stopAudio();
-  var ans=(finalText+partialText).trim();
-  // Update display with clean text
-  var tx=document.getElementById('txtxt');if(tx){tx.innerHTML='<span class="final">'+ans+'</span>'}
+  var tx=document.getElementById('txtxt');
+  var ans=(tx&&tx.textContent?tx.textContent.trim():'')||(finalText+partialText).trim();
+  if(tx){tx.contentEditable='false';tx.oninput=null;tx.innerHTML='<span class="final">'+ans+'</span>';}
+  var _hs=document.getElementById('edit-hint');if(_hs)_hs.style.display='none';
   if(ans.length<15){speakThen('Please give a longer answer before submitting.',function(){startDG()});return}
 
   thinking(true);setStatus('Evaluating\u2026','thk');
