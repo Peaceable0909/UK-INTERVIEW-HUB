@@ -184,6 +184,10 @@ h1{font-size:clamp(22px,5vw,28px);font-weight:900;text-align:center;letter-spaci
     <div class="avatar"><span class="mi fill">support_agent</span></div>
     <h1>AI Mock Interview</h1>
     <p class="sub">A real interview experience — your coach asks questions, listens to your answers, and gives you specific feedback to improve.</p>
+    <div id="ctx-banner" style="display:none;background:rgba(196,18,48,.1);border:1px solid rgba(196,18,48,.25);border-radius:10px;padding:10px 14px;margin-bottom:4px;font-size:13px;color:rgba(255,255,255,.75);text-align:center">
+      <span class="mi fill" style="font-size:15px;color:#c41230;vertical-align:middle;margin-right:5px">school</span>
+      <span id="ctx-text"></span>
+    </div>
     <div class="laptop-tip">
       <span class="mi fill">laptop_mac</span>
       <div>
@@ -875,6 +879,17 @@ function startInterview(){
   activeQ=n>=99?QS.slice():QS.slice(0,Math.min(n,QS.length));
   results=[];qIdx=0;attempt=0;nextBlobP=null;dgKey=null;
 
+  // Load student name + programme before anything
+  try{
+    var _si=window.getCurrentStudent&&window.getCurrentStudent();
+    if(_si&&_si.name){studentFullName=_si.name;studentFirstName=_si.name.split(' ')[0]||'there';}
+    var _cid=localStorage.getItem('last_course');
+    if(_cid&&COURSES&&COURSES[_cid]){
+      studentProgramme=COURSES[_cid].name||'';
+      if(COURSES[_cid].university)studentUniversity=COURSES[_cid].university;
+    }
+  }catch(e){}
+
   // Get DG key early
   getDGKey();
 
@@ -899,12 +914,13 @@ function startInterview(){
       studentProgramme = courseData ? (courseData.name || courseData.programme || 'your programme') : 'your programme';
       studentUniversity = 'York St John University';
 
-      var greeting = 'Hey ' + studentFirstName + '! '
-        + 'Welcome to your mock interview for ' + studentProgramme + ' at ' + studentUniversity + '. '
-        + 'I will ask you ' + activeQ.length + ' questions, just like a real credibility interview. '
-        + 'After each answer I will tell you exactly what to fix, and we go again until it is right. '
-        + 'Let us begin.';
-
+      var progLine = studentProgramme
+        ? 'I can see you are preparing for '+studentProgramme+' at '+studentUniversity+'. '
+        : '';
+      var greeting = 'Hey '+studentFirstName+'! Welcome to your mock interview. '
+        +progLine
+        +'I will ask you '+activeQ.length+' questions, just like a real credibility interview. '
+        +'After each answer I will tell you exactly what to fix. Let us go.'
       if(!isMuted){
         speakThen(greeting, function(){ goToQ(0, null); });
       } else {
@@ -916,6 +932,18 @@ function startInterview(){
 }
 
 document.addEventListener('DOMContentLoaded',function(){
+  try{
+    var _s2=window.getCurrentStudent&&window.getCurrentStudent();
+    var _c2=localStorage.getItem('last_course');
+    var _p=[];
+    if(_s2&&_s2.name)_p.push(_s2.name);
+    if(_c2&&COURSES&&COURSES[_c2]&&COURSES[_c2].name)_p.push(COURSES[_c2].name);
+    if(_p.length){
+      var _b=document.getElementById('ctx-banner');
+      var _t=document.getElementById('ctx-text');
+      if(_b&&_t){_t.textContent=_p.join(' • ');_b.style.display='block';}
+    }
+  }catch(e){}
   var btn=document.getElementById('btnstart');
   if(btn){
     btn.addEventListener('click',function(){
