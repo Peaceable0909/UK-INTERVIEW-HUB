@@ -380,13 +380,35 @@ function playBlob(blob,cb){
   curAudio.onerror=function(){setStatus('Ready','');URL.revokeObjectURL(url);if(cb)cb()};
   curAudio.play().catch(function(){setStatus('Ready','');if(cb)cb()});
 }
+// TTS queue — ensures only ONE Gemini TTS request at a time
+var _ttsQueue=Promise.resolve();
 function fetchTTS(text){
   var voice=(document.getElementById('voicepref')||{}).value||'Kore';
+  // Chain onto previous request so they never run simultaneously
+  _ttsQueue=_ttsQueue.then(function(){
+    return _doTTS(text,voice,0);
+  });
+  return _ttsQueue;
+}
+function _doTTS(text,voice,attempt){
   return fetch(GEMINI_PROXY,{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({type:'tts',text:text,voice:voice})})
   .then(function(r){return r.json()})
-  .then(function(d){return d.audio?pcmToWav(d.audio):null})
-  .catch(function(){return null});
+  .then(function(d){
+    if(d.audio) return pcmToWav(d.audio);
+    // 502/error — retry once after 1s
+    if(attempt<1){
+      return new Promise(function(res){setTimeout(function(){res(_doTTS(text,voice,1))},1000)});
+    }
+    console.warn('Gemini TTS failed after retry, using browser fallback');
+    return null;
+  })
+  .catch(function(e){
+    if(attempt<1){
+      return new Promise(function(res){setTimeout(function(){res(_doTTS(text,voice,1))},1000)});
+    }
+    return null;
+  });
 }
 function speakBrowser(text,cb){
   var syn=window.speechSynthesis;
@@ -637,10 +659,10 @@ async function submitAns(){
   // Store result
   results.push({question:q.text,cat:q.cat,transcript:ans,score:score,pass:pass,feedback:fbTxt,attempt:attempt+1});
 
-  // Pre-fetch feedback audio + next Q audio in parallel
+  // Fetch feedback audio (queued — won't conflict with other requests)
   var fbBlobP=isMuted?Promise.resolve(null):fetchTTS(fbTxt);
-  var ni=qIdx+1,nq=activeQ[ni];
-  nextBlobP=nq?(isMuted?Promise.resolve(null):fetchTTS('Question '+(ni+1)+'. '+nq.text)):Promise.resolve(null);
+  // No next-Q pre-fetch — queue keeps things orderly
+  nextBlobP=null;
 
   // Show feedback card
   var fb=document.getElementById('fbcard');
@@ -767,13 +789,8 @@ function startInterview(){
   // Get DG key early
   getDGKey();
 
-  // Pre-fetch Q1 audio during countdown
-  var q1blob=null;
-  if(activeQ[0]&&!isMuted){
-    fetchTTS('Question 1. '+activeQ[0].text).then(function(b){q1blob=b});
-  }
-
-  // Greeting
+  // Show countdown immediately — no pre-fetch here
+  // (avoids simultaneous TTS requests that get rate-limited)
   show('sc');
   var i=3,cd=document.getElementById('cdn');
   if(cd)cd.textContent='3';
@@ -783,14 +800,13 @@ function startInterview(){
     if(i>0){if(cd)cd.textContent=String(i);setTimeout(tick,1000)}
     else{
       show('siv');
-      // Greet by name then start Q1
       var s=window.getCurrentStudent&&window.getCurrentStudent();
       var name=s&&s.name?s.name.split(' ')[0]:'there';
-      var greeting='Hey '+name+'! Welcome to your mock interview. I\'ll ask you '+activeQ.length+' questions. After each answer I\'ll tell you exactly what to fix — and you can try again until you get it right. Let\'s go.';
+      var greeting='Hey '+name+'! Welcome to your mock interview. I\'ll ask you '+activeQ.length+' questions. After each answer I\'ll tell you exactly what to fix. Let\'s go.';
       if(!isMuted){
-        speakThen(greeting,function(){goToQ(0,q1blob)});
+        speakThen(greeting,function(){goToQ(0,null)});
       } else {
-        goToQ(0,q1blob);
+        goToQ(0,null);
       }
     }
   }
