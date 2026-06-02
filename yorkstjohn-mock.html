@@ -389,7 +389,8 @@ var studentProgramme='your programme';
 var studentUniversity='York St John University';
 var dgSocket=null, dgKey=null, mediaStream=null, mediaRecorder=null, audioChunks=[];
 var curAudio=null, nextBlobP=null;
-var currentQText=''; // for replay
+var currentQText='';
+var displayedLength=0;
 
 // ── Screen ────────────────────────────────────────────────────────
 function show(id){
@@ -504,8 +505,12 @@ function getDGKey(){
 function updateTranscript(){
   var el=document.getElementById('txtxt');
   if(!el)return;
-  el.innerHTML='<span class="final">'+finalText+'</span>'+(partialText?'<span class="partial">'+partialText+'</span>':'');
   var full=(finalText+partialText).trim();
+  // Never shrink during recording — Deepgram reprocesses and sends shorter interims
+  if(isRecording&&full.length<displayedLength)return;
+  displayedLength=full.length;
+  el.innerHTML='<span class="final">'+finalText+'</span>'
+    +(partialText?'<span class="partial">'+partialText+'</span>':'');
   var cc=document.getElementById('txchar');
   if(cc)cc.textContent=full.length>0?full.length+' chars':'';
   var sb=document.getElementById('btnsub');
@@ -621,7 +626,7 @@ function stopDG(){
 
 function toggleRec(){
   if(isRecording){stopDG()}
-  else{finalText='';partialText='';var tx=document.getElementById('txtxt');if(tx)tx.innerHTML='';startDG()}
+  else{finalText='';partialText='';displayedLength=0;var tx=document.getElementById('txtxt');if(tx)tx.innerHTML='';startDG()}
 }
 
 // ── Interview flow ────────────────────────────────────────────────
