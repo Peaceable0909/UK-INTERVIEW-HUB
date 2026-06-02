@@ -811,7 +811,7 @@ window.QUESTION_TEXT_MAP = {
   'NRS_SC10':'How do you feel about spending 50% of your time on clinical placements?',
   'NRS_SC11':'How will you balance academic work, placements, and self-care?',
   'NRS_SC12':'What do you know about the NMC Code?',
-  'NRS_SC13':'How does the NHS structure affect a nurse's role?',
+  'NRS_SC13':"How does the NHS structure affect a nurse's role?",
   'NRS_SC14':'What are current challenges in UK adult nursing?',
   'NRS_SC15':'How would you promote equality, diversity, and inclusion in practice?',
   'NRS_SC16':'How will you fund tuition and living costs in London?',
