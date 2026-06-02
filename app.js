@@ -1,15 +1,12 @@
 // ===== CONFIG =====
 const SUPABASE_URL = 'https://okshteetxmmphgjgvrwt.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjgwNjgsImV4cCI6MjA5MTMwNDA2OH0.YN3vYBZ_3iESod6t8P2KIYfVkuazXitceMw17xtdgu8';
-const EMAILJS_PUBLIC_KEY = 'WQ9ZIq9xkFVWQkFRM';
-const EMAILJS_SERVICE_ID = 'service_v6wame2';
-const EMAILJS_TEMPLATE_ID = 'template_6lh9ond';
 
 // ===== INIT =====
 if (!window.supabase) { console.error('Supabase CDN failed to load'); }
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 window.supabaseClient = supabaseClient;
-if (typeof emailjs !== 'undefined') emailjs.init(EMAILJS_PUBLIC_KEY);
+// emailjs removed — emails sent via Supabase Edge Function (Apps Script)
 
 let _sessionReadyResolve;
 window.sessionReady = new Promise(resolve => { _sessionReadyResolve = resolve; });
