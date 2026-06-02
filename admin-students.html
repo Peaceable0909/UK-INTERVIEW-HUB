@@ -394,7 +394,12 @@ function renderPractice(aiScores){
 function renderMocks(mocks){
   if(!mocks.length) return '<div class="empty-section"><span class="mi">mic</span>No mock interview sessions yet</div>';
 
-  return mocks.map(function(session, si){
+  var header = mocks.length > 1
+    ? '<div class="sec-title">'+mocks.length+' sessions — most recent first</div>'
+    : '';
+
+  return header + mocks.map(function(session, si){
+    var sessionNum = mocks.length - si; // newest = highest number
     var score = session.overall_score || 0;
     var readiness = session.readiness || 'poor';
     var questions = Array.isArray(session.questions) ? session.questions : [];
@@ -425,7 +430,7 @@ function renderMocks(mocks){
       +'<div class="mock-ring-pct" style="color:'+colour+'">'+score+'</div>'
       +'</div>'
       +'<div class="mock-session-info">'
-      +'<div class="mock-session-date">'+(session.completed_at?fmtDate(session.completed_at):'Unknown date')+'</div>'
+      +'<div class="mock-session-date">Session '+(mocks.length-si)+' of '+mocks.length+' &nbsp;·&nbsp; '+(session.completed_at?fmtDate(session.completed_at):'Unknown date')+'</div>'
       +'<div class="mock-session-sub">'+passed+'/'+questions.length+' questions passed'+( session.school?' · '+escHtml(session.school):'')+'</div>'
       +'</div>'
       +'<span class="mock-chip '+chipClass+'">'+chipText+'</span>'
