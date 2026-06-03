@@ -2453,6 +2453,13 @@ async function loadDrawerData(userId) {
     if(data.mocks.length) parts.push(data.mocks.length + ' mock session' + (data.mocks.length > 1 ? 's' : ''));
     if(dm) dm.textContent = parts.join(' \u00b7 ') || 'No activity yet';
     _drawerCache[userId] = data;
+    // Show data summary to confirm queries worked before render
+    var dc = document.getElementById('drawer-content');
+    if(dc) dc.innerHTML = '<div style="padding:16px;font-size:12px;color:#374151;background:#f9fafb;border-radius:8px;margin:8px">'
+      + '<b>Queries OK</b> | scores: ' + (data.progress && data.progress.ai_scores ? Object.keys(data.progress.ai_scores).length : 0)
+      + ' | mocks: ' + data.mocks.length
+      + ' | checklists: ' + data.checklists.length
+      + '<br><small style="color:#6b7280">Rendering tab: ' + _drawerTab + '...</small></div>';
     renderDrawerTab(_drawerTab, data);
   } catch(e) {
     console.error('loadDrawerData error:', e);
