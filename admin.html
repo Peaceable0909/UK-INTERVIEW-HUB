@@ -2448,8 +2448,14 @@ async function loadDrawerData(userId) {
     if(mocksRes.error) throw new Error('mock_sessions error: ' + mocksRes.error.message + ' (code:' + mocksRes.error.code + ')');
     
     setStatus('Fetching checklist...');
-    var chkRes   = await db.from('student_checklists').select('*').eq('user_id', userId);
-    if(chkRes.error)   throw new Error('checklists error: ' + chkRes.error.message + ' (code:' + chkRes.error.code + ')');
+    // Use AbortController timeout for student_checklists (may have RLS issues)
+    var chkRes = { data: [], error: null };
+    try {
+      var chkPromise = db.from('student_checklists').select('*').eq('user_id', userId);
+      var chkTimeout = new Promise(resolve => setTimeout(() => resolve({data:[], error:{message:'RLS timeout — checklist policy may be missing', code:'timeout'}}), 5000));
+      chkRes = await Promise.race([chkPromise, chkTimeout]);
+    } catch(e) { chkRes = { data: [], error: { message: e.message } }; }
+    // Don't throw on checklist error — just show empty checklist
 
     var data = { progress: progRes.data, mocks: mocksRes.data||[], checklists: chkRes.data||[] };
     var dm = document.getElementById('drawer-meta');
