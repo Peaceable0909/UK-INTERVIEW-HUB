@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <base href="/UK-INTERVIEW-HUB/">
 <title>AI Mock Interview · York St John</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════════
    YSJ MOCK INTERVIEW — Elite Redesign
@@ -17,9 +17,9 @@
 :root {
   --green:#1a6b3a; --green2:#22c55e; --green-glow:rgba(34,197,94,.2);
   --red:#c41230; --red2:#ef4444; --amber:#f59e0b;
-  --font-display:'Syne',sans-serif;
-  --font-body:'DM Sans',sans-serif;
-  --font-mono:'JetBrains Mono',monospace;
+  --font-display:'Sora',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --font-numbers:'Space Grotesk',sans-serif;
   --ease-spring:cubic-bezier(.34,1.56,.64,1);
   --ease-out:cubic-bezier(.16,1,.3,1);
   --dur:280ms;
@@ -53,7 +53,7 @@
 
 /* ── RESET ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;font-family:var(--font-body);background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+html,body{height:100%;font-family:var(--font-body);font-size:16px;background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
 button{font-family:inherit;cursor:pointer}
 a{text-decoration:none;color:inherit}
 .mi{font-family:"Material Symbols Outlined";font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;vertical-align:middle;line-height:1;user-select:none}
@@ -98,7 +98,7 @@ a{text-decoration:none;color:inherit}
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
 .topbar-logo .mi{font-size:18px;color:#fff}
-.topbar-name{font-family:var(--font-display);font-size:16px;font-weight:800;color:var(--t1);letter-spacing:-.3px}
+.topbar-name{font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--t1);letter-spacing:-.2px}
 .topbar-name span{color:var(--green2)}
 .topbar-center{flex:1;display:flex;justify-content:center}
 .phase-pill{
@@ -157,7 +157,7 @@ a{text-decoration:none;color:inherit}
 }
 .hero-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--green2);animation:pulse 2s infinite}
 .hero-title{
-  font-family:var(--font-display);font-size:clamp(28px,5vw,42px);
+  font-family:var(--font-display);font-size:clamp(32px,5vw,56px);
   font-weight:900;line-height:1.05;letter-spacing:-.5px;
   color:var(--t1);margin-bottom:12px;
 }
@@ -217,7 +217,7 @@ a{text-decoration:none;color:inherit}
   box-shadow:var(--shadow-card);
   animation:fadeUp .4s var(--ease-out) .2s both;
 }
-.prefs-title{font-family:var(--font-display);font-size:16px;font-weight:800;color:var(--t1);margin-bottom:18px}
+.prefs-title{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--t1);margin-bottom:18px}
 .prefs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .pref-group label{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:7px}
 .pref-select{
@@ -260,7 +260,7 @@ a{text-decoration:none;color:inherit}
   padding-top:calc(56px + env(safe-area-inset-top));
 }
 .cdn{
-  font-family:var(--font-display);font-size:120px;font-weight:900;
+  font-family:var(--font-numbers);font-size:120px;font-weight:700;
   color:var(--green2);line-height:1;
   text-shadow:0 0 60px rgba(34,197,94,.4);
   animation:countIn .4s var(--ease-spring);
@@ -287,7 +287,7 @@ a{text-decoration:none;color:inherit}
 .ivqn-badge{
   background:var(--surface);border:1px solid var(--border2);
   border-radius:8px;padding:4px 10px;
-  font-family:var(--font-mono);font-size:12px;font-weight:500;color:var(--t3);
+  font-family:var(--font-numbers);font-size:12px;font-weight:500;color:var(--t3);
   white-space:nowrap;flex-shrink:0;
 }
 
@@ -372,7 +372,7 @@ a{text-decoration:none;color:inherit}
   margin-bottom:10px;
 }
 .qtxt{
-  font-family:var(--font-display);font-size:clamp(15px,2.5vw,18px);
+  font-family:var(--font-display);font-size:clamp(17px,2.5vw,22px);font-weight:700;
   font-weight:700;line-height:1.4;color:var(--t1);
 }
 .attempt-badge{
@@ -413,7 +413,7 @@ a{text-decoration:none;color:inherit}
 .txhdr-left{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em}
 .recdot{width:7px;height:7px;border-radius:50%;background:var(--t4);transition:background .2s}
 .recording .recdot{background:var(--red2);animation:pulse 1s infinite}
-.txchar{font-size:11px;color:var(--t4);font-family:var(--font-mono)}
+.txchar{font-size:11px;color:var(--t4);font-family:var(--font-numbers)}
 .txtxt{
   font-size:14px;line-height:1.6;color:var(--t2);
   min-height:44px;max-height:80px;overflow-y:auto;
@@ -444,12 +444,12 @@ a{text-decoration:none;color:inherit}
 .fbcard.fail{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.03)}
 .fbtop{display:flex;align-items:flex-start;gap:12px;margin-bottom:8px}
 .fbnum{
-  font-family:var(--font-display);font-size:28px;font-weight:900;
+  font-family:var(--font-numbers);font-size:42px;font-weight:700;
   line-height:1;flex-shrink:0;
 }
 .fbnum.pass{color:var(--green2)}.fbnum.fail{color:var(--red2)}
 .fbvdict{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:2px}
-.fbsub{font-size:11px;color:var(--t3);font-family:var(--font-mono)}
+.fbsub{font-size:11px;color:var(--t3);font-family:var(--font-numbers)}
 .fbmsg{font-size:13px;color:var(--t2);line-height:1.6}
 
 /* action rows */
@@ -533,7 +533,7 @@ a{text-decoration:none;color:inherit}
   padding:5px 12px;border-radius:99px;margin-bottom:12px;
 }
 .rs-title{
-  font-family:var(--font-display);font-size:clamp(26px,4vw,38px);
+  font-family:var(--font-display);font-size:clamp(28px,4vw,38px);
   font-weight:900;line-height:1.1;color:var(--t1);margin-bottom:8px;
 }
 .rs-title .name{color:var(--green2)}
@@ -573,7 +573,7 @@ a{text-decoration:none;color:inherit}
   align-items:center;justify-content:center;
 }
 .rsscore{
-  font-family:var(--font-display);font-size:30px;font-weight:900;
+  font-family:var(--font-numbers);font-size:48px;font-weight:700;
   color:var(--t1);line-height:1;
 }
 .rslbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-top:2px}
@@ -598,7 +598,7 @@ a{text-decoration:none;color:inherit}
 
 /* question breakdown */
 .rqsec{
-  font-family:var(--font-display);font-size:18px;font-weight:800;
+  font-family:var(--font-display);font-size:20px;font-weight:700;
   color:var(--t1);margin:28px 0 14px;
 }
 .rq{
@@ -621,7 +621,7 @@ a{text-decoration:none;color:inherit}
 .rqb.pass{background:rgba(34,197,94,.15);color:var(--green2);border:1.5px solid rgba(34,197,94,.3)}
 .rqb.fail{background:rgba(239,68,68,.1);color:var(--red2);border:1.5px solid rgba(239,68,68,.2)}
 .rqtitle{flex:1;font-size:13px;font-weight:700;color:var(--t1);line-height:1.4}
-.rqsc{font-family:var(--font-mono);font-size:15px;font-weight:700;flex-shrink:0}
+.rqsc{font-family:var(--font-numbers);font-size:15px;font-weight:700;flex-shrink:0}
 .rqsc.pass{color:var(--green2)}.rqsc.fail{color:var(--red2)}
 .rqchev{font-size:18px;color:var(--t4);transition:transform .25s;flex-shrink:0}
 .rq.open .rqchev{transform:rotate(180deg)}
@@ -636,7 +636,7 @@ a{text-decoration:none;color:inherit}
   border-left:3px solid var(--border2);
 }
 .rqfb{font-size:13px;color:var(--t2);line-height:1.6}
-.rqatt{font-size:11px;color:var(--t4);font-family:var(--font-mono);margin-top:8px}
+.rqatt{font-size:11px;color:var(--t4);font-family:var(--font-numbers);margin-top:8px}
 
 /* result buttons */
 .rsbtns{display:flex;flex-direction:column;gap:10px;margin-top:28px}
