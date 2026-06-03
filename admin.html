@@ -2437,13 +2437,19 @@ async function loadDrawerData(userId) {
     if(!db){ throw new Error('No DB connection — _adminDB is undefined'); }
     
     // Query each table individually so we can see which one fails
+    function setStatus(msg) { if(content) content.innerHTML = '<div style="text-align:center;padding:40px;color:#6b7280;font-size:13px">' + msg + '</div>'; }
+    
+    setStatus('Fetching practice scores...');
     var progRes  = await db.from('student_progress').select('ai_scores,updated_at').eq('user_id', userId).maybeSingle();
+    if(progRes.error)  throw new Error('student_progress error: ' + progRes.error.message + ' (code:' + progRes.error.code + ')');
+    
+    setStatus('Fetching mock sessions...');
     var mocksRes = await db.from('mock_interview_sessions').select('*').eq('user_id', userId).order('completed_at', {ascending:false});
+    if(mocksRes.error) throw new Error('mock_sessions error: ' + mocksRes.error.message + ' (code:' + mocksRes.error.code + ')');
+    
+    setStatus('Fetching checklist...');
     var chkRes   = await db.from('student_checklists').select('*').eq('user_id', userId);
-
-    if(progRes.error)  throw new Error('student_progress: ' + progRes.error.message);
-    if(mocksRes.error) throw new Error('mock_interview_sessions: ' + mocksRes.error.message);
-    if(chkRes.error)   throw new Error('student_checklists: ' + chkRes.error.message);
+    if(chkRes.error)   throw new Error('checklists error: ' + chkRes.error.message + ' (code:' + chkRes.error.code + ')');
 
     var data = { progress: progRes.data, mocks: mocksRes.data||[], checklists: chkRes.data||[] };
     var dm = document.getElementById('drawer-meta');
