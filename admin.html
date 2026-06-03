@@ -2433,10 +2433,16 @@ async function loadDrawerData(userId) {
   var content = document.getElementById('drawer-content');
   if(content) content.innerHTML = '<div style="text-align:center;padding:40px;color:#9ca3af"><div style="width:32px;height:32px;border-radius:50%;border:3px solid #e5e7eb;border-top-color:#c41230;animation:spin .7s linear infinite;margin:0 auto 12px"></div><div style="font-size:13px">Loading\u2026</div></div>';
   try {
-    var results = await Promise.all([
-      window._adminDB.from('student_progress').select('ai_scores,updated_at').eq('user_id', userId).single(),
-      window._adminDB.from('mock_interview_sessions').select('*').eq('user_id', userId).order('completed_at', {ascending:false}),
-      window._adminDB.from('student_checklists').select('*').eq('user_id', userId)
+    var db = window._adminDB;
+    if(!db){ throw new Error('Not connected to database'); }
+    var timeout = new Promise((_,reject) => setTimeout(() => reject(new Error('Query timed out after 10s')), 10000));
+    var results = await Promise.race([
+      Promise.all([
+        db.from('student_progress').select('ai_scores,updated_at').eq('user_id', userId).maybeSingle(),
+        db.from('mock_interview_sessions').select('*').eq('user_id', userId).order('completed_at', {ascending:false}),
+        db.from('student_checklists').select('*').eq('user_id', userId)
+      ]),
+      timeout
     ]);
     var data = { progress: results[0].data, mocks: results[1].data||[], checklists: results[2].data||[] };
     var dm = document.getElementById('drawer-meta');
