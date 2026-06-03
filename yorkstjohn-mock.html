@@ -1160,7 +1160,9 @@ function speakThen(text,cb){
 function getDGKey(){
   if(dgKey){console.log('[DG] Using cached key');return Promise.resolve(dgKey);}
   console.log('[DG] Fetching token from:', DG_TOKEN_URL);
-  return fetch(DG_TOKEN_URL).then(function(r){
+  return fetch(DG_TOKEN_URL, {
+    headers: {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTIwNzQsImV4cCI6MjA2MDIyODA3NH0.hM3RCMVrNKzPbsxpLMtGkBOaHR94-_WjIQ1IgzREZAs', 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTIwNzQsImV4cCI6MjA2MDIyODA3NH0.hM3RCMVrNKzPbsxpLMtGkBOaHR94-_WjIQ1IgzREZAs'}
+  }).then(function(r){
     console.log('[DG] Token response status:', r.status);
     return r.json();
   }).then(function(d){
@@ -1328,7 +1330,12 @@ function doQuestion(q,preBlob,isRetry){
   document.getElementById('qloading').style.display='block';
   document.getElementById('qcontent').style.display='none';
   setStatus('Preparing\u2026','');
-  var afterSpeak=function(){document.getElementById('btnreplay').style.display='flex';startDG();};
+  var afterSpeak=function(){
+    document.getElementById('btnreplay').style.display='flex';
+    // Don't auto-start — let user tap mic button intentionally
+    // This avoids race conditions when audio ends and recording starts simultaneously
+    setStatus('Ready to record','');
+  };
   function reveal(blob){
     document.getElementById('qcat').textContent=q.cat;
     document.getElementById('qtxt').textContent=q.text;
@@ -1454,7 +1461,10 @@ function retryQ(){
   var txt='Question '+(qIdx+1)+'. '+q.text;
   finalText='';partialText='';
   document.getElementById('btnreplay').style.display='none';
-  speakThen(txt,function(){document.getElementById('btnreplay').style.display='flex';startDG();});
+  speakThen(txt,function(){
+    document.getElementById('btnreplay').style.display='flex';
+    setStatus('Ready to record','');
+  });
 }
 
 function nextQ(){
@@ -1559,13 +1569,6 @@ function startInterview(){
     }
   }catch(e){}
   getDGKey();
-  // Request mic permission early so popup appears before TTS starts
-  // This prevents the permission dialog from interfering with audio playback
-  if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-    navigator.mediaDevices.getUserMedia({audio:true,video:false})
-      .then(function(stream){ stream.getTracks().forEach(function(t){t.stop()}); })
-      .catch(function(e){ console.warn('Mic permission denied:', e.message); });
-  }
   show('sc');
   var i=3,cd=document.getElementById('cdn');
   if(cd)cd.textContent='3';
