@@ -2434,17 +2434,18 @@ async function loadDrawerData(userId) {
   if(content) content.innerHTML = '<div style="text-align:center;padding:40px;color:#9ca3af"><div style="width:32px;height:32px;border-radius:50%;border:3px solid #e5e7eb;border-top-color:#c41230;animation:spin .7s linear infinite;margin:0 auto 12px"></div><div style="font-size:13px">Loading\u2026</div></div>';
   try {
     var db = window._adminDB;
-    if(!db){ throw new Error('Not connected to database'); }
-    var timeout = new Promise((_,reject) => setTimeout(() => reject(new Error('Query timed out after 10s')), 10000));
-    var results = await Promise.race([
-      Promise.all([
-        db.from('student_progress').select('ai_scores,updated_at').eq('user_id', userId).maybeSingle(),
-        db.from('mock_interview_sessions').select('*').eq('user_id', userId).order('completed_at', {ascending:false}),
-        db.from('student_checklists').select('*').eq('user_id', userId)
-      ]),
-      timeout
-    ]);
-    var data = { progress: results[0].data, mocks: results[1].data||[], checklists: results[2].data||[] };
+    if(!db){ throw new Error('No DB connection — _adminDB is undefined'); }
+    
+    // Query each table individually so we can see which one fails
+    var progRes  = await db.from('student_progress').select('ai_scores,updated_at').eq('user_id', userId).maybeSingle();
+    var mocksRes = await db.from('mock_interview_sessions').select('*').eq('user_id', userId).order('completed_at', {ascending:false});
+    var chkRes   = await db.from('student_checklists').select('*').eq('user_id', userId);
+
+    if(progRes.error)  throw new Error('student_progress: ' + progRes.error.message);
+    if(mocksRes.error) throw new Error('mock_interview_sessions: ' + mocksRes.error.message);
+    if(chkRes.error)   throw new Error('student_checklists: ' + chkRes.error.message);
+
+    var data = { progress: progRes.data, mocks: mocksRes.data||[], checklists: chkRes.data||[] };
     var dm = document.getElementById('drawer-meta');
     var parts = [];
     if(data.progress && data.progress.ai_scores) parts.push(Object.keys(data.progress.ai_scores).length + ' practice Q&As');
@@ -2453,7 +2454,8 @@ async function loadDrawerData(userId) {
     _drawerCache[userId] = data;
     renderDrawerTab(_drawerTab, data);
   } catch(e) {
-    if(content) content.innerHTML = '<div style="text-align:center;padding:32px;color:#ef4444;font-size:13px">Error: ' + escHtml(e.message) + '</div>';
+    console.error('loadDrawerData error:', e);
+    if(content) content.innerHTML = '<div style="text-align:center;padding:32px;color:#ef4444;font-size:13px;font-weight:700">Error loading data:<br>' + escHtml(e.message || String(e)) + '<br><br><span style="font-size:11px;color:#6b7280">Check browser console for details</span></div>';
   }
 }
 
