@@ -349,7 +349,7 @@ tbody tr:hover{background:#f8fafc}
 <body>
 
 <!-- ═══════════ LOGIN ═══════════ -->
-<div id="loginScreen" style="display:none;">
+<div id="loginScreen">
   <div class="login-card">
     <div class="login-logo">WHITE <span>ROCK</span></div>
     <p class="login-subtitle">Admin Portal — Authorised Access Only</p>
@@ -1272,13 +1272,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // AUTH
   // ═══════════════════════════════════════════════════════════════════
   async function checkAuth() {
-    const { data:{ session } } = await supabase.auth.getSession();
-    if (session?.user) {
-      if (!ADMIN_EMAILS.includes(session.user.email)) { await supabase.auth.signOut(); showLoginError('Access denied.'); return; }
-      currentAdminEmail = session.user.email;
-      showAdminScreen(session.user);
-    } else {
-      document.getElementById('loginScreen').style.display='flex';
+    try {
+      const { data:{ session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        if (!ADMIN_EMAILS.includes(session.user.email)) { await supabase.auth.signOut(); showLoginError('Access denied.'); return; }
+        document.getElementById('loginScreen').style.display = 'none';
+        currentAdminEmail = session.user.email;
+        showAdminScreen(session.user);
+      } else {
+        document.getElementById('loginScreen').style.display = 'flex';
+      }
+    } catch(err) {
+      console.error('checkAuth error:', err);
+      document.getElementById('loginScreen').style.display = 'flex';
     }
   }
 
