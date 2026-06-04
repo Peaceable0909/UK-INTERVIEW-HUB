@@ -1160,14 +1160,14 @@ function obBack1() {
 
 function obNext2() {
   var counselor = (document.getElementById('ob-counselor').value||'').trim();
-  if (!counselor) { obShake('ob-counselor'); obToast('Please enter your counsellor's first name'); return; }
+  if (!counselor) { obShake('ob-counselor'); obToast('Please enter your counsellor first name'); return; }
   obData.counselor = counselor;
   // Populate confirmation
   document.getElementById('confirm-name').textContent = obData.name;
   document.getElementById('confirm-program').textContent = obData.program;
   var schoolNames = {
     yorkstjohn:'York St John University', bpp:'BPP University',
-    regent:"Regent's University London", netherlands:'Netherlands University',
+    regent:"Regents University London", netherlands:'Netherlands University',
     nursing:'Nursing Programme', other:'Other University'
   };
   document.getElementById('confirm-school').textContent = schoolNames[obData.school] || obData.school;
