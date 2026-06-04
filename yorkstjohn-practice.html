@@ -299,6 +299,14 @@ a{text-decoration:none;color:inherit}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .msg-row{animation:fadeUp .25s ease both}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+@keyframes obShake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-6px)}
+  40%{transform:translateX(6px)}
+  60%{transform:translateX(-4px)}
+  80%{transform:translateX(4px)}
+}
 </style>
 </head>
 <body>
@@ -423,6 +431,8 @@ document.addEventListener('DOMContentLoaded', async function() {
   // Wire text input
   var ta = document.getElementById('textInput');
   if (ta) ta.addEventListener('input', function(){ document.getElementById('sendBtn').disabled = !ta.value.trim(); });
+  // Onboarding check (runs after everything else is ready)
+  setTimeout(checkOnboarding, 200);
 });
 
 function waitForApp() {
@@ -1077,6 +1087,148 @@ window.addEventListener('scroll',function(){
   var tb=document.querySelector('.topbar');
   if(tb)tb.classList.toggle('scrolled',window.scrollY>10);
 },{passive:true});
+
+/* ════════════════════════════════════════════════════
+   ONBOARDING — collect name, program, school, counsellor
+   Saved to localStorage. If already set, skip overlay.
+════════════════════════════════════════════════════ */
+
+var OB_KEY = 'ysj_coach_onboarding_v1';
+var obData = {};
+
+function loadOnboarding() {
+  try {
+    var raw = localStorage.getItem(OB_KEY);
+    if (raw) {
+      obData = JSON.parse(raw);
+      return true; // already completed
+    }
+  } catch(e) {}
+  return false;
+}
+
+function saveOnboarding() {
+  localStorage.setItem(OB_KEY, JSON.stringify(obData));
+}
+
+function checkOnboarding() {
+  if (loadOnboarding() && obData.name && obData.program && obData.school && obData.counselor) {
+    // Already set — hide overlay and show coach info in topbar
+    document.getElementById('onboardOverlay').style.display = 'none';
+    updateTopbarWithSession();
+  }
+  // else: overlay stays visible
+}
+
+function updateTopbarWithSession() {
+  // Update topbar subtitle with student name
+  var nameEl = document.querySelector('.tb-name');
+  if (nameEl) nameEl.textContent = 'AI Interview Coach';
+  var statusEl = document.querySelector('.tb-status');
+  if (statusEl) statusEl.innerHTML = '<div class="status-dot"></div>Hi ' + escHtml(obData.name) + ' · ' + escHtml(obData.program);
+}
+
+// Step navigation
+function obSetDot(step) {
+  for (var i = 1; i <= 3; i++) {
+    var el = document.getElementById('dot'+i);
+    if (el) el.style.background = i <= step ? '#4f46e5' : '#e5e7eb';
+  }
+}
+
+function obNext1() {
+  var name = (document.getElementById('ob-name').value||'').trim();
+  var program = (document.getElementById('ob-program').value||'').trim();
+  var school = document.getElementById('ob-school').value;
+  if (!name) { obShake('ob-name'); obToast('Please enter your first name'); return; }
+  if (!program) { obShake('ob-program'); obToast('Please enter your programme name'); return; }
+  if (!school) { obShake('ob-school'); obToast('Please select your university'); return; }
+  obData.name = name;
+  obData.program = program;
+  obData.school = school;
+  document.getElementById('step1').style.display = 'none';
+  document.getElementById('step2').style.display = 'block';
+  obSetDot(2);
+  document.getElementById('ob-counselor').focus();
+}
+
+function obBack1() {
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step1').style.display = 'block';
+  obSetDot(1);
+}
+
+function obNext2() {
+  var counselor = (document.getElementById('ob-counselor').value||'').trim();
+  if (!counselor) { obShake('ob-counselor'); obToast('Please enter your counsellor's first name'); return; }
+  obData.counselor = counselor;
+  // Populate confirmation
+  document.getElementById('confirm-name').textContent = obData.name;
+  document.getElementById('confirm-program').textContent = obData.program;
+  var schoolNames = {
+    yorkstjohn:'York St John University', bpp:'BPP University',
+    regent:"Regent's University London", netherlands:'Netherlands University',
+    nursing:'Nursing Programme', other:'Other University'
+  };
+  document.getElementById('confirm-school').textContent = schoolNames[obData.school] || obData.school;
+  document.getElementById('confirm-counselor').textContent = obData.counselor;
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3').style.display = 'block';
+  obSetDot(3);
+}
+
+function obBack2() {
+  document.getElementById('step3').style.display = 'none';
+  document.getElementById('step2').style.display = 'block';
+  obSetDot(2);
+}
+
+function obStart() {
+  saveOnboarding();
+  // Save to student_progress if logged in
+  var s = window.getCurrentStudent && window.getCurrentStudent();
+  if (s && s.id && window.supabaseClient) {
+    window.supabaseClient.from('student_progress').update({
+      full_name: obData.name,
+      selected_university: obData.school,
+      updated_at: new Date().toISOString()
+    }).eq('user_id', s.id).then(function(){}).catch(function(){});
+  }
+  // Hide overlay with animation
+  var overlay = document.getElementById('onboardOverlay');
+  overlay.style.transition = 'opacity .4s ease';
+  overlay.style.opacity = '0';
+  setTimeout(function() {
+    overlay.style.display = 'none';
+    updateTopbarWithSession();
+    // Update QUESTIONS array if school is set
+    updateQuestionsForSchool(obData.school);
+  }, 400);
+}
+
+function updateQuestionsForSchool(school) {
+  // For now all schools use same PQS questions — can be extended per school
+  QUESTIONS = window.PQS || window.YSJ_DATA?.PQS || [];
+  sessionStats.total = QUESTIONS.length;
+}
+
+function obToast(msg) {
+  showToast(msg);
+}
+
+function obShake(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.style.borderColor = '#dc2626';
+  el.style.animation = 'obShake .3s ease';
+  setTimeout(function() {
+    el.style.animation = '';
+    el.style.borderColor = '#e5e7eb';
+  }, 300);
+}
+
+// checkOnboarding() is called from the main DOMContentLoaded
+
 </script>
 
 <nav class="bottomnav" aria-label="Main navigation">
@@ -1086,5 +1238,203 @@ window.addEventListener('scroll',function(){
   <a href="yorkstjohn-questions.html" class="bn-tab"><span class="mi">quiz</span>Questions</a>
   <a href="yorkstjohn-checklist.html" class="bn-tab"><span class="mi">checklist</span>Checklist</a>
 </nav>
+
+<!-- ══ ONBOARDING OVERLAY ══ -->
+<div id="onboardOverlay" style="
+  position:fixed;inset:0;z-index:1000;
+  background:linear-gradient(160deg,#1e1b4b 0%,#312e81 50%,#4c1d95 100%);
+  display:flex;align-items:flex-start;justify-content:center;
+  overflow-y:auto;padding:0 0 40px;">
+  <div style="width:100%;max-width:440px;padding:0 20px 20px;">
+
+    <!-- Logo area -->
+    <div style="text-align:center;padding:40px 0 28px">
+      <div style="width:72px;height:72px;border-radius:50%;
+        background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.2);
+        display:flex;align-items:center;justify-content:center;margin:0 auto 14px">
+        <span class="mi fill" style="font-size:34px;color:#fff">psychology</span>
+      </div>
+      <div style="font-family:var(--fh);font-size:22px;font-weight:800;color:#fff;letter-spacing:-.3px">AI Interview Coach</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.55);margin-top:5px">by WhiteRock</div>
+    </div>
+
+    <!-- Card -->
+    <div style="background:#fff;border-radius:24px;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+      <div style="font-family:var(--fh);font-size:18px;font-weight:800;color:#1e1b4b;margin-bottom:4px">Let's get you set up</div>
+      <div style="font-size:13px;color:var(--t3);margin-bottom:24px">Just a few details before we start your coaching session.</div>
+
+      <!-- Step indicators -->
+      <div style="display:flex;gap:6px;margin-bottom:24px" id="stepDots">
+        <div style="height:4px;flex:1;border-radius:99px;background:#4f46e5" id="dot1"></div>
+        <div style="height:4px;flex:1;border-radius:99px;background:#e5e7eb" id="dot2"></div>
+        <div style="height:4px;flex:1;border-radius:99px;background:#e5e7eb" id="dot3"></div>
+      </div>
+
+      <!-- STEP 1: Name + Program -->
+      <div id="step1">
+        <div style="font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.06em;margin-bottom:18px">Step 1 of 3 — Your Details</div>
+
+        <div style="margin-bottom:16px">
+          <label style="display:block;font-size:12px;font-weight:700;color:#374151;margin-bottom:6px">
+            Your first name <span style="color:#dc2626">*</span>
+          </label>
+          <input id="ob-name" type="text" placeholder="e.g. Sarah"
+            style="width:100%;padding:12px 14px;border:1.5px solid #e5e7eb;border-radius:12px;
+            font-size:15px;font-family:var(--fn);color:#111827;outline:none;transition:border-color .2s"
+            onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+
+        <div style="margin-bottom:16px">
+          <label style="display:block;font-size:12px;font-weight:700;color:#374151;margin-bottom:6px">
+            Programme / Course <span style="color:#dc2626">*</span>
+          </label>
+          <input id="ob-program" type="text" placeholder="e.g. MSc International Business"
+            style="width:100%;padding:12px 14px;border:1.5px solid #e5e7eb;border-radius:12px;
+            font-size:15px;font-family:var(--fn);color:#111827;outline:none;transition:border-color .2s"
+            onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+
+        <div style="margin-bottom:24px">
+          <label style="display:block;font-size:12px;font-weight:700;color:#374151;margin-bottom:6px">
+            University / School <span style="color:#dc2626">*</span>
+          </label>
+          <div style="position:relative">
+            <select id="ob-school"
+              style="width:100%;padding:12px 14px;border:1.5px solid #e5e7eb;border-radius:12px;
+              font-size:14px;font-family:var(--fn);color:#111827;outline:none;
+              appearance:none;cursor:pointer;background:#fff;transition:border-color .2s"
+              onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#e5e7eb'">
+              <option value="">— Select your university —</option>
+              <option value="yorkstjohn">York St John University</option>
+              <option value="bpp">BPP University</option>
+              <option value="regent">Regent's University London</option>
+              <option value="netherlands">Netherlands (HAN / Utrecht / Avans)</option>
+              <option value="nursing">Nursing Programme</option>
+              <option value="other">Other / Not Listed</option>
+            </select>
+            <span class="mi" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:#9ca3af;font-size:18px">expand_more</span>
+          </div>
+        </div>
+
+        <button onclick="obNext1()" style="width:100%;padding:14px;border-radius:12px;
+          background:#4f46e5;color:#fff;border:none;font-size:15px;font-weight:700;
+          font-family:var(--fh);cursor:pointer;transition:all .2s;
+          box-shadow:0 4px 16px rgba(79,70,229,.35)"
+          onmouseover="this.style.background='#3730a3'" onmouseout="this.style.background='#4f46e5'">
+          Continue →
+        </button>
+      </div>
+
+      <!-- STEP 2: Counsellor name -->
+      <div id="step2" style="display:none">
+        <div style="font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.06em;margin-bottom:18px">Step 2 of 3 — Your WhiteRock Coach</div>
+
+        <div style="background:#f5f3ff;border-radius:12px;padding:12px 14px;margin-bottom:20px;display:flex;align-items:center;gap:10px">
+          <span class="mi fill" style="color:#7c3aed;font-size:20px;flex-shrink:0">person</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#4c1d95">Your WhiteRock counsellor</div>
+            <div style="font-size:12px;color:#7c3aed;margin-top:1px">They will be able to see your practice scores and feedback</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:24px">
+          <label style="display:block;font-size:12px;font-weight:700;color:#374151;margin-bottom:6px">
+            Counsellor's first name <span style="color:#dc2626">*</span>
+          </label>
+          <input id="ob-counselor" type="text" placeholder="e.g. Michael"
+            style="width:100%;padding:12px 14px;border:1.5px solid #e5e7eb;border-radius:12px;
+            font-size:15px;font-family:var(--fn);color:#111827;outline:none;transition:border-color .2s"
+            onfocus="this.style.borderColor='#4f46e5'" onblur="this.style.borderColor='#e5e7eb'"
+            onkeydown="if(event.key==='Enter')obNext2()">
+        </div>
+
+        <div style="display:flex;gap:10px">
+          <button onclick="obBack1()" style="padding:14px 20px;border-radius:12px;
+            background:#f3f4f6;color:#374151;border:none;font-size:14px;font-weight:600;
+            font-family:var(--fn);cursor:pointer">← Back</button>
+          <button onclick="obNext2()" style="flex:1;padding:14px;border-radius:12px;
+            background:#4f46e5;color:#fff;border:none;font-size:15px;font-weight:700;
+            font-family:var(--fh);cursor:pointer;transition:all .2s;
+            box-shadow:0 4px 16px rgba(79,70,229,.35)"
+            onmouseover="this.style.background='#3730a3'" onmouseout="this.style.background='#4f46e5'">
+            Continue →
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Confirm + Start -->
+      <div id="step3" style="display:none">
+        <div style="font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.06em;margin-bottom:18px">Step 3 of 3 — Ready to go!</div>
+
+        <!-- Summary card -->
+        <div style="background:#f8fafc;border:1.5px solid #e5e7eb;border-radius:16px;padding:16px;margin-bottom:24px">
+          <div style="font-size:12px;font-weight:700;color:#6b7280;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em">Your session details</div>
+
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <div style="width:36px;height:36px;border-radius:50%;background:#eef2ff;
+              display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <span class="mi fill" style="font-size:18px;color:#4f46e5">person</span>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em">Student</div>
+              <div style="font-size:15px;font-weight:700;color:#111827" id="confirm-name"></div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <div style="width:36px;height:36px;border-radius:50%;background:#f0fdf4;
+              display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <span class="mi fill" style="font-size:18px;color:#16a34a">menu_book</span>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em">Programme</div>
+              <div style="font-size:14px;font-weight:600;color:#111827" id="confirm-program"></div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <div style="width:36px;height:36px;border-radius:50%;background:#fff7ed;
+              display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <span class="mi fill" style="font-size:18px;color:#d97706">account_balance</span>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em">University</div>
+              <div style="font-size:14px;font-weight:600;color:#111827" id="confirm-school"></div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:36px;height:36px;border-radius:50%;background:#f5f3ff;
+              display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <span class="mi fill" style="font-size:18px;color:#7c3aed">support_agent</span>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em">WhiteRock Coach</div>
+              <div style="font-size:14px;font-weight:600;color:#111827" id="confirm-counselor"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px">
+          <button onclick="obBack2()" style="padding:14px 20px;border-radius:12px;
+            background:#f3f4f6;color:#374151;border:none;font-size:14px;font-weight:600;
+            font-family:var(--fn);cursor:pointer">← Back</button>
+          <button onclick="obStart()" style="flex:1;padding:14px;border-radius:12px;
+            background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border:none;
+            font-size:15px;font-weight:800;font-family:var(--fh);cursor:pointer;
+            box-shadow:0 4px 20px rgba(79,70,229,.4);transition:all .2s"
+            onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
+            <span class="mi fill sm" style="vertical-align:middle;margin-right:6px">play_circle</span>
+            Start Coaching Session
+          </button>
+        </div>
+      </div>
+
+    </div>
+    <div style="text-align:center;margin-top:16px;font-size:11px;color:rgba(255,255,255,.35)">
+      Powered by WhiteRock · AI Interview Preparation
+    </div>
+  </div>
+</div>
 </body>
 </html>
