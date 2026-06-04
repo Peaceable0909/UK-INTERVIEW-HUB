@@ -577,23 +577,56 @@ function buildFeedbackHTML(fb, qid, qIdx) {
   var checklistHtml = (fb.checklist||[]).map(function(c) {
     return '<li><span class="mi fill ck ' + (c.met?'ok':'miss') + '">' + (c.met?'check_circle':'cancel') + '</span><span>' + escHtml(c.item) + '</span></li>';
   }).join('');
-  var isLast = (qIdx >= QUESTIONS.length - 1);
-  return '<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">' +
+
+  // Score circle with badge
+  var verdictIcon = fb.pass ? '✅' : '❌';
+  var verdictText = fb.pass ? 'Passed' : 'Keep going';
+  var verdictSub  = fb.pass ? 'Moving to next question' : 'Try again — you can do this';
+
+  return '<div style="margin-top:14px;padding-top:14px;border-top:1.5px solid var(--border)">' +
+
+    // ── Score row ──
     '<div class="fb-score-row">' +
       '<div class="fb-score-circle ' + clsCircle + '">' +
         '<div class="fb-score-num">' + fb.score + '</div>' +
         '<div class="fb-score-den">/100</div>' +
       '</div>' +
       '<div>' +
-        '<div class="fb-verdict">' + (fb.pass ? '✅ Good answer!' : '❌ Needs improvement') + '</div>' +
+        '<div class="fb-verdict">' + verdictIcon + ' ' + verdictText + '</div>' +
         '<div class="fb-summary">' + escHtml(fb.summary||'') + '</div>' +
       '</div>' +
     '</div>' +
-    (fb.what_worked ? '<div class="fb-sect"><div class="fb-sect-head good"><span class="mi fill xs">check_circle</span>What worked</div><div class="fb-text">' + escHtml(fb.what_worked) + '</div></div>' : '') +
-    (fb.what_missed ? '<div class="fb-sect"><div class="fb-sect-head bad"><span class="mi fill xs">cancel</span>Main gap</div><div class="fb-text">' + escHtml(fb.what_missed) + '</div></div>' : '') +
+
+    // ── What worked (ALWAYS shown) ──
+    '<div class="fb-sect">' +
+      '<div class="fb-sect-head good"><span class="mi fill xs">check_circle</span>What worked</div>' +
+      '<div class="fb-text">' + escHtml(fb.what_worked || 'Keep working on adding more personal detail to your answer.') + '</div>' +
+    '</div>' +
+
+    // ── What to improve (ALWAYS shown) ──
+    '<div class="fb-sect">' +
+      '<div class="fb-sect-head ' + (fb.pass ? 'tip' : 'bad') + '">' +
+        '<span class="mi fill xs">' + (fb.pass ? 'tips_and_updates' : 'cancel') + '</span>' +
+        (fb.pass ? 'How to make it even stronger' : 'What is still missing') +
+      '</div>' +
+      '<div class="fb-text">' + escHtml(fb.what_missed || 'Great — nothing critical missing.') + '</div>' +
+    '</div>' +
+
+    // ── Requirements checklist ──
     (checklistHtml ? '<div class="fb-sect"><div class="fb-sect-head tip"><span class="mi fill xs">fact_check</span>Requirements</div><ul class="fb-checklist">' + checklistHtml + '</ul></div>' : '') +
-    (fb.example_answer ? '<div class="fb-sect"><div class="fb-sect-head ex"><span class="mi fill xs">lightbulb</span>Strong example</div><div class="fb-example">' + escHtml(fb.example_answer) + '</div></div>' : '') +
-    (fb.encouragement ? '<div class="fb-text" style="color:var(--t3);font-style:italic;margin:8px 0 4px">' + escHtml(fb.encouragement) + '</div>' : '') +
+
+    // ── Example answer (ALWAYS shown) ──
+    '<div class="fb-sect">' +
+      '<div class="fb-sect-head ex"><span class="mi fill xs">lightbulb</span>Strong example</div>' +
+      '<div class="fb-example">' + escHtml(fb.example_answer || '') + '</div>' +
+    '</div>' +
+
+    // ── Coaching note (ALWAYS shown, references their words) ──
+    (fb.coaching_note ? '<div style="margin-top:10px;padding:10px 12px;background:var(--brand-lt);border-radius:10px;border-left:3px solid var(--brand)">' +
+      '<div style="font-size:10px;font-weight:800;color:var(--brand);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Coach note</div>' +
+      '<div style="font-size:13px;color:var(--brand-dk);line-height:1.6">' + escHtml(fb.coaching_note) + '</div>' +
+    '</div>' : '') +
+
   '</div>';
 }
 
@@ -844,14 +877,19 @@ async function submitAnswer(text, audioUrl) {
       '- Example of good next_instruction: "You need to mention your actual job title and say how THIS specific module in your course directly helps you do it better"',
       '- Example of bad next_instruction: "Try to be more specific" — too vague',
       '',
+      '=== ALWAYS GIVE FEEDBACK — PASS OR FAIL ===',
+      'Even when the student passes, give them detailed coaching. Reference what they actually said.',
+      'Quote their words back to them. Tell them what was strong AND what could be even better next time.',
+      '',
       'Return ONLY valid JSON, no markdown, no extra text:',
       '{"pass":boolean,"score":0-100,',
-      '"summary":"1 honest sentence on the answer quality — speak directly to the student",',
-      '"what_worked":"quote or paraphrase something they actually said that was good. If nothing was good, say so honestly",',
-      '"what_missed":"the single most important thing still missing from this answer",',
+      '"summary":"1 honest coaching sentence spoken directly to the student — reference something they actually said",',
+      '"what_worked":"ALWAYS fill this in. Quote or closely paraphrase something the student actually said that worked well. Even if they failed, find one thing.",',
+      '"what_missed":"ALWAYS fill this in. The single most important gap. Even if they passed, tell them what would make the answer even stronger.",',
       '"checklist":[{"item":"specific requirement from the criteria","met":true/false},{"item":"specific requirement","met":true/false},{"item":"specific requirement","met":true/false}],',
-      '"example_answer":"2-3 sentence example of a STRONG answer for this exact question — personal, specific, genuine sounding. Use first person. Reference their course/country/job context.",',
-      '"next_instruction":"if failed: one concrete coaching instruction — tell them EXACTLY what to say differently next time. If passed: empty string."}',
+      '"example_answer":"ALWAYS provide this. 2-3 sentences showing a strong version of this answer — personal, specific, genuine. Reference their course, their context. First person.",',
+      '"coaching_note":"ALWAYS fill this in. 1-2 sentences of coaching advice referencing their actual words. Pass: tell them what made it good and what to polish. Fail: tell them exactly what to add next time.",',
+      '"next_instruction":"if failed: one concrete sentence telling them EXACTLY what to change. If passed: empty string."}',
     ].join('\n');
 
     // Use Gemini proxy (same endpoint as mock interview)
@@ -882,14 +920,16 @@ async function submitAnswer(text, audioUrl) {
     if (fb.pass) sessionStats.passed++;
     renderScoreBoard();
 
-    // Build AI response text — coaching language, not robotic
+    // Build AI response text — always coaching, always references student's answer
     var aiResponseText;
     if (fb.pass) {
-      aiResponseText = fb.summary || 'Well done — that was a good answer.';
+      // Even on pass — give the coaching note so they learn
+      aiResponseText = (fb.coaching_note || fb.summary || 'Good answer.') +
+        (fb.what_missed ? ' One thing to note for next time: ' + fb.what_missed : '');
     } else {
-      // Lead with what was wrong + the specific coaching instruction
-      var what = fb.what_missed ? fb.what_missed + '. ' : '';
-      var how = fb.next_instruction || 'Try again — use the example below as your guide.';
+      // Lead with summary + exact instruction
+      var what = fb.summary ? fb.summary + ' ' : '';
+      var how = fb.next_instruction || 'Use the example below as your guide and try again.';
       aiResponseText = what + how;
     }
 
