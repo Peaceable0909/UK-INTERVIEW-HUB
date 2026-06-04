@@ -1683,6 +1683,36 @@ function obShake(id) {
 
 // checkOnboarding() is called from the main DOMContentLoaded
 
+
+// ── Missing utility functions ─────────────────────
+function enableInput(on) {
+  var bar = document.getElementById('inputBar');
+  var micBtn = document.getElementById('micBtn');
+  var ta = document.getElementById('textInput');
+  if (bar) {
+    bar.style.opacity = on ? '1' : '0.6';
+    bar.style.pointerEvents = on ? '' : 'none';
+  }
+  if (micBtn) micBtn.disabled = !on;
+  // Don't disable the textarea itself — student can still see and read
+  // but disable the send button if we're disabling
+  if (!on) {
+    var sb = document.getElementById('sendBtn');
+    if (sb) sb.disabled = true;
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+function onKeyDown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
 </script>
 
 <nav class="bottomnav" aria-label="Main navigation">
