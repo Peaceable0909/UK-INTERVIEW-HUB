@@ -661,11 +661,12 @@ function startSession() {
   var course = window.getCurrentCourse && window.getCurrentCourse() || {};
   var prog = course.name ? ' preparing for ' + course.name : '';
 
-  var greeting = 'Hi ' + name + '! I\'m your AI interview coach' + prog + '.\
-\
-I will ask you ' + QUESTIONS.length + ' questions — exactly the type a UKVI caseworker will ask. After each answer I\'ll give you detailed feedback and a strong example answer.\
-\
-You need to pass each question before we move on. When you\'re ready, just say "Let\'s go" or anything you like.';
+  var greeting = 'Hi ' + name + '! Welcome to your WhiteRock interview coaching session' +
+    (prog ? ' for ' + prog : '') + '.' +
+    '\n\nHere is how this works. I will ask you questions one at a time — the same type a real UKVI caseworker will ask.' +
+    '\n\nAfter each answer I will tell you what worked, what is missing, and show you a strong example. You keep trying until you pass. Only then do we move to the next question.' +
+    '\n\nOne rule: do not try to sound like a textbook. Speak naturally, like you are talking to a friend. That is what they want to hear.' +
+    '\n\nWhen you are ready, just say "Let us go"';
 
   appendMessage({ role:'ai', text: greeting, time: new Date().toISOString(), phase:'welcome' });
   enableInput(true);
@@ -753,18 +754,23 @@ function askCurrentQuestion() {
   var q = QUESTIONS[currentQIdx];
   var num = currentQIdx + 1;
   var total = QUESTIONS.length;
-  var qText = 'Question ' + num + ' of ' + total + '\n\
-' + q.q;
 
   sessionPhase = 'question';
-  enableInput(true);
+  enableInput(false); // disable while intro plays
 
-  appendMessage({
-    role:'ai', text: q.q, time: new Date().toISOString(),
-    isQuestion: true, qid: q.id, qNum: num, qTotal: total
-  });
-  if (!isMuted) speakText('Question ' + num + '. ' + q.q, null);
-  scrollToBottom();
+  // Natural intro before the question
+  var qIntro = num === 1 ? 'Great. Here is your first question.' : 'Good, moving on.';
+  appendMessage({ role:'ai', text: qIntro, time: new Date().toISOString() });
+
+  setTimeout(function() {
+    appendMessage({
+      role:'ai', text: q.q, time: new Date().toISOString(),
+      isQuestion: true, qid: q.id, qNum: num, qTotal: total
+    });
+    enableInput(true);
+    if (!isMuted) speakText(qIntro + ' ' + q.q, null);
+    scrollToBottom();
+  }, 700);
 }
 
 // ── Submit and grade ───────────────────────────────
@@ -785,32 +791,84 @@ async function submitAnswer(text, audioUrl) {
   showTyping();
 
   try {
+    var studentName = (obData && obData.name) ? obData.name : 'the student';
     var prompt = [
-      'You are a strict but supportive UK student visa credibility interview coach.',
+      '=== WHITEROCK AI INTERVIEW COACH ===',
+      '',
+      'You are a WhiteRock interview coach preparing ' + studentName + ' for a real UK student visa credibility interview (UKVI).',
       'Course: "' + (course.name||'their chosen course') + '" at ' + (course.campus||'York St John University') + '.',
-      'Question (attempt ' + attempt + '): "' + q.q + '"',
-      'Required criteria: ' + q.cr,
-      'Student answer: "' + text + '"',
+      'This is attempt ' + attempt + ' at this question.',
       '',
-      'PASS threshold: score >= 70. Most first attempts score 45-72.',
-      'Banned phrases cost -20 each: "highly renowned", "world-class education", "better opportunities" without specifics.',
-      'Auto-fail: under 30 words → max 30 | no specifics at all → max 35.',
+      '=== THE QUESTION ===',
+      q.q,
       '',
-      'IMPORTANT — if this is attempt 2+ and the student improved, acknowledge the improvement specifically.',
-      'IMPORTANT — if they failed again, do NOT just repeat the same feedback. Focus on what STILL needs fixing.',
+      '=== WHAT A GOOD ANSWER REQUIRES ===',
+      q.cr,
       '',
-      'Return ONLY valid JSON:',
+      '=== STUDENT ANSWER ===',
+      '"' + text + '"',
+      '',
+      '=== WHAT UKVI ARE ACTUALLY LOOKING FOR ===',
+      'They are NOT looking for the "correct textbook answer". They want to hear genuine, personal, self-thought answers.',
+      'They want to know: does this student actually think for themselves? Or are they reading from a script?',
+      'An answer that sounds robotic or memorised = FAIL, no matter how technically correct.',
+      '',
+      '=== BANNED PHRASES — instant score penalties (-20 each) ===',
+      '- "highly renowned globally" or "globally recognised" (without ranking evidence)',
+      '- "strong reputation" (without naming a specific ranking, award, or evidence)',
+      '- "world-class education" (without evidence)',
+      '- "fees are less / more affordable" (without a comparison figure)',
+      '- "better employment opportunities" (without a specific role or employer)',
+      '- "the UK is ranked number X" said like a robot without personal connection',
+      '- Any answer that sounds like it was copied from ChatGPT or a template',
+      '- Generic answers that could apply to ANY country or university',
+      '',
+      '=== AUTOMATIC FAIL CAPS ===',
+      '- Under 30 words OR just 1-2 sentences → cap score at 30',
+      '- Completely off-topic → cap at 20',
+      '- Zero personal connection / all generic phrases → cap at 35',
+      '- Sounds like a robot reciting memorised facts → cap at 40',
+      '',
+      '=== SCORING CALIBRATION ===',
+      '- Most first attempts: 40–65',
+      '- Decent attempt with some personal connection but gaps: 55–68',
+      '- Pass threshold: 70+',
+      '- Scores above 80 require: specific personal story, named institutions/companies/modules, genuine reason why this course and this country makes sense FOR THIS STUDENT specifically',
+      '- If attempt 2+: give credit for genuine improvement. But do NOT pass if key criteria still missing.',
+      '',
+      '=== YOUR COACHING STYLE ===',
+      '- Talk like a real coach talking to a friend — warm but honest',
+      '- If they used robot language, call it out directly but kindly: "That phrase sounds copied — let\'s make it yours"',
+      '- If they gave a generic answer, ask them to think about THEIR story: their job, their business, their family',
+      '- Your next_instruction must be a specific, actionable coaching tip — not vague encouragement',
+      '- Example of good next_instruction: "You need to mention your actual job title and say how THIS specific module in your course directly helps you do it better"',
+      '- Example of bad next_instruction: "Try to be more specific" — too vague',
+      '',
+      'Return ONLY valid JSON, no markdown, no extra text:',
       '{"pass":boolean,"score":0-100,',
-      '"summary":"1 sentence on quality",',
-      '"what_worked":"specific strength in their actual words",',
-      '"what_missed":"the single most important gap still missing",',
-      '"checklist":[{"item":"requirement","met":true/false},{"item":"requirement","met":true/false},{"item":"requirement","met":true/false}],',
-      '"example_answer":"2-3 sentence strong example tailored to their course",',
-      '"next_instruction":"if failed: short coaching instruction telling them exactly what to add in their NEXT attempt. If passed: empty string."}',
+      '"summary":"1 honest sentence on the answer quality — speak directly to the student",',
+      '"what_worked":"quote or paraphrase something they actually said that was good. If nothing was good, say so honestly",',
+      '"what_missed":"the single most important thing still missing from this answer",',
+      '"checklist":[{"item":"specific requirement from the criteria","met":true/false},{"item":"specific requirement","met":true/false},{"item":"specific requirement","met":true/false}],',
+      '"example_answer":"2-3 sentence example of a STRONG answer for this exact question — personal, specific, genuine sounding. Use first person. Reference their course/country/job context.",',
+      '"next_instruction":"if failed: one concrete coaching instruction — tell them EXACTLY what to say differently next time. If passed: empty string."}',
     ].join('\n');
 
-    var resp = await puter.ai.chat(prompt, {model:'gpt-4o-mini'});
-    var raw = typeof resp==='string' ? resp : resp?.message?.content || JSON.stringify(resp);
+    // Use Gemini proxy (same endpoint as mock interview)
+    var gradeResp = await fetch(GEMINI_PROXY, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({type:'grade', prompt: prompt})
+    });
+    var gradeData = await gradeResp.json();
+    var raw = '';
+    if (gradeData.error) {
+      // Fallback to puter if Gemini fails
+      var puterResp = await puter.ai.chat(prompt, {model:'gpt-4o-mini'});
+      raw = typeof puterResp==='string' ? puterResp : puterResp?.message?.content || JSON.stringify(puterResp);
+    } else {
+      raw = typeof gradeData==='string' ? gradeData : JSON.stringify(gradeData);
+    }
     var match = raw.match(/\{[\s\S]*\}/);
     if (!match) throw new Error('No JSON');
     var fb = JSON.parse(match[0]);
@@ -824,12 +882,15 @@ async function submitAnswer(text, audioUrl) {
     if (fb.pass) sessionStats.passed++;
     renderScoreBoard();
 
-    // Build AI response text
+    // Build AI response text — coaching language, not robotic
     var aiResponseText;
     if (fb.pass) {
-      aiResponseText = '✅ Well done! ' + (fb.summary || 'Good answer.');
+      aiResponseText = fb.summary || 'Well done — that was a good answer.';
     } else {
-      aiResponseText = fb.next_instruction || ('❌ ' + (fb.summary || 'That needs improvement. Please try again.'));
+      // Lead with what was wrong + the specific coaching instruction
+      var what = fb.what_missed ? fb.what_missed + '. ' : '';
+      var how = fb.next_instruction || 'Try again — use the example below as your guide.';
+      aiResponseText = what + how;
     }
 
     // Append feedback message
@@ -868,13 +929,19 @@ async function submitAnswer(text, audioUrl) {
         } else {
           // AI asks the next question naturally
           var nextQ = QUESTIONS[currentQIdx];
-          var num = currentQIdx + 1;
-          appendMessage({
-            role:'ai', text: nextQ.q, time: new Date().toISOString(),
-            isQuestion: true, qid: nextQ.id, qNum: num, qTotal: QUESTIONS.length
-          });
-          enableInput(true);
-          if (!isMuted) speakText('Question ' + num + '. ' + nextQ.q, null);
+          var nextNum = currentQIdx + 1;
+          var transition = 'Well done ' + ((obData && obData.name) ? obData.name : '') + '. That was a good answer. Let us move on.';
+          appendMessage({ role:'ai', text: transition, time: new Date().toISOString() });
+          enableInput(false);
+          setTimeout(function() {
+            appendMessage({
+              role:'ai', text: nextQ.q, time: new Date().toISOString(),
+              isQuestion: true, qid: nextQ.id, qNum: nextNum, qTotal: QUESTIONS.length
+            });
+            enableInput(true);
+            if (!isMuted) speakText(transition + ' Question ' + nextNum + '. ' + nextQ.q, null);
+            scrollToBottom();
+          }, 800);
         }
       }, 1200);
     } else {
@@ -885,9 +952,8 @@ async function submitAnswer(text, audioUrl) {
       setTimeout(function() {
         enableInput(true);
         // Prompt them with a short nudge
-        var nudge = 'Try again — use the example above as a guide.';
-        appendMessage({ role:'ai', text: nudge, time: new Date().toISOString() });
-        if (!isMuted) speakText(nudge, null);
+        // Don't add an extra nudge — the feedback message already has the coaching instruction
+        // Just re-enable input silently
         scrollToBottom();
       }, 800);
     }
