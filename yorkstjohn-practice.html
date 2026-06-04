@@ -1368,89 +1368,158 @@ function getDGKey() {
 }
 
 var recInterval = null;
+var audioCtx = null;  // reuse AudioContext across recordings
+
 function startRecording() {
   if (isRecording) return;
   if (!waitingForAnswer) { showToast('Wait for the question first'); return; }
   finalText = ''; partialText = '';
+
+  // Show a quick "connecting" state
+  var micIcon = document.getElementById('micIcon');
+  if (micIcon) { micIcon.textContent = 'hourglass_top'; }
+
   getDGKey().then(function(key) {
-    if (!key) { startBrowserSTT(); return; }
-    navigator.mediaDevices.getUserMedia({audio:true,video:false}).then(function(stream) {
+    if (!key) {
+      if (micIcon) micIcon.textContent = 'mic';
+      showToast('Could not get mic token — please refresh and try again');
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({audio:true, video:false}).then(function(stream) {
       mediaStream = stream;
+
       var wsUrl = 'wss://api.deepgram.com/v1/listen?token=' + encodeURIComponent(key) +
-        '&model=nova-2&language=en-GB&smart_format=true&interim_results=true&endpointing=500&encoding=linear16&sample_rate=16000';
+        '&model=nova-2' +
+        '&language=en-GB' +
+        '&smart_format=true' +
+        '&interim_results=true' +
+        '&endpointing=500' +
+        '&utterance_end_ms=1500' +
+        '&encoding=linear16' +
+        '&sample_rate=16000';
+
       dgSocket = new WebSocket(wsUrl);
+
       dgSocket.onopen = function() {
+        console.log('[DG] WebSocket open');
         isRecording = true;
         setRecordingUI(true);
-        var AudioCtx = window.AudioContext || window.webkitAudioContext;
-        var ctx = new AudioCtx({sampleRate:16000});
-        var src = ctx.createMediaStreamSource(stream);
-        var processor = ctx.createScriptProcessor(4096,1,1);
-        src.connect(processor); processor.connect(ctx.destination);
-        processor.onaudioprocess = function(e) {
-          if (dgSocket && dgSocket.readyState===1) {
-            var input = e.inputBuffer.getChannelData(0);
-            var pcm = new Int16Array(input.length);
-            for(var i=0;i<input.length;i++) pcm[i]=Math.max(-32768,Math.min(32767,input[i]*32768));
-            dgSocket.send(pcm.buffer);
+
+        // Set up audio processing
+        try {
+          var AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (!audioCtx || audioCtx.state === 'closed') {
+            audioCtx = new AudioCtx({sampleRate: 16000});
           }
-        };
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+
+          var src = audioCtx.createMediaStreamSource(stream);
+          var processor = audioCtx.createScriptProcessor(4096, 1, 1);
+          src.connect(processor);
+          processor.connect(audioCtx.destination);
+
+          processor.onaudioprocess = function(e) {
+            if (dgSocket && dgSocket.readyState === 1) {
+              var input = e.inputBuffer.getChannelData(0);
+              var pcm = new Int16Array(input.length);
+              for (var i = 0; i < input.length; i++) {
+                pcm[i] = Math.max(-32768, Math.min(32767, input[i] * 32768));
+              }
+              dgSocket.send(pcm.buffer);
+            }
+          };
+        } catch(audioErr) {
+          console.error('[DG] Audio setup error:', audioErr);
+          showToast('Audio setup failed — check microphone permissions');
+          stopRecording();
+        }
       };
+
       dgSocket.onmessage = function(e) {
         try {
           var d = JSON.parse(e.data);
-          if (d.type==='Results') {
-            var t = d.channel&&d.channel.alternatives&&d.channel.alternatives[0]&&d.channel.alternatives[0].transcript||'';
-            if (d.is_final) { if(t) finalText+=t+' '; partialText=''; }
-            else { partialText=t; }
+          if (d.type === 'Results') {
+            var t = d.channel &&
+                    d.channel.alternatives &&
+                    d.channel.alternatives[0] &&
+                    d.channel.alternatives[0].transcript || '';
+            if (d.is_final) {
+              if (t) finalText += t + ' ';
+              partialText = '';
+            } else {
+              partialText = t;
+            }
             updateLiveTranscript();
           }
-        } catch(ex){}
+        } catch(ex) {}
       };
-      dgSocket.onerror = function(){ stopRecording(); };
-      dgSocket.onclose = function(){
-        if(partialText.trim()){ finalText+=partialText.trim()+' '; partialText=''; }
-      };
-    }).catch(function(){ startBrowserSTT(); });
-  });
-}
 
-var browserRecog = null;
-function startBrowserSTT() {
-  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { showToast('Mic not available — type your answer'); return; }
-  browserRecog = new SR();
-  browserRecog.continuous = true;
-  browserRecog.interimResults = true;
-  browserRecog.lang = 'en-GB';
-  browserRecog.onstart = function() { isRecording=true; setRecordingUI(true); };
-  browserRecog.onresult = function(e) {
-    var f='', p='';
-    for(var i=e.resultIndex;i<e.results.length;i++){
-      var t=e.results[i][0].transcript;
-      if(e.results[i].isFinal) f+=t+' '; else p+=t;
-    }
-    if(f) finalText+=f; partialText=p;
-    updateLiveTranscript();
-  };
-  browserRecog.onerror = function(){ stopRecording(); };
-  browserRecog.start();
+      dgSocket.onerror = function(err) {
+        console.error('[DG] WebSocket error:', err);
+        stopRecording();
+        showToast('Connection error — try again');
+      };
+
+      dgSocket.onclose = function(e) {
+        console.log('[DG] WebSocket closed, code:', e.code);
+        if (partialText.trim()) {
+          finalText += partialText.trim() + ' ';
+          partialText = '';
+        }
+      };
+
+    }).catch(function(err) {
+      console.error('[DG] getUserMedia error:', err);
+      if (micIcon) micIcon.textContent = 'mic';
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        showToast('Microphone blocked — allow access in browser settings');
+      } else if (err.name === 'NotFoundError') {
+        showToast('No microphone found — type your answer instead');
+      } else {
+        showToast('Could not access mic — type your answer instead');
+      }
+    });
+  }).catch(function() {
+    if (micIcon) micIcon.textContent = 'mic';
+    showToast('Could not connect — check your internet and try again');
+  });
 }
 
 function stopRecording() {
   isRecording = false;
   setRecordingUI(false);
-  if (dgSocket) { try{dgSocket.send(JSON.stringify({type:'CloseStream'}))}catch(ex){} setTimeout(function(){try{dgSocket.close()}catch(ex){}},300); dgSocket=null; }
-  if (mediaStream) { mediaStream.getTracks().forEach(function(t){t.stop()}); mediaStream=null; }
-  if (browserRecog) { try{browserRecog.stop()}catch(ex){} browserRecog=null; }
+
+  // Close Deepgram socket
+  if (dgSocket) {
+    try { dgSocket.send(JSON.stringify({type:'CloseStream'})); } catch(ex) {}
+    setTimeout(function() {
+      try { dgSocket.close(); } catch(ex) {}
+    }, 300);
+    dgSocket = null;
+  }
+
+  // Stop mic stream
+  if (mediaStream) {
+    mediaStream.getTracks().forEach(function(t) { t.stop(); });
+    mediaStream = null;
+  }
+
+  // Collect final transcript
   var captured = (finalText + partialText).trim();
-  if (captured.length >= 10) {
+
+  if (captured.length >= 8) {
     var ta = document.getElementById('textInput');
-    if (ta) { ta.value = captured; autoResize(ta); document.getElementById('sendBtn').disabled = false; }
-    document.getElementById('liveTranscript').textContent = '';
-    showToast('Tap Send to submit, or edit your answer first');
+    if (ta) {
+      ta.value = captured;
+      autoResize(ta);
+      document.getElementById('sendBtn').disabled = false;
+      ta.focus();
+    }
+    var lt = document.getElementById('liveTranscript');
+    if (lt) lt.textContent = '';
+    showToast('Check your answer, then tap Send');
   } else {
-    showToast('No speech detected — try again');
+    showToast('Nothing captured — speak clearly and try again');
   }
 }
 
