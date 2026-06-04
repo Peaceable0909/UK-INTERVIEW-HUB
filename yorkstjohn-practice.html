@@ -13,233 +13,199 @@
 <link rel="stylesheet" href="ysj.css">
 
 <style>
-/* ═══════════════════════════════════════════════════════════
-   WhiteRock × York St John — Design System v2
-   UI/UX Pro Max: 8dp grid · 44px targets · system fonts
-   Style: Clean flat + subtle depth (EdTech / Apple-like)
-═══════════════════════════════════════════════════════════ */
+/* ═══ CHAT PRACTICE — WhiteRock × YSJ ═══ */
 :root{
-  /* Brand */
-  --red:#c41230; --red-dk:#9e0e25; --red-lt:#fff5f5; --red-mid:#fecaca;
-  --navy:#1a1a2e; --navy2:#0f172a;
-  /* Neutrals */
-  --bg:#f5f5f7; --surface:#ffffff; --surface2:#fafafa;
-  --border:#e5e7eb; --divider:#f3f4f6;
-  /* Text */
-  --t1:#1d1d1f; --t2:#3c3c43; --t3:#6e6e73; --t4:#aeaeb2;
-  /* Semantic */
-  --green:#1c7c54; --green-lt:#d1fae5; --green-bg:#f0fdf4;
-  --amber:#b45309; --amber-lt:#fef3c7; --amber-bg:#fffbeb;
-  --blue:#1d4ed8; --blue-lt:#dbeafe; --blue-bg:#eff6ff;
-  --purple:#5b21b6; --purple-lt:#ede9fe; --purple-bg:#faf5ff;
-  --teal:#0d7377; --teal-lt:#ccfbf1; --teal-bg:#f0fdfa;
-  /* Spacing (8dp) */
-  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px;
-  --s6:24px; --s7:28px; --s8:32px; --s10:40px; --s12:48px;
-  /* Radii */
-  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-pill:99px;
-  /* Elevation */
-  --sh-1:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
-  --sh-2:0 4px 12px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
-  --sh-3:0 12px 32px rgba(0,0,0,.1),0 4px 8px rgba(0,0,0,.06);
-  /* Layout */
-  --topbar:56px; --bottomnav:60px;
+  --red:#c41230;--red-dk:#9e0e25;
+  --green:#16a34a;--green-lt:#dcfce7;
+  --amber:#b45309;--amber-lt:#fef3c7;
+  --bg:#f0f2f5;--surface:#fff;
+  --border:#e4e6ea;
+  --t1:#1a1a1a;--t2:#374151;--t3:#6b7280;--t4:#d1d5db;
+  --sh:0 2px 12px rgba(0,0,0,.08);
+  --topbar:56px;--bottomnav:60px;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{font-size:16px;-webkit-text-size-adjust:100%;}
-body{
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  background:var(--bg);color:var(--t1);line-height:1.5;
-  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
-  overflow-x:hidden;
-}
-/* Material Symbols */
-.mi{
-  font-family:"Material Symbols Outlined";
-  font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;
-  vertical-align:middle;line-height:1;user-select:none;
-  font-size:22px; /* prevents shift */
-}
-.mi.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;}
-.mi.sm{font-size:18px;}
-.mi.xs{font-size:16px;}
-.mi.lg{font-size:26px;}
-.mi.xl{font-size:32px;}
-/* Headings */
-h1{font-size:clamp(22px,5vw,28px);font-weight:800;line-height:1.15;letter-spacing:-.3px;color:var(--t1);}
-h2{font-size:18px;font-weight:800;line-height:1.2;letter-spacing:-.2px;color:var(--t1);}
-h3{font-size:16px;font-weight:700;line-height:1.3;color:var(--t1);}
-p{color:var(--t3);line-height:1.5;}
-/* Links */
-a{text-decoration:none;color:inherit;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.mi{font-family:"Material Symbols Outlined";font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;
+  vertical-align:middle;line-height:1;user-select:none;font-size:22px}
+.mi.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24}
+.mi.sm{font-size:18px}.mi.xs{font-size:15px}.mi.lg{font-size:26px}.mi.xl{font-size:32px}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none;font-size:16px}
+button:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:calc(var(--topbar)+env(safe-area-inset-top));
+  padding-top:env(safe-area-inset-top);background:#fff;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding-left:16px;padding-right:16px;gap:12px;
+  box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.topbar.scrolled{box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.tb-back{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;color:var(--red);background:#fff5f5;flex-shrink:0}
+.tb-title{flex:1;font-size:15px;font-weight:800;color:var(--t1);letter-spacing:-.2px}
+.tb-sub{font-size:11px;color:var(--t3);font-weight:500}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:99px;
+  font-size:12px;font-weight:700;background:var(--bg)}
+.chip.muted{color:var(--t3)}
+
+/* ── PROGRESS ── */
+.q-strip{position:fixed;top:calc(var(--topbar)+env(safe-area-inset-top));left:0;right:0;z-index:190;
+  background:#fff;border-bottom:1px solid var(--border);padding:8px 16px}
+.q-strip-bar{margin-top:5px}
+.prog-track{height:4px;background:var(--bg);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;border-radius:99px;transition:width .4s ease;background:var(--red)}
+.q-strip-counter{font-size:11px;font-weight:700;color:var(--t3);letter-spacing:.04em;text-transform:uppercase}
+
+/* ── PAGE WRAPPER ── */
+.page{padding-top:calc(var(--topbar) + env(safe-area-inset-top) + 52px);
+  padding-bottom:calc(var(--bottomnav) + env(safe-area-inset-bottom) + 16px)}
+.pad{max-width:680px;margin:0 auto;padding:0 12px}
+
+/* ── MOCK INTERVIEW BANNER ── */
+.mock-banner{display:flex;align-items:center;gap:14px;
+  background:linear-gradient(135deg,#0f172a,#1e1b4b);
+  border-radius:16px;padding:14px 16px;margin-bottom:14px;text-decoration:none;
+  -webkit-tap-highlight-color:transparent}
+.mock-icon{width:44px;height:44px;border-radius:50%;background:#c41230;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  box-shadow:0 0 16px rgba(196,18,48,.5)}
+
+/* ══ CHAT LAYOUT ══ */
+.chat-wrap{display:flex;flex-direction:column;gap:0}
+
+/* Question card — AI bubble (left) */
+.chat-ai{display:flex;align-items:flex-start;gap:8px;padding:12px 0 4px}
+.ai-avatar{width:36px;height:36px;border-radius:50%;background:var(--red);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;
+  box-shadow:0 2px 8px rgba(196,18,48,.25)}
+.ai-avatar .mi{font-size:18px;color:#fff}
+.ai-bubble{max-width:88%;background:#fff;border-radius:18px 18px 18px 4px;
+  padding:14px 16px;box-shadow:var(--sh);border:1px solid var(--border)}
+.ai-label{font-size:10px;font-weight:800;color:var(--t3);text-transform:uppercase;
+  letter-spacing:.08em;margin-bottom:6px}
+.ai-cat-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;
+  color:var(--red);background:#fff5f5;border-radius:99px;padding:3px 9px;margin-bottom:8px}
+.ai-question{font-size:15px;font-weight:700;color:var(--t1);line-height:1.5}
+.ai-hint-btn{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;
+  color:var(--t3);background:none;border:1px solid var(--border);border-radius:99px;
+  padding:5px 10px;margin-top:10px;cursor:pointer;transition:all .2s}
+.ai-hint-btn:hover{color:var(--amber);border-color:var(--amber)}
+.ai-hint-box{display:none;margin-top:10px;font-size:13px;color:var(--t2);line-height:1.6;
+  background:#fffbeb;border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:10px 12px}
+.ai-hint-box.show{display:block}
+
+/* Student message (right) */
+.chat-student{display:flex;justify-content:flex-end;padding:4px 0 4px}
+.student-bubble{max-width:88%;background:#c41230;border-radius:18px 18px 4px 18px;
+  padding:12px 16px;box-shadow:0 2px 10px rgba(196,18,48,.25)}
+.student-bubble p{font-size:14px;color:#fff;line-height:1.6;font-weight:500}
+.student-meta{font-size:11px;color:rgba(255,255,255,.6);margin-top:5px;text-align:right}
+
+/* Input area */
+.input-row{background:#fff;border-radius:16px;padding:12px 14px;
+  box-shadow:var(--sh);border:1.5px solid var(--border);margin:6px 0;
+  transition:border-color .2s}
+.input-row:focus-within{border-color:var(--red)}
+.q-answer{width:100%;border:none;outline:none;resize:none;font-family:inherit;
+  font-size:14px;line-height:1.6;color:var(--t1);min-height:88px;max-height:200px;
+  background:transparent}
+.q-answer::placeholder{color:var(--t4)}
+.input-footer{display:flex;align-items:center;justify-content:space-between;
+  margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.char-count{font-size:11px;color:var(--t4);font-family:monospace}
+.actions-row{display:flex;gap:8px;align-items:center}
+
 /* Buttons */
-button{font-family:inherit;cursor:pointer;border:none;background:none;font-size:16px;}
-button:disabled{opacity:.5;cursor:not-allowed;}
-/* ── TOP BAR ─────────────────────────────────────────── */
-.topbar{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  height:calc(var(--topbar) + env(safe-area-inset-top));
-  padding-top:env(safe-area-inset-top);
-  background:rgba(255,255,255,.92);
-  backdrop-filter:saturate(180%) blur(20px);
-  -webkit-backdrop-filter:saturate(180%) blur(20px);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;
-  padding-left:var(--s2);padding-right:var(--s4);gap:var(--s2);
-}
-.topbar-back{
-  width:44px;height:44px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  color:var(--navy);-webkit-tap-highlight-color:transparent;
-  transition:background .15s;flex-shrink:0;
-}
-.topbar-back:hover,.topbar-back:active{background:var(--divider);}
-.topbar-title{font-size:17px;font-weight:700;color:var(--t1);flex:1;letter-spacing:-.2px;}
-.topbar-action{
-  width:44px;height:44px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  -webkit-tap-highlight-color:transparent;transition:background .15s;
-}
-.topbar-action:hover,.topbar-action:active{background:var(--divider);}
-.topbar-badge-wrap{position:relative;}
-.notif-badge{
-  position:absolute;top:6px;right:6px;
-  width:8px;height:8px;border-radius:50%;
-  background:var(--red);border:2px solid #fff;
-  display:none;
-}
-.notif-badge.on{display:block;}
-/* ── PAGE BODY ───────────────────────────────────────── */
-.page{
-  padding-top:calc(var(--topbar) + env(safe-area-inset-top) + var(--s4));
-  padding-bottom:calc(var(--bottomnav) + env(safe-area-inset-bottom) + var(--s6));
-}
-.pad{padding-left:var(--s4);padding-right:var(--s4);}
-/* ── BOTTOM NAV ──────────────────────────────────────── */
-.bottomnav{
-  position:fixed;bottom:0;left:0;right:0;z-index:200;
-  height:calc(var(--bottomnav) + env(safe-area-inset-bottom));
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;
+  border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;
+  transition:all .15s;white-space:nowrap;border:none}
+.btn.red{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(196,18,48,.3)}
+.btn.red:hover{background:var(--red-dk);transform:translateY(-1px)}
+.btn.outline{background:#fff;color:var(--t2);border:1.5px solid var(--border)}
+.btn.outline:hover{border-color:var(--t3)}
+.btn.sm{padding:7px 14px;font-size:13px}
+
+/* ══ AI FEEDBACK BUBBLE ══ */
+.feedback-wrap{padding:4px 0 8px}
+.feedback-ai{display:flex;align-items:flex-start;gap:8px}
+.fb-bubble{flex:1;max-width:92%;background:#fff;border-radius:18px 18px 18px 4px;
+  padding:16px 18px;box-shadow:var(--sh);border:1px solid var(--border)}
+
+/* Score header */
+.fb-score-row{display:flex;align-items:center;gap:14px;margin-bottom:14px;
+  padding-bottom:14px;border-bottom:1px solid var(--border)}
+.fb-score-circle{width:56px;height:56px;border-radius:50%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;flex-shrink:0;font-weight:900}
+.fb-score-circle.pass{background:var(--green-lt);color:var(--green)}
+.fb-score-circle.fail{background:#fee2e2;color:#dc2626}
+.fb-score-num{font-size:22px;line-height:1;font-weight:900}
+.fb-score-den{font-size:10px;font-weight:700;opacity:.7}
+.fb-verdict{font-size:15px;font-weight:800;color:var(--t1);margin-bottom:3px}
+.fb-summary{font-size:13px;color:var(--t3);line-height:1.5}
+
+/* Analysis sections */
+.fb-section{margin-bottom:12px}
+.fb-section-head{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.fb-section-head.good{color:var(--green)}
+.fb-section-head.bad{color:#dc2626}
+.fb-section-head.tip{color:var(--amber)}
+.fb-section-head.example{color:#7c3aed}
+.fb-text{font-size:13px;color:var(--t2);line-height:1.65}
+.fb-example-box{background:#f5f3ff;border-left:3px solid #7c3aed;border-radius:0 8px 8px 0;
+  padding:10px 12px;font-size:13px;color:#4c1d95;line-height:1.65;font-style:italic;margin-top:6px}
+.fb-checklist{list-style:none;display:flex;flex-direction:column;gap:5px;margin-top:4px}
+.fb-checklist li{display:flex;align-items:flex-start;gap:7px;font-size:13px;color:var(--t2);line-height:1.5}
+.fb-checklist .ck-icon{flex-shrink:0;margin-top:1px;font-size:15px}
+.fb-checklist .ck-icon.ok{color:var(--green)}
+.fb-checklist .ck-icon.miss{color:#dc2626}
+
+/* Retry/next buttons */
+.fb-actions{display:flex;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+
+/* Loading bubble */
+.typing-bubble{display:flex;align-items:flex-start;gap:8px;padding:8px 0}
+.typing-dots{display:flex;gap:4px;padding:14px 18px;background:#fff;
+  border-radius:18px 18px 18px 4px;box-shadow:var(--sh);border:1px solid var(--border)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--t4);
+  animation:dotBounce .9s infinite ease-in-out}
+.dot:nth-child(2){animation-delay:.2s}
+.dot:nth-child(3){animation-delay:.4s}
+@keyframes dotBounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+
+/* Error */
+.error-bubble{background:#fff5f5;border:1px solid #fecaca;border-radius:12px;
+  padding:14px;text-align:center;margin:8px 0}
+
+/* Toast */
+#toast{position:fixed;bottom:calc(var(--bottomnav)+env(safe-area-inset-bottom)+10px);
+  left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;
+  padding:10px 20px;border-radius:99px;font-size:13px;font-weight:600;
+  display:none;z-index:9999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+
+/* Loading screen */
+.ai-loading{display:none;text-align:center;padding:24px 16px}
+.ai-loading.show{display:block}
+.ai-anim{font-size:42px;margin-bottom:12px;animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.95)}}
+.ai-loading-text{font-size:15px;font-weight:700;color:var(--t1)}
+.ai-loading-sub{font-size:13px;color:var(--t3);margin-top:4px}
+
+/* Bottom nav */
+.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:200;
+  height:calc(var(--bottomnav)+env(safe-area-inset-bottom));
   padding-bottom:env(safe-area-inset-bottom);
-  background:rgba(255,255,255,.95);
-  backdrop-filter:saturate(180%) blur(20px);
-  -webkit-backdrop-filter:saturate(180%) blur(20px);
-  border-top:1px solid var(--border);
-  display:grid;grid-template-columns:repeat(5,1fr);
-  align-items:start;
-}
-.bn-tab{
-  display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:10px var(--s2) 6px;
-  color:var(--t4);font-size:10px;font-weight:600;
-  text-transform:uppercase;letter-spacing:.04em;
-  text-decoration:none;-webkit-tap-highlight-color:transparent;
-  transition:color .15s;
-}
-.bn-tab .mi{font-size:24px;transition:all .15s;}
-.bn-tab.active{color:var(--red);}
-.bn-tab.active .mi{font-variation-settings:"FILL" 1,"wght" 500,"GRAD" 0,"opsz" 24;}
-/* ── CARD ────────────────────────────────────────────── */
-.card{
-  background:var(--surface);border-radius:var(--r-xl);
-  border:1px solid var(--border);overflow:hidden;
-}
-.card+.card{margin-top:var(--s3);}
-/* ── SECTION HEADER ──────────────────────────────────── */
-.sec-hdr{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:var(--s4);
-}
-.sec-title{font-size:18px;font-weight:800;color:var(--t1);letter-spacing:-.2px;}
-.sec-sub{font-size:13px;color:var(--t3);margin-top:2px;}
-.sec-link{
-  font-size:13px;font-weight:700;color:var(--red);
-  display:flex;align-items:center;gap:2px;
-}
-/* ── BUTTONS ─────────────────────────────────────────── */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  gap:var(--s2);border-radius:var(--r-md);font-weight:700;
-  min-height:44px;padding:0 var(--s5);font-size:15px;
-  cursor:pointer;-webkit-tap-highlight-color:transparent;
-  transition:filter .15s, opacity .15s;
-  touch-action:manipulation;
-}
-.btn:active{filter:brightness(.93);}
-.btn.full{width:100%;}
-.btn.red{background:var(--red);color:#fff;}
-.btn.navy{background:var(--navy);color:#fff;}
-.btn.outline{border:1.5px solid var(--border);background:var(--surface);color:var(--t1);}
-.btn.ghost{background:transparent;color:var(--red);border:none;}
-.btn.lg{min-height:52px;font-size:16px;border-radius:14px;}
-/* ── CHIPS / BADGES ──────────────────────────────────── */
-.chip{
-  display:inline-flex;align-items:center;gap:var(--s1);
-  border-radius:var(--r-pill);padding:5px 12px;
-  font-size:12px;font-weight:700;
-}
-.chip.red{background:var(--red-lt);color:var(--red);}
-.chip.green{background:var(--green-lt);color:var(--green);}
-.chip.navy{background:#e8eaf2;color:var(--navy);}
-.chip.muted{background:var(--divider);color:var(--t3);}
-.chip.border{background:var(--surface);border:1.5px solid var(--border);color:var(--t2);}
-/* ── INPUT ───────────────────────────────────────────── */
-.input{
-  width:100%;border:1.5px solid var(--border);
-  border-radius:var(--r-md);padding:12px 14px;
-  font-size:16px;font-family:inherit;
-  outline:none;background:var(--surface);
-  transition:border-color .15s;color:var(--t1);
-}
-.input:focus{border-color:var(--red);}
-.textarea{resize:none;min-height:120px;line-height:1.5;}
-/* ── DIVIDER ─────────────────────────────────────────── */
-.hr{height:1px;background:var(--divider);margin:var(--s4) 0;}
-/* ── SHIMMER SKELETON ────────────────────────────────── */
-.skeleton{
-  background:linear-gradient(90deg,var(--divider) 25%,#ebebeb 50%,var(--divider) 75%);
-  background-size:200% 100%;
-  animation:shimmer 1.4s infinite;
-  border-radius:var(--r-sm);
-}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-/* ── SPINNER ─────────────────────────────────────────── */
-.spinner{
-  width:20px;height:20px;
-  border:2.5px solid var(--divider);
-  border-top-color:var(--red);
-  border-radius:50%;
-  animation:spin .7s linear infinite;
-  display:inline-block;flex-shrink:0;
-}
-@keyframes spin{to{transform:rotate(360deg);}}
-/* ── TOAST ───────────────────────────────────────────── */
-#toast{
-  display:none;position:fixed;bottom:80px;left:50%;
-  transform:translateX(-50%);
-  background:var(--t1);color:#fff;
-  padding:10px 20px;border-radius:var(--r-pill);
-  font-size:14px;font-weight:600;z-index:9999;
-  box-shadow:var(--sh-3);white-space:nowrap;
-}
-/* ── PROGRESS BAR ────────────────────────────────────── */
-.prog-track{
-  height:6px;background:var(--divider);
-  border-radius:var(--r-pill);overflow:hidden;
-}
-.prog-fill{
-  height:100%;border-radius:var(--r-pill);
-  transition:width .5s cubic-bezier(.4,0,.2,1);
-}
-/* ── SAFE AREAS ──────────────────────────────────────── */
-@media(prefers-reduced-motion:reduce){
-  *{transition:none!important;animation:none!important;}
-}
-/* ── RESPONSIVE ──────────────────────────────────────── */
-@media(min-width:768px){
-  .page{max-width:560px;margin:0 auto;}
-  .topbar{max-width:560px;left:50%;transform:translateX(-50%);}
-  .bottomnav{max-width:560px;left:50%;transform:translateX(-50%);}
-}
+  background:#fff;border-top:1px solid var(--border);
+  display:flex;align-items:stretch}
+.bn-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;font-size:10px;font-weight:600;color:var(--t3);
+  -webkit-tap-highlight-color:transparent;text-decoration:none;padding:4px 2px}
+.bn-tab.active{color:var(--red)}
+.bn-tab .mi{font-size:20px}
+
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 <style>
 /* Progress header strip */
@@ -360,25 +326,16 @@ button:disabled{opacity:.5;cursor:not-allowed;}
   </div>
 </div>
 
-<div class="page anim-up" style="padding-top:calc(var(--topbar) + env(safe-area-inset-top) + 42px);">
+<div class="page">
   <div class="pad">
-    <a href="yorkstjohn-mock.html"
-  style="display:flex;align-items:center;gap:14px;
-    background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 100%);
-    border:1px solid rgba(255,255,255,.1);border-radius:16px;
-    padding:16px;margin-bottom:14px;text-decoration:none;
-    -webkit-tap-highlight-color:transparent;">
-  <div style="width:48px;height:48px;border-radius:50%;background:#c41230;
-    display:flex;align-items:center;justify-content:center;flex-shrink:0;
-    box-shadow:0 0 18px rgba(196,18,48,.5)">
-    <span class="mi fill" style="font-size:24px;color:#fff">smart_toy</span>
-  </div>
-  <div style="flex:1">
-    <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:3px">AI Voice Mock Interview</div>
-    <div style="font-size:12px;color:rgba(255,255,255,.5)">Spoken questions · Live transcription · Instant feedback</div>
-  </div>
-  <span class="mi" style="font-size:20px;color:rgba(255,255,255,.4)">arrow_forward_ios</span>
-</a>
+    <a href="yorkstjohn-mock.html" class="mock-banner">
+      <div class="mock-icon"><span class="mi fill" style="font-size:22px;color:#fff">smart_toy</span></div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:2px">AI Voice Mock Interview</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.5)">Spoken questions · Live transcription · Instant feedback</div>
+      </div>
+      <span class="mi" style="font-size:18px;color:rgba(255,255,255,.35)">arrow_forward_ios</span>
+    </a>
     <div id="q-area"></div>
   </div>
 </div>
@@ -395,8 +352,8 @@ function showToast(msg,dur=2500){const t=document.getElementById('toast');t.text
 <script>
 let currentIdx = 0;
 let hintShown = false;
+let attemptCount = 0;  // per-question attempt counter
 
-// Check if coming from question bank with a specific question
 const fromQBank = location.search.includes('from=qbank');
 const storedQ = fromQBank ? JSON.parse(sessionStorage.getItem('ysj_practice_q')||'null') : null;
 
@@ -407,12 +364,12 @@ function getQueue() {
 
 function showQ(idx) {
   currentIdx = idx;
+  attemptCount = 0;
+  hintShown = false;
   const queue = getQueue();
   const q = queue[idx];
   if (!q) return;
-  hintShown = false;
 
-  // Update progress
   const pct = Math.round((idx+1)/queue.length*100);
   document.getElementById('q-label').textContent = 'Q '+(idx+1)+'/'+queue.length;
   document.getElementById('q-counter').textContent = 'Question '+(idx+1)+' of '+queue.length;
@@ -425,141 +382,155 @@ function showQ(idx) {
 
   const area = document.getElementById('q-area');
   area.innerHTML = `
-    <div class="q-card">
-      <div class="q-card-top">
-        <div class="q-tag">
-          <span class="mi fill" aria-hidden="true">${catIcons[q.cat]||'quiz'}</span>
-          ${catNames[q.cat]||q.cat}
+    <div class="chat-wrap" id="chat-wrap">
+
+      <!-- AI question bubble -->
+      <div class="chat-ai">
+        <div class="ai-avatar"><span class="mi fill sm">psychology</span></div>
+        <div class="ai-bubble">
+          <div class="ai-label">AI Coach</div>
+          <div class="ai-cat-tag">
+            <span class="mi xs fill">${catIcons[q.cat]||'quiz'}</span>
+            ${catNames[q.cat]||q.cat}
+          </div>
+          <div class="ai-question">${q.q}</div>
+          <button class="ai-hint-btn" onclick="toggleHint()" id="hint-btn">
+            <span class="mi xs">tips_and_updates</span> Show hint
+          </button>
+          <div class="ai-hint-box" id="hint-box">${q.hint}</div>
         </div>
-        <h2 class="q-question">${q.q}</h2>
-        <button class="q-hint-toggle" onclick="toggleHint()" aria-expanded="false" id="hint-btn">
-          <span class="mi sm">tips_and_updates</span>
-          Show hint
-        </button>
       </div>
-      <div class="q-hint-box" id="hint-box">${q.hint}</div>
-      <div class="q-answer-wrap">
+
+      <!-- Conversation history (student replies + feedback appear here) -->
+      <div id="convo-thread"></div>
+
+      <!-- Loading typing indicator (hidden by default) -->
+      <div class="typing-bubble" id="typing-indicator" style="display:none">
+        <div class="ai-avatar"><span class="mi fill sm">psychology</span></div>
+        <div class="typing-dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+
+      <!-- Input area -->
+      <div class="input-row" id="input-row">
         <textarea class="q-answer" id="q-ans"
-          placeholder="Write your answer here. Be specific — give examples for every statement, name the university address, mention comparisons with at least one other country or university…"
-          rows="6"
+          placeholder="Type your answer here… Be specific — give examples, name modules, mention your campus address, compare with other universities…"
+          rows="4"
           oninput="updateCharCount(this)"
           aria-label="Your answer"></textarea>
-        <div class="q-char-count" id="char-count">0 characters</div>
-        <div class="q-actions">
-          <button class="btn red" id="check-btn" onclick="checkAnswer()"
-            aria-label="Check answer with AI">
-            <span class="mi fill sm">psychology</span>
-            Check with AI
-          </button>
-          ${idx < queue.length-1
-            ? `<button class="btn outline" onclick="showQ(${idx+1})" aria-label="Skip to next question">
-                <span class="mi sm">skip_next</span> Skip
-               </button>`
-            : ''}
+        <div class="input-footer">
+          <span class="char-count" id="char-count">0 chars</span>
+          <div class="actions-row">
+            ${idx < queue.length-1
+              ? `<button class="btn outline sm" onclick="showQ(${idx+1})" aria-label="Skip">
+                  <span class="mi sm">skip_next</span> Skip
+                 </button>`
+              : ''}
+            <button class="btn red sm" id="check-btn" onclick="checkAnswer()">
+              <span class="mi fill sm">send</span> Send
+            </button>
+          </div>
         </div>
       </div>
+
     </div>
-    <div class="ai-loading" id="ai-loading">
-      <div class="ai-anim"><span class="mi xl fill" style="color:var(--red)">psychology</span></div>
-      <div class="ai-loading-text">AI is evaluating your answer…</div>
-      <div class="ai-loading-sub">This takes about 5–10 seconds</div>
-    </div>
-    <div id="fb-area"></div>
   `;
 }
 
 function updateCharCount(el) {
-  document.getElementById('char-count').textContent = el.value.length + ' characters';
+  document.getElementById('char-count').textContent = el.value.length + ' chars';
 }
 
 function toggleHint() {
   hintShown = !hintShown;
-  const box = document.getElementById('hint-box');
+  document.getElementById('hint-box').classList.toggle('show', hintShown);
   const btn = document.getElementById('hint-btn');
-  box.classList.toggle('show', hintShown);
-  btn.setAttribute('aria-expanded', hintShown);
-  btn.innerHTML = `<span class="mi sm">tips_and_updates</span> ${hintShown?'Hide hint':'Show hint'}`;
+  btn.innerHTML = `<span class="mi xs">tips_and_updates</span> ${hintShown?'Hide hint':'Show hint'}`;
+}
+
+function escHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 async function checkAnswer() {
-  const ans = document.getElementById('q-ans')?.value?.trim();
-  if (!ans || ans.length < 20) { showToast('Please write a longer answer (at least a few sentences)'); return; }
+  const ansEl = document.getElementById('q-ans');
+  const ans = ansEl?.value?.trim();
+  if (!ans || ans.length < 20) { showToast('Please write a longer answer first'); return; }
 
   const checkBtn = document.getElementById('check-btn');
-  const loading = document.getElementById('ai-loading');
+  const typing = document.getElementById('typing-indicator');
+  const inputRow = document.getElementById('input-row');
   checkBtn.disabled = true;
-  loading.classList.add('show');
+  attemptCount++;
+
+  // 1. Show student bubble
+  const thread = document.getElementById('convo-thread');
+  const now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const studentDiv = document.createElement('div');
+  studentDiv.className = 'chat-student';
+  studentDiv.innerHTML = `
+    <div class="student-bubble">
+      <p>${escHtml(ans)}</p>
+      <div class="student-meta">You · Attempt ${attemptCount} · ${now}</div>
+    </div>`;
+  thread.appendChild(studentDiv);
+
+  // 2. Clear input, show typing
+  ansEl.value = '';
+  document.getElementById('char-count').textContent = '0 chars';
+  inputRow.style.display = 'none';
+  typing.style.display = 'flex';
+  typing.scrollIntoView({behavior:'smooth',block:'end'});
 
   try {
     const queue = getQueue();
     const q = queue[currentIdx];
     const course = window.getCurrentCourse?.() || {};
-    const prompt = `You are a strict UK student visa credibility interview examiner. You assess answers exactly as a UKVI Entry Clearance Officer would — applying the same scrutiny used in real credibility interview refusals.
 
-Course: "${course.name}" at ${course.campus}.
+    const prompt = `You are a strict but supportive UK student visa credibility interview coach. 
+Your job is to help students improve their answers through detailed, constructive chat feedback.
+
+Course: "${course.name||'their chosen course'}" at ${course.campus||'York St John University'}.
 Question: "${q.q}"
-Required content: ${q.cr}
-Student answer: "${ans}"
+Required content criteria: ${q.cr}
+Student answer (Attempt ${attemptCount}): "${ans}"
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CORE PRINCIPLE — THE ONLY THING THAT MATTERS:
-A credible answer = STATEMENT + CONCRETE EXAMPLE.
-A statement alone is NEVER enough. UKVI caseworkers are trained to reject any answer that lacks specific, verifiable examples. This is confirmed in real refusal letters.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ASSESSMENT STANDARD (same as a UKVI Entry Clearance Officer):
+- A credible answer = STATEMENT + CONCRETE EXAMPLE. A statement alone is never enough.
+- PASS threshold: score >= 70
 
-BANNED PHRASES — These appear word-for-word in real UKVI refusal letters as evidence of a "generic, surface-level" answer. Deduct -20 for EACH unless immediately followed by a specific, verifiable example:
-• "highly renowned globally" or "globally recognised"
-• "strong reputation" (without citing a ranking, table, or award)
-• "fees are less" or "more affordable" (without a comparison figure)
-• "good/fast processing times" as a reason to choose the UK
-• "I want to solve problems" as a career goal
-• "gain better employment" or "better job opportunities" (without a specific role/employer)
-• "world-class education" (without evidence)
-• Any reason that would equally apply to Australia, Canada, or the US with no UK-specific distinction
+BANNED PHRASES (each costs -20 unless followed by a specific example):
+"highly renowned globally", "globally recognised", "strong reputation" (without ranking/award),
+"fees are less/more affordable" (without figures), "world-class education" (without evidence),
+"gain better employment" (without specific role/employer), any reason applicable to any country.
 
-AUTOMATIC FAIL — cap score as shown:
-• Answer is under 30 words or 1–2 sentences → cap at 30
-• Completely off-topic → cap at 20
-• Could apply to ANY country or university — zero specifics → cap at 35
-• Entirely banned phrases with no examples → cap at 25
+AUTOMATIC FAIL caps: under 30 words → max 30 | completely off-topic → max 20 | no specifics at all → max 35
 
-MAJOR DEDUCTIONS — apply each that is missing (-15 to -25):
-• No module names when course knowledge is required → -25
-• No comparison with at least one other country OR university when relevant → -20
-• Career plan has no structure: must include short-term (0–2 yr), medium-term (3–5 yr), long-term (5–10 yr) → -20
-• Financial source is vague ("my parents/family are paying") — must name source of funds (savings, property sale, inheritance, salary, sponsorship) → -20
-• No personal language ("I", "my", "I chose") — reads like a copied brochure → -20
-• Factually incorrect about the course, campus, or university → -20
-• No campus location or city when question requires it → -15
+MAJOR DEDUCTIONS (-15 to -25 each if missing):
+No module names when required (-25) | No country/university comparison when relevant (-20) |
+Career plan with no timeline structure (-20) | Vague funding source (-20) | 
+No personal language (-20) | Factually wrong about course/campus (-20) | No campus address when needed (-15)
 
-MODERATE DEDUCTIONS (-8 to -12):
-• Only 1 module named when 2–3 expected → -10
-• Career role named but no timeline or employer named → -12
-• Comparison given but no specific detail about the alternative (e.g., just "Canada") → -10
-• Funding source named but no documentary basis mentioned → -10
-• Rambling, unfocused answer with no clear structure → -8
-• Accommodation plan with no cost or location specifics → -8
+CALIBRATION: Most first attempts score 45-72. Scores above 80 require exceptional specificity.
 
-MINOR DEDUCTIONS (-3 to -5):
-• Statement + example present but example is weak or very brief → -5
-• Missing one minor detail from required content → -3
-• Adequate answer but lacks personal connection or enthusiasm → -5
+Return ONLY valid JSON, no markdown:
+{
+  "pass": boolean,
+  "score": integer 0-100,
+  "summary": "1 concise sentence on the overall answer quality",
+  "what_worked": "specific strength in their actual answer — quote their words if useful",
+  "what_missed": "the single most important gap that hurt their score",
+  "checklist": [
+    {"item": "requirement 1 from the criteria", "met": true/false},
+    {"item": "requirement 2", "met": true/false},
+    {"item": "requirement 3", "met": true/false}
+  ],
+  "example_answer": "A 2-3 sentence example showing exactly how to answer this question well — specific, personal, with real details relevant to their course",
+  "encouragement": "short warm sentence to motivate them to try again (if failed) or congratulate them (if passed)"
+}`;
 
-CALIBRATION:
-• Most students score 45–72 on a first attempt
-• Scores above 80 require: exceptional specificity, named sources (rankings, statistics, figures), full career structure, funding evidence, personal voice
-• A "decent" answer with some specifics but gaps → 55–65, NOT 75+
-• PASS THRESHOLD: score >= 70
-• Most first attempts should NOT pass — the bar reflects the actual UKVI standard
-
-Do NOT penalise: punctuation, capitalisation, minor spelling, grammar, or accent.
-
-Return ONLY valid JSON — no markdown, no explanation, nothing else:
-{"pass": boolean, "score": integer 0-100, "summary": "one sentence about the answer", "good": ["one specific strength"], "improve": ["one specific improvement needed"]}
-
-CRITICAL: Evaluate the ACTUAL student answer. Do NOT return a default or template score. Every answer gets a DIFFERENT score based on its specific content.`;
     const resp = await puter.ai.chat(prompt, {model:'gpt-4o-mini'});
-    loading.classList.remove('show');
     let raw = typeof resp==='string' ? resp : resp?.message?.content || JSON.stringify(resp);
     const match = raw.match(/\{[\s\S]*\}/);
     if (!match) throw new Error('No JSON in response');
@@ -567,76 +538,144 @@ CRITICAL: Evaluate the ACTUAL student answer. Do NOT return a default or templat
     const passed = j.pass || j.score >= 70;
     const score = j.score || 0;
 
-    // Render feedback
-    const fbArea = document.getElementById('fb-area');
-    fbArea.innerHTML = `<div class="fb-card ${passed?'pass':'fail'}">
-      <div class="fb-top">
-        <div>
-          <div class="fb-score ${passed?'pass':'fail'}">${score}</div>
-          <div class="fb-score-lbl">out of 100</div>
-        </div>
-        <div style="flex:1">
-          <div class="fb-verdict">${passed?'&#9989; Good answer!':'&#10060; Needs improvement'}</div>
-          ${j.summary ? `<div class="fb-summary">${j.summary}</div>` : ''}
-        </div>
-      </div>
-      <div class="fb-sections">
-        ${j.good?.[0] ? `<div class="fb-section">
-          <div class="fb-section-lbl"><span class="mi fill sm" style="color:var(--green)">check_circle</span>What worked</div>
-          <div class="fb-section-text">${j.good[0]}</div>
-        </div>` : ''}
-        ${j.improve?.[0] ? `<div class="fb-section">
-          <div class="fb-section-lbl"><span class="mi fill sm" style="color:var(--amber)">tips_and_updates</span>Improve this</div>
-          <div class="fb-section-text">${j.improve[0]}</div>
-        </div>` : ''}
-        <div style="display:flex;gap:var(--s3);margin-top:var(--s2)">
-          ${currentIdx < getQueue().length-1
-            ? `<button class="btn red" style="flex:1" onclick="showQ(${currentIdx+1})">
-                <span class="mi fill sm">arrow_forward</span> Next Question
-               </button>`
-            : `<button class="btn red" style="flex:1" onclick="location.href='yorkstjohn-hub.html'">
-                <span class="mi fill sm">check_circle</span> Back to Dashboard
-               </button>`}
-          <button class="btn outline" onclick="retryQ()" aria-label="Try this question again">
-            <span class="mi sm">refresh</span> Retry
-          </button>
-        </div>
-      </div>
-    </div>`;
+    // 3. Hide typing, build feedback bubble
+    typing.style.display = 'none';
 
-    // XP + Save
+    const fbDiv = document.createElement('div');
+    fbDiv.className = 'feedback-wrap';
+
+    const checklistHtml = (j.checklist||[]).map(c=>`
+      <li>
+        <span class="mi fill ck-icon ${c.met?'ok':'miss'}">${c.met?'check_circle':'cancel'}</span>
+        <span>${escHtml(c.item)}</span>
+      </li>`).join('');
+
+    const isLast = currentIdx >= getQueue().length - 1;
+    fbDiv.innerHTML = `
+      <div class="feedback-ai">
+        <div class="ai-avatar"><span class="mi fill sm">psychology</span></div>
+        <div class="fb-bubble">
+
+          <!-- Score header -->
+          <div class="fb-score-row">
+            <div class="fb-score-circle ${passed?'pass':'fail'}">
+              <div class="fb-score-num">${score}</div>
+              <div class="fb-score-den">/100</div>
+            </div>
+            <div>
+              <div class="fb-verdict">${passed?'✅ Good answer!':'❌ Needs improvement'}</div>
+              <div class="fb-summary">${escHtml(j.summary||'')}</div>
+            </div>
+          </div>
+
+          <!-- What worked -->
+          ${j.what_worked ? `
+          <div class="fb-section">
+            <div class="fb-section-head good"><span class="mi fill xs">check_circle</span>What worked</div>
+            <div class="fb-text">${escHtml(j.what_worked)}</div>
+          </div>` : ''}
+
+          <!-- What missed -->
+          ${j.what_missed ? `
+          <div class="fb-section">
+            <div class="fb-section-head bad"><span class="mi fill xs">cancel</span>Main gap</div>
+            <div class="fb-text">${escHtml(j.what_missed)}</div>
+          </div>` : ''}
+
+          <!-- Checklist -->
+          ${checklistHtml ? `
+          <div class="fb-section">
+            <div class="fb-section-head tip"><span class="mi fill xs">fact_check</span>Requirements checklist</div>
+            <ul class="fb-checklist">${checklistHtml}</ul>
+          </div>` : ''}
+
+          <!-- Example answer -->
+          ${j.example_answer ? `
+          <div class="fb-section">
+            <div class="fb-section-head example"><span class="mi fill xs">lightbulb</span>Example of a strong answer</div>
+            <div class="fb-example-box">${escHtml(j.example_answer)}</div>
+          </div>` : ''}
+
+          <!-- Encouragement + actions -->
+          ${j.encouragement ? `<div class="fb-text" style="color:var(--t3);font-style:italic;margin-bottom:12px">${escHtml(j.encouragement)}</div>` : ''}
+
+          <div class="fb-actions">
+            ${!passed ? `
+            <button class="btn red sm" style="flex:1" onclick="retryQ()">
+              <span class="mi fill sm">refresh</span> Try again
+            </button>` : ''}
+            <button class="btn outline sm" style="flex:${passed?2:1}" onclick="${isLast?`location.href='yorkstjohn-hub.html'`:`showQ(${currentIdx+1})`}">
+              <span class="mi fill sm">${isLast?'home':'arrow_forward'}</span>
+              ${isLast?'Back to hub':'Next question'}
+            </button>
+          </div>
+
+        </div>
+      </div>`;
+
+    thread.appendChild(fbDiv);
+
+    // Show input again for retry (if failed)
+    if (!passed) {
+      inputRow.style.display = 'block';
+      checkBtn.disabled = false;
+      // Update placeholder
+      const ta = document.getElementById('q-ans');
+      if(ta) ta.placeholder = 'Try again — use the example above as a guide…';
+    }
+
+    fbDiv.scrollIntoView({behavior:'smooth', block:'start'});
+
+    // 4. Save to admin
     if (typeof window.saveAIResponse === 'function') {
       const normScore = Math.round(score/10);
-      await window.saveAIResponse('YSJ_'+q.id, ans, normScore, j.summary||'', q.q);
+      // Save with full feedback including example and checklist
+      const fullFeedback = [
+        j.summary,
+        j.what_missed ? 'Gap: ' + j.what_missed : '',
+        j.example_answer ? 'Example: ' + j.example_answer : ''
+      ].filter(Boolean).join(' | ');
+      await window.saveAIResponse('YSJ_'+q.id, ans, normScore, fullFeedback, q.q);
       const xp = parseInt(localStorage.getItem('ysj_xp')||'0') + (passed?20:10);
       localStorage.setItem('ysj_xp', xp);
     }
-    // Streak
     const today = new Date().toDateString();
     if (localStorage.getItem('ysj_streak_date')!==today) {
       const streak = parseInt(localStorage.getItem('ysj_streak')||'0')+1;
       localStorage.setItem('ysj_streak', streak);
       localStorage.setItem('ysj_streak_date', today);
     }
-    fbArea.scrollIntoView({behavior:'smooth',block:'start'});
 
   } catch(e) {
-    loading.classList.remove('show');
+    typing.style.display = 'none';
+    inputRow.style.display = 'block';
     checkBtn.disabled = false;
-    document.getElementById('fb-area').innerHTML = `<div class="card" style="padding:var(--s5);text-align:center">
-      <span class="mi xl" style="color:var(--t4);display:block;margin-bottom:var(--s3)">wifi_off</span>
-      <p style="font-size:14px;font-weight:700;color:var(--t2)">Could not connect to AI</p>
-      <p style="font-size:13px;color:var(--t3);margin-top:4px">Make sure you are signed in to Puter and have internet access.</p>
-    </div>`;
+    const errDiv = document.createElement('div');
+    errDiv.className = 'feedback-wrap';
+    errDiv.innerHTML = `
+      <div class="feedback-ai">
+        <div class="ai-avatar"><span class="mi fill sm">psychology</span></div>
+        <div class="error-bubble">
+          <span class="mi" style="color:var(--t4);font-size:28px;display:block;margin-bottom:6px">wifi_off</span>
+          <p style="font-size:14px;font-weight:700;color:var(--t2)">Could not connect to AI</p>
+          <p style="font-size:13px;color:var(--t3);margin-top:4px">Make sure you are signed in to Puter and have internet access.</p>
+        </div>
+      </div>`;
+    document.getElementById('convo-thread').appendChild(errDiv);
   }
 }
 
 function retryQ() {
-  document.getElementById('fb-area').innerHTML='';
-  document.getElementById('q-ans').value='';
-  document.getElementById('char-count').textContent='0 characters';
+  // Keep the conversation history visible, just re-show the input
+  const inputRow = document.getElementById('input-row');
   const checkBtn = document.getElementById('check-btn');
-  if (checkBtn) checkBtn.disabled=false;
+  if (inputRow) inputRow.style.display = 'block';
+  if (checkBtn) checkBtn.disabled = false;
+  const ta = document.getElementById('q-ans');
+  if (ta) {
+    ta.focus();
+    ta.scrollIntoView({behavior:'smooth', block:'center'});
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => { showQ(0); });
