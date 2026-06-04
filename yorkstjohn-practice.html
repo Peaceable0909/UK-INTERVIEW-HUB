@@ -425,8 +425,9 @@ document.addEventListener('DOMContentLoaded', async function() {
   if (conversation.length === 0) {
     renderEmptyStart();
   } else {
+    // Restore session — render history and resume from correct phase
     renderAllMessages();
-    renderNextQuestion();
+    restoreSessionPhase();
   }
   // Wire text input
   var ta = document.getElementById('textInput');
@@ -593,13 +594,6 @@ function buildFeedbackHTML(fb, qid, qIdx) {
     (checklistHtml ? '<div class="fb-sect"><div class="fb-sect-head tip"><span class="mi fill xs">fact_check</span>Requirements</div><ul class="fb-checklist">' + checklistHtml + '</ul></div>' : '') +
     (fb.example_answer ? '<div class="fb-sect"><div class="fb-sect-head ex"><span class="mi fill xs">lightbulb</span>Strong example</div><div class="fb-example">' + escHtml(fb.example_answer) + '</div></div>' : '') +
     (fb.encouragement ? '<div class="fb-text" style="color:var(--t3);font-style:italic;margin:8px 0 4px">' + escHtml(fb.encouragement) + '</div>' : '') +
-    '<div class="fb-actions">' +
-      (!fb.pass ? '<button class="fb-btn retry" onclick="retryQuestion(' + qIdx + ')"><span class="mi fill xs">refresh</span>Try again</button>' : '') +
-      '<button class="fb-btn next" onclick="' + (isLast ? 'showDone()' : 'nextQuestion()') + '">' +
-        '<span class="mi fill xs">' + (isLast ? 'emoji_events' : 'arrow_forward') + '</span>' +
-        (isLast ? 'See results' : 'Next question') +
-      '</button>' +
-    '</div>' +
   '</div>';
 }
 
@@ -640,101 +634,180 @@ function renderEmptyStart() {
   }
 }
 
-// ── Start / Continue ───────────────────────────────
+// ══════════════════════════════════════════════════
+//  CONVERSATION ENGINE
+//  Rules:
+//  1. Welcome message → AI waits for any reply → asks Q1
+//  2. Student answers → AI grades it
+//  3. If FAIL → feedback shown → AI waits for retry (same q)
+//  4. Only when PASS → AI congratulates → asks next question
+//  5. Student can NEVER skip — must pass to advance
+//  6. Intent detection: short "ok/ready/yes" = readiness signal
+//     Long text = answer attempt
+// ══════════════════════════════════════════════════
+
+// Session phase:
+// 'welcome'  → waiting for student to say they're ready
+// 'question' → question asked, waiting for answer
+// 'feedback' → feedback given for current q, still on same q (failed)
+var sessionPhase = 'welcome';
+
 function startSession() {
   var thread = document.getElementById('msgThread');
   if (thread) thread.innerHTML = '';
-  // Welcome message
-  var greeting = 'Hi! I\'m your AI interview coach. I\'ll ask you ' + QUESTIONS.length + ' questions, just like a real UK visa credibility interview. After each answer I\'ll give you detailed feedback and a scored example.\n\nYour answers are saved — you can come back and continue any time. Shall we get started?';
-  var welcomeMsg = { role:'ai', text: greeting, time: new Date().toISOString(), isQuestion: false };
-  appendMessage(welcomeMsg);
-  if (!isMuted) speakText(greeting, function() { renderNextQuestion(); });
-  else renderNextQuestion();
+  sessionPhase = 'welcome';
+
+  var name = (obData && obData.name) ? obData.name : 'there';
+  var course = window.getCurrentCourse && window.getCurrentCourse() || {};
+  var prog = course.name ? ' preparing for ' + course.name : '';
+
+  var greeting = 'Hi ' + name + '! I\'m your AI interview coach' + prog + '.\
+\
+I will ask you ' + QUESTIONS.length + ' questions — exactly the type a UKVI caseworker will ask. After each answer I\'ll give you detailed feedback and a strong example answer.\
+\
+You need to pass each question before we move on. When you\'re ready, just say "Let\'s go" or anything you like.';
+
+  appendMessage({ role:'ai', text: greeting, time: new Date().toISOString(), phase:'welcome' });
+  enableInput(true);
   renderScoreBoard();
+  if (!isMuted) speakText(greeting, null);
 }
 
-function renderNextQuestion() {
-  if (currentQIdx >= QUESTIONS.length) { showDone(); return; }
-  var q = QUESTIONS[currentQIdx];
-  // Check if already answered (locked)
-  var alreadyAnswered = conversation.some(function(m) { return m.role === 'you' && m.qid === q.id; });
-  if (alreadyAnswered) {
-    // Find the next unanswered
-    while (currentQIdx < QUESTIONS.length) {
-      var check = QUESTIONS[currentQIdx];
-      var answered = conversation.some(function(m) { return m.role === 'you' && m.qid === check.id; });
-      if (!answered) break;
-      currentQIdx++;
-    }
-    if (currentQIdx >= QUESTIONS.length) { showDone(); return; }
-    q = QUESTIONS[currentQIdx];
+// ── Classify what the student sent ─────────────────
+// Returns: 'ready' | 'answer'
+function classifyMessage(text) {
+  var t = text.trim().toLowerCase();
+  // Short confirmations that mean "I'm ready / move on"
+  var readyPhrases = [
+    'ready','yes','ok','okay','sure','go','let\'s go','lets go',
+    'start','begin','next','yep','yup','alright','got it',
+    'i\'m ready','im ready','i am ready','go ahead','continue','move on'
+  ];
+  for (var i = 0; i < readyPhrases.length; i++) {
+    if (t === readyPhrases[i] || t.replace(/[^a-z\s]/g,'') === readyPhrases[i]) return 'ready';
   }
-  var qText = 'Question ' + (currentQIdx + 1) + ' of ' + QUESTIONS.length + '.\n\n' + q.q;
-  var qMsg = { role:'ai', text: q.q, time: new Date().toISOString(), isQuestion: true, qid: q.id };
-  setTimeout(function() {
-    appendMessage(qMsg);
-    waitingForAnswer = true;
-    enableInput(true);
-    if (!isMuted) speakText(qText, null);
-  }, 500);
+  // Short (under 8 words) with no substance = ready signal
+  if (t.split(/\s+/).length <= 6 && t.length < 40) return 'ready';
+  // Anything else is a real answer attempt
+  return 'answer';
 }
 
-function enableInput(on) {
-  var bar = document.getElementById('inputBar');
-  if (bar) bar.style.opacity = on ? '1' : '0.5';
-  var mic = document.getElementById('micBtn');
-  if (mic) mic.disabled = !on;
-}
-
-// ── Send message (text or transcribed audio) ───────
+// ── Main send handler ──────────────────────────────
 function sendMessage() {
   var ta = document.getElementById('textInput');
   var text = ta ? ta.value.trim() : '';
-  if (!text || !waitingForAnswer) return;
+  if (!text) return;
   ta.value = '';
   ta.style.height = '';
   document.getElementById('sendBtn').disabled = true;
-  submitAnswer(text, null);
+
+  if (sessionPhase === 'welcome') {
+    // Student acknowledged — ask first question
+    appendMessage({ role:'you', text: text, time: new Date().toISOString() });
+    setTimeout(askCurrentQuestion, 600);
+  } else if (sessionPhase === 'question' || sessionPhase === 'feedback') {
+    // Anything the student sends here is an answer attempt
+    // (they can't skip — every message is treated as an answer)
+    submitAnswer(text, null);
+  }
 }
 
-function onKeyDown(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+// ── Restore phase after page reload ──────────────
+function restoreSessionPhase() {
+  // Check if session is fully done
+  if (currentQIdx >= QUESTIONS.length) {
+    showDone();
+    return;
+  }
+  // Find the last AI message — was it a question or feedback?
+  var lastAI = null;
+  for (var i = conversation.length-1; i >= 0; i--) {
+    if (conversation[i].role === 'ai') { lastAI = conversation[i]; break; }
+  }
+  if (!lastAI) {
+    // Only student messages exist? Ask current question
+    sessionPhase = 'question';
+    askCurrentQuestion();
+    return;
+  }
+  if (lastAI.isQuestion) {
+    // Last AI message was a question — waiting for student answer
+    sessionPhase = 'question';
+    enableInput(true);
+  } else if (lastAI.feedback && !lastAI.feedback.pass) {
+    // Last feedback was a fail — still on this question
+    sessionPhase = 'feedback';
+    enableInput(true);
+    appendMessage({ role:'ai', text:'Welcome back! Let\'s continue. Try again on the question above.', time: new Date().toISOString() });
+    if (!isMuted) speakText('Welcome back! Let\'s continue from where we left off.', null);
+  } else {
+    // Last feedback was a pass, or welcome message — ask next question
+    sessionPhase = 'question';
+    setTimeout(askCurrentQuestion, 600);
+  }
 }
 
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+// ── Ask the current question ───────────────────────
+function askCurrentQuestion() {
+  if (currentQIdx >= QUESTIONS.length) { showDone(); return; }
+  var q = QUESTIONS[currentQIdx];
+  var num = currentQIdx + 1;
+  var total = QUESTIONS.length;
+  var qText = 'Question ' + num + ' of ' + total + '\n\
+' + q.q;
+
+  sessionPhase = 'question';
+  enableInput(true);
+
+  appendMessage({
+    role:'ai', text: q.q, time: new Date().toISOString(),
+    isQuestion: true, qid: q.id, qNum: num, qTotal: total
+  });
+  if (!isMuted) speakText('Question ' + num + '. ' + q.q, null);
+  scrollToBottom();
 }
 
-// ── Submit and grade answer ────────────────────────
+// ── Submit and grade ───────────────────────────────
 async function submitAnswer(text, audioUrl) {
-  if (!waitingForAnswer) return;
-  waitingForAnswer = false;
   enableInput(false);
+  sessionPhase = 'feedback'; // stays on feedback until they pass
 
   var q = QUESTIONS[currentQIdx];
   var course = window.getCurrentCourse && window.getCurrentCourse() || {};
-  var attempt = conversation.filter(function(m) { return m.role === 'you' && m.qid === q.id; }).length + 1;
+  var attempt = conversation.filter(function(m) {
+    return m.role === 'you' && m.qid === q.id;
+  }).length + 1;
 
-  // Student message
+  // Show student's message
   appendMessage({ role:'you', text: text, time: new Date().toISOString(), qid: q.id, audioUrl: audioUrl });
 
-  // Typing indicator
+  // Show typing
   showTyping();
 
   try {
-    var prompt = 'You are a strict but supportive UK student visa credibility interview coach.\n' +
-      'Course: "' + (course.name||'their chosen course') + '" at ' + (course.campus||'York St John University') + '.\n' +
-      'Question: "' + q.q + '"\nRequired criteria: ' + q.cr + '\n' +
-      'Student answer (attempt ' + attempt + '): "' + text + '"\n\n' +
-      'PASS threshold: score >= 70. Most first attempts score 45-72.\n' +
-      'Banned phrases each cost -20: "highly renowned", "world-class education", "better opportunities" without specifics, "strong reputation" without evidence.\n' +
-      'Auto-fail caps: under 30 words → max 30 | no specifics at all → max 35.\n' +
-      'Return ONLY valid JSON:\n' +
-      '{"pass":boolean,"score":0-100,"summary":"1 sentence","what_worked":"specific strength","what_missed":"main gap",' +
-      '"checklist":[{"item":"criterion","met":true/false},{"item":"criterion","met":true/false},{"item":"criterion","met":true/false}],' +
-      '"example_answer":"2-3 sentence example for this specific question and course",' +
-      '"encouragement":"short warm sentence"}';
+    var prompt = [
+      'You are a strict but supportive UK student visa credibility interview coach.',
+      'Course: "' + (course.name||'their chosen course') + '" at ' + (course.campus||'York St John University') + '.',
+      'Question (attempt ' + attempt + '): "' + q.q + '"',
+      'Required criteria: ' + q.cr,
+      'Student answer: "' + text + '"',
+      '',
+      'PASS threshold: score >= 70. Most first attempts score 45-72.',
+      'Banned phrases cost -20 each: "highly renowned", "world-class education", "better opportunities" without specifics.',
+      'Auto-fail: under 30 words → max 30 | no specifics at all → max 35.',
+      '',
+      'IMPORTANT — if this is attempt 2+ and the student improved, acknowledge the improvement specifically.',
+      'IMPORTANT — if they failed again, do NOT just repeat the same feedback. Focus on what STILL needs fixing.',
+      '',
+      'Return ONLY valid JSON:',
+      '{"pass":boolean,"score":0-100,',
+      '"summary":"1 sentence on quality",',
+      '"what_worked":"specific strength in their actual words",',
+      '"what_missed":"the single most important gap still missing",',
+      '"checklist":[{"item":"requirement","met":true/false},{"item":"requirement","met":true/false},{"item":"requirement","met":true/false}],',
+      '"example_answer":"2-3 sentence strong example tailored to their course",',
+      '"next_instruction":"if failed: short coaching instruction telling them exactly what to add in their NEXT attempt. If passed: empty string."}',
+    ].join('\n');
 
     var resp = await puter.ai.chat(prompt, {model:'gpt-4o-mini'});
     var raw = typeof resp==='string' ? resp : resp?.message?.content || JSON.stringify(resp);
@@ -751,53 +824,87 @@ async function submitAnswer(text, audioUrl) {
     if (fb.pass) sessionStats.passed++;
     renderScoreBoard();
 
-    // AI feedback message
-    var fbMsg = {
-      role:'ai', text: fb.encouragement || (fb.pass ? 'Great answer!' : 'Here\'s my detailed feedback:'),
+    // Build AI response text
+    var aiResponseText;
+    if (fb.pass) {
+      aiResponseText = '✅ Well done! ' + (fb.summary || 'Good answer.');
+    } else {
+      aiResponseText = fb.next_instruction || ('❌ ' + (fb.summary || 'That needs improvement. Please try again.'));
+    }
+
+    // Append feedback message
+    appendMessage({
+      role:'ai',
+      text: aiResponseText,
       time: new Date().toISOString(),
-      feedback: fb, qid: q.id, qIdx: currentQIdx, isQuestion: false
-    };
-    appendMessage(fbMsg);
+      feedback: fb,
+      qid: q.id,
+      qIdx: currentQIdx,
+      isQuestion: false
+    });
 
     // Save to admin
     if (typeof window.saveAIResponse === 'function') {
       var normScore = Math.round(fb.score / 10);
-      var fullFeedback = [fb.summary, fb.what_missed ? 'Gap: '+fb.what_missed : '', fb.example_answer ? 'Example: '+fb.example_answer : ''].filter(Boolean).join(' | ');
+      var fullFeedback = [
+        fb.summary,
+        fb.what_missed ? 'Gap: ' + fb.what_missed : '',
+        fb.example_answer ? 'Example: ' + fb.example_answer : ''
+      ].filter(Boolean).join(' | ');
       await window.saveAIResponse('YSJ_' + q.id, text, normScore, fullFeedback, q.q);
     }
 
-    // Speak feedback if not muted
-    if (!isMuted && fb.encouragement) speakText(fb.encouragement, null);
+    // Speak feedback
+    if (!isMuted) speakText(aiResponseText, null);
 
-    // Auto-advance if passed
     if (fb.pass) {
+      // PASSED — advance to next question after a short pause
       currentQIdx++;
       saveConversation();
+      sessionPhase = 'question';
+      setTimeout(function() {
+        if (currentQIdx >= QUESTIONS.length) {
+          showDone();
+        } else {
+          // AI asks the next question naturally
+          var nextQ = QUESTIONS[currentQIdx];
+          var num = currentQIdx + 1;
+          appendMessage({
+            role:'ai', text: nextQ.q, time: new Date().toISOString(),
+            isQuestion: true, qid: nextQ.id, qNum: num, qTotal: QUESTIONS.length
+          });
+          enableInput(true);
+          if (!isMuted) speakText('Question ' + num + '. ' + nextQ.q, null);
+        }
+      }, 1200);
+    } else {
+      // FAILED — stay on this question, re-enable input for retry
+      // The student just types their next attempt — no button needed
+      saveConversation();
+      sessionPhase = 'feedback';
+      setTimeout(function() {
+        enableInput(true);
+        // Prompt them with a short nudge
+        var nudge = 'Try again — use the example above as a guide.';
+        appendMessage({ role:'ai', text: nudge, time: new Date().toISOString() });
+        if (!isMuted) speakText(nudge, null);
+        scrollToBottom();
+      }, 800);
     }
 
   } catch(e) {
     hideTyping();
-    appendMessage({ role:'ai', text:'Sorry, I couldn\'t evaluate that. Please check your connection and try again.', time: new Date().toISOString() });
-    waitingForAnswer = true;
+    appendMessage({
+      role:'ai',
+      text: 'Sorry, I could not evaluate that. Please check your connection and try again.',
+      time: new Date().toISOString()
+    });
     enableInput(true);
+    sessionPhase = 'feedback';
   }
 }
 
-function retryQuestion(qIdx) {
-  currentQIdx = qIdx;
-  waitingForAnswer = true;
-  enableInput(true);
-  var q = QUESTIONS[qIdx];
-  if (!isMuted) speakText(q.q, null);
-  showToast('Try again — use the example as a guide');
-  scrollToBottom();
-}
-
-function nextQuestion() {
-  currentQIdx++;
-  saveConversation();
-  renderNextQuestion();
-}
+// retryQuestion and nextQuestion removed — flow driven by student typing
 
 // ── Done screen ────────────────────────────────────
 function showDone() {
