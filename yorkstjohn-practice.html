@@ -2,691 +2,1087 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <base href="/UK-INTERVIEW-HUB/">
-<title>AI Practice | York St John</title>
+<title>AI Coach | York St John</title>
 <script src="https://js.puter.com/v2/"></script>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="ysj.css">
-
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 <style>
-/* ═══ CHAT PRACTICE — WhiteRock × YSJ ═══ */
+/* ══ TOKENS ══ */
 :root{
-  --red:#c41230;--red-dk:#9e0e25;
+  --brand:#4f46e5;--brand-dk:#3730a3;--brand-lt:#eef2ff;--brand-mid:#c7d2fe;
+  --brand-bg:rgba(79,70,229,.08);
+  --you-bg:#4f46e5;--you-bg2:#6366f1;
   --green:#16a34a;--green-lt:#dcfce7;
-  --amber:#b45309;--amber-lt:#fef3c7;
+  --amber:#d97706;--amber-lt:#fef3c7;
+  --red:#dc2626;--red-lt:#fee2e2;
   --bg:#f0f2f5;--surface:#fff;
-  --border:#e4e6ea;
-  --t1:#1a1a1a;--t2:#374151;--t3:#6b7280;--t4:#d1d5db;
-  --sh:0 2px 12px rgba(0,0,0,.08);
-  --topbar:56px;--bottomnav:60px;
+  --border:#e4e6ea;--border2:#d1d5db;
+  --t1:#111827;--t2:#374151;--t3:#6b7280;--t4:#9ca3af;
+  --topbar:60px;--inputbar:72px;
+  --fn:'Inter',sans-serif;--fh:'Sora',sans-serif;--fnum:'Space Grotesk',sans-serif;
+  --sh:0 1px 4px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.06);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;-webkit-text-size-adjust:100%}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{font-family:var(--fn);background:var(--bg);color:var(--t1);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  padding-bottom:calc(var(--inputbar)+env(safe-area-inset-bottom))}
 .mi{font-family:"Material Symbols Outlined";font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;
   vertical-align:middle;line-height:1;user-select:none;font-size:22px}
 .mi.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24}
-.mi.sm{font-size:18px}.mi.xs{font-size:15px}.mi.lg{font-size:26px}.mi.xl{font-size:32px}
+.mi.sm{font-size:18px}.mi.xs{font-size:15px}.mi.lg{font-size:28px}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+button:disabled{opacity:.45;cursor:not-allowed}
 a{text-decoration:none;color:inherit}
-button{font-family:inherit;cursor:pointer;border:none;background:none;font-size:16px}
-button:disabled{opacity:.5;cursor:not-allowed}
 
-/* ── TOPBAR ── */
-.topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:calc(var(--topbar)+env(safe-area-inset-top));
-  padding-top:env(safe-area-inset-top);background:#fff;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;padding-left:16px;padding-right:16px;gap:12px;
-  box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.topbar.scrolled{box-shadow:0 2px 8px rgba(0,0,0,.1)}
-.tb-back{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
-  justify-content:center;color:var(--red);background:#fff5f5;flex-shrink:0}
-.tb-title{flex:1;font-size:15px;font-weight:800;color:var(--t1);letter-spacing:-.2px}
-.tb-sub{font-size:11px;color:var(--t3);font-weight:500}
-.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:99px;
-  font-size:12px;font-weight:700;background:var(--bg)}
-.chip.muted{color:var(--t3)}
+/* ══ TOPBAR ══ */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  height:calc(var(--topbar)+env(safe-area-inset-top));
+  padding-top:env(safe-area-inset-top);
+  background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 16px;gap:12px;
+  padding-top:env(safe-area-inset-top);
+}
+.tb-avatar{width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,var(--brand),#7c3aed);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tb-avatar .mi{font-size:22px;color:#fff}
+.tb-info{flex:1;min-width:0}
+.tb-name{font-family:var(--fh);font-size:15px;font-weight:700;color:var(--t1)}
+.tb-status{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t3);font-weight:500;margin-top:1px}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0}
+.tb-actions{display:flex;gap:6px}
+.tb-btn{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  color:var(--t3);cursor:pointer;transition:all .2s}
+.tb-btn:hover{border-color:var(--brand);color:var(--brand)}
 
-/* ── PROGRESS ── */
-.q-strip{position:fixed;top:calc(var(--topbar)+env(safe-area-inset-top));left:0;right:0;z-index:190;
-  background:#fff;border-bottom:1px solid var(--border);padding:8px 16px}
-.q-strip-bar{margin-top:5px}
-.prog-track{height:4px;background:var(--bg);border-radius:99px;overflow:hidden}
-.prog-fill{height:100%;border-radius:99px;transition:width .4s ease;background:var(--red)}
-.q-strip-counter{font-size:11px;font-weight:700;color:var(--t3);letter-spacing:.04em;text-transform:uppercase}
+/* ══ CHAT SCROLL AREA ══ */
+.chat-page{
+  padding-top:calc(var(--topbar)+env(safe-area-inset-top));
+  padding-bottom:calc(var(--inputbar)+env(safe-area-inset-bottom)+16px);
+  min-height:100dvh;
+}
+.chat-body{max-width:720px;margin:0 auto;padding:16px 12px}
 
-/* ── PAGE WRAPPER ── */
-.page{padding-top:calc(var(--topbar) + env(safe-area-inset-top) + 52px);
-  padding-bottom:calc(var(--bottomnav) + env(safe-area-inset-bottom) + 16px)}
-.pad{max-width:680px;margin:0 auto;padding:0 12px}
+/* ══ SCOREBOARD BANNER ══ */
+.score-banner{
+  background:linear-gradient(135deg,#1e1b4b,#312e81);
+  border-radius:16px;padding:14px 16px;margin-bottom:16px;
+  display:flex;align-items:center;gap:12px;
+}
+.score-items{display:flex;gap:18px;flex:1;flex-wrap:wrap}
+.score-item{text-align:center}
+.score-val{font-family:var(--fnum);font-size:22px;font-weight:700;color:#fff;line-height:1}
+.score-lbl{font-size:10px;font-weight:600;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.score-divider{width:1px;background:rgba(255,255,255,.12);align-self:stretch}
+.score-actions{display:flex;gap:8px}
+.score-action-btn{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;
+  padding:7px 12px;border-radius:99px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-continue{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.btn-continue:hover{background:rgba(255,255,255,.18)}
+.btn-restart{background:#dc2626;color:#fff;border:none}
+.btn-restart:hover{background:#b91c1c}
 
-/* ── MOCK INTERVIEW BANNER ── */
-.mock-banner{display:flex;align-items:center;gap:14px;
-  background:linear-gradient(135deg,#0f172a,#1e1b4b);
-  border-radius:16px;padding:14px 16px;margin-bottom:14px;text-decoration:none;
-  -webkit-tap-highlight-color:transparent}
-.mock-icon{width:44px;height:44px;border-radius:50%;background:#c41230;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  box-shadow:0 0 16px rgba(196,18,48,.5)}
+/* ══ DATE DIVIDER ══ */
+.date-divider{text-align:center;margin:16px 0 8px;position:relative}
+.date-divider span{font-size:11px;font-weight:600;color:var(--t4);background:var(--bg);
+  padding:0 12px;position:relative;z-index:1}
+.date-divider::before{content:'';position:absolute;top:50%;left:0;right:0;
+  height:1px;background:var(--border)}
 
-/* ══ CHAT LAYOUT ══ */
-.chat-wrap{display:flex;flex-direction:column;gap:0}
+/* ══ AI MESSAGE (LEFT) ══ */
+.msg-row{display:flex;gap:8px;margin-bottom:8px;align-items:flex-start}
+.msg-row.you{flex-direction:row-reverse}
+.msg-avatar{width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--brand),#7c3aed);
+  display:flex;align-items:center;justify-content:center;margin-top:2px}
+.msg-avatar .mi{font-size:17px;color:#fff}
+.msg-col{display:flex;flex-direction:column;max-width:78%;gap:3px}
+.msg-col.you{align-items:flex-end}
+.msg-sender{font-size:12px;font-weight:700;color:var(--brand);padding:0 4px}
+.msg-sender.you{color:var(--t3)}
 
-/* Question card — AI bubble (left) */
-.chat-ai{display:flex;align-items:flex-start;gap:8px;padding:12px 0 4px}
-.ai-avatar{width:36px;height:36px;border-radius:50%;background:var(--red);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;
-  box-shadow:0 2px 8px rgba(196,18,48,.25)}
-.ai-avatar .mi{font-size:18px;color:#fff}
-.ai-bubble{max-width:88%;background:#fff;border-radius:18px 18px 18px 4px;
-  padding:14px 16px;box-shadow:var(--sh);border:1px solid var(--border)}
-.ai-label{font-size:10px;font-weight:800;color:var(--t3);text-transform:uppercase;
-  letter-spacing:.08em;margin-bottom:6px}
-.ai-cat-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;
-  color:var(--red);background:#fff5f5;border-radius:99px;padding:3px 9px;margin-bottom:8px}
-.ai-question{font-size:15px;font-weight:700;color:var(--t1);line-height:1.5}
-.ai-hint-btn{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;
-  color:var(--t3);background:none;border:1px solid var(--border);border-radius:99px;
-  padding:5px 10px;margin-top:10px;cursor:pointer;transition:all .2s}
-.ai-hint-btn:hover{color:var(--amber);border-color:var(--amber)}
-.ai-hint-box{display:none;margin-top:10px;font-size:13px;color:var(--t2);line-height:1.6;
-  background:#fffbeb;border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:10px 12px}
-.ai-hint-box.show{display:block}
+/* AI bubble */
+.ai-bubble{background:var(--surface);border:1px solid var(--border);
+  border-radius:4px 18px 18px 18px;padding:14px 16px;
+  box-shadow:var(--sh);font-size:14px;color:var(--t2);line-height:1.65}
+.ai-bubble strong{color:var(--t1);font-weight:700}
+.ai-bubble ul{margin:8px 0 4px 16px}
+.ai-bubble li{margin-bottom:3px;line-height:1.5}
 
-/* Student message (right) */
-.chat-student{display:flex;justify-content:flex-end;padding:4px 0 4px}
-.student-bubble{max-width:88%;background:#c41230;border-radius:18px 18px 4px 18px;
-  padding:12px 16px;box-shadow:0 2px 10px rgba(196,18,48,.25)}
-.student-bubble p{font-size:14px;color:#fff;line-height:1.6;font-weight:500}
-.student-meta{font-size:11px;color:rgba(255,255,255,.6);margin-top:5px;text-align:right}
+/* You bubble */
+.you-bubble{background:linear-gradient(135deg,var(--you-bg),var(--you-bg2));
+  border-radius:18px 4px 18px 18px;padding:12px 16px;
+  box-shadow:0 2px 10px rgba(79,70,229,.25);color:#fff;
+  font-size:14px;line-height:1.6;font-weight:500}
+.you-bubble .transcript-text{font-size:13px;color:rgba(255,255,255,.85);
+  margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.2);
+  font-style:italic}
+.msg-time{font-size:11px;color:var(--t4);padding:0 4px;
+  display:flex;align-items:center;gap:3px}
+.msg-time.you{justify-content:flex-end;color:rgba(255,255,255,.5);padding-right:6px}
+.tick{font-size:13px}
 
-/* Input area */
-.input-row{background:#fff;border-radius:16px;padding:12px 14px;
-  box-shadow:var(--sh);border:1.5px solid var(--border);margin:6px 0;
-  transition:border-color .2s}
-.input-row:focus-within{border-color:var(--red)}
-.q-answer{width:100%;border:none;outline:none;resize:none;font-family:inherit;
-  font-size:14px;line-height:1.6;color:var(--t1);min-height:88px;max-height:200px;
-  background:transparent}
-.q-answer::placeholder{color:var(--t4)}
-.input-footer{display:flex;align-items:center;justify-content:space-between;
-  margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
-.char-count{font-size:11px;color:var(--t4);font-family:monospace}
-.actions-row{display:flex;gap:8px;align-items:center}
-
-/* Buttons */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;
-  border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;
-  transition:all .15s;white-space:nowrap;border:none}
-.btn.red{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(196,18,48,.3)}
-.btn.red:hover{background:var(--red-dk);transform:translateY(-1px)}
-.btn.outline{background:#fff;color:var(--t2);border:1.5px solid var(--border)}
-.btn.outline:hover{border-color:var(--t3)}
-.btn.sm{padding:7px 14px;font-size:13px}
-
-/* ══ AI FEEDBACK BUBBLE ══ */
-.feedback-wrap{padding:4px 0 8px}
-.feedback-ai{display:flex;align-items:flex-start;gap:8px}
-.fb-bubble{flex:1;max-width:92%;background:#fff;border-radius:18px 18px 18px 4px;
-  padding:16px 18px;box-shadow:var(--sh);border:1px solid var(--border)}
-
-/* Score header */
-.fb-score-row{display:flex;align-items:center;gap:14px;margin-bottom:14px;
-  padding-bottom:14px;border-bottom:1px solid var(--border)}
-.fb-score-circle{width:56px;height:56px;border-radius:50%;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;flex-shrink:0;font-weight:900}
+/* ── FEEDBACK inside AI bubble ── */
+.fb-score-row{display:flex;align-items:center;gap:12px;
+  margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.fb-score-circle{width:50px;height:50px;border-radius:50%;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
 .fb-score-circle.pass{background:var(--green-lt);color:var(--green)}
-.fb-score-circle.fail{background:#fee2e2;color:#dc2626}
-.fb-score-num{font-size:22px;line-height:1;font-weight:900}
-.fb-score-den{font-size:10px;font-weight:700;opacity:.7}
-.fb-verdict{font-size:15px;font-weight:800;color:var(--t1);margin-bottom:3px}
-.fb-summary{font-size:13px;color:var(--t3);line-height:1.5}
-
-/* Analysis sections */
-.fb-section{margin-bottom:12px}
-.fb-section-head{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;
-  text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
-.fb-section-head.good{color:var(--green)}
-.fb-section-head.bad{color:#dc2626}
-.fb-section-head.tip{color:var(--amber)}
-.fb-section-head.example{color:#7c3aed}
+.fb-score-circle.fail{background:var(--red-lt);color:var(--red)}
+.fb-score-num{font-family:var(--fnum);font-size:19px;font-weight:700;line-height:1}
+.fb-score-den{font-size:9px;font-weight:700;opacity:.65}
+.fb-verdict{font-family:var(--fh);font-size:14px;font-weight:700;color:var(--t1);margin-bottom:2px}
+.fb-summary{font-size:12px;color:var(--t3);line-height:1.5}
+.fb-sect{margin-bottom:10px}
+.fb-sect-head{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.fb-sect-head.good{color:var(--green)}.fb-sect-head.bad{color:var(--red)}
+.fb-sect-head.tip{color:var(--amber)}.fb-sect-head.ex{color:#7c3aed}
 .fb-text{font-size:13px;color:var(--t2);line-height:1.65}
-.fb-example-box{background:#f5f3ff;border-left:3px solid #7c3aed;border-radius:0 8px 8px 0;
-  padding:10px 12px;font-size:13px;color:#4c1d95;line-height:1.65;font-style:italic;margin-top:6px}
-.fb-checklist{list-style:none;display:flex;flex-direction:column;gap:5px;margin-top:4px}
-.fb-checklist li{display:flex;align-items:flex-start;gap:7px;font-size:13px;color:var(--t2);line-height:1.5}
-.fb-checklist .ck-icon{flex-shrink:0;margin-top:1px;font-size:15px}
-.fb-checklist .ck-icon.ok{color:var(--green)}
-.fb-checklist .ck-icon.miss{color:#dc2626}
+.fb-example{background:#f5f3ff;border-left:3px solid #7c3aed;
+  border-radius:0 8px 8px 0;padding:10px 12px;
+  font-size:13px;color:#4c1d95;line-height:1.65;margin-top:5px}
+.fb-checklist{list-style:none;display:flex;flex-direction:column;gap:4px;margin-top:4px}
+.fb-checklist li{display:flex;align-items:flex-start;gap:6px;font-size:13px;color:var(--t2);line-height:1.5}
+.ck{font-size:15px;flex-shrink:0;margin-top:1px}
+.ck.ok{color:var(--green)}.ck.miss{color:var(--red)}
+.fb-actions{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap}
+.fb-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;
+  border-radius:99px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.fb-btn.next{background:var(--brand);color:#fff;box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.fb-btn.next:hover{background:var(--brand-dk)}
+.fb-btn.retry{background:var(--surface);color:var(--t2);border:1.5px solid var(--border)}
+.fb-btn.retry:hover{border-color:var(--t3)}
 
-/* Retry/next buttons */
-.fb-actions{display:flex;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+/* ══ TYPING INDICATOR ══ */
+.typing-row{display:flex;gap:8px;align-items:flex-end;margin-bottom:10px}
+.typing-dots{background:var(--surface);border:1px solid var(--border);
+  border-radius:4px 18px 18px 18px;padding:14px 18px;display:flex;gap:4px;
+  box-shadow:var(--sh)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--brand-mid);
+  animation:dotB .9s infinite ease-in-out}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes dotB{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-5px);opacity:1}}
 
-/* Loading bubble */
-.typing-bubble{display:flex;align-items:flex-start;gap:8px;padding:8px 0}
-.typing-dots{display:flex;gap:4px;padding:14px 18px;background:#fff;
-  border-radius:18px 18px 18px 4px;box-shadow:var(--sh);border:1px solid var(--border)}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--t4);
-  animation:dotBounce .9s infinite ease-in-out}
-.dot:nth-child(2){animation-delay:.2s}
-.dot:nth-child(3){animation-delay:.4s}
-@keyframes dotBounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+/* ══ AUDIO WAVEFORM ══ */
+.audio-row{display:flex;align-items:center;gap:10px;
+  background:rgba(79,70,229,.07);border-radius:12px;padding:8px 12px;
+  margin-top:8px;cursor:pointer}
+.audio-row.you-audio{background:rgba(255,255,255,.15)}
+.play-btn{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;cursor:pointer;border:none}
+.play-btn.ai-play{background:var(--brand);color:#fff}
+.play-btn.you-play{background:rgba(255,255,255,.9);color:var(--brand)}
+.waveform{flex:1;display:flex;align-items:center;gap:2px;height:22px}
+.bar{width:3px;border-radius:99px;background:var(--brand-mid);
+  transition:transform .1s;flex-shrink:0}
+.audio-row.you-audio .bar{background:rgba(255,255,255,.5)}
+.audio-dur{font-family:var(--fnum);font-size:12px;font-weight:600;color:var(--t3);min-width:28px}
+.audio-row.you-audio .audio-dur{color:rgba(255,255,255,.7)}
 
-/* Error */
-.error-bubble{background:#fff5f5;border:1px solid #fecaca;border-radius:12px;
-  padding:14px;text-align:center;margin:8px 0}
+/* ══ INPUT BAR ══ */
+.input-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+}
+.input-inner{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:6px}
+.input-row{display:flex;align-items:flex-end;gap:8px}
+.input-field{flex:1;display:flex;align-items:center;gap:8px;
+  background:var(--bg);border:1.5px solid var(--border);border-radius:24px;
+  padding:9px 14px;transition:border-color .2s}
+.input-field:focus-within{border-color:var(--brand)}
+.input-field textarea{flex:1;border:none;outline:none;background:transparent;
+  font-family:var(--fn);font-size:14px;color:var(--t1);resize:none;
+  line-height:1.5;max-height:100px;min-height:22px}
+.input-field textarea::placeholder{color:var(--t4)}
+.mic-inline{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;color:var(--t4);flex-shrink:0;cursor:pointer;transition:color .2s}
+.mic-inline:hover{color:var(--brand)}
+.mic-inline .mi{font-size:18px}
+.send-btn{width:46px;height:46px;border-radius:50%;
+  background:var(--brand);color:#fff;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  box-shadow:0 2px 10px rgba(79,70,229,.35);transition:all .2s}
+.send-btn:hover{background:var(--brand-dk);transform:scale(1.05)}
+.send-btn:disabled{opacity:.4;transform:none}
+.send-btn .mi{font-size:20px}
+.mic-hint{text-align:center;font-size:11px;color:var(--t4);
+  display:flex;align-items:center;justify-content:center;gap:6px}
+.mic-hint .mi{font-size:15px}
 
-/* Toast */
-#toast{position:fixed;bottom:calc(var(--bottomnav)+env(safe-area-inset-bottom)+10px);
+/* ══ MIC RECORDING UI ══ */
+.mic-recording-bar{display:none;align-items:center;justify-content:center;gap:12px;
+  background:var(--red-lt);border-radius:12px;padding:10px 16px;margin-bottom:4px}
+.mic-recording-bar.show{display:flex}
+.rec-dot{width:10px;height:10px;border-radius:50%;background:var(--red);
+  animation:recBlink 1s infinite}
+@keyframes recBlink{0%,100%{opacity:1}50%{opacity:.3}}
+.rec-label{font-size:13px;font-weight:700;color:var(--red)}
+.rec-timer{font-family:var(--fnum);font-size:13px;font-weight:600;color:var(--red)}
+.stop-btn{padding:6px 14px;border-radius:99px;background:var(--red);color:#fff;
+  font-size:12px;font-weight:700;border:none;cursor:pointer}
+.live-transcript{font-size:12px;color:var(--t3);font-style:italic;text-align:center;
+  min-height:16px;margin-top:2px}
+
+/* ══ EMPTY STATE ══ */
+.empty-start{text-align:center;padding:32px 20px 16px}
+.empty-icon{width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg,var(--brand),#7c3aed);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.empty-icon .mi{font-size:30px;color:#fff}
+.empty-title{font-family:var(--fh);font-size:18px;font-weight:700;color:var(--t1);margin-bottom:6px}
+.empty-sub{font-size:13px;color:var(--t3);line-height:1.6;margin-bottom:18px}
+.start-btn{display:inline-flex;align-items:center;gap:8px;
+  background:var(--brand);color:#fff;border:none;border-radius:12px;
+  padding:13px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--fh);
+  box-shadow:0 4px 16px rgba(79,70,229,.35);transition:all .2s}
+.start-btn:hover{background:var(--brand-dk);transform:translateY(-1px)}
+
+/* ══ DONE STATE ══ */
+.done-card{background:linear-gradient(135deg,#1e1b4b,#312e81);
+  border-radius:20px;padding:24px;text-align:center;margin:8px 0}
+.done-icon{font-size:42px;margin-bottom:10px}
+.done-title{font-family:var(--fh);font-size:20px;font-weight:800;color:#fff;margin-bottom:6px}
+.done-sub{font-size:13px;color:rgba(255,255,255,.65);margin-bottom:18px}
+.done-stats{display:flex;justify-content:center;gap:24px;margin-bottom:20px}
+.done-stat{text-align:center}
+.done-stat-val{font-family:var(--fnum);font-size:26px;font-weight:700;color:#fff;line-height:1}
+.done-stat-lbl{font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+.done-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.done-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;
+  border-radius:99px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.done-btn.primary{background:#fff;color:var(--brand)}
+.done-btn.secondary{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2)}
+
+/* ══ QUESTION LOCKED ══ */
+.locked-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;
+  color:var(--green);background:var(--green-lt);border-radius:99px;padding:3px 9px;margin-top:6px}
+
+/* ══ TOAST ══ */
+#toast{position:fixed;bottom:calc(var(--inputbar)+env(safe-area-inset-bottom)+12px);
   left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;
   padding:10px 20px;border-radius:99px;font-size:13px;font-weight:600;
-  display:none;z-index:9999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+  display:none;z-index:9999;white-space:nowrap}
 
-/* Loading screen */
-.ai-loading{display:none;text-align:center;padding:24px 16px}
-.ai-loading.show{display:block}
-.ai-anim{font-size:42px;margin-bottom:12px;animation:pulse 1.2s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.95)}}
-.ai-loading-text{font-size:15px;font-weight:700;color:var(--t1)}
-.ai-loading-sub{font-size:13px;color:var(--t3);margin-top:4px}
+/* ══ MODAL ══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);
+  z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border-radius:20px;padding:24px;max-width:340px;width:100%;
+  box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-title{font-family:var(--fh);font-size:17px;font-weight:800;color:var(--t1);margin-bottom:8px}
+.modal-body{font-size:14px;color:var(--t3);line-height:1.6;margin-bottom:20px}
+.modal-btns{display:flex;gap:10px}
+.modal-btn{flex:1;padding:12px;border-radius:12px;font-size:14px;font-weight:700;
+  cursor:pointer;border:none;transition:all .2s;font-family:var(--fn)}
+.modal-btn.cancel{background:var(--bg);color:var(--t2)}
+.modal-btn.danger{background:var(--red);color:#fff}
 
-/* Bottom nav */
-.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:200;
-  height:calc(var(--bottomnav)+env(safe-area-inset-bottom));
-  padding-bottom:env(safe-area-inset-bottom);
-  background:#fff;border-top:1px solid var(--border);
-  display:flex;align-items:stretch}
+/* ══ BOTTOM NAV ══ */
+.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:100;
+  height:calc(60px+env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);
+  background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:stretch}
 .bn-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:2px;font-size:10px;font-weight:600;color:var(--t3);
   -webkit-tap-highlight-color:transparent;text-decoration:none;padding:4px 2px}
-.bn-tab.active{color:var(--red)}
+.bn-tab.active{color:var(--brand)}
 .bn-tab .mi{font-size:20px}
 
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg-row{animation:fadeUp .25s ease both}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
-<style>
-/* Progress header strip */
-.q-strip{
-  position:sticky;top:calc(var(--topbar) + env(safe-area-inset-top));z-index:90;
-  background:var(--surface);border-bottom:1px solid var(--border);
-  padding:8px var(--s4);
-  display:flex;align-items:center;gap:var(--s3);
-}
-.q-strip-counter{font-size:13px;font-weight:700;color:var(--t2);white-space:nowrap;}
-.q-strip-bar{flex:1;}
-/* Question card */
-.q-card{
-  background:var(--surface);border-radius:var(--r-xl);
-  border:1px solid var(--border);overflow:hidden;
-  margin-bottom:var(--s4);
-}
-.q-card-top{padding:var(--s5) var(--s5) var(--s4);}
-.q-tag{
-  display:inline-flex;align-items:center;gap:6px;
-  background:var(--bg);border-radius:var(--r-pill);
-  padding:5px 12px;font-size:11px;font-weight:800;
-  color:var(--t3);text-transform:uppercase;
-  letter-spacing:.05em;margin-bottom:var(--s4);
-}
-.q-tag .mi{font-size:15px;}
-.q-question{font-size:clamp(16px,4vw,20px);font-weight:800;color:var(--t1);
-  line-height:1.4;margin-bottom:var(--s3);}
-.q-hint-toggle{
-  display:flex;align-items:center;gap:6px;
-  font-size:14px;font-weight:700;color:var(--red);
-  padding:0;-webkit-tap-highlight-color:transparent;
-}
-.q-hint-toggle .mi{font-size:18px;}
-.q-hint-box{
-  background:var(--amber-bg);border-left:3px solid var(--amber);
-  border-radius:0 var(--r-md) var(--r-md) 0;
-  padding:var(--s4);margin:var(--s3) var(--s5) 0;
-  font-size:13px;color:var(--t2);line-height:1.5;display:none;
-}
-.q-hint-box.show{display:block;}
-.q-answer-wrap{padding:var(--s4) var(--s5) var(--s5);}
-.q-answer{
-  width:100%;border:1.5px solid var(--border);
-  border-radius:var(--r-lg);padding:var(--s4);
-  font-size:16px;font-family:inherit;resize:none;
-  outline:none;background:var(--surface);color:var(--t1);
-  min-height:140px;line-height:1.5;
-  transition:border-color .15s;
-}
-.q-answer:focus{border-color:var(--red);}
-.q-char-count{font-size:11px;color:var(--t4);text-align:right;margin-top:4px;}
-/* Action row */
-.q-actions{display:flex;gap:var(--s3);margin-top:var(--s4);}
-.q-actions .btn{flex:1;}
-/* Feedback card */
-.fb-card{
-  border-radius:var(--r-xl);overflow:hidden;
-  margin-bottom:var(--s4);border:1.5px solid;
-}
-.fb-card.pass{background:var(--green-bg);border-color:#86efac;}
-.fb-card.fail{background:var(--red-lt);border-color:#fca5a5;}
-.fb-top{
-  padding:var(--s5) var(--s5) var(--s3);
-  display:flex;align-items:center;gap:var(--s4);
-}
-.fb-score{font-size:40px;font-weight:900;line-height:1;}
-.fb-score.pass{color:var(--green);}
-.fb-score.fail{color:var(--red);}
-.fb-score-lbl{font-size:12px;color:var(--t3);margin-top:2px;}
-.fb-verdict{font-size:16px;font-weight:800;color:var(--t1);}
-.fb-summary{font-size:14px;color:var(--t2);margin-top:4px;line-height:1.5;}
-.fb-sections{padding:0 var(--s5) var(--s5);}
-.fb-section{margin-bottom:var(--s4);}
-.fb-section-lbl{font-size:11px;font-weight:800;text-transform:uppercase;
-  letter-spacing:.08em;color:var(--t3);margin-bottom:6px;
-  display:flex;align-items:center;gap:6px;}
-.fb-section-lbl .mi{font-size:15px;}
-.fb-section-text{font-size:14px;color:var(--t2);line-height:1.5;
-  background:rgba(255,255,255,.6);border-radius:var(--r-md);
-  padding:var(--s3) var(--s4);}
-/* AI loading */
-.ai-loading{
-  background:var(--surface);border-radius:var(--r-xl);
-  border:1px solid var(--border);padding:var(--s8) var(--s5);
-  text-align:center;margin-bottom:var(--s4);display:none;
-}
-.ai-loading.show{display:block;}
-.ai-anim{
-  width:56px;height:56px;border-radius:50%;
-  background:linear-gradient(135deg,var(--red-lt),#ede9fe);
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto var(--s4);animation:pulse 1.5s ease-in-out infinite;
-}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-.ai-loading-text{font-size:15px;font-weight:700;color:var(--t2);}
-.ai-loading-sub{font-size:13px;color:var(--t3);margin-top:4px;}
-</style>
-<!-- v1780313506 -->
 </head>
 <body>
 
-<header class="topbar">
-  <a href="yorkstjohn-hub.html" class="topbar-back" aria-label="Back to dashboard">
-    <span class="mi">arrow_back_ios_new</span>
+<!-- TOPBAR -->
+<header class="topbar" style="padding-top:env(safe-area-inset-top)">
+  <a href="yorkstjohn-hub.html" style="color:var(--t3);display:flex;align-items:center;margin-right:4px">
+    <span class="mi sm">arrow_back_ios_new</span>
   </a>
-  <span class="topbar-title">AI Practice</span>
-  <span class="chip muted" id="q-label" style="font-size:12px">Q 1 / 22</span>
+  <div class="tb-avatar"><span class="mi fill">psychology</span></div>
+  <div class="tb-info">
+    <div class="tb-name">AI Interview Coach</div>
+    <div class="tb-status"><div class="status-dot"></div>Online</div>
+  </div>
+  <div class="tb-actions">
+    <button class="tb-btn" id="muteBtn" onclick="toggleMute()" title="Toggle audio">
+      <span class="mi fill sm" id="muteIcon">volume_up</span>
+    </button>
+    <button class="tb-btn" onclick="showRestartModal()" title="Options">
+      <span class="mi sm">more_horiz</span>
+    </button>
+  </div>
 </header>
 
-<!-- Progress strip -->
-<div class="q-strip">
-  <div class="q-strip-counter" id="q-counter">Question 1 of 22</div>
-  <div class="q-strip-bar">
-    <div class="prog-track">
-      <div class="prog-fill" id="q-prog" style="width:5%;background:var(--red)"></div>
+<!-- CHAT AREA -->
+<div class="chat-page">
+  <div class="chat-body" id="chatBody">
+    <!-- Scoreboard -->
+    <div id="scoreBoard" style="display:none"></div>
+    <!-- Messages render here -->
+    <div id="msgThread"></div>
+  </div>
+</div>
+
+<!-- INPUT BAR -->
+<div class="input-bar" id="inputBar">
+  <div class="input-inner">
+    <!-- Recording state -->
+    <div class="mic-recording-bar" id="recBar">
+      <div class="rec-dot"></div>
+      <span class="rec-label">Recording</span>
+      <span class="rec-timer" id="recTimer">0:00</span>
+      <button class="stop-btn" onclick="stopRecording()"><span class="mi xs">stop</span> Stop</button>
+    </div>
+    <div class="live-transcript" id="liveTranscript"></div>
+    <!-- Text input row -->
+    <div class="input-row">
+      <div class="input-field">
+        <textarea id="textInput" placeholder="Type your message…" rows="1"
+          oninput="autoResize(this)" onkeydown="onKeyDown(event)"></textarea>
+        <button class="mic-inline" id="micBtn" onclick="startRecording()" title="Tap to record">
+          <span class="mi fill" id="micIcon">mic</span>
+        </button>
+      </div>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()" disabled>
+        <span class="mi fill">send</span>
+      </button>
+    </div>
+    <div class="mic-hint">
+      <span class="mi" style="color:var(--brand);font-size:16px">mic</span>
+      Tap mic to record your answer · Or use the text box above
     </div>
   </div>
 </div>
 
-<div class="page">
-  <div class="pad">
-    <a href="yorkstjohn-mock.html" class="mock-banner">
-      <div class="mock-icon"><span class="mi fill" style="font-size:22px;color:#fff">smart_toy</span></div>
-      <div style="flex:1">
-        <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:2px">AI Voice Mock Interview</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.5)">Spoken questions · Live transcription · Instant feedback</div>
-      </div>
-      <span class="mi" style="font-size:18px;color:rgba(255,255,255,.35)">arrow_forward_ios</span>
-    </a>
-    <div id="q-area"></div>
+<!-- RESTART MODAL -->
+<div class="modal-overlay" id="restartModal">
+  <div class="modal">
+    <div class="modal-title">⚠️ Start Over?</div>
+    <div class="modal-body">This will clear your entire conversation history and scores. Your progress will be reset to zero. This cannot be undone.</div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="hideRestartModal()">Cancel</button>
+      <button class="modal-btn danger" onclick="confirmRestart()">Yes, start over</button>
+    </div>
   </div>
 </div>
 
-<nav class="bottomnav" aria-label="Main navigation"><a href="yorkstjohn-hub.html" class="bn-tab" aria-label="Home"><span class="mi">home</span>Home</a><a href="yorkstjohn-guide.html" class="bn-tab" aria-label="Guide"><span class="mi">menu_book</span>Guide</a><a href="yorkstjohn-practice.html" class="bn-tab active" aria-label="Practice"><span class="mi">mic</span>Practice</a><a href="yorkstjohn-questions.html" class="bn-tab" aria-label="Questions"><span class="mi">quiz</span>Questions</a><a href="yorkstjohn-checklist.html" class="bn-tab" aria-label="Checklist"><span class="mi">checklist</span>Checklist</a></nav>
-<div id="toast" role="alert" aria-live="polite"></div>
+<div id="toast"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script defer src="app.js?v=9"></script>
 <script src="yorkstjohn-data.js"></script>
 
 <script>
-function showToast(msg,dur=2500){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',dur);}
-</script>
-<script>
-let currentIdx = 0;
-let hintShown = false;
-let attemptCount = 0;  // per-question attempt counter
+/* ════════════════════════════════════════════════════
+   AI COACH — Voice-first chat with persistence
+   Saves conversation to Supabase ai_scores + admin
+════════════════════════════════════════════════════ */
 
-const fromQBank = location.search.includes('from=qbank');
-const storedQ = fromQBank ? JSON.parse(sessionStorage.getItem('ysj_practice_q')||'null') : null;
+var GEMINI_PROXY = 'https://okshteetxmmphgjgvrwt.supabase.co/functions/v1/gemini-proxy';
+var DG_TOKEN_URL = 'https://okshteetxmmphgjgvrwt.supabase.co/functions/v1/deepgram-token';
+var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rc2h0ZWV0eG1tcGhnamd2cnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2NTIwNzQsImV4cCI6MjA2MDIyODA3NH0.hM3RCMVrNKzPbsxpLMtGkBOaHR94-_WjIQ1IgzREZAs';
 
-function getQueue() {
-  if (storedQ) return [{id:'custom',cat:'custom',q:storedQ.q,hint:'Answer specifically and give a concrete example.',cr:'Give a complete, personalised answer with specific examples and comparisons.'}];
-  return PQS;
+// ── State ──────────────────────────────────────────
+var conversation = [];        // [{role:'ai'|'you', text, time, score, qid, audioUrl}]
+var currentQIdx = 0;
+var waitingForAnswer = false;
+var isMuted = false;
+var isRecording = false;
+var dgSocket = null, dgKey = null, mediaStream = null;
+var finalText = '', partialText = '';
+var recSeconds = 0, recTimer = null;
+var currentAudio = null;
+var sessionStats = { answered: 0, passed: 0, totalScore: 0, total: 0 };
+
+// ── Questions (from yorkstjohn-data.js PQS) ────────
+var QUESTIONS = [];
+
+// ── Init ───────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async function() {
+  await waitForApp();
+  QUESTIONS = window.PQS || window.YSJ_DATA?.PQS || [];
+  sessionStats.total = QUESTIONS.length;
+  await loadConversation();
+  renderScoreBoard();
+  if (conversation.length === 0) {
+    renderEmptyStart();
+  } else {
+    renderAllMessages();
+    renderNextQuestion();
+  }
+  // Wire text input
+  var ta = document.getElementById('textInput');
+  if (ta) ta.addEventListener('input', function(){ document.getElementById('sendBtn').disabled = !ta.value.trim(); });
+});
+
+function waitForApp() {
+  return new Promise(function(res) {
+    var t = 0;
+    var iv = setInterval(function() {
+      t++;
+      if (window.getCurrentStudent || t > 30) { clearInterval(iv); res(); }
+    }, 100);
+  });
 }
 
-function showQ(idx) {
-  currentIdx = idx;
-  attemptCount = 0;
-  hintShown = false;
-  const queue = getQueue();
-  const q = queue[idx];
-  if (!q) return;
+// ── Persistence: save/load conversation ───────────
+var STORAGE_KEY = 'ysj_coach_v1_';
 
-  const pct = Math.round((idx+1)/queue.length*100);
-  document.getElementById('q-label').textContent = 'Q '+(idx+1)+'/'+queue.length;
-  document.getElementById('q-counter').textContent = 'Question '+(idx+1)+' of '+queue.length;
-  document.getElementById('q-prog').style.width = pct+'%';
-
-  const catIcons = {uk:'public',ysj:'account_balance',course:'menu_book',
-    career:'trending_up',finance:'payments',living:'home',visa:'badge',custom:'mic'};
-  const catNames = {uk:'Why the UK',ysj:'Why York St John',course:'Course Knowledge',
-    career:'Career Plans',finance:'Finance',living:'Accommodation',visa:'Visa Rules',custom:'Your Question'};
-
-  const area = document.getElementById('q-area');
-  area.innerHTML = `
-    <div class="chat-wrap" id="chat-wrap">
-
-      <!-- AI question bubble -->
-      <div class="chat-ai">
-        <div class="ai-avatar"><span class="mi fill sm">psychology</span></div>
-        <div class="ai-bubble">
-          <div class="ai-label">AI Coach</div>
-          <div class="ai-cat-tag">
-            <span class="mi xs fill">${catIcons[q.cat]||'quiz'}</span>
-            ${catNames[q.cat]||q.cat}
-          </div>
-          <div class="ai-question">${q.q}</div>
-          <button class="ai-hint-btn" onclick="toggleHint()" id="hint-btn">
-            <span class="mi xs">tips_and_updates</span> Show hint
-          </button>
-          <div class="ai-hint-box" id="hint-box">${q.hint}</div>
-        </div>
-      </div>
-
-      <!-- Conversation history (student replies + feedback appear here) -->
-      <div id="convo-thread"></div>
-
-      <!-- Loading typing indicator (hidden by default) -->
-      <div class="typing-bubble" id="typing-indicator" style="display:none">
-        <div class="ai-avatar"><span class="mi fill sm">psychology</span></div>
-        <div class="typing-dots">
-          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-        </div>
-      </div>
-
-      <!-- Input area -->
-      <div class="input-row" id="input-row">
-        <textarea class="q-answer" id="q-ans"
-          placeholder="Type your answer here… Be specific — give examples, name modules, mention your campus address, compare with other universities…"
-          rows="4"
-          oninput="updateCharCount(this)"
-          aria-label="Your answer"></textarea>
-        <div class="input-footer">
-          <span class="char-count" id="char-count">0 chars</span>
-          <div class="actions-row">
-            ${idx < queue.length-1
-              ? `<button class="btn outline sm" onclick="showQ(${idx+1})" aria-label="Skip">
-                  <span class="mi sm">skip_next</span> Skip
-                 </button>`
-              : ''}
-            <button class="btn red sm" id="check-btn" onclick="checkAnswer()">
-              <span class="mi fill sm">send</span> Send
-            </button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  `;
+function getStorageKey() {
+  var s = window.getCurrentStudent && window.getCurrentStudent();
+  return STORAGE_KEY + (s ? s.id : 'guest');
 }
 
-function updateCharCount(el) {
-  document.getElementById('char-count').textContent = el.value.length + ' chars';
+async function loadConversation() {
+  try {
+    var raw = localStorage.getItem(getStorageKey());
+    if (raw) {
+      var saved = JSON.parse(raw);
+      conversation = saved.conversation || [];
+      currentQIdx = saved.currentQIdx || 0;
+      sessionStats = saved.stats || { answered:0, passed:0, totalScore:0, total: QUESTIONS.length };
+      sessionStats.total = QUESTIONS.length;
+    }
+  } catch(e) { conversation = []; currentQIdx = 0; }
 }
 
-function toggleHint() {
-  hintShown = !hintShown;
-  document.getElementById('hint-box').classList.toggle('show', hintShown);
-  const btn = document.getElementById('hint-btn');
-  btn.innerHTML = `<span class="mi xs">tips_and_updates</span> ${hintShown?'Hide hint':'Show hint'}`;
+function saveConversation() {
+  try {
+    localStorage.setItem(getStorageKey(), JSON.stringify({
+      conversation: conversation,
+      currentQIdx: currentQIdx,
+      stats: sessionStats,
+      savedAt: new Date().toISOString()
+    }));
+  } catch(e) {}
 }
 
-function escHtml(str) {
-  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+// ── Scoreboard ─────────────────────────────────────
+function renderScoreBoard() {
+  var sb = document.getElementById('scoreBoard');
+  if (!sb) return;
+  if (conversation.length === 0) { sb.style.display='none'; return; }
+  sb.style.display = 'block';
+  var pct = sessionStats.answered > 0 ? Math.round(sessionStats.totalScore / sessionStats.answered) : 0;
+  sb.innerHTML = '<div class="score-banner">' +
+    '<div class="score-items">' +
+      '<div class="score-item"><div class="score-val">' + pct + '</div><div class="score-lbl">Avg Score</div></div>' +
+      '<div class="score-divider"></div>' +
+      '<div class="score-item"><div class="score-val">' + sessionStats.answered + '</div><div class="score-lbl">Answered</div></div>' +
+      '<div class="score-divider"></div>' +
+      '<div class="score-item"><div class="score-val">' + sessionStats.passed + '</div><div class="score-lbl">Passed</div></div>' +
+      '<div class="score-divider"></div>' +
+      '<div class="score-item"><div class="score-val">' + currentQIdx + '/' + sessionStats.total + '</div><div class="score-lbl">Progress</div></div>' +
+    '</div>' +
+    '<div class="score-actions">' +
+      '<button class="score-action-btn btn-restart" onclick="showRestartModal()"><span class="mi xs">refresh</span>Restart</button>' +
+    '</div>' +
+  '</div>';
 }
 
-async function checkAnswer() {
-  const ansEl = document.getElementById('q-ans');
-  const ans = ansEl?.value?.trim();
-  if (!ans || ans.length < 20) { showToast('Please write a longer answer first'); return; }
+// ── Render all messages (on reload) ───────────────
+function renderAllMessages() {
+  var thread = document.getElementById('msgThread');
+  if (!thread) return;
+  thread.innerHTML = '';
+  var lastDate = '';
+  conversation.forEach(function(msg, i) {
+    var d = new Date(msg.time);
+    var dateStr = d.toDateString();
+    if (dateStr !== lastDate) {
+      var today = new Date().toDateString();
+      var yest = new Date(Date.now()-86400000).toDateString();
+      var label = dateStr === today ? 'Today' : dateStr === yest ? 'Yesterday' : d.toLocaleDateString([], {weekday:'long', month:'short', day:'numeric'});
+      thread.insertAdjacentHTML('beforeend', '<div class="date-divider"><span>' + label + '</span></div>');
+      lastDate = dateStr;
+    }
+    thread.insertAdjacentHTML('beforeend', buildMessageHTML(msg));
+  });
+  scrollToBottom();
+}
 
-  const checkBtn = document.getElementById('check-btn');
-  const typing = document.getElementById('typing-indicator');
-  const inputRow = document.getElementById('input-row');
-  checkBtn.disabled = true;
-  attemptCount++;
+function buildMessageHTML(msg) {
+  var timeStr = new Date(msg.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  if (msg.role === 'ai') {
+    var waveHtml = buildWaveform(msg.text.length, false, msg.audioUrl);
+    return '<div class="msg-row">' +
+      '<div class="msg-avatar"><span class="mi fill sm">psychology</span></div>' +
+      '<div class="msg-col">' +
+        '<div class="msg-sender">AI Coach</div>' +
+        '<div class="ai-bubble">' +
+          (msg.isQuestion ? '<strong>' + escHtml(msg.text) + '</strong>' : formatAIText(msg.text)) +
+          (msg.feedback ? buildFeedbackHTML(msg.feedback, msg.qid, msg.qIdx) : '') +
+        '</div>' +
+        '<div class="msg-time">' + timeStr + '</div>' +
+      '</div>' +
+    '</div>';
+  } else {
+    var waveHtml2 = buildWaveform(msg.text.length, true, msg.audioUrl);
+    return '<div class="msg-row you">' +
+      '<div class="msg-col you">' +
+        '<div class="msg-sender you">You</div>' +
+        '<div class="you-bubble">' +
+          (msg.audioUrl ? waveHtml2 : '') +
+          '<p>' + escHtml(msg.text) + '</p>' +
+        '</div>' +
+        '<div class="msg-time you">' + timeStr + ' <span class="tick mi fill" style="font-size:13px;color:rgba(99,102,241,.7)">done_all</span></div>' +
+      '</div>' +
+    '</div>';
+  }
+}
 
-  // 1. Show student bubble
-  const thread = document.getElementById('convo-thread');
-  const now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  const studentDiv = document.createElement('div');
-  studentDiv.className = 'chat-student';
-  studentDiv.innerHTML = `
-    <div class="student-bubble">
-      <p>${escHtml(ans)}</p>
-      <div class="student-meta">You · Attempt ${attemptCount} · ${now}</div>
-    </div>`;
-  thread.appendChild(studentDiv);
+function buildWaveform(len, isYou, audioUrl) {
+  var bars = '';
+  var count = Math.min(40, Math.max(20, Math.floor(len / 3)));
+  for (var i = 0; i < count; i++) {
+    var h = 4 + Math.round(Math.random() * 14);
+    bars += '<div class="bar" style="height:' + h + 'px"></div>';
+  }
+  var dur = Math.max(3, Math.min(30, Math.round(len / 15)));
+  var cls = isYou ? 'audio-row you-audio' : 'audio-row';
+  var btnCls = isYou ? 'play-btn you-play' : 'play-btn ai-play';
+  return '<div class="' + cls + '">' +
+    '<button class="' + btnCls + '" onclick="playAudio(this,\'' + (audioUrl||'') + '\')">' +
+      '<span class="mi fill xs">play_arrow</span>' +
+    '</button>' +
+    '<div class="waveform">' + bars + '</div>' +
+    '<span class="audio-dur">' + (dur < 10 ? '0:0' : '0:') + dur + '</span>' +
+  '</div>';
+}
 
-  // 2. Clear input, show typing
-  ansEl.value = '';
-  document.getElementById('char-count').textContent = '0 chars';
-  inputRow.style.display = 'none';
-  typing.style.display = 'flex';
-  typing.scrollIntoView({behavior:'smooth',block:'end'});
+function buildFeedbackHTML(fb, qid, qIdx) {
+  if (!fb) return '';
+  var clsCircle = fb.pass ? 'pass' : 'fail';
+  var checklistHtml = (fb.checklist||[]).map(function(c) {
+    return '<li><span class="mi fill ck ' + (c.met?'ok':'miss') + '">' + (c.met?'check_circle':'cancel') + '</span><span>' + escHtml(c.item) + '</span></li>';
+  }).join('');
+  var isLast = (qIdx >= QUESTIONS.length - 1);
+  return '<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">' +
+    '<div class="fb-score-row">' +
+      '<div class="fb-score-circle ' + clsCircle + '">' +
+        '<div class="fb-score-num">' + fb.score + '</div>' +
+        '<div class="fb-score-den">/100</div>' +
+      '</div>' +
+      '<div>' +
+        '<div class="fb-verdict">' + (fb.pass ? '✅ Good answer!' : '❌ Needs improvement') + '</div>' +
+        '<div class="fb-summary">' + escHtml(fb.summary||'') + '</div>' +
+      '</div>' +
+    '</div>' +
+    (fb.what_worked ? '<div class="fb-sect"><div class="fb-sect-head good"><span class="mi fill xs">check_circle</span>What worked</div><div class="fb-text">' + escHtml(fb.what_worked) + '</div></div>' : '') +
+    (fb.what_missed ? '<div class="fb-sect"><div class="fb-sect-head bad"><span class="mi fill xs">cancel</span>Main gap</div><div class="fb-text">' + escHtml(fb.what_missed) + '</div></div>' : '') +
+    (checklistHtml ? '<div class="fb-sect"><div class="fb-sect-head tip"><span class="mi fill xs">fact_check</span>Requirements</div><ul class="fb-checklist">' + checklistHtml + '</ul></div>' : '') +
+    (fb.example_answer ? '<div class="fb-sect"><div class="fb-sect-head ex"><span class="mi fill xs">lightbulb</span>Strong example</div><div class="fb-example">' + escHtml(fb.example_answer) + '</div></div>' : '') +
+    (fb.encouragement ? '<div class="fb-text" style="color:var(--t3);font-style:italic;margin:8px 0 4px">' + escHtml(fb.encouragement) + '</div>' : '') +
+    '<div class="fb-actions">' +
+      (!fb.pass ? '<button class="fb-btn retry" onclick="retryQuestion(' + qIdx + ')"><span class="mi fill xs">refresh</span>Try again</button>' : '') +
+      '<button class="fb-btn next" onclick="' + (isLast ? 'showDone()' : 'nextQuestion()') + '">' +
+        '<span class="mi fill xs">' + (isLast ? 'emoji_events' : 'arrow_forward') + '</span>' +
+        (isLast ? 'See results' : 'Next question') +
+      '</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function formatAIText(text) {
+  if (!text) return '';
+  var escaped = escHtml(text);
+  // Convert **bold**
+  escaped = escaped.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  // Convert bullet points
+  escaped = escaped.replace(/^[•\-] (.+)$/gm, '<li>$1</li>');
+  if (escaped.includes('<li>')) escaped = escaped.replace(/(<li>.*<\/li>\s*)+/gs, '<ul>$&</ul>');
+  // Paragraphs
+  escaped = escaped.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+  return '<p>' + escaped + '</p>';
+}
+
+// ── Append a single message ────────────────────────
+function appendMessage(msg) {
+  conversation.push(msg);
+  saveConversation();
+  var thread = document.getElementById('msgThread');
+  if (thread) {
+    thread.insertAdjacentHTML('beforeend', buildMessageHTML(msg));
+    scrollToBottom();
+  }
+}
+
+// ── Show empty start screen ────────────────────────
+function renderEmptyStart() {
+  var thread = document.getElementById('msgThread');
+  if (thread) {
+    thread.innerHTML = '<div class="empty-start">' +
+      '<div class="empty-icon"><span class="mi fill lg">psychology</span></div>' +
+      '<div class="empty-title">AI Interview Coach</div>' +
+      '<div class="empty-sub">I\'ll ask you interview questions one by one, give you detailed feedback, and show you example answers. Your progress is saved so you can continue any time.</div>' +
+      '<button class="start-btn" onclick="startSession()"><span class="mi fill sm">play_circle</span>Start coaching</button>' +
+    '</div>';
+  }
+}
+
+// ── Start / Continue ───────────────────────────────
+function startSession() {
+  var thread = document.getElementById('msgThread');
+  if (thread) thread.innerHTML = '';
+  // Welcome message
+  var greeting = 'Hi! I\'m your AI interview coach. I\'ll ask you ' + QUESTIONS.length + ' questions, just like a real UK visa credibility interview. After each answer I\'ll give you detailed feedback and a scored example.\n\nYour answers are saved — you can come back and continue any time. Shall we get started?';
+  var welcomeMsg = { role:'ai', text: greeting, time: new Date().toISOString(), isQuestion: false };
+  appendMessage(welcomeMsg);
+  if (!isMuted) speakText(greeting, function() { renderNextQuestion(); });
+  else renderNextQuestion();
+  renderScoreBoard();
+}
+
+function renderNextQuestion() {
+  if (currentQIdx >= QUESTIONS.length) { showDone(); return; }
+  var q = QUESTIONS[currentQIdx];
+  // Check if already answered (locked)
+  var alreadyAnswered = conversation.some(function(m) { return m.role === 'you' && m.qid === q.id; });
+  if (alreadyAnswered) {
+    // Find the next unanswered
+    while (currentQIdx < QUESTIONS.length) {
+      var check = QUESTIONS[currentQIdx];
+      var answered = conversation.some(function(m) { return m.role === 'you' && m.qid === check.id; });
+      if (!answered) break;
+      currentQIdx++;
+    }
+    if (currentQIdx >= QUESTIONS.length) { showDone(); return; }
+    q = QUESTIONS[currentQIdx];
+  }
+  var qText = 'Question ' + (currentQIdx + 1) + ' of ' + QUESTIONS.length + '.\n\n' + q.q;
+  var qMsg = { role:'ai', text: q.q, time: new Date().toISOString(), isQuestion: true, qid: q.id };
+  setTimeout(function() {
+    appendMessage(qMsg);
+    waitingForAnswer = true;
+    enableInput(true);
+    if (!isMuted) speakText(qText, null);
+  }, 500);
+}
+
+function enableInput(on) {
+  var bar = document.getElementById('inputBar');
+  if (bar) bar.style.opacity = on ? '1' : '0.5';
+  var mic = document.getElementById('micBtn');
+  if (mic) mic.disabled = !on;
+}
+
+// ── Send message (text or transcribed audio) ───────
+function sendMessage() {
+  var ta = document.getElementById('textInput');
+  var text = ta ? ta.value.trim() : '';
+  if (!text || !waitingForAnswer) return;
+  ta.value = '';
+  ta.style.height = '';
+  document.getElementById('sendBtn').disabled = true;
+  submitAnswer(text, null);
+}
+
+function onKeyDown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+// ── Submit and grade answer ────────────────────────
+async function submitAnswer(text, audioUrl) {
+  if (!waitingForAnswer) return;
+  waitingForAnswer = false;
+  enableInput(false);
+
+  var q = QUESTIONS[currentQIdx];
+  var course = window.getCurrentCourse && window.getCurrentCourse() || {};
+  var attempt = conversation.filter(function(m) { return m.role === 'you' && m.qid === q.id; }).length + 1;
+
+  // Student message
+  appendMessage({ role:'you', text: text, time: new Date().toISOString(), qid: q.id, audioUrl: audioUrl });
+
+  // Typing indicator
+  showTyping();
 
   try {
-    const queue = getQueue();
-    const q = queue[currentIdx];
-    const course = window.getCurrentCourse?.() || {};
+    var prompt = 'You are a strict but supportive UK student visa credibility interview coach.\n' +
+      'Course: "' + (course.name||'their chosen course') + '" at ' + (course.campus||'York St John University') + '.\n' +
+      'Question: "' + q.q + '"\nRequired criteria: ' + q.cr + '\n' +
+      'Student answer (attempt ' + attempt + '): "' + text + '"\n\n' +
+      'PASS threshold: score >= 70. Most first attempts score 45-72.\n' +
+      'Banned phrases each cost -20: "highly renowned", "world-class education", "better opportunities" without specifics, "strong reputation" without evidence.\n' +
+      'Auto-fail caps: under 30 words → max 30 | no specifics at all → max 35.\n' +
+      'Return ONLY valid JSON:\n' +
+      '{"pass":boolean,"score":0-100,"summary":"1 sentence","what_worked":"specific strength","what_missed":"main gap",' +
+      '"checklist":[{"item":"criterion","met":true/false},{"item":"criterion","met":true/false},{"item":"criterion","met":true/false}],' +
+      '"example_answer":"2-3 sentence example for this specific question and course",' +
+      '"encouragement":"short warm sentence"}';
 
-    const prompt = `You are a strict but supportive UK student visa credibility interview coach. 
-Your job is to help students improve their answers through detailed, constructive chat feedback.
+    var resp = await puter.ai.chat(prompt, {model:'gpt-4o-mini'});
+    var raw = typeof resp==='string' ? resp : resp?.message?.content || JSON.stringify(resp);
+    var match = raw.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('No JSON');
+    var fb = JSON.parse(match[0]);
+    fb.pass = fb.pass || fb.score >= 70;
 
-Course: "${course.name||'their chosen course'}" at ${course.campus||'York St John University'}.
-Question: "${q.q}"
-Required content criteria: ${q.cr}
-Student answer (Attempt ${attemptCount}): "${ans}"
+    hideTyping();
 
-ASSESSMENT STANDARD (same as a UKVI Entry Clearance Officer):
-- A credible answer = STATEMENT + CONCRETE EXAMPLE. A statement alone is never enough.
-- PASS threshold: score >= 70
+    // Update stats
+    sessionStats.answered++;
+    sessionStats.totalScore += fb.score;
+    if (fb.pass) sessionStats.passed++;
+    renderScoreBoard();
 
-BANNED PHRASES (each costs -20 unless followed by a specific example):
-"highly renowned globally", "globally recognised", "strong reputation" (without ranking/award),
-"fees are less/more affordable" (without figures), "world-class education" (without evidence),
-"gain better employment" (without specific role/employer), any reason applicable to any country.
+    // AI feedback message
+    var fbMsg = {
+      role:'ai', text: fb.encouragement || (fb.pass ? 'Great answer!' : 'Here\'s my detailed feedback:'),
+      time: new Date().toISOString(),
+      feedback: fb, qid: q.id, qIdx: currentQIdx, isQuestion: false
+    };
+    appendMessage(fbMsg);
 
-AUTOMATIC FAIL caps: under 30 words → max 30 | completely off-topic → max 20 | no specifics at all → max 35
-
-MAJOR DEDUCTIONS (-15 to -25 each if missing):
-No module names when required (-25) | No country/university comparison when relevant (-20) |
-Career plan with no timeline structure (-20) | Vague funding source (-20) | 
-No personal language (-20) | Factually wrong about course/campus (-20) | No campus address when needed (-15)
-
-CALIBRATION: Most first attempts score 45-72. Scores above 80 require exceptional specificity.
-
-Return ONLY valid JSON, no markdown:
-{
-  "pass": boolean,
-  "score": integer 0-100,
-  "summary": "1 concise sentence on the overall answer quality",
-  "what_worked": "specific strength in their actual answer — quote their words if useful",
-  "what_missed": "the single most important gap that hurt their score",
-  "checklist": [
-    {"item": "requirement 1 from the criteria", "met": true/false},
-    {"item": "requirement 2", "met": true/false},
-    {"item": "requirement 3", "met": true/false}
-  ],
-  "example_answer": "A 2-3 sentence example showing exactly how to answer this question well — specific, personal, with real details relevant to their course",
-  "encouragement": "short warm sentence to motivate them to try again (if failed) or congratulate them (if passed)"
-}`;
-
-    const resp = await puter.ai.chat(prompt, {model:'gpt-4o-mini'});
-    let raw = typeof resp==='string' ? resp : resp?.message?.content || JSON.stringify(resp);
-    const match = raw.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('No JSON in response');
-    const j = JSON.parse(match[0]);
-    const passed = j.pass || j.score >= 70;
-    const score = j.score || 0;
-
-    // 3. Hide typing, build feedback bubble
-    typing.style.display = 'none';
-
-    const fbDiv = document.createElement('div');
-    fbDiv.className = 'feedback-wrap';
-
-    const checklistHtml = (j.checklist||[]).map(c=>`
-      <li>
-        <span class="mi fill ck-icon ${c.met?'ok':'miss'}">${c.met?'check_circle':'cancel'}</span>
-        <span>${escHtml(c.item)}</span>
-      </li>`).join('');
-
-    const isLast = currentIdx >= getQueue().length - 1;
-    fbDiv.innerHTML = `
-      <div class="feedback-ai">
-        <div class="ai-avatar"><span class="mi fill sm">psychology</span></div>
-        <div class="fb-bubble">
-
-          <!-- Score header -->
-          <div class="fb-score-row">
-            <div class="fb-score-circle ${passed?'pass':'fail'}">
-              <div class="fb-score-num">${score}</div>
-              <div class="fb-score-den">/100</div>
-            </div>
-            <div>
-              <div class="fb-verdict">${passed?'✅ Good answer!':'❌ Needs improvement'}</div>
-              <div class="fb-summary">${escHtml(j.summary||'')}</div>
-            </div>
-          </div>
-
-          <!-- What worked -->
-          ${j.what_worked ? `
-          <div class="fb-section">
-            <div class="fb-section-head good"><span class="mi fill xs">check_circle</span>What worked</div>
-            <div class="fb-text">${escHtml(j.what_worked)}</div>
-          </div>` : ''}
-
-          <!-- What missed -->
-          ${j.what_missed ? `
-          <div class="fb-section">
-            <div class="fb-section-head bad"><span class="mi fill xs">cancel</span>Main gap</div>
-            <div class="fb-text">${escHtml(j.what_missed)}</div>
-          </div>` : ''}
-
-          <!-- Checklist -->
-          ${checklistHtml ? `
-          <div class="fb-section">
-            <div class="fb-section-head tip"><span class="mi fill xs">fact_check</span>Requirements checklist</div>
-            <ul class="fb-checklist">${checklistHtml}</ul>
-          </div>` : ''}
-
-          <!-- Example answer -->
-          ${j.example_answer ? `
-          <div class="fb-section">
-            <div class="fb-section-head example"><span class="mi fill xs">lightbulb</span>Example of a strong answer</div>
-            <div class="fb-example-box">${escHtml(j.example_answer)}</div>
-          </div>` : ''}
-
-          <!-- Encouragement + actions -->
-          ${j.encouragement ? `<div class="fb-text" style="color:var(--t3);font-style:italic;margin-bottom:12px">${escHtml(j.encouragement)}</div>` : ''}
-
-          <div class="fb-actions">
-            ${!passed ? `
-            <button class="btn red sm" style="flex:1" onclick="retryQ()">
-              <span class="mi fill sm">refresh</span> Try again
-            </button>` : ''}
-            <button class="btn outline sm" style="flex:${passed?2:1}" onclick="${isLast?`location.href='yorkstjohn-hub.html'`:`showQ(${currentIdx+1})`}">
-              <span class="mi fill sm">${isLast?'home':'arrow_forward'}</span>
-              ${isLast?'Back to hub':'Next question'}
-            </button>
-          </div>
-
-        </div>
-      </div>`;
-
-    thread.appendChild(fbDiv);
-
-    // Show input again for retry (if failed)
-    if (!passed) {
-      inputRow.style.display = 'block';
-      checkBtn.disabled = false;
-      // Update placeholder
-      const ta = document.getElementById('q-ans');
-      if(ta) ta.placeholder = 'Try again — use the example above as a guide…';
-    }
-
-    fbDiv.scrollIntoView({behavior:'smooth', block:'start'});
-
-    // 4. Save to admin
+    // Save to admin
     if (typeof window.saveAIResponse === 'function') {
-      const normScore = Math.round(score/10);
-      // Save with full feedback including example and checklist
-      const fullFeedback = [
-        j.summary,
-        j.what_missed ? 'Gap: ' + j.what_missed : '',
-        j.example_answer ? 'Example: ' + j.example_answer : ''
-      ].filter(Boolean).join(' | ');
-      await window.saveAIResponse('YSJ_'+q.id, ans, normScore, fullFeedback, q.q);
-      const xp = parseInt(localStorage.getItem('ysj_xp')||'0') + (passed?20:10);
-      localStorage.setItem('ysj_xp', xp);
+      var normScore = Math.round(fb.score / 10);
+      var fullFeedback = [fb.summary, fb.what_missed ? 'Gap: '+fb.what_missed : '', fb.example_answer ? 'Example: '+fb.example_answer : ''].filter(Boolean).join(' | ');
+      await window.saveAIResponse('YSJ_' + q.id, text, normScore, fullFeedback, q.q);
     }
-    const today = new Date().toDateString();
-    if (localStorage.getItem('ysj_streak_date')!==today) {
-      const streak = parseInt(localStorage.getItem('ysj_streak')||'0')+1;
-      localStorage.setItem('ysj_streak', streak);
-      localStorage.setItem('ysj_streak_date', today);
+
+    // Speak feedback if not muted
+    if (!isMuted && fb.encouragement) speakText(fb.encouragement, null);
+
+    // Auto-advance if passed
+    if (fb.pass) {
+      currentQIdx++;
+      saveConversation();
     }
 
   } catch(e) {
-    typing.style.display = 'none';
-    inputRow.style.display = 'block';
-    checkBtn.disabled = false;
-    const errDiv = document.createElement('div');
-    errDiv.className = 'feedback-wrap';
-    errDiv.innerHTML = `
-      <div class="feedback-ai">
-        <div class="ai-avatar"><span class="mi fill sm">psychology</span></div>
-        <div class="error-bubble">
-          <span class="mi" style="color:var(--t4);font-size:28px;display:block;margin-bottom:6px">wifi_off</span>
-          <p style="font-size:14px;font-weight:700;color:var(--t2)">Could not connect to AI</p>
-          <p style="font-size:13px;color:var(--t3);margin-top:4px">Make sure you are signed in to Puter and have internet access.</p>
-        </div>
-      </div>`;
-    document.getElementById('convo-thread').appendChild(errDiv);
+    hideTyping();
+    appendMessage({ role:'ai', text:'Sorry, I couldn\'t evaluate that. Please check your connection and try again.', time: new Date().toISOString() });
+    waitingForAnswer = true;
+    enableInput(true);
   }
 }
 
-function retryQ() {
-  // Keep the conversation history visible, just re-show the input
-  const inputRow = document.getElementById('input-row');
-  const checkBtn = document.getElementById('check-btn');
-  if (inputRow) inputRow.style.display = 'block';
-  if (checkBtn) checkBtn.disabled = false;
-  const ta = document.getElementById('q-ans');
-  if (ta) {
-    ta.focus();
-    ta.scrollIntoView({behavior:'smooth', block:'center'});
+function retryQuestion(qIdx) {
+  currentQIdx = qIdx;
+  waitingForAnswer = true;
+  enableInput(true);
+  var q = QUESTIONS[qIdx];
+  if (!isMuted) speakText(q.q, null);
+  showToast('Try again — use the example as a guide');
+  scrollToBottom();
+}
+
+function nextQuestion() {
+  currentQIdx++;
+  saveConversation();
+  renderNextQuestion();
+}
+
+// ── Done screen ────────────────────────────────────
+function showDone() {
+  hideInputBar();
+  var avg = sessionStats.answered > 0 ? Math.round(sessionStats.totalScore / sessionStats.answered) : 0;
+  var doneMsg = { role:'ai', text:'🎉', time: new Date().toISOString(), isDone: true };
+  // Render done card directly
+  var thread = document.getElementById('msgThread');
+  if (thread) {
+    thread.insertAdjacentHTML('beforeend',
+      '<div class="done-card">' +
+        '<div class="done-icon">🎉</div>' +
+        '<div class="done-title">Session Complete!</div>' +
+        '<div class="done-sub">You\'ve completed all ' + QUESTIONS.length + ' questions. Here\'s your summary.</div>' +
+        '<div class="done-stats">' +
+          '<div class="done-stat"><div class="done-stat-val">' + avg + '</div><div class="done-stat-lbl">Avg Score</div></div>' +
+          '<div class="done-stat"><div class="done-stat-val">' + sessionStats.passed + '/' + sessionStats.answered + '</div><div class="done-stat-lbl">Passed</div></div>' +
+        '</div>' +
+        '<div class="done-btns">' +
+          '<button class="done-btn secondary" onclick="showRestartModal()"><span class="mi xs">refresh</span>Start over</button>' +
+          '<button class="done-btn primary" onclick="location.href=\'yorkstjohn-hub.html\'"><span class="mi xs">home</span>Dashboard</button>' +
+        '</div>' +
+      '</div>');
+    scrollToBottom();
+  }
+  if (!isMuted) speakText('Congratulations! You have completed all ' + QUESTIONS.length + ' questions. Your average score was ' + avg + ' out of 100. ' + (avg >= 70 ? 'Excellent work. You are looking interview-ready.' : 'Keep practising. Review your weaker answers and try again.'), null);
+}
+
+function hideInputBar() {
+  var bar = document.getElementById('inputBar');
+  if (bar) bar.style.display = 'none';
+}
+
+// ── Typing indicator ───────────────────────────────
+function showTyping() {
+  var thread = document.getElementById('msgThread');
+  if (!thread) return;
+  var div = document.createElement('div');
+  div.id = 'typingRow';
+  div.className = 'typing-row';
+  div.innerHTML = '<div class="msg-avatar"><span class="mi fill sm">psychology</span></div>' +
+    '<div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+  thread.appendChild(div);
+  scrollToBottom();
+}
+
+function hideTyping() {
+  var el = document.getElementById('typingRow');
+  if (el) el.remove();
+}
+
+// ── Scroll ─────────────────────────────────────────
+function scrollToBottom() {
+  setTimeout(function() { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }, 100);
+}
+
+// ── Audio playback ─────────────────────────────────
+function playAudio(btn, url) {
+  if (!url) { showToast('No audio recorded for this message'); return; }
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  currentAudio = new Audio(url);
+  currentAudio.play().catch(function() { showToast('Could not play audio'); });
+  btn.innerHTML = '<span class="mi fill xs">pause</span>';
+  currentAudio.onended = function() { btn.innerHTML = '<span class="mi fill xs">play_arrow</span>'; };
+}
+
+// ── Mute ───────────────────────────────────────────
+function toggleMute() {
+  isMuted = !isMuted;
+  var icon = document.getElementById('muteIcon');
+  if (icon) icon.textContent = isMuted ? 'volume_off' : 'volume_up';
+  if (isMuted && currentAudio) { currentAudio.pause(); currentAudio = null; }
+  if (isMuted && window.speechSynthesis) window.speechSynthesis.cancel();
+  showToast(isMuted ? 'Audio off' : 'Audio on');
+}
+
+// ── TTS ────────────────────────────────────────────
+function speakText(text, cb) {
+  if (isMuted) { if(cb) cb(); return; }
+  fetchTTS(text).then(function(blob) {
+    if (blob) {
+      var url = URL.createObjectURL(blob);
+      if (currentAudio) currentAudio.pause();
+      currentAudio = new Audio(url);
+      currentAudio.onended = function() { URL.revokeObjectURL(url); if(cb) cb(); };
+      currentAudio.onerror = function() { if(cb) cb(); };
+      currentAudio.play().catch(function() { speakBrowser(text, cb); });
+    } else {
+      speakBrowser(text, cb);
+    }
+  }).catch(function() { speakBrowser(text, cb); });
+}
+
+function speakBrowser(text, cb) {
+  var syn = window.speechSynthesis;
+  if (!syn) { if(cb) cb(); return; }
+  syn.cancel();
+  var u = new SpeechSynthesisUtterance(text);
+  u.rate = 0.9; u.pitch = 1.05;
+  var vs = syn.getVoices();
+  var v = vs.find(function(x){ return x.lang==='en-GB'; }) || vs[0];
+  if (v) u.voice = v;
+  u.onend = function() { if(cb) cb(); };
+  u.onerror = function() { if(cb) cb(); };
+  syn.speak(u);
+}
+
+function pcmToWav(b64) {
+  var pcm = Uint8Array.from(atob(b64), function(c){ return c.charCodeAt(0); });
+  var buf = new ArrayBuffer(44+pcm.byteLength), v = new DataView(buf);
+  var s = function(o,str){ for(var i=0;i<str.length;i++) v.setUint8(o+i, str.charCodeAt(i)); };
+  s(0,'RIFF'); v.setUint32(4,36+pcm.byteLength,true); s(8,'WAVE'); s(12,'fmt ');
+  v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+  v.setUint32(24,24000,true); v.setUint32(28,48000,true);
+  v.setUint16(32,2,true); v.setUint16(34,16,true);
+  s(36,'data'); v.setUint32(40,pcm.byteLength,true);
+  new Uint8Array(buf).set(pcm,44);
+  return new Blob([buf],{type:'audio/wav'});
+}
+
+function mp3FromBase64(b64) {
+  var bytes = Uint8Array.from(atob(b64), function(c){ return c.charCodeAt(0); });
+  return new Blob([bytes],{type:'audio/mpeg'});
+}
+
+function fetchTTS(text) {
+  var voice = 'Kore';
+  return fetch(GEMINI_PROXY, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({type:'tts', text:text, voice:voice})
+  }).then(function(r){ return r.json(); }).then(function(d) {
+    if (d.audio) return d.format==='mp3' ? mp3FromBase64(d.audio) : pcmToWav(d.audio);
+    return null;
+  }).catch(function(){ return null; });
+}
+
+// ── STT: Deepgram ──────────────────────────────────
+function getDGKey() {
+  if (dgKey) return Promise.resolve(dgKey);
+  return fetch(DG_TOKEN_URL, {
+    headers:{'Authorization':'Bearer '+ANON_KEY,'apikey':ANON_KEY}
+  }).then(function(r){ return r.json(); }).then(function(d) {
+    if (d.key) { dgKey = d.key; return dgKey; }
+    return null;
+  }).catch(function(){ return null; });
+}
+
+var recInterval = null;
+function startRecording() {
+  if (isRecording) return;
+  if (!waitingForAnswer) { showToast('Wait for the question first'); return; }
+  finalText = ''; partialText = '';
+  getDGKey().then(function(key) {
+    if (!key) { startBrowserSTT(); return; }
+    navigator.mediaDevices.getUserMedia({audio:true,video:false}).then(function(stream) {
+      mediaStream = stream;
+      var wsUrl = 'wss://api.deepgram.com/v1/listen?token=' + encodeURIComponent(key) +
+        '&model=nova-2&language=en-GB&smart_format=true&interim_results=true&endpointing=500&encoding=linear16&sample_rate=16000';
+      dgSocket = new WebSocket(wsUrl);
+      dgSocket.onopen = function() {
+        isRecording = true;
+        setRecordingUI(true);
+        var AudioCtx = window.AudioContext || window.webkitAudioContext;
+        var ctx = new AudioCtx({sampleRate:16000});
+        var src = ctx.createMediaStreamSource(stream);
+        var processor = ctx.createScriptProcessor(4096,1,1);
+        src.connect(processor); processor.connect(ctx.destination);
+        processor.onaudioprocess = function(e) {
+          if (dgSocket && dgSocket.readyState===1) {
+            var input = e.inputBuffer.getChannelData(0);
+            var pcm = new Int16Array(input.length);
+            for(var i=0;i<input.length;i++) pcm[i]=Math.max(-32768,Math.min(32767,input[i]*32768));
+            dgSocket.send(pcm.buffer);
+          }
+        };
+      };
+      dgSocket.onmessage = function(e) {
+        try {
+          var d = JSON.parse(e.data);
+          if (d.type==='Results') {
+            var t = d.channel&&d.channel.alternatives&&d.channel.alternatives[0]&&d.channel.alternatives[0].transcript||'';
+            if (d.is_final) { if(t) finalText+=t+' '; partialText=''; }
+            else { partialText=t; }
+            updateLiveTranscript();
+          }
+        } catch(ex){}
+      };
+      dgSocket.onerror = function(){ stopRecording(); };
+      dgSocket.onclose = function(){
+        if(partialText.trim()){ finalText+=partialText.trim()+' '; partialText=''; }
+      };
+    }).catch(function(){ startBrowserSTT(); });
+  });
+}
+
+var browserRecog = null;
+function startBrowserSTT() {
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { showToast('Mic not available — type your answer'); return; }
+  browserRecog = new SR();
+  browserRecog.continuous = true;
+  browserRecog.interimResults = true;
+  browserRecog.lang = 'en-GB';
+  browserRecog.onstart = function() { isRecording=true; setRecordingUI(true); };
+  browserRecog.onresult = function(e) {
+    var f='', p='';
+    for(var i=e.resultIndex;i<e.results.length;i++){
+      var t=e.results[i][0].transcript;
+      if(e.results[i].isFinal) f+=t+' '; else p+=t;
+    }
+    if(f) finalText+=f; partialText=p;
+    updateLiveTranscript();
+  };
+  browserRecog.onerror = function(){ stopRecording(); };
+  browserRecog.start();
+}
+
+function stopRecording() {
+  isRecording = false;
+  setRecordingUI(false);
+  if (dgSocket) { try{dgSocket.send(JSON.stringify({type:'CloseStream'}))}catch(ex){} setTimeout(function(){try{dgSocket.close()}catch(ex){}},300); dgSocket=null; }
+  if (mediaStream) { mediaStream.getTracks().forEach(function(t){t.stop()}); mediaStream=null; }
+  if (browserRecog) { try{browserRecog.stop()}catch(ex){} browserRecog=null; }
+  var captured = (finalText + partialText).trim();
+  if (captured.length >= 10) {
+    var ta = document.getElementById('textInput');
+    if (ta) { ta.value = captured; autoResize(ta); document.getElementById('sendBtn').disabled = false; }
+    document.getElementById('liveTranscript').textContent = '';
+    showToast('Tap Send to submit, or edit your answer first');
+  } else {
+    showToast('No speech detected — try again');
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => { showQ(0); });
+function setRecordingUI(on) {
+  var recBar = document.getElementById('recBar');
+  var micIcon = document.getElementById('micIcon');
+  if (recBar) recBar.classList.toggle('show', on);
+  if (micIcon) micIcon.textContent = on ? 'stop_circle' : 'mic';
+  if (on) {
+    recSeconds = 0;
+    recInterval = setInterval(function() {
+      recSeconds++;
+      var m = Math.floor(recSeconds/60), s = recSeconds%60;
+      var el = document.getElementById('recTimer');
+      if(el) el.textContent = m+':'+(s<10?'0':'')+s;
+    }, 1000);
+  } else {
+    clearInterval(recInterval);
+  }
+}
+
+function updateLiveTranscript() {
+  var el = document.getElementById('liveTranscript');
+  if (el) el.textContent = (finalText + partialText).trim() || '';
+}
+
+// ── Restart modal ──────────────────────────────────
+function showRestartModal() { document.getElementById('restartModal').classList.add('show'); }
+function hideRestartModal() { document.getElementById('restartModal').classList.remove('show'); }
+function confirmRestart() {
+  hideRestartModal();
+  conversation = [];
+  currentQIdx = 0;
+  sessionStats = { answered:0, passed:0, totalScore:0, total: QUESTIONS.length };
+  dgKey = null;
+  saveConversation();
+  document.getElementById('scoreBoard').style.display = 'none';
+  var thread = document.getElementById('msgThread');
+  if (thread) thread.innerHTML = '';
+  var bar = document.getElementById('inputBar');
+  if (bar) bar.style.display = '';
+  renderEmptyStart();
+  showToast('Session cleared — starting fresh');
+}
+
+// ── Helpers ────────────────────────────────────────
+function escHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function showToast(msg, dur) {
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.style.display='block';
+  setTimeout(function(){t.style.display='none';}, dur||2500);
+}
+window.addEventListener('scroll',function(){
+  var tb=document.querySelector('.topbar');
+  if(tb)tb.classList.toggle('scrolled',window.scrollY>10);
+},{passive:true});
 </script>
 
-<script>
-// Scroll-aware topbar shadow
-window.addEventListener('scroll', () => {
-  const tb = document.querySelector('.topbar,.ysj-topbar');
-  if (tb) tb.classList.toggle('scrolled', window.scrollY > 10);
-}, { passive: true });
-</script>
+<nav class="bottomnav" aria-label="Main navigation">
+  <a href="yorkstjohn-hub.html" class="bn-tab"><span class="mi">home</span>Home</a>
+  <a href="yorkstjohn-guide.html" class="bn-tab"><span class="mi">menu_book</span>Guide</a>
+  <a href="yorkstjohn-practice.html" class="bn-tab active"><span class="mi">mic</span>Practice</a>
+  <a href="yorkstjohn-questions.html" class="bn-tab"><span class="mi">quiz</span>Questions</a>
+  <a href="yorkstjohn-checklist.html" class="bn-tab"><span class="mi">checklist</span>Checklist</a>
+</nav>
 </body>
 </html>
