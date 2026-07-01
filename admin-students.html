@@ -149,10 +149,37 @@ body{background:var(--bg);min-height:100vh}
   .detail-header{padding:16px}
   .tab-bar{padding:0 16px}
 }
+
+/* Login gate */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{width:100%;max-width:360px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:32px 28px}
+.login-title{font-size:19px;font-weight:900;color:#fff;margin-bottom:4px}
+.login-subtitle{font-size:12.5px;color:rgba(255,255,255,.4);margin-bottom:22px}
+.login-card .form-group{margin-bottom:14px}
+.login-card label{display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,.5);margin-bottom:6px}
+.login-card input{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:13.5px;color:#fff;font-family:inherit;outline:none}
+.btn-login-submit{width:100%;margin-top:6px;padding:11px;border:none;border-radius:10px;background:var(--red);color:#fff;font-weight:800;font-size:13.5px;cursor:pointer}
+.btn-login-submit:disabled{opacity:.6;cursor:default}
+#loginError{font-size:12.5px;color:#f87171;margin-top:12px;min-height:16px}
+.sb-signout{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:rgba(255,255,255,.4);background:none;border:none;cursor:pointer;padding:0;margin-top:8px}
+.sb-signout:hover{color:#f87171}
 </style>
 </head>
 <body>
-<div class="page">
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-title">Student Responses</div>
+    <p class="login-subtitle">Admin Portal — Authorised Access Only</p>
+    <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" autocomplete="email"/></div>
+    <div class="form-group"><label>Password</label><input type="password" id="loginPassword" autocomplete="current-password"/></div>
+    <button class="btn-login-submit" id="loginSubmitBtn">Sign In to Admin Portal</button>
+    <p id="loginError"></p>
+  </div>
+</div>
+
+<div class="page" id="adminScreen" style="display:none">
 
   <!-- SIDEBAR: Student list -->
   <div class="sidebar">
@@ -160,6 +187,7 @@ body{background:var(--bg);min-height:100vh}
       <h2><span class="mi fill">group</span>Student Responses</h2>
       <input class="sb-search" type="search" id="search-input" placeholder="Search students…" oninput="filterStudents()">
       <div class="sb-count" id="sb-count">Loading…</div>
+      <button class="sb-signout" id="adminSignOutBtn"><span class="mi" style="font-size:14px">logout</span>Sign Out</button>
     </div>
     <div class="sb-list" id="student-list">
       <div class="loading"><span class="spinner-sm"></span>Loading students…</div>
@@ -184,15 +212,64 @@ body{background:var(--bg);min-height:100vh}
 var allStudents = [];
 var selectedId  = null;
 
-// ── Load all students on start ────────────────────────────────────
+// ── Auth gate ──────────────────────────────────────────────────────
 window.addEventListener('load', function(){
-  waitForSupabase(loadStudents);
+  waitForSupabase(checkAuth);
 });
 
 function waitForSupabase(cb){
-  if(window.supabaseClient){ cb(); return; }
+  if(window.supabaseClient && window.ADMIN_EMAILS){ cb(); return; }
   setTimeout(function(){ waitForSupabase(cb); }, 150);
 }
+
+async function checkAuth(){
+  try{
+    var { data: { session } } = await supabaseClient.auth.getSession();
+    if(session && session.user){
+      if(window.ADMIN_EMAILS.indexOf(session.user.email) === -1){
+        await supabaseClient.auth.signOut();
+        showLoginError('Access denied.');
+        return;
+      }
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminScreen').style.display = 'flex';
+      loadStudents();
+    } else {
+      document.getElementById('loginScreen').style.display = 'flex';
+    }
+  } catch(err){
+    console.error('checkAuth error:', err);
+    document.getElementById('loginScreen').style.display = 'flex';
+  }
+}
+
+function showLoginError(msg){
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginError').textContent = msg;
+}
+
+async function adminLogin(){
+  var email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  var password = document.getElementById('loginPassword').value;
+  var btn = document.getElementById('loginSubmitBtn');
+  var errEl = document.getElementById('loginError');
+  errEl.textContent = '';
+  if(!email || !password){ errEl.textContent = 'Please enter email and password.'; return; }
+  if(window.ADMIN_EMAILS.indexOf(email) === -1){ errEl.textContent = 'Access denied. Not an authorised admin email.'; return; }
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  var { data, error } = await supabaseClient.auth.signInWithPassword({ email: email, password: password });
+  if(error){ errEl.textContent = error.message; btn.disabled = false; btn.textContent = 'Sign In to Admin Portal'; return; }
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminScreen').style.display = 'flex';
+  loadStudents();
+}
+
+document.getElementById('loginSubmitBtn').addEventListener('click', adminLogin);
+document.getElementById('loginPassword').addEventListener('keydown', function(e){ if(e.key === 'Enter') adminLogin(); });
+document.getElementById('adminSignOutBtn').addEventListener('click', async function(){
+  await supabaseClient.auth.signOut();
+  location.reload();
+});
 
 async function loadStudents(){
   try{

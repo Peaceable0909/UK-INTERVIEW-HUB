@@ -5,6 +5,9 @@ const EMAILJS_PUBLIC_KEY = 'WQ9ZIq9xkFVWQkFRM';
 const EMAILJS_SERVICE_ID = 'service_v6wame2';
 const EMAILJS_TEMPLATE_ID = 'template_6lh9ond';
 
+// Shared admin allowlist — single source of truth for admin.html and admin-students.html.
+window.ADMIN_EMAILS = ['admin@whiterock.com','applications.whiterock@gmail.com','akinremi@gmail.com','whiterockeducationalservices@gmail.com','simon@whiterock-edu.com','simonfemi@yahoo.com','myinkscriber@gmail.com','femiolaniyi36@gmail.com','peaceableolaniyi@gmail.com','peaceable.whiterock@gmail.com','jwill.whiterock@gmail.com','abraham.whiterock@gmail.com','cherish.whiterock@gmail.com','ideyewhiterock@gmail.com','bakinremi.whiterock@gmail.com','praisewhiterock27@gmail.com','waleadegoke.whiterock@gmail.com'];
+
 // ===== INIT =====
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 window.supabaseClient = supabaseClient;
