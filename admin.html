@@ -1493,7 +1493,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>
           <div class="action-btns">
             <button class="btn-icon calendar" data-action="date" data-id="${s.user_id}" data-name="${escHtml(s.full_name||'')}" data-date="${s.interview_date||''}" title="Set Interview Date"><span class="material-symbols-outlined">calendar_month</span></button>
-            <button class="btn-icon" data-action="work" data-id="${s.user_id}" data-name="${escHtml(s.full_name||'')}" title="View Student Work" style="background:#f0fdf4;color:#166534;border:1px solid #bbf7d0" onclick="openWorkDrawer('${s.user_id}','${escHtml(s.full_name||s.email||'Student')}')"><span class="material-symbols-outlined">quiz</span></button>
+            <button class="btn-icon" data-action="work" data-id="${s.user_id}" data-name="${escHtml(s.full_name||s.email||'Student')}" title="View Student Work" style="background:#f0fdf4;color:#166534;border:1px solid #bbf7d0"><span class="material-symbols-outlined">quiz</span></button>
             <button class="btn-icon delete" data-action="delete" data-id="${s.user_id}" data-name="${escHtml(s.full_name||'')}" title="Delete Student"><span class="material-symbols-outlined">delete</span></button>
           </div>
         </td>
@@ -1527,6 +1527,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const {action,id,name,date}=btn.dataset;
     if (action==='date') openDateModal(id,name,date);
     else if (action==='delete') openDeleteModal(id,name);
+    else if (action==='work') openWorkDrawer(id,name);
   });
 
   // ── UPCOMING INTERVIEWS (right panel) ──
@@ -1689,8 +1690,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <div style="min-width:160px;font-size:12.5px;font-weight:600;color:${isPast?'var(--muted)':hasDate?'var(--green)':'var(--amber)'}">${hasDate?fmtDate(s.interview_date):'Not scheduled'}</div>
         <div style="min-width:80px;text-align:center">${badge}</div>
         <div class="action-btns">
-          <button class="btn-icon calendar" onclick="openDateModalFromId('${s.user_id}')" title="Edit Date"><span class="material-symbols-outlined">edit_calendar</span></button>
-          <button class="btn-icon delete" onclick="openDeleteModal('${s.user_id}','${escHtml(s.full_name||'')}')" title="Delete"><span class="material-symbols-outlined">delete</span></button>
+          <button class="btn-icon calendar" data-action="date" data-id="${s.user_id}" title="Edit Date"><span class="material-symbols-outlined">edit_calendar</span></button>
+          <button class="btn-icon delete" data-action="delete" data-id="${s.user_id}" data-name="${escHtml(s.full_name||'')}" title="Delete"><span class="material-symbols-outlined">delete</span></button>
         </div>
       </div>`;
     }).join('');
@@ -1700,6 +1701,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const s=allStudents.find(s=>s.user_id===id);
     if (s) openDateModal(s.user_id, s.full_name||'', s.interview_date||'');
   };
+
+  document.getElementById('ivList').addEventListener('click', e => {
+    const btn=e.target.closest('button'); if (!btn) return;
+    const {action,id,name}=btn.dataset;
+    if (action==='date') openDateModalFromId(id);
+    else if (action==='delete') openDeleteModal(id,name);
+  });
 
   // ═══════════════════════════════════════════════════════════════════
   // ANALYTICS PANEL
