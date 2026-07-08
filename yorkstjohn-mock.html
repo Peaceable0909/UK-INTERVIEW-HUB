@@ -98,6 +98,10 @@ a{text-decoration:none;color:inherit}
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
 .topbar-logo .mi{font-size:18px;color:#fff}
+/* Icons8 robot glyph reused as the AI persona icon — line art on a
+   transparent background, recolored white via filter to match the
+   existing white/green icon treatment on these dark circular badges. */
+.ai-icon-img{width:50%;height:50%;object-fit:contain;filter:brightness(0) invert(1)}
 .topbar-name{font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--t1);letter-spacing:-.2px}
 .topbar-name span{color:var(--green2)}
 .topbar-center{flex:1;display:flex;justify-content:center}
@@ -695,7 +699,7 @@ a{text-decoration:none;color:inherit}
 <!-- ══ TOPBAR ══ -->
 <header class="topbar">
   <div class="topbar-brand">
-    <div class="topbar-logo"><span class="mi fill">psychology</span></div>
+    <div class="topbar-logo"><img src="ai-icon.png" alt="" class="ai-icon-img"></div>
     <span class="topbar-name">YSJ <span>AI</span></span>
   </div>
   <div class="topbar-center">
@@ -821,7 +825,7 @@ a{text-decoration:none;color:inherit}
     <div class="aiwrap" id="aiwrap">
       <div class="airng"></div>
       <div class="airng airng2"></div>
-      <div class="aiface"><span class="mi fill">support_agent</span></div>
+      <div class="aiface"><img src="ai-icon.png" alt="" class="ai-icon-img"></div>
     </div>
     <div class="swave">
       <div class="sw"></div><div class="sw"></div><div class="sw"></div>
