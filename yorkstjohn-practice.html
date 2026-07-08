@@ -105,6 +105,10 @@ a { text-decoration:none; color:inherit }
   box-shadow:0 2px 8px rgba(79,70,229,.3);
 }
 .tb-avatar .mi { font-size:20px; color:#fff }
+/* Icons8 robot glyph reused as the AI persona icon everywhere on this page —
+   line art on a transparent background, recolored white to match the
+   existing white icon treatment on these colored circular badges. */
+.ai-icon-img { width:50%; height:50%; object-fit:contain; filter:brightness(0) invert(1) }
 .tb-info { flex:1; min-width:0 }
 .tb-name { font-family:var(--fh); font-size:15px; font-weight:700; color:var(--t1);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
@@ -508,7 +512,7 @@ a { text-decoration:none; color:inherit }
   <a href="yorkstjohn-hub.html" style="color:var(--t3);display:flex;align-items:center;margin-right:4px">
     <span class="mi sm">arrow_back_ios_new</span>
   </a>
-  <div class="tb-avatar"><span class="mi fill">psychology</span></div>
+  <div class="tb-avatar"><img src="ai-icon.png" alt="" class="ai-icon-img"></div>
   <div class="tb-info">
     <div class="tb-name">AI Interview Coach</div>
     <div class="tb-status"><div class="status-dot"></div>Online</div>
@@ -718,7 +722,7 @@ function buildMessageHTML(msg) {
   if (msg.role === 'ai') {
     var waveHtml = buildWaveform(msg.text.length, false, msg.audioUrl);
     return '<div class="msg-row">' +
-      '<div class="msg-avatar"><span class="mi fill sm">psychology</span></div>' +
+      '<div class="msg-avatar"><img src="ai-icon.png" alt="" class="ai-icon-img"></div>' +
       '<div class="msg-col">' +
         '<div class="msg-sender">AI Coach</div>' +
         '<div class="ai-bubble' + (msg.isQuestion ? ' is-question' : '') + '">' +
@@ -855,7 +859,7 @@ function renderEmptyStart() {
   var thread = document.getElementById('msgThread');
   if (thread) {
     thread.innerHTML = '<div class="empty-start">' +
-      '<div class="empty-icon"><span class="mi fill lg">psychology</span></div>' +
+      '<div class="empty-icon"><img src="ai-icon.png" alt="" class="ai-icon-img"></div>' +
       '<div class="empty-title">AI Interview Coach</div>' +
       '<div class="empty-sub">I will ask you questions one by one, give you detailed feedback with examples, and only move forward when you pass. Your progress is saved so you can continue any time.</div>' +
       '<button class="start-btn" onclick="startSession()"><span class="mi fill sm">play_circle</span>Start coaching</button>' +
@@ -1269,7 +1273,7 @@ function showTyping() {
   var div = document.createElement('div');
   div.id = 'typingRow';
   div.className = 'typing-row';
-  div.innerHTML = '<div class="msg-avatar"><span class="mi fill sm">psychology</span></div>' +
+  div.innerHTML = '<div class="msg-avatar"><img src="ai-icon.png" alt="" class="ai-icon-img"></div>' +
     '<div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
   thread.appendChild(div);
   scrollToBottom();
@@ -1760,7 +1764,7 @@ function onKeyDown(e) {
       <div style="width:68px;height:68px;border-radius:50%;
         background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.2);
         display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
-        <span class="mi fill" style="font-size:32px;color:#fff">psychology</span>
+        <img src="ai-icon.png" alt="" style="width:34px;height:34px;object-fit:contain;filter:brightness(0) invert(1)">
       </div>
       <div style="font-family:var(--fh);font-size:21px;font-weight:800;color:#fff">AI Interview Coach</div>
       <div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:4px">by WhiteRock</div>
