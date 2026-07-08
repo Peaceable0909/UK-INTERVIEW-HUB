@@ -271,7 +271,13 @@ a{text-decoration:none;color:inherit}
 #siv{
   background:var(--bg);
   padding-top:calc(56px + env(safe-area-inset-top));
-  display:flex;flex-direction:column;
+}
+/* height/overflow only apply once .screen.on makes this the active screen —
+   an unconditional display:flex here used to keep #siv permanently rendered
+   (with real layout height) underneath every other screen, adding a full
+   extra viewport of dead scroll space and leaving stale interview content
+   visible behind the results/briefing screens. */
+#siv.on{
   height:100dvh;overflow:hidden;
 }
 
