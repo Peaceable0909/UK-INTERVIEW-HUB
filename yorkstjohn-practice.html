@@ -1233,6 +1233,28 @@ function showDone() {
     scrollToBottom();
   }
   if (!isMuted) speakText('Congratulations! You have completed all ' + QUESTIONS.length + ' questions. Your average score was ' + avg + ' out of 100. ' + (avg >= 70 ? 'Excellent work. You are looking interview-ready.' : 'Keep practising. Review your weaker answers and try again.'), null);
+  notifyAdminOnComplete(avg);
+}
+
+// Practice answers already save to student_progress via window.saveAIResponse
+// (per-question), but nothing told admins a student had finished a session —
+// they'd only find out by manually opening that student's row. Mirror the
+// mock-interview "session complete" notification here too.
+async function notifyAdminOnComplete(avg) {
+  try {
+    var student = window.getCurrentStudent && window.getCurrentStudent();
+    if (!student || !student.id || !window.supabaseClient) return;
+    var course = window.getCurrentCourse && window.getCurrentCourse() || {};
+    var courseName = course.name || 'York St John';
+    var studentName = student.name || 'Student';
+    var emoji = avg >= 80 ? '✅' : avg >= 60 ? '⚠️' : '📚';
+    await window.supabaseClient.from('student_notifications').insert([{
+      title: emoji + ' Practice Session Complete — ' + studentName,
+      message: studentName + ' completed all ' + QUESTIONS.length + ' AI Coach practice questions for ' + courseName + '. Avg score: ' + avg + '/100 · ' + sessionStats.passed + '/' + sessionStats.answered + ' passed.',
+      type: 'success', target: 'admin', created_by: 'system',
+      target_user_id: student.id
+    }]);
+  } catch (e) { console.warn('notifyAdminOnComplete error:', e); }
 }
 
 function hideInputBar() {
