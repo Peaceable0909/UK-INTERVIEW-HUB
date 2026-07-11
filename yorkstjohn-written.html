@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<base href="/UK-INTERVIEW-HUB/">
+<title>Written Answers | York St John</title>
+<script src="https://js.puter.com/v2/"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brand:#4f46e5; --brand-dk:#3730a3; --brand-lt:#eef2ff; --brand-mid:#c7d2fe;
+  --green:#16a34a; --green-lt:#dcfce7;
+  --amber:#d97706; --amber-lt:#fef9c3;
+  --red:#dc2626;   --red-lt:#fee2e2;
+  --bg:#f0f2f5; --surface:#ffffff;
+  --border:#e4e6eb; --border2:#d1d5db;
+  --t1:#111827; --t2:#374151; --t3:#6b7280; --t4:#9ca3af;
+  --fh:'Sora',sans-serif; --fn:'Inter',sans-serif; --fnum:'Space Grotesk',sans-serif;
+  --topbar:60px; --bottomnav-h:60px;
+  --radius-sm:10px; --radius-md:16px; --radius-lg:20px;
+  --dur-fast:150ms; --dur-mid:250ms;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+}
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0 }
+html { font-size:16px; -webkit-text-size-adjust:100%; scroll-behavior:smooth }
+body {
+  font-family:var(--fn); background:var(--bg); color:var(--t1);
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  padding-bottom:calc(var(--bottomnav-h) + env(safe-area-inset-bottom) + 20px);
+}
+.mi { font-family:'Material Symbols Outlined'; font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; vertical-align:middle; line-height:1; user-select:none }
+.mi.fill { font-variation-settings:'FILL' 1 }
+.mi.sm { font-size:18px } .mi.lg { font-size:32px }
+button { font-family:inherit; cursor:pointer; border:none; background:none; touch-action:manipulation; -webkit-tap-highlight-color:transparent }
+button:disabled { opacity:.5; cursor:not-allowed }
+a { text-decoration:none; color:inherit }
+
+/* ══ TOPBAR ══ */
+.topbar {
+  position:fixed; top:0; left:0; right:0; z-index:300; height:var(--topbar);
+  display:flex; align-items:center; gap:12px; padding:0 16px;
+  background:rgba(255,255,255,.9); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.tb-avatar {
+  width:40px; height:40px; border-radius:50%; flex-shrink:0;
+  background:linear-gradient(135deg,var(--brand),#7c3aed);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 8px rgba(79,70,229,.3);
+}
+/* Icons8 robot glyph reused as the AI persona icon — recolored white to
+   match the existing white icon treatment on these colored badges. */
+.ai-icon-img { width:50%; height:50%; object-fit:contain; filter:brightness(0) invert(1) }
+.tb-info { flex:1; min-width:0 }
+.tb-name { font-family:var(--fh); font-size:15px; font-weight:700; color:var(--t1) }
+.tb-status { font-size:12px; color:var(--t3); font-weight:500; margin-top:1px }
+
+/* ══ PAGE ══ */
+.page { max-width:720px; margin:0 auto; padding:calc(var(--topbar) + 16px) 16px 0 }
+
+.intro {
+  background:linear-gradient(135deg,#312e81,#4c1d95); color:#fff;
+  border-radius:var(--radius-lg); padding:20px 22px; margin-bottom:18px;
+}
+.intro h1 { font-family:var(--fh); font-size:22px; font-weight:800; margin-bottom:6px }
+.intro p { font-size:13.5px; line-height:1.6; color:rgba(255,255,255,.82) }
+
+/* progress banner */
+.prog-banner {
+  display:flex; align-items:center; gap:14px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-md); padding:12px 16px; margin-bottom:18px;
+}
+.prog-ring { position:relative; width:44px; height:44px; flex-shrink:0 }
+.prog-ring svg { transform:rotate(-90deg) }
+.prog-pct { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:var(--fnum); font-size:13px; font-weight:700; color:var(--brand) }
+.prog-txt { flex:1; font-size:13px; color:var(--t2); font-weight:600 }
+.prog-sub { font-size:11.5px; color:var(--t4); font-weight:500; margin-top:2px }
+
+/* category group */
+.cat-title {
+  font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.1em;
+  color:var(--brand); margin:22px 0 10px; display:flex; align-items:center; gap:6px;
+}
+
+/* question card */
+.q-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-md); margin-bottom:12px; overflow:hidden;
+  transition:box-shadow var(--dur-fast);
+}
+.q-card.answered { border-color:var(--brand-mid) }
+.q-head { display:flex; align-items:flex-start; gap:10px; padding:14px 16px 0 }
+.q-num {
+  width:26px; height:26px; border-radius:50%; flex-shrink:0;
+  background:var(--brand-lt); color:var(--brand);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--fnum); font-size:12px; font-weight:700;
+}
+.q-num.pass { background:var(--green-lt); color:var(--green) }
+.q-num.fail { background:var(--red-lt); color:var(--red) }
+.q-text { flex:1; font-family:var(--fh); font-size:14.5px; font-weight:700; color:var(--t1); line-height:1.4 }
+.q-scorepill { flex-shrink:0; font-family:var(--fnum); font-size:15px; font-weight:800 }
+.q-scorepill.pass { color:var(--green) } .q-scorepill.fail { color:var(--red) }
+.q-hint {
+  font-size:12px; color:var(--t3); line-height:1.55; padding:8px 16px 0;
+  display:flex; gap:6px;
+}
+.q-hint .mi { font-size:14px; color:var(--amber); flex-shrink:0; margin-top:1px }
+.q-body { padding:12px 16px 16px }
+.q-textarea {
+  width:100%; min-height:96px; resize:vertical;
+  border:1.5px solid var(--border); border-radius:var(--radius-sm);
+  padding:11px 13px; font-family:var(--fn); font-size:14px; color:var(--t1);
+  line-height:1.55; outline:none; background:var(--bg);
+  transition:border-color var(--dur-fast), box-shadow var(--dur-fast);
+}
+.q-textarea:focus { border-color:var(--brand); box-shadow:0 0 0 3px rgba(79,70,229,.1); background:#fff }
+.q-textarea::placeholder { color:var(--t4) }
+.q-footer { display:flex; align-items:center; justify-content:space-between; margin-top:10px; gap:10px }
+.q-count { font-size:11.5px; color:var(--t4); font-family:var(--fnum) }
+.q-submit {
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--brand); color:#fff; border-radius:var(--radius-sm);
+  padding:9px 18px; font-size:13px; font-weight:700; font-family:var(--fh);
+  box-shadow:0 2px 8px rgba(79,70,229,.25); transition:transform var(--dur-fast), filter var(--dur-fast);
+}
+.q-submit:hover:not(:disabled) { filter:brightness(1.05) }
+.q-submit:active:not(:disabled) { transform:scale(.97) }
+.q-submit .spin { width:15px; height:15px; border:2px solid rgba(255,255,255,.35); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; display:inline-block }
+@keyframes spin { to { transform:rotate(360deg) } }
+
+/* feedback block */
+.q-feedback { margin-top:12px; border-top:1px dashed var(--border2); padding-top:12px; animation:fadeIn var(--dur-mid) var(--ease-out) }
+@keyframes fadeIn { from { opacity:0; transform:translateY(4px) } to { opacity:1; transform:translateY(0) } }
+.fb-verdict { display:flex; align-items:center; gap:8px; margin-bottom:8px }
+.fb-badge { font-size:11px; font-weight:800; padding:3px 10px; border-radius:99px }
+.fb-badge.pass { background:var(--green-lt); color:var(--green) }
+.fb-badge.fail { background:var(--red-lt); color:var(--red) }
+.fb-score { font-family:var(--fnum); font-size:20px; font-weight:800 }
+.fb-score.pass { color:var(--green) } .fb-score.fail { color:var(--red) }
+.fb-summary { font-size:13px; color:var(--t2); line-height:1.6; margin-bottom:10px }
+.fb-row { font-size:12.5px; line-height:1.55; margin-bottom:6px; display:flex; gap:6px }
+.fb-row .mi { font-size:15px; flex-shrink:0; margin-top:1px }
+.fb-row.good .mi { color:var(--green) }
+.fb-row.improve .mi { color:var(--amber) }
+.fb-label { font-weight:700; color:var(--t1) }
+
+/* bottom nav */
+.bottomnav {
+  position:fixed; bottom:0; left:0; right:0; z-index:100;
+  height:calc(var(--bottomnav-h) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(255,255,255,.95); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border-top:1px solid var(--border); display:flex; align-items:stretch;
+}
+.bn-tab { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:2px; font-size:10px; font-weight:600; color:var(--t3);
+  -webkit-tap-highlight-color:transparent; text-decoration:none; padding:4px 2px; transition:color var(--dur-fast) }
+.bn-tab.active { color:var(--brand) }
+.bn-tab .mi { font-size:20px }
+
+#toast {
+  position:fixed; bottom:calc(var(--bottomnav-h) + env(safe-area-inset-bottom) + 12px);
+  left:50%; transform:translateX(-50%); background:#111827; color:#fff;
+  padding:10px 20px; border-radius:99px; font-size:13px; font-weight:600;
+  display:none; z-index:9999; white-space:nowrap; box-shadow:0 4px 16px rgba(0,0,0,.3);
+}
+@media(min-width:640px){ .page{ padding-left:20px; padding-right:20px } }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="yorkstjohn-hub.html" style="color:var(--t3);display:flex;align-items:center;margin-right:2px">
+    <span class="mi sm">arrow_back_ios_new</span>
+  </a>
+  <div class="tb-avatar"><img src="ai-icon.png" alt="" class="ai-icon-img"></div>
+  <div class="tb-info">
+    <div class="tb-name">Written Answers</div>
+    <div class="tb-status">Type your answers · scored by AI</div>
+  </div>
+</header>
+
+<div class="page">
+  <div class="intro">
+    <h1>Write Your Interview Answers</h1>
+    <p>Type your answer to each question in your own words. Our AI marks it with the strict UKVI rubric and gives you a score plus specific feedback. Your counsellor sees every answer you submit.</p>
+  </div>
+
+  <div class="prog-banner" id="progBanner" style="display:none">
+    <div class="prog-ring">
+      <svg width="44" height="44" viewBox="0 0 44 44">
+        <circle cx="22" cy="22" r="18" stroke="#e4e6eb" stroke-width="5" fill="none"/>
+        <circle id="progCirc" cx="22" cy="22" r="18" stroke="#4f46e5" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="113" style="transition:stroke-dashoffset .5s"/>
+      </svg>
+      <div class="prog-pct" id="progPct">0%</div>
+    </div>
+    <div style="flex:1">
+      <div class="prog-txt" id="progTxt">0 of 22 answered</div>
+      <div class="prog-sub" id="progSub">Average score will appear here</div>
+    </div>
+  </div>
+
+  <div id="qList">
+    <div style="text-align:center;padding:48px 0;color:var(--t4)">
+      <span class="spin" style="width:22px;height:22px;border:3px solid #e4e6eb;border-top-color:#4f46e5;border-radius:50%;display:inline-block;animation:spin .7s linear infinite"></span>
+      <div style="margin-top:10px;font-size:13px">Loading questions…</div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<nav class="bottomnav" aria-label="Main navigation">
+  <a href="yorkstjohn-hub.html" class="bn-tab"><span class="mi">home</span>Home</a>
+  <a href="yorkstjohn-guide.html" class="bn-tab"><span class="mi">menu_book</span>Guide</a>
+  <a href="yorkstjohn-practice.html" class="bn-tab"><span class="mi">mic</span>Practice</a>
+  <a href="yorkstjohn-written.html" class="bn-tab active"><span class="mi">edit_note</span>Written</a>
+  <a href="yorkstjohn-checklist.html" class="bn-tab"><span class="mi">checklist</span>Checklist</a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="app.js?v=11"></script>
+<script src="yorkstjohn-data.js?v=2"></script>
+<script>
+/* ════════════════════════════════════════════════════
+   YSJ WRITTEN ANSWERS — typed answers, strict AI marking
+   Saves each answer to student_progress.ai_scores under a
+   YSJW_ prefix so it shows as its own group in the admin
+   work drawer, separate from the voice AI Coach (YSJ_).
+════════════════════════════════════════════════════ */
+var GEMINI_PROXY = 'https://okshteetxmmphgjgvrwt.supabase.co/functions/v1/gemini-proxy';
+
+var QS = [];
+var savedScores = {};        // { YSJW_p1: {score,answer,feedback,...} }
+var notifiedComplete = false;
+
+var CAT_LABELS = {
+  ysj:'Why York St John', course:'Your Course', finance:'Finance & Funding',
+  living:'Accommodation & Living', career:'Career Plans', visa:'Visa & Compliance', uk:'Why the UK'
+};
+var CAT_ORDER = ['ysj','course','finance','living','career','visa','uk'];
+
+document.addEventListener('DOMContentLoaded', function() {
+  waitForApp(init);
+});
+
+function waitForApp(cb) {
+  var t = 0;
+  (function loop() {
+    if (window.supabaseClient && (window.PQS || (window.YSJ_DATA && window.YSJ_DATA.PQS))) { cb(); return; }
+    if (t > 60) { cb(); return; }   // proceed anyway after ~9s
+    t++; setTimeout(loop, 150);
+  })();
+}
+
+async function init() {
+  QS = window.PQS || (window.YSJ_DATA && window.YSJ_DATA.PQS) || [];
+  await loadSaved();
+  render();
+}
+
+async function loadSaved() {
+  try {
+    var student = window.getCurrentStudent && window.getCurrentStudent();
+    if (!student || !student.id) return;
+    var res = await window.supabaseClient
+      .from('student_progress').select('ai_scores').eq('user_id', student.id).maybeSingle();
+    var scores = (res && res.data && res.data.ai_scores) || {};
+    Object.keys(scores).forEach(function(k) {
+      if (k.indexOf('YSJW_') === 0) savedScores[k] = scores[k];
+    });
+  } catch (e) { console.warn('loadSaved error:', e); }
+}
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function render() {
+  var list = document.getElementById('qList');
+  if (!QS.length) { list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--t4);font-size:13px">No questions available.</div>'; return; }
+
+  var byCat = {};
+  QS.forEach(function(q) { (byCat[q.cat] = byCat[q.cat] || []).push(q); });
+  var cats = CAT_ORDER.filter(function(c) { return byCat[c]; })
+    .concat(Object.keys(byCat).filter(function(c) { return CAT_ORDER.indexOf(c) === -1; }));
+
+  var num = 0, html = '';
+  cats.forEach(function(cat) {
+    html += '<div class="cat-title"><span class="mi" style="font-size:14px">label</span>' + esc(CAT_LABELS[cat] || cat) + '</div>';
+    byCat[cat].forEach(function(q) {
+      num++;
+      html += questionCardHTML(q, num);
+    });
+  });
+  list.innerHTML = html;
+  updateProgress();
+}
+
+function questionCardHTML(q, num) {
+  var key = 'YSJW_' + q.id;
+  var saved = savedScores[key];
+  var hasAnswer = saved && typeof saved.score === 'number';
+  var pass = hasAnswer && saved.score >= 70;
+  var numCls = hasAnswer ? (pass ? 'pass' : 'fail') : '';
+  return [
+    '<div class="q-card' + (hasAnswer ? ' answered' : '') + '" id="card-' + q.id + '">',
+      '<div class="q-head">',
+        '<div class="q-num ' + numCls + '">' + (hasAnswer ? (pass ? '✓' : '!') : num) + '</div>',
+        '<div class="q-text">' + esc(q.q) + '</div>',
+        hasAnswer ? '<div class="q-scorepill ' + (pass?'pass':'fail') + '">' + saved.score + '</div>' : '',
+      '</div>',
+      q.hint ? '<div class="q-hint"><span class="mi">lightbulb</span><span>' + esc(q.hint) + '</span></div>' : '',
+      '<div class="q-body">',
+        '<textarea class="q-textarea" id="ta-' + q.id + '" placeholder="Type your answer here, in your own words…" oninput="onType(\'' + q.id + '\')">' + esc(saved ? (saved.answer || '') : '') + '</textarea>',
+        '<div class="q-footer">',
+          '<span class="q-count" id="count-' + q.id + '">0 words</span>',
+          '<button class="q-submit" id="btn-' + q.id + '" onclick="gradeWritten(\'' + q.id + '\')"><span class="mi" style="font-size:15px">grading</span>' + (hasAnswer ? 'Re-submit' : 'Submit') + '</button>',
+        '</div>',
+        '<div id="fb-' + q.id + '">' + (hasAnswer ? feedbackHTML(saved) : '') + '</div>',
+      '</div>',
+    '</div>'
+  ].join('');
+}
+
+function feedbackHTML(fb) {
+  var pass = fb.score >= 70;
+  var good = Array.isArray(fb.good) ? fb.good : (fb.good ? [fb.good] : []);
+  var improve = Array.isArray(fb.improve) ? fb.improve : (fb.improve ? [fb.improve] : []);
+  return [
+    '<div class="q-feedback">',
+      '<div class="fb-verdict">',
+        '<span class="fb-badge ' + (pass?'pass':'fail') + '">' + (pass ? '✅ Pass' : '❌ Keep working') + '</span>',
+        '<span class="fb-score ' + (pass?'pass':'fail') + '">' + fb.score + '<span style="font-size:12px;color:var(--t4)">/100</span></span>',
+      '</div>',
+      fb.summary ? '<div class="fb-summary">' + esc(fb.summary) + '</div>' : '',
+      good.map(function(g){ return '<div class="fb-row good"><span class="mi fill">check_circle</span><span><span class="fb-label">What worked:</span> ' + esc(g) + '</span></div>'; }).join(''),
+      improve.map(function(m){ return '<div class="fb-row improve"><span class="mi fill">tips_and_updates</span><span><span class="fb-label">Improve:</span> ' + esc(m) + '</span></div>'; }).join(''),
+    '</div>'
+  ].join('');
+}
+
+function wordCount(s) { s = (s||'').trim(); return s ? s.split(/\s+/).length : 0; }
+
+function onType(id) {
+  var ta = document.getElementById('ta-' + id);
+  var c = document.getElementById('count-' + id);
+  if (ta && c) c.textContent = wordCount(ta.value) + ' words';
+}
+
+async function gradeWritten(id) {
+  var q = QS.find(function(x){ return x.id === id; });
+  var ta = document.getElementById('ta-' + id);
+  var btn = document.getElementById('btn-' + id);
+  var fbEl = document.getElementById('fb-' + id);
+  if (!q || !ta) return;
+  var answer = ta.value.trim();
+  if (answer.length < 15) { toast('Write a fuller answer before submitting.'); return; }
+
+  btn.disabled = true;
+  var btnLabel = btn.innerHTML;
+  btn.innerHTML = '<span class="spin"></span>Marking…';
+
+  var prompt = buildPrompt(q, answer);
+  var fb = null;
+  try {
+    var res = await fetch(GEMINI_PROXY, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ type:'grade', prompt: prompt })
+    });
+    var data = await res.json();
+    var raw = data && data.error ? '' : (typeof data === 'string' ? data : JSON.stringify(data));
+    if (!raw && typeof puter !== 'undefined') {
+      var pr = await puter.ai.chat(prompt, { model:'gpt-4o-mini' });
+      raw = typeof pr === 'string' ? pr : (pr && pr.message && pr.message.content) || '';
+    }
+    var m = raw.match(/\{[\s\S]*\}/);
+    if (m) fb = JSON.parse(m[0]);
+  } catch (e) { console.warn('grade error:', e); }
+
+  btn.disabled = false;
+  btn.innerHTML = btnLabel;
+
+  if (!fb || typeof fb.score !== 'number') {
+    toast('Could not mark that answer. Please try again.');
+    return;
+  }
+  fb.score = Math.max(0, Math.min(100, Math.round(fb.score)));
+  fb.pass = fb.score >= 70;
+
+  // Render feedback + mark card
+  fbEl.innerHTML = feedbackHTML(fb);
+  var card = document.getElementById('card-' + id);
+  if (card) card.classList.add('answered');
+  var numEl = card && card.querySelector('.q-num');
+  if (numEl) { numEl.className = 'q-num ' + (fb.pass ? 'pass' : 'fail'); numEl.textContent = fb.pass ? '✓' : '!'; }
+  var head = card && card.querySelector('.q-head');
+  var pill = head && head.querySelector('.q-scorepill');
+  if (!pill && head) { pill = document.createElement('div'); head.appendChild(pill); }
+  if (pill) { pill.className = 'q-scorepill ' + (fb.pass?'pass':'fail'); pill.textContent = fb.score; }
+
+  // Persist locally + to Supabase (admin reads this)
+  savedScores['YSJW_' + id] = { score: fb.score, answer: answer, feedback: buildFeedbackText(fb), questionText: q.q, summary: fb.summary, good: fb.good, improve: fb.improve };
+  btn.innerHTML = '<span class="mi" style="font-size:15px">grading</span>Re-submit';
+  saveToAdmin(id, q, answer, fb);
+  updateProgress();
+}
+
+function buildPrompt(q, answer) {
+  return [
+    'You are marking a UK student visa (UKVI) credibility interview practice answer for York St John University.',
+    '',
+    'QUESTION: "' + q.q + '"',
+    'WHAT A GOOD ANSWER REQUIRES: ' + (q.cr || q.hint || 'A specific, personal, well-evidenced answer.'),
+    '',
+    'STUDENT ANSWER: "' + answer + '"',
+    '',
+    'MARKING RULES — STRICT DEDUCTION-BASED RUBRIC:',
+    'Start at 100. Deduct points for EACH failing below. Deductions are CUMULATIVE.',
+    'AUTOMATIC FAIL (score 0-35):',
+    '- Answer is 1-2 sentences or under 30 words -> cap at 30',
+    '- Answer is completely off-topic or does not address the question -> cap at 20',
+    '- Answer could apply to ANY university/course (no specifics at all) -> cap at 35',
+    'MAJOR DEDUCTIONS (-15 to -25 each):',
+    '- No module names mentioned when the question requires course knowledge -> -25',
+    '- No campus address or city mentioned when relevant -> -15',
+    '- No career goal or target job role named -> -20',
+    '- No personal language ("I", "my", "I chose") - reads like a brochure -> -20',
+    '- Claims something factually wrong about the course, campus, or university -> -20',
+    'MODERATE DEDUCTIONS (-8 to -12 each):',
+    '- Only 1 module named when 2-3 are expected -> -10',
+    '- Career plan is vague ("get a good job") with no specific role or company -> -12',
+    '- No comparison with other universities when the question expects it -> -10',
+    '- Answer is unfocused or rambling without a clear structure -> -8',
+    '- Accommodation plan mentioned but no cost or location specifics -> -8',
+    'MINOR DEDUCTIONS (-3 to -5 each):',
+    '- Slightly generic phrasing in one section but rest is specific -> -5',
+    '- Missing one minor detail from the required content -> -3',
+    '- Answer is adequate but lacks enthusiasm or personal connection -> -5',
+    'CALIBRATION - most students should score 45-72. Scores above 80 are RARE and require exceptional detail, personal voice, and complete coverage. A "decent" answer with some specifics but gaps should score 55-65, NOT 75+.',
+    'PASS THRESHOLD: score >= 70. Most first attempts should NOT pass.',
+    'Do NOT penalise: punctuation, capitalisation, minor spelling, grammar, accent markers.',
+    'Return ONLY valid JSON, no markdown, no explanation:',
+    '{"pass": boolean, "score": integer 0-100, "summary": "one sentence about the answer", "good": ["one specific strength"], "improve": ["one specific improvement needed"]}',
+    'CRITICAL: Evaluate the ACTUAL student answer. Do NOT return a default or template score. Every answer gets a DIFFERENT score based on its specific content.'
+  ].join('\n');
+}
+
+function buildFeedbackText(fb) {
+  var good = Array.isArray(fb.good) ? fb.good.join('; ') : (fb.good || '');
+  var improve = Array.isArray(fb.improve) ? fb.improve.join('; ') : (fb.improve || '');
+  return [fb.summary || '', good ? 'Worked: ' + good : '', improve ? 'Improve: ' + improve : ''].filter(Boolean).join(' | ');
+}
+
+async function saveToAdmin(id, q, answer, fb) {
+  try {
+    if (typeof window.saveAIResponse !== 'function') return;
+    var normScore = Math.round(fb.score / 10);   // saveAIResponse expects a /10 scale
+    await window.saveAIResponse('YSJW_' + id, answer, normScore, buildFeedbackText(fb), q.q);
+    maybeNotifyComplete();
+  } catch (e) { console.warn('saveToAdmin error:', e); }
+}
+
+async function maybeNotifyComplete() {
+  try {
+    var answered = Object.keys(savedScores).length;
+    if (answered < QS.length || notifiedComplete) return;
+    notifiedComplete = true;
+    var student = window.getCurrentStudent && window.getCurrentStudent();
+    if (!student || !student.id || !window.supabaseClient) return;
+    var vals = Object.keys(savedScores).map(function(k){ return savedScores[k].score || 0; });
+    var avg = vals.length ? Math.round(vals.reduce(function(a,b){return a+b;},0) / vals.length) : 0;
+    var course = window.getCurrentCourse && window.getCurrentCourse() || {};
+    var name = student.name || 'Student';
+    var emoji = avg >= 80 ? '✅' : avg >= 60 ? '⚠️' : '📚';
+    await window.supabaseClient.from('student_notifications').insert([{
+      title: emoji + ' Written Answers Complete — ' + name,
+      message: name + ' finished all ' + QS.length + ' written interview answers for ' + (course.name || 'York St John') + '. Average score: ' + avg + '/100.',
+      type: 'success', target: 'admin', created_by: 'system', target_user_id: student.id
+    }]);
+  } catch (e) { console.warn('notifyComplete error:', e); }
+}
+
+function updateProgress() {
+  var answered = Object.keys(savedScores).length;
+  var total = QS.length || 22;
+  var banner = document.getElementById('progBanner');
+  if (answered === 0) { if (banner) banner.style.display = 'none'; return; }
+  if (banner) banner.style.display = 'flex';
+  var pct = Math.round(answered / total * 100);
+  var vals = Object.keys(savedScores).map(function(k){ return savedScores[k].score || 0; });
+  var avg = vals.length ? Math.round(vals.reduce(function(a,b){return a+b;},0) / vals.length) : 0;
+  var circ = 2 * Math.PI * 18;
+  var circEl = document.getElementById('progCirc');
+  if (circEl) { circEl.setAttribute('stroke-dasharray', circ.toFixed(0)); circEl.style.strokeDashoffset = (circ - circ * pct / 100).toFixed(1); circEl.setAttribute('stroke', avg >= 70 ? '#16a34a' : avg >= 50 ? '#d97706' : '#4f46e5'); }
+  var pctEl = document.getElementById('progPct'); if (pctEl) pctEl.textContent = pct + '%';
+  var txtEl = document.getElementById('progTxt'); if (txtEl) txtEl.textContent = answered + ' of ' + total + ' answered';
+  var subEl = document.getElementById('progSub'); if (subEl) subEl.textContent = 'Average score: ' + avg + '/100';
+}
+
+var toastTimer = null;
+function toast(msg) {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.style.display = 'none'; }, 2600);
+}
+</script>
+</body>
+</html>
