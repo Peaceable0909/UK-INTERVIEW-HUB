@@ -555,10 +555,14 @@ const MODS = [
   { id:'M10',n:'10', title:'Recorded Video Interview',   icon:'videocam',        color:'#c41230', bg:'#fff5f5', href:'yorkstjohn-video-interview.html' },
 ];
 
+const VIDEO_REVIEW_LABELS = { awaiting_review:'Awaiting Review', under_review:'Under Review', passed:'Passed', failed:'Failed' };
+const VIDEO_REVIEW_COLORS = { awaiting_review:'#d97706', under_review:'#2563eb', passed:'#16a34a', failed:'#c41230' };
+
 function getModPct(mod, scores) {
   if (mod.id === 'M1') return Math.min(100, parseInt(localStorage.getItem('ysj_guide_opened') || '0') * 10);
   if (mod.id === 'M8') return Math.min(100, Math.round(Object.keys(scores).filter(k=>k.startsWith('YSJ_p')).length/22*100));
   if (mod.id === 'M9') return Math.min(100, Math.round(Object.keys(scores).filter(k=>k.startsWith('YSJW_')).length/22*100));
+  if (mod.id === 'M10') return 0; // driven by videoReviewStatus in renderMods instead of a %
   const catPfx = {M2:['uk'],M3:['ysj'],M4:['course'],M5:['fin'],M6:['living'],M7:['career']};
   const pfxs = catPfx[mod.id] || [];
   const total = {M2:6,M3:8,M4:7,M5:8,M6:7,M7:7}[mod.id] || 6;
@@ -566,26 +570,30 @@ function getModPct(mod, scores) {
   return Math.min(100, Math.round(answered/total*100));
 }
 
-function renderMods(scores) {
+function renderMods(scores, videoReviewStatus) {
   const grid = document.getElementById('mod-grid');
   if (!grid) return;
   grid.innerHTML = MODS.map((m, i) => {
+    const isVideoReviewed = m.id === 'M10' && videoReviewStatus;
     const pct = getModPct(m, scores);
     const done = pct >= 100, started = pct > 0;
-    const lbl  = done ? 'Completed' : started ? 'Resume' : 'Start';
-    return `<div class="mod-card${started?' started':''}" style="--mc:${m.color}"
+    const lbl  = isVideoReviewed ? (VIDEO_REVIEW_LABELS[videoReviewStatus] || 'Submitted')
+               : done ? 'Completed' : started ? 'Resume' : 'Start';
+    const barPct = isVideoReviewed ? 100 : pct;
+    const actionColor = isVideoReviewed ? VIDEO_REVIEW_COLORS[videoReviewStatus] || m.color : '';
+    return `<div class="mod-card${started||isVideoReviewed?' started':''}" style="--mc:${m.color}"
       role="listitem" onclick="location.href='${m.href}'"
-      aria-label="${m.title}, ${pct}% complete"
+      aria-label="${m.title}, ${isVideoReviewed ? lbl : pct+'% complete'}"
       style="--mc:${m.color};animation-delay:${i*50}ms">
       <div class="mod-num">${m.n}</div>
       <div class="mod-icon" style="background:${m.bg}">
         <span class="mi fill" style="color:${m.color}" aria-hidden="true">${m.icon}</span>
       </div>
       <div class="mod-title">${m.title}</div>
-      <div class="mod-bar-wrap"><div class="mod-bar" style="width:0%" data-width="${pct}%"></div></div>
+      <div class="mod-bar-wrap"><div class="mod-bar" style="width:0%" data-width="${barPct}%"></div></div>
       <div class="mod-foot">
-        <span class="mod-pct">${pct}%</span>
-        <span class="mod-action">${lbl}</span>
+        <span class="mod-pct">${isVideoReviewed ? '' : pct+'%'}</span>
+        <span class="mod-action"${actionColor?` style="color:${actionColor}"`:''}>${lbl}</span>
       </div>
     </div>`;
   }).join('');
@@ -744,7 +752,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   updateHero(scores, interviewDate);
   updateSkills(scores);
-  renderMods(scores); // re-render with real data
+
+  // Recorded video interview review status (for the M10 tile)
+  let videoReviewStatus = null;
+  try {
+    const { data } = await supabaseClient
+      .from('video_interview_sessions')
+      .select('status, review_status')
+      .eq('user_id', s.id).eq('school', 'yorkstjohn').eq('status', 'completed')
+      .order('completed_at', { ascending: false }).limit(1).maybeSingle();
+    if (data) videoReviewStatus = data.review_status;
+  } catch(e) { console.warn('Video review status load:', e.message); }
+
+  renderMods(scores, videoReviewStatus); // re-render with real data
 
   // Notifications
   try {

@@ -146,7 +146,10 @@ a{text-decoration:none;color:inherit}
 .summary-row:last-child{border-bottom:none}
 .summary-row .lbl{color:var(--muted)}
 .summary-row .val{color:var(--navy);font-weight:600;text-align:right}
-.summary-row .val.status-submitted{background:var(--green-bg);color:#155d2e;padding:2px 10px;border-radius:5px;font-size:11px}
+.summary-row .val.status-pill{padding:2px 10px;border-radius:5px;font-size:11px}
+.summary-row .val.status-pill[data-status="awaiting_review"],.summary-row .val.status-pill[data-status="under_review"]{background:var(--amber-bg);color:var(--amber)}
+.summary-row .val.status-pill[data-status="passed"]{background:var(--green-bg);color:#155d2e}
+.summary-row .val.status-pill[data-status="failed"]{background:var(--red-bg);color:#8a1420}
 
 #viFailedList{width:100%;display:flex;flex-direction:column;gap:8px;margin-top:14px;text-align:left}
 .vi-failed-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--white);border:1px solid #f2c6c9;border-radius:8px;padding:11px 13px;font-size:13px;color:var(--navy)}
@@ -305,7 +308,7 @@ a{text-decoration:none;color:inherit}
   <!-- COMPLETE -->
   <section id="vi-complete" class="vi-screen">
     <div class="state-icon success"><span class="mi fill" style="color:var(--green)">check_circle</span></div>
-    <div class="state-title">Interview Complete</div>
+    <div class="state-title">Interview Submitted Successfully</div>
     <div class="state-sub" id="viCompleteText">Your recorded interview has been submitted successfully. Thank you for your time.</div>
 
     <div class="vi-card summary-card">
@@ -314,7 +317,7 @@ a{text-decoration:none;color:inherit}
       <div class="summary-row"><span class="lbl">Application ID</span><span class="val" id="viSummaryAppId">—</span></div>
       <div class="summary-row"><span class="lbl">Programme</span><span class="val" id="viSummaryProgramme">—</span></div>
       <div class="summary-row"><span class="lbl">Date</span><span class="val" id="viSummaryDate">—</span></div>
-      <div class="summary-row"><span class="lbl">Status</span><span class="val status-submitted" id="viSummaryStatus">Submitted</span></div>
+      <div class="summary-row"><span class="lbl">Status</span><span class="val status-pill" data-status="awaiting_review" id="viSummaryStatus">Awaiting Review</span></div>
     </div>
 
     <a href="dashboard.html" class="btn-primary" style="margin-top:18px;max-width:260px;text-decoration:none;display:inline-flex">Back to Dashboard</a>

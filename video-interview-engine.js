@@ -495,9 +495,23 @@ window.initVideoInterview = async function initVideoInterview(schoolKey) {
 
     if (stream) stream.getTracks().forEach((t) => t.stop());
     stopMeter();
-    setText('viCompleteText', 'Your recorded interview has been submitted successfully.');
+    setText('viCompleteText', 'Your recorded interview has been saved successfully. Our admissions team will now review it — you’ll get an email as soon as that’s done.');
     populateSummary();
     show('complete');
+    sendSubmissionEmail(); // fire-and-forget — the screen above already reflects success either way
+  }
+
+  // Only ever called after every answer is confirmed 'uploaded' and the
+  // session is marked 'completed' — never on a failed/partial submission.
+  function sendSubmissionEmail() {
+    db.auth.getSession().then(function (r) {
+      const token = r.data && r.data.session && r.data.session.access_token;
+      return fetch('https://okshteetxmmphgjgvrwt.supabase.co/functions/v1/send-email', {
+        method: 'POST',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, token ? { Authorization: 'Bearer ' + token } : {}),
+        body: JSON.stringify({ type: 'video_interview_submitted', user_id: student.id, student_name: student.name || 'Student' })
+      });
+    }).catch(function (e) { console.warn('[video-interview] submission email failed to send', e); });
   }
 
   function populateSummary() {
@@ -508,7 +522,7 @@ window.initVideoInterview = async function initVideoInterview(schoolKey) {
     setText('viSummaryAppId', student.student_id || '—');
     setText('viSummaryProgramme', programme);
     setText('viSummaryDate', new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }));
-    setText('viSummaryStatus', 'Submitted');
+    setText('viSummaryStatus', 'Awaiting Review');
   }
 
   function renderFailed(failed) {

@@ -539,11 +539,13 @@ function renderVideoInterviews(videoSessions, progress){
 
   if(!videoSessions.length) return info + '<div class="empty-section"><span class="mi">videocam</span>No recorded interview yet</div>';
 
+  var reviewHtml = videoSessions[0].status === 'completed' ? renderReviewCard(videoSessions[0]) : '';
+
   var header = videoSessions.length > 1
     ? '<div class="sec-title">'+videoSessions.length+' attempts — most recent first</div>'
     : '';
 
-  return info + header + videoSessions.map(function(session, si){
+  return info + reviewHtml + header + videoSessions.map(function(session, si){
     var answers = (session.video_interview_answers||[]).slice().sort(function(a,b){ return a.question_index - b.question_index; });
     var uploaded = answers.filter(function(a){ return a.upload_status==='uploaded'; }).length;
     var chipClass = session.status==='completed'?'ready':session.status==='abandoned'?'poor':'needs';
@@ -588,6 +590,69 @@ function videoStatusLabel(session){
   if(session.status==='completed') return 'Completed';
   if(session.status==='abandoned') return 'Abandoned';
   return 'In Progress';
+}
+
+function reviewStatusMeta(status){
+  var map = {
+    awaiting_review: { label:'Awaiting Review', bg:'rgba(251,191,36,.15)', col:'#fbbf24' },
+    under_review:    { label:'Under Review',    bg:'rgba(37,99,235,.15)',  col:'#60a5fa' },
+    passed:          { label:'Passed',          bg:'rgba(34,197,94,.15)', col:'#4ade80' },
+    failed:          { label:'Failed',          bg:'rgba(196,18,48,.15)', col:'#f87171' }
+  };
+  return map[status] || map.awaiting_review;
+}
+
+function renderReviewCard(session){
+  var meta = reviewStatusMeta(session.review_status);
+  var reviewedLine = session.reviewed_by
+    ? '<div style="font-size:11px;color:var(--muted);margin-top:8px">Reviewed by '+escHtml(session.reviewed_by)+(session.reviewed_at?' on '+fmtDate(session.reviewed_at):'')+'</div>'
+    : '';
+  return '<div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px">'
+    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'
+      +'<div style="font-size:13px;font-weight:800">Review</div>'
+      +'<span style="font-size:11px;font-weight:800;padding:4px 11px;border-radius:99px;background:'+meta.bg+';color:'+meta.col+'">'+meta.label+'</span>'
+    +'</div>'
+    +'<textarea id="reviewNotes-'+session.id+'" placeholder="Add review notes (internal only, not shown to student)…" style="width:100%;min-height:70px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;font-family:inherit;color:inherit;resize:vertical;box-sizing:border-box">'+escHtml(session.review_notes||'')+'</textarea>'
+    +'<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">'
+      +'<button type="button" style="background:rgba(255,255,255,.06);color:inherit;border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer" onclick="saveVideoReviewNotes(\''+session.id+'\',this)">Save Notes</button>'
+      +'<button type="button" style="background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer" onclick="setVideoReviewStatus(\''+session.id+'\',\'passed\')">Mark Passed</button>'
+      +'<button type="button" style="background:rgba(196,18,48,.15);color:#f87171;border:1px solid rgba(196,18,48,.3);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer" onclick="setVideoReviewStatus(\''+session.id+'\',\'failed\')">Mark Failed</button>'
+    +'</div>'
+    +reviewedLine
+    +'</div>';
+}
+
+async function saveVideoReviewNotes(sessionId, btn){
+  var ta = document.getElementById('reviewNotes-'+sessionId);
+  btn.disabled = true;
+  var { error } = await supabaseClient.from('video_interview_sessions').update({ review_notes: ta?ta.value:'', updated_at:new Date().toISOString() }).eq('id', sessionId);
+  btn.disabled = false;
+  if(error){ alert('Failed to save notes: '+error.message); return; }
+}
+
+async function setVideoReviewStatus(sessionId, newStatus){
+  if(!confirm('Mark this interview as '+newStatus.toUpperCase()+'? The student will be emailed the result.')) return;
+  var student = allStudents.find(function(s){ return s.id === selectedId; });
+  var studentName = student ? (student.full_name || student.email || 'Student') : 'Student';
+  var { data: sessData } = await supabaseClient.auth.getSession();
+  var adminEmail = (sessData && sessData.session && sessData.session.user && sessData.session.user.email) || '';
+  var { error } = await supabaseClient.from('video_interview_sessions').update({
+    review_status: newStatus, reviewed_by: adminEmail, reviewed_at: new Date().toISOString(), updated_at: new Date().toISOString()
+  }).eq('id', sessionId);
+  if(error){ alert('Failed to update status: '+error.message); return; }
+  callVideoReviewEmail(selectedId, studentName, newStatus);
+  if(selectedId) selectStudent(selectedId);
+}
+
+function callVideoReviewEmail(userId, studentName, result){
+  supabaseClient.auth.getSession().then(function(r){
+    var token = r.data && r.data.session && r.data.session.access_token;
+    return fetch('https://okshteetxmmphgjgvrwt.supabase.co/functions/v1/send-email', {
+      method:'POST',
+      headers: Object.assign({'Content-Type':'application/json'}, token ? {'Authorization':'Bearer '+token} : {}),
+      body: JSON.stringify({ type:'video_interview_reviewed', user_id:userId, student_name:studentName, result:result })
+    });
+  }).catch(function(e){ console.warn('review email failed', e); });
 }
 
 function videoUploadLabel(status){

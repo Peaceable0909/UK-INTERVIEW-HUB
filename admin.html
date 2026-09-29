@@ -387,6 +387,7 @@ tbody tr:hover{background:#f8fafc}
       <button class="sb-item" data-tab="students2"><span class="material-symbols-outlined">group</span>Students</button>
       <button class="sb-item" data-tab="questions"><span class="material-symbols-outlined">chat</span>Questions<span class="sb-badge" id="sbQuestionsBadge" style="display:none">0</span></button>
       <button class="sb-item" data-tab="interviews-stub"><span class="material-symbols-outlined">calendar_month</span>Interviews</button>
+      <button class="sb-item" data-tab="video-reviews-stub"><span class="material-symbols-outlined">rate_review</span>Video Reviews<span class="sb-badge" id="sbVideoReviewsBadge" style="display:none">0</span></button>
       <button class="sb-item" data-tab="live-sessions"><span class="material-symbols-outlined">videocam</span>Live Sessions</button>
       <button class="sb-item" data-tab="notifications"><span class="material-symbols-outlined">notifications</span>Notifications</button>
       <button class="sb-item" data-tab="analytics-stub"><span class="material-symbols-outlined">bar_chart</span>Analytics</button>
@@ -705,6 +706,40 @@ tbody tr:hover{background:#f8fafc}
           <div id="ivLoading" style="text-align:center;padding:48px"><div class="spinner"></div><p style="color:var(--muted);font-size:14px">Loading interviews…</p></div>
           <div id="ivEmpty" class="empty-state" style="display:none"><span class="material-symbols-outlined">event_busy</span><p>No interviews match your filter.</p></div>
           <div id="ivList" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- ════ VIDEO REVIEWS PANEL ════ -->
+      <div id="panel-video-reviews-stub" style="display:none">
+        <div class="welcome-bar"><h1>Video Interview Reviews 🎬</h1><p>Review submitted recorded interviews and mark them Passed or Failed.</p></div>
+        <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+          <div class="search-box" style="max-width:300px">
+            <span class="material-symbols-outlined">search</span>
+            <input type="text" id="vrSearchInput" placeholder="Search student or application ID…"/>
+          </div>
+          <select class="filter-select" id="vrFilterStatus">
+            <option value="all" selected>All Statuses</option>
+            <option value="awaiting_review">Awaiting Review</option>
+            <option value="under_review">Under Review</option>
+            <option value="passed">Passed</option>
+            <option value="failed">Failed</option>
+          </select>
+          <button class="btn-toolbar btn-navy" id="vrRefreshBtn"><span class="material-symbols-outlined" style="font-size:15px">refresh</span>Refresh</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px" id="vrStats"></div>
+        <div class="card" style="padding:0">
+          <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+            <div class="card-title"><span class="material-symbols-outlined">rate_review</span>YSJ Interviews</div>
+            <span id="vrCount" style="font-size:12px;color:var(--muted)"></span>
+          </div>
+          <div id="vrLoading" style="text-align:center;padding:48px"><div class="spinner"></div><p style="color:var(--muted);font-size:14px">Loading interviews…</p></div>
+          <div id="vrEmpty" class="empty-state" style="display:none"><span class="material-symbols-outlined">video_library</span><p>No submitted interviews match your filter.</p></div>
+          <div id="vrTableWrap" class="table-wrap" style="display:none">
+            <table>
+              <thead><tr><th>Student</th><th>Application ID</th><th>Submitted</th><th>Status</th><th style="width:90px">Action</th></tr></thead>
+              <tbody id="vrTableBody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -1258,6 +1293,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (realId==='questions') loadQuestions();
     if (realId==='notifications') loadNotifHistory();
     if (realId==='interviews-stub') renderInterviewsPanel();
+    if (realId==='video-reviews-stub') renderVideoReviewsPanel();
     if (realId==='live-sessions') loadSessions();
     if (realId==='analytics-stub') renderAnalyticsPanel();
     if (realId==='reports-stub') renderReportsSummary();
@@ -1284,6 +1320,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!ADMIN_EMAILS.includes(session.user.email)) { await supabase.auth.signOut(); showLoginError('Access denied.'); return; }
         document.getElementById('loginScreen').style.display = 'none';
         currentAdminEmail = session.user.email;
+        window.currentAdminEmail = currentAdminEmail; // expose for drawer functions outside this scope
         showAdminScreen(session.user);
       } else {
         document.getElementById('loginScreen').style.display = 'flex';
@@ -1308,6 +1345,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error){ errEl.textContent=error.message; btn.disabled=false; btn.textContent='Sign In to Admin Portal'; return; }
     currentAdminEmail = data.user.email;
+    window.currentAdminEmail = currentAdminEmail; // expose for drawer functions outside this scope
     logAction('auth','Admin signed in','login');
     showAdminScreen(data.user);
   }
@@ -2417,9 +2455,9 @@ var _drawerUserId = null;
 var _drawerTab    = 'practice';
 var _drawerCache  = {};
 
-function openWorkDrawer(userId, name) {
+function openWorkDrawer(userId, name, initialTab) {
   _drawerUserId = userId;
-  _drawerTab    = 'practice';
+  _drawerTab    = initialTab || 'practice';
   var initials = (name||'?').split(' ').map(function(w){return w[0]||''}).join('').toUpperCase().slice(0,2);
   var av = document.getElementById('drawer-avatar');
   var dn = document.getElementById('drawer-name');
@@ -2427,7 +2465,7 @@ function openWorkDrawer(userId, name) {
   if(av) av.textContent = initials;
   if(dn) dn.textContent = name;
   if(dm) dm.textContent = 'Loading responses\u2026';
-  switchDrawerTab('practice', true);
+  switchDrawerTab(_drawerTab, true);
   var overlay = document.getElementById('work-drawer-overlay');
   var drawer  = document.getElementById('work-drawer');
   if(overlay) overlay.style.display = 'block';
@@ -2592,6 +2630,7 @@ function renderDrawerMock(mocks) {
 }
 
 function renderDrawerVideo(sessions, progress) {
+  var latest = sessions[0];
   var infoHtml = [
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:14px;margin-bottom:16px">',
       '<div><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#9ca3af">Application ID</div><div style="font-size:13px;font-weight:700;color:#111827;margin-top:2px">' + escHtml((progress && progress.student_id) || '—') + '</div></div>',
@@ -2603,7 +2642,9 @@ function renderDrawerVideo(sessions, progress) {
 
   if(!sessions.length) return infoHtml + '<div style="text-align:center;padding:32px;color:#9ca3af"><div style="font-size:32px;margin-bottom:8px">🎥</div><div style="font-size:13px">No recorded interview yet</div></div>';
 
-  var html = infoHtml;
+  var reviewHtml = latest.status === 'completed' ? renderReviewCard(latest) : '';
+
+  var html = infoHtml + reviewHtml;
   if(sessions.length > 1) html += '<div style="font-size:11px;font-weight:700;color:#9ca3af;margin-bottom:12px">' + sessions.length + ' attempts — most recent first</div>';
 
   sessions.forEach(function(session, si) {
@@ -2652,6 +2693,179 @@ function renderDrawerVideo(sessions, progress) {
     ].join('');
   });
   return html;
+}
+
+function reviewStatusMeta(status) {
+  var map = {
+    awaiting_review: { label:'Awaiting Review', bg:'#fef3c7', col:'#92400e' },
+    under_review:    { label:'Under Review',    bg:'#dbeafe', col:'#1e40af' },
+    passed:          { label:'Passed',          bg:'#dcfce7', col:'#166534' },
+    failed:          { label:'Failed',          bg:'#fee2e2', col:'#991b1b' }
+  };
+  return map[status] || map.awaiting_review;
+}
+
+function renderReviewCard(session) {
+  var meta = reviewStatusMeta(session.review_status);
+  var reviewedLine = session.reviewed_by
+    ? '<div style="font-size:11px;color:#9ca3af;margin-top:8px">Reviewed by ' + escHtml(session.reviewed_by) + (session.reviewed_at ? ' on ' + new Date(session.reviewed_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '') + '</div>'
+    : '';
+  return [
+    '<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin-bottom:16px">',
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">',
+        '<div style="font-size:13px;font-weight:800;color:#111827">Review</div>',
+        '<span style="font-size:11px;font-weight:800;padding:4px 11px;border-radius:99px;background:' + meta.bg + ';color:' + meta.col + '">' + meta.label + '</span>',
+      '</div>',
+      '<textarea id="reviewNotes-' + session.id + '" placeholder="Add review notes (internal only, not shown to student)…" style="width:100%;min-height:70px;border:1px solid #e5e7eb;border-radius:8px;padding:10px;font-size:13px;font-family:inherit;resize:vertical;box-sizing:border-box">' + escHtml(session.review_notes || '') + '</textarea>',
+      '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">',
+        '<button type="button" class="btn-toolbar btn-navy" onclick="saveVideoReviewNotes(\'' + session.id + '\',this)"><span class="material-symbols-outlined" style="font-size:15px">save</span>Save Notes</button>',
+        '<button type="button" class="btn-toolbar btn-green" onclick="setVideoReviewStatus(\'' + session.id + '\',\'passed\')"><span class="material-symbols-outlined" style="font-size:15px">check_circle</span>Mark Passed</button>',
+        '<button type="button" class="btn-toolbar btn-red" onclick="setVideoReviewStatus(\'' + session.id + '\',\'failed\')"><span class="material-symbols-outlined" style="font-size:15px">cancel</span>Mark Failed</button>',
+      '</div>',
+      reviewedLine,
+    '</div>'
+  ].join('');
+}
+
+async function saveVideoReviewNotes(sessionId, btn) {
+  var ta = document.getElementById('reviewNotes-' + sessionId);
+  var notes = ta ? ta.value : '';
+  btn.disabled = true;
+  var { error } = await window._adminDB.from('video_interview_sessions').update({ review_notes: notes, updated_at: new Date().toISOString() }).eq('id', sessionId);
+  btn.disabled = false;
+  if (error) { showToast('Failed to save notes: ' + error.message, 'error'); return; }
+  showToast('Notes saved', 'success');
+}
+
+async function setVideoReviewStatus(sessionId, newStatus) {
+  var label = newStatus === 'passed' ? 'PASSED' : 'FAILED';
+  if (!confirm('Mark this interview as ' + label + '? The student will be emailed the result.')) return;
+  var userId = _drawerUserId;
+  var studentName = (document.getElementById('drawer-name') || {}).textContent || 'Student';
+  var { error } = await window._adminDB.from('video_interview_sessions').update({
+    review_status: newStatus, reviewed_by: (window.currentAdminEmail || ''), reviewed_at: new Date().toISOString(), updated_at: new Date().toISOString()
+  }).eq('id', sessionId);
+  if (error) { showToast('Failed to update status: ' + error.message, 'error'); return; }
+  logAction('video', 'Marked interview ' + newStatus + ' for ' + studentName, newStatus === 'passed' ? 'check_circle' : 'cancel');
+  showToast('Marked as ' + newStatus, 'success');
+  callVideoReviewEmail(userId, studentName, newStatus);
+  if (_drawerUserId) loadDrawerData(_drawerUserId);
+  refreshVideoReviewsIfVisible();
+}
+
+function callVideoReviewEmail(userId, studentName, result) {
+  window._adminDB.auth.getSession().then(function(r){
+    var token = r.data && r.data.session && r.data.session.access_token;
+    return fetch('https://okshteetxmmphgjgvrwt.supabase.co/functions/v1/send-email', {
+      method:'POST',
+      headers: Object.assign({'Content-Type':'application/json'}, token ? {'Authorization':'Bearer '+token} : {}),
+      body: JSON.stringify({ type:'video_interview_reviewed', user_id:userId, student_name:studentName, result:result })
+    });
+  }).catch(function(e){ console.warn('review email failed', e); });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// VIDEO REVIEWS — global list across all students (separate from the
+// per-student drawer above, so admins can triage every submitted YSJ
+// interview without opening students one at a time).
+// ═══════════════════════════════════════════════════════════════════
+var _vrSessions = [];
+
+async function renderVideoReviewsPanel() {
+  var loading = document.getElementById('vrLoading'), empty = document.getElementById('vrEmpty'), wrap = document.getElementById('vrTableWrap');
+  if (loading) loading.style.display = 'block';
+  if (empty) empty.style.display = 'none';
+  if (wrap) wrap.style.display = 'none';
+  try {
+    var db = window._adminDB;
+    var sessRes = await db.from('video_interview_sessions').select('*').eq('school','yorkstjohn').eq('status','completed').order('completed_at',{ascending:false});
+    if (sessRes.error) throw sessRes.error;
+    var sessions = sessRes.data || [];
+    var userIds = sessions.map(function(s){ return s.user_id; });
+    var progByUser = {};
+    if (userIds.length) {
+      var progRes = await db.from('student_progress').select('user_id,full_name,student_id').in('user_id', userIds);
+      if (progRes.error) throw progRes.error;
+      (progRes.data || []).forEach(function(p){ progByUser[p.user_id] = p; });
+    }
+    _vrSessions = sessions.map(function(s){ return Object.assign({}, s, { _student: progByUser[s.user_id] || {} }); });
+
+    var awaiting = _vrSessions.filter(function(s){ return s.review_status === 'awaiting_review'; }).length;
+    var statsEl = document.getElementById('vrStats');
+    if (statsEl) {
+      var stat = function(n,label,col){ return '<div class="card" style="padding:14px 16px"><div style="font-size:22px;font-weight:900;color:'+col+'">'+n+'</div><div style="font-size:11px;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-top:2px">'+label+'</div></div>'; };
+      statsEl.innerHTML =
+        stat(_vrSessions.length, 'Total Submitted', '#111827') +
+        stat(awaiting, 'Awaiting Review', '#92400e') +
+        stat(_vrSessions.filter(function(s){return s.review_status==='passed';}).length, 'Passed', '#166534') +
+        stat(_vrSessions.filter(function(s){return s.review_status==='failed';}).length, 'Failed', '#991b1b');
+    }
+    var badge = document.getElementById('sbVideoReviewsBadge');
+    if (badge) { badge.textContent = awaiting; badge.style.display = awaiting ? 'inline-flex' : 'none'; }
+
+    renderVrTable();
+
+    var search = document.getElementById('vrSearchInput'), filter = document.getElementById('vrFilterStatus'), refresh = document.getElementById('vrRefreshBtn');
+    if (search && !search._wired) { search.addEventListener('input', renderVrTable); search._wired = true; }
+    if (filter && !filter._wired) { filter.addEventListener('change', renderVrTable); filter._wired = true; }
+    if (refresh && !refresh._wired) { refresh.addEventListener('click', renderVideoReviewsPanel); refresh._wired = true; }
+  } catch(e) {
+    if (loading) loading.innerHTML = '<p style="color:#dc2626;font-size:13px">Error: ' + e.message + '</p>';
+    return;
+  } finally {
+    if (loading) loading.style.display = 'none';
+  }
+}
+
+function refreshVideoReviewsIfVisible() {
+  var panel = document.getElementById('panel-video-reviews-stub');
+  if (panel && panel.style.display !== 'none') renderVideoReviewsPanel();
+}
+
+function renderVrTable() {
+  var q = ((document.getElementById('vrSearchInput')||{}).value || '').toLowerCase().trim();
+  var statusFilter = (document.getElementById('vrFilterStatus')||{}).value || 'all';
+  var rows = _vrSessions.filter(function(s){
+    if (statusFilter !== 'all' && s.review_status !== statusFilter) return false;
+    if (!q) return true;
+    var name = (s._student.full_name || '').toLowerCase();
+    var appId = (s._student.student_id || '').toLowerCase();
+    return name.indexOf(q) !== -1 || appId.indexOf(q) !== -1;
+  });
+
+  var empty = document.getElementById('vrEmpty'), wrap = document.getElementById('vrTableWrap'), body = document.getElementById('vrTableBody'), count = document.getElementById('vrCount');
+  if (count) count.textContent = rows.length + ' interview' + (rows.length !== 1 ? 's' : '');
+  if (!rows.length) { if (empty) empty.style.display = 'block'; if (wrap) wrap.style.display = 'none'; return; }
+  if (empty) empty.style.display = 'none';
+  if (wrap) wrap.style.display = 'block';
+
+  body.innerHTML = rows.map(function(s){
+    var meta = reviewStatusMeta(s.review_status);
+    var name = s._student.full_name || 'Unknown';
+    var appId = s._student.student_id || '—';
+    var dateStr = s.completed_at ? new Date(s.completed_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—';
+    var actionLabel = s.review_status === 'awaiting_review' ? 'Review' : s.review_status === 'under_review' ? 'Continue' : 'View';
+    return [
+      '<tr>',
+        '<td style="font-weight:700;color:#111827">' + escHtml(name) + '</td>',
+        '<td>' + escHtml(appId) + '</td>',
+        '<td>' + dateStr + '</td>',
+        '<td><span style="font-size:11px;font-weight:800;padding:4px 11px;border-radius:99px;background:' + meta.bg + ';color:' + meta.col + '">' + meta.label + '</span></td>',
+        '<td><button type="button" class="btn-toolbar btn-navy" style="padding:6px 12px;font-size:12px" onclick="openVideoReview(\'' + s.user_id + '\',\'' + name.replace(/'/g,"\\'") + '\',\'' + s.id + '\')">' + actionLabel + '</button></td>',
+      '</tr>'
+    ].join('');
+  }).join('');
+}
+
+async function openVideoReview(userId, name, sessionId) {
+  var session = _vrSessions.find(function(s){ return s.id === sessionId; });
+  if (session && session.review_status === 'awaiting_review') {
+    session.review_status = 'under_review'; // optimistic, so the drawer opens already showing it
+    window._adminDB.from('video_interview_sessions').update({ review_status:'under_review', updated_at:new Date().toISOString() })
+      .eq('id', sessionId).eq('review_status','awaiting_review')
+      .then(function(){ refreshVideoReviewsIfVisible(); });
+  }
+  openWorkDrawer(userId, name, 'video');
 }
 
 function videoStatusLabel(session) {
