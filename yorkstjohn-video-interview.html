@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<base href="/UK-INTERVIEW-HUB/">
+<title>Recorded Interview · York St John</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0d1b3e; --navy-mid:#16295a;
+  --surface:#f4f6fa; --white:#ffffff; --border:#dfe3ea; --muted:#6b7280; --t4:#9aa3b2;
+  --green:#16a34a; --green-bg:#e7f6ec;
+  --blue:#2563eb; --blue-bg:#e8effd;
+  --red:#e8192c; --red-bg:#fbe9ea;
+  --amber:#b45309; --amber-bg:#fbf1e0;
+  --font-display:'Manrope',sans-serif; --font-body:'Inter',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:var(--font-body);font-size:16px;background:var(--surface);color:var(--navy);-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+a{text-decoration:none;color:inherit}
+.mi{font-family:"Material Symbols Outlined";font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;vertical-align:middle;line-height:1;user-select:none}
+.fill{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:calc(56px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top);background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding-left:16px;padding-right:16px;gap:10px}
+.tb-brand{display:flex;align-items:center;gap:8px;min-width:0}
+.tb-logo{width:28px;height:28px;border-radius:7px;background:var(--navy);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tb-logo .mi{color:#fff;font-size:15px}
+.tb-name{font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--navy);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-name small{display:block;font-weight:500;font-size:9.5px;color:var(--muted);letter-spacing:.03em;text-transform:uppercase}
+.back-link{display:inline-flex;align-items:center;gap:3px;color:var(--muted);font-size:13px;font-weight:600;flex-shrink:0}
+.back-link:hover{color:var(--navy)}
+.topbar-right{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--t4);text-transform:uppercase;letter-spacing:.05em;flex-shrink:0}
+
+.page{max-width:600px;margin:0 auto;padding:calc(56px + env(safe-area-inset-top) + 20px) 16px 40px}
+
+.vi-screen{display:none;flex-direction:column;animation:fadeIn .2s ease both}
+.vi-screen.on{display:flex}
+
+/* ── Camera preview (global) ── */
+#viCamWrap{display:none;max-width:600px;margin:calc(56px + env(safe-area-inset-top) + 16px) auto 0;padding:0 16px}
+.cam-box{position:relative;border-radius:12px;overflow:hidden;background:#111827;aspect-ratio:16/10}
+#viCam{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.rec-dot{position:absolute;top:12px;left:12px;display:none;align-items:center;gap:6px;background:rgba(15,17,23,.85);padding:5px 11px 5px 8px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.04em;color:#fff}
+.rec-dot .dot{width:7px;height:7px;border-radius:50%;background:var(--red)}
+.rec-dot.on{display:flex}
+.rec-dot.on .dot{animation:pulse 1s infinite}
+
+/* ── Cards / shared bits ── */
+.vi-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:20px}
+.eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+#viMsg{display:none;margin-top:12px;background:var(--red-bg);border:1px solid #f2c6c9;color:#8a1420;border-radius:8px;padding:11px 13px;font-size:13px;line-height:1.5}
+.status-chip{display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:7px 13px;font-size:13px;font-weight:600;margin:14px 0}
+.status-chip .dot{width:8px;height:8px;border-radius:50%;background:var(--t4);flex-shrink:0}
+.status-chip[data-state="ready"]{background:var(--green-bg);border-color:#c3e6cd;color:#155d2e}
+.status-chip[data-state="ready"] .dot{background:var(--green)}
+.status-chip[data-state="error"]{background:var(--red-bg);border-color:#f2c6c9;color:#8a1420}
+.status-chip[data-state="error"] .dot{background:var(--red)}
+.status-chip[data-state="checking"] .dot{background:var(--amber);animation:pulse 1s infinite}
+.hint-text{font-size:13px;color:var(--muted);margin-bottom:2px}
+
+.btn-primary{width:100%;background:var(--navy);color:#fff;border:none;border-radius:8px;padding:14px;font-size:14.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover:not(:disabled){background:var(--navy-mid)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-secondary{width:100%;background:var(--white);color:var(--navy);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:13.5px;font-weight:600;margin-top:8px}
+.btn-secondary:hover{background:var(--surface)}
+
+/* ── Intro ── */
+.hero-card{background:var(--navy);border-radius:12px;padding:28px 24px;color:#fff}
+.hero-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.6);margin-bottom:10px}
+.hero-title{font-family:var(--font-display);font-size:clamp(22px,5vw,28px);font-weight:800;line-height:1.2;margin-bottom:10px}
+.hero-sub{font-size:13.5px;color:rgba(255,255,255,.72);line-height:1.6;max-width:440px}
+.resume-banner{display:none;align-items:center;gap:9px;background:var(--amber-bg);border:1px solid #f0dcb0;border-radius:8px;padding:11px 14px;margin-top:16px;font-size:13px;font-weight:600;color:var(--amber)}
+.steps-list{display:flex;flex-direction:column;gap:8px;margin:18px 0}
+.step-row{display:flex;align-items:flex-start;gap:11px;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.step-num{width:22px;height:22px;border-radius:6px;background:var(--surface);color:var(--navy);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-row .txt{font-size:13px;color:var(--muted);line-height:1.5}
+.step-row .txt b{color:var(--navy);font-weight:600}
+
+/* ── Device screens ── */
+.waveform{display:flex;align-items:flex-end;gap:3px;height:56px;margin:16px 0;padding:0 2px}
+.wf-bar{flex:1;min-width:2px;height:6%;border-radius:2px;background:var(--blue);transition:height .08s ease-out}
+
+/* ── Countdown ── */
+#vi-countdown{align-items:center;justify-content:center;min-height:50vh;text-align:center}
+.cd-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+.cd-sub{font-size:13px;color:var(--muted);margin-bottom:22px}
+.cd-ring{width:120px;height:120px;border-radius:50%;border:3px solid var(--border);display:flex;align-items:center;justify-content:center}
+#viCountdownNum{font-family:var(--font-display);font-size:44px;font-weight:800;color:var(--navy)}
+
+/* ── Interview ── */
+.q-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:22px;margin-top:14px}
+.q-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+#viQIndex{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+#viQCat{font-size:11px;font-weight:600;color:var(--blue);background:var(--blue-bg);padding:3px 9px;border-radius:6px;white-space:nowrap}
+#viQText{font-family:var(--font-display);font-size:18px;font-weight:700;line-height:1.4;margin-bottom:20px;color:var(--navy)}
+.phase-pill{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:var(--blue-bg);color:var(--blue);padding:4px 11px;border-radius:6px;margin-bottom:14px}
+.timer-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+.ring-box{position:relative;width:96px;height:96px}
+.ring-box svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring-box circle{fill:none;stroke-width:6}
+.ring-track{stroke:var(--surface)}
+#viTimerRing{stroke:var(--blue);stroke-linecap:round;transition:stroke-dashoffset .95s linear}
+.ring-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--navy)}
+.timer-caption{font-size:12px;color:var(--muted);text-align:center;margin-top:8px;max-width:280px}
+.btn-done{margin-top:14px;background:var(--white);color:var(--navy);border:1px solid var(--navy);border-radius:7px;padding:8px 20px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px}
+.btn-done:hover{background:var(--navy);color:#fff}
+
+/* ── Progress list ── */
+.progress-card{margin-top:14px}
+.progress-card h3{font-family:var(--font-display);font-size:14px;font-weight:700;margin-bottom:12px;color:var(--navy)}
+.prog-row{display:flex;align-items:center;gap:10px;padding:9px 4px;border-left:3px solid transparent;border-bottom:1px solid var(--border)}
+.prog-row:last-child{border-bottom:none}
+.prog-num{width:22px;height:22px;border-radius:6px;background:var(--surface);color:var(--muted);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.prog-label{flex:1;font-size:12.5px;color:var(--muted);line-height:1.4;min-width:0}
+.prog-status{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.prog-badge{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:5px;background:var(--surface);color:var(--muted)}
+.prog-time{font-size:11px;color:var(--t4);font-weight:600}
+.prog-row[data-status="completed"] .prog-num{background:var(--green);color:#fff}
+.prog-row[data-status="completed"] .prog-badge{background:var(--green-bg);color:#155d2e}
+.prog-row[data-status="completed"] .prog-label{color:var(--navy)}
+.prog-row[data-status="in_progress"]{border-left-color:var(--blue)}
+.prog-row[data-status="in_progress"] .prog-num{background:var(--blue);color:#fff}
+.prog-row[data-status="in_progress"] .prog-badge{background:var(--blue);color:#fff}
+.prog-row[data-status="in_progress"] .prog-label{color:var(--navy);font-weight:600}
+
+/* ── Reconnect / Finishing / Complete / Failed ── */
+#vi-answered,#vi-reconnect,#vi-upload-trouble,#vi-finishing,#vi-failed,#vi-gate{align-items:center;text-align:center;min-height:46vh;justify-content:center;padding-top:16px}
+#vi-complete{align-items:center;padding-top:16px}
+.state-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.state-icon .mi{font-size:28px}
+.state-icon.success{background:var(--green-bg)}
+.spinner{width:30px;height:30px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--blue);animation:spin .8s linear infinite;margin-bottom:14px}
+.state-title{font-family:var(--font-display);font-size:19px;font-weight:700;margin-bottom:8px;color:var(--navy);text-align:center}
+.state-sub{font-size:13px;color:var(--muted);line-height:1.6;max-width:380px;text-align:center;margin:0 auto}
+
+.summary-card{width:100%;margin-top:20px}
+.summary-card h3{font-family:var(--font-display);font-size:13px;font-weight:700;margin-bottom:12px;color:var(--navy)}
+.summary-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
+.summary-row:last-child{border-bottom:none}
+.summary-row .lbl{color:var(--muted)}
+.summary-row .val{color:var(--navy);font-weight:600;text-align:right}
+.summary-row .val.status-submitted{background:var(--green-bg);color:#155d2e;padding:2px 10px;border-radius:5px;font-size:11px}
+
+#viFailedList{width:100%;display:flex;flex-direction:column;gap:8px;margin-top:14px;text-align:left}
+.vi-failed-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--white);border:1px solid #f2c6c9;border-radius:8px;padding:11px 13px;font-size:13px;color:var(--navy)}
+.vi-btn-retry{background:var(--red);color:#fff;border:none;border-radius:6px;padding:7px 13px;font-size:12px;font-weight:700;flex-shrink:0}
+
+@media (max-width:420px){
+  .tb-name{font-size:12px}
+  .topbar-right{display:none}
+  .hero-card{padding:22px 18px}
+  .vi-card,.q-card{padding:16px}
+  .ring-box{width:84px;height:84px}
+  .ring-num{font-size:17px}
+  .state-title{font-size:17px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a href="yorkstjohn-hub.html" class="back-link"><span class="mi">arrow_back_ios_new</span>Hub</a>
+  <div class="tb-brand">
+    <div class="tb-logo"><span class="mi fill" style="font-size:14px">school</span></div>
+    <div class="tb-name">York St John<br><small>University</small></div>
+  </div>
+  <div class="topbar-right">Interview Portal</div>
+</header>
+
+<!-- Persistent camera preview — shown during both device-check screens, the interview, and reconnect -->
+<div id="viCamWrap">
+  <div class="cam-box">
+    <video id="viCam" autoplay playsinline muted></video>
+    <div id="viRecDot" class="rec-dot"><span class="dot"></span>REC</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- GATE -->
+  <section id="vi-gate" class="vi-screen">
+    <div class="state-icon" style="background:var(--red-bg)"><span class="mi" style="color:var(--red)">lock</span></div>
+    <div class="state-title">Sign in required</div>
+    <div class="state-sub">Please sign in to start your recorded interview.</div>
+    <a href="index.html" class="btn-primary" style="margin-top:18px;text-decoration:none;display:inline-flex;max-width:200px">Sign In</a>
+  </section>
+
+  <!-- INTRO -->
+  <section id="vi-intro" class="vi-screen">
+    <div class="hero-card">
+      <div class="hero-eyebrow">Structured video interview</div>
+      <h1 class="hero-title">Your Recorded Interview</h1>
+      <p class="hero-sub">Complete your recorded video interview for York St John University — <span id="viQTotal">12</span> questions, one at a time, with a short reading period and a fixed time to answer each one.</p>
+    </div>
+
+    <div id="viResumeBanner" class="resume-banner"><span class="mi fill">history</span><span id="viResumeText"></span></div>
+
+    <div class="steps-list">
+      <div class="step-row"><div class="step-num">1</div><div class="txt"><b>Camera &amp; mic check</b> — confirm your camera and microphone are working before you start.</div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="txt"><b>Read the question</b> — a short countdown gives you time to read before you answer.</div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="txt"><b>Answer on camera</b> — recording starts automatically. Stop early with Done, or let the timer run out.</div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="txt"><b>You control the pace</b> — click Continue when you're ready for the next question.</div></div>
+    </div>
+
+    <button id="viStartBtn" class="btn-primary"><span class="mi fill">play_circle</span>Start Interview</button>
+  </section>
+
+  <!-- DEVICE CHECK — CAMERA -->
+  <section id="vi-device-camera" class="vi-screen">
+    <div class="vi-card">
+      <div class="eyebrow">Step 1 of 2</div>
+      <h2 style="font-family:var(--font-display);font-size:18px;font-weight:700;margin-top:6px">Camera Test</h2>
+      <p class="hint-text" style="margin-top:4px">Let's make sure your camera is working properly.</p>
+      <div class="status-chip" id="viCamStatus" data-state="checking"><span class="dot"></span>Checking…</div>
+      <div id="viMsg"></div>
+      <button id="viCamNextBtn" class="btn-primary" disabled><span class="mi fill">arrow_forward</span>Next</button>
+      <button id="viCamRetryBtn" class="btn-secondary"><span class="mi" style="margin-right:6px;font-size:16px">refresh</span>Retry Camera</button>
+    </div>
+  </section>
+
+  <!-- DEVICE CHECK — AUDIO -->
+  <section id="vi-device-audio" class="vi-screen">
+    <div class="vi-card">
+      <div class="eyebrow">Step 2 of 2</div>
+      <h2 style="font-family:var(--font-display);font-size:18px;font-weight:700;margin-top:6px">Audio Test</h2>
+      <p class="hint-text" style="margin-top:4px">Let's check your microphone. Speak normally — you should see the bars move.</p>
+      <div class="waveform" id="viWaveform"></div>
+      <div class="status-chip" id="viMicStatus" data-state="checking"><span class="dot"></span>Checking…</div>
+      <button id="viMicNextBtn" class="btn-primary" disabled><span class="mi fill">arrow_forward</span>Start Interview</button>
+      <button id="viMicRetryBtn" class="btn-secondary"><span class="mi" style="margin-right:6px;font-size:16px">refresh</span>Retry Microphone</button>
+    </div>
+  </section>
+
+  <!-- COUNTDOWN -->
+  <section id="vi-countdown" class="vi-screen">
+    <div class="cd-label">Get Ready</div>
+    <div class="cd-sub">The interview will start in:</div>
+    <div class="cd-ring"><span id="viCountdownNum">3</span></div>
+  </section>
+
+  <!-- INTERVIEW -->
+  <section id="vi-interview" class="vi-screen">
+    <div class="q-card">
+      <div class="q-meta"><span id="viQIndex">Question 1 of 12</span><span id="viQCat"></span></div>
+      <div id="viQText">—</div>
+      <div style="text-align:center">
+        <span class="phase-pill" id="viPhaseLabel">Reading Time</span>
+        <div class="timer-wrap">
+          <div class="ring-box">
+            <svg viewBox="0 0 100 100">
+              <circle class="ring-track" cx="50" cy="50" r="45"></circle>
+              <circle id="viTimerRing" cx="50" cy="50" r="45"></circle>
+            </svg>
+            <div class="ring-num" id="viTimerNum">20</div>
+          </div>
+          <div class="timer-caption" id="viTimerCaption">Take a moment to read and understand the question.</div>
+          <button id="viDoneBtn" class="btn-done" style="display:none"><span class="mi fill" style="font-size:17px">check</span>Done</button>
+        </div>
+      </div>
+    </div>
+    <div class="vi-card progress-card">
+      <h3>Your Interview Progress</h3>
+      <div id="viProgressList"></div>
+    </div>
+  </section>
+
+  <!-- ANSWERED — manual gate; the next question never appears automatically -->
+  <section id="vi-answered" class="vi-screen">
+    <div class="state-icon success"><span class="mi fill" style="color:var(--green)">check_circle</span></div>
+    <div class="state-title">Answer Recorded</div>
+    <div class="state-sub">Take a moment if you need it. Click continue when you're ready for the next question.</div>
+    <button id="viAnsweredBtn" class="btn-primary" style="margin-top:18px;max-width:280px"><span class="mi fill">arrow_forward</span><span id="viAnsweredBtnText">Continue to Next Question</span></button>
+  </section>
+
+  <!-- RECONNECT -->
+  <section id="vi-reconnect" class="vi-screen">
+    <div class="state-icon" style="background:var(--amber-bg)"><span class="mi" style="color:var(--amber)">videocam_off</span></div>
+    <div class="state-title">Camera or microphone disconnected</div>
+    <div class="state-sub">Reconnect your camera/microphone, then resume — you'll continue from the same question, nothing already recorded is lost.</div>
+    <button id="viReconnectBtn" class="btn-primary" style="margin-top:18px;max-width:260px"><span class="mi fill">refresh</span>Resume</button>
+  </section>
+
+  <!-- UPLOAD TROUBLE (systemic failure circuit breaker) -->
+  <section id="vi-upload-trouble" class="vi-screen">
+    <div class="state-icon" style="background:var(--red-bg)"><span class="mi" style="color:var(--red)">cloud_off</span></div>
+    <div class="state-title">We're having trouble saving your answers</div>
+    <div class="state-sub">Several answers in a row failed to save — this usually means your internet connection dropped or your session timed out. Check your connection, then resume from where you left off.</div>
+    <button id="viUploadTroubleBtn" class="btn-primary" style="margin-top:18px;max-width:260px"><span class="mi fill">refresh</span>Resume</button>
+  </section>
+
+  <!-- FINISHING -->
+  <section id="vi-finishing" class="vi-screen">
+    <div class="spinner"></div>
+    <div class="state-title">Submitting your interview</div>
+    <div class="state-sub" id="viFinishStatus">Saving your answers…</div>
+  </section>
+
+  <!-- COMPLETE -->
+  <section id="vi-complete" class="vi-screen">
+    <div class="state-icon success"><span class="mi fill" style="color:var(--green)">check_circle</span></div>
+    <div class="state-title">Interview Complete</div>
+    <div class="state-sub" id="viCompleteText">Your recorded interview has been submitted successfully. Thank you for your time.</div>
+
+    <div class="vi-card summary-card">
+      <h3>Interview Summary</h3>
+      <div class="summary-row"><span class="lbl">Student Name</span><span class="val" id="viSummaryName">—</span></div>
+      <div class="summary-row"><span class="lbl">Application ID</span><span class="val" id="viSummaryAppId">—</span></div>
+      <div class="summary-row"><span class="lbl">Programme</span><span class="val" id="viSummaryProgramme">—</span></div>
+      <div class="summary-row"><span class="lbl">Date</span><span class="val" id="viSummaryDate">—</span></div>
+      <div class="summary-row"><span class="lbl">Status</span><span class="val status-submitted" id="viSummaryStatus">Submitted</span></div>
+    </div>
+
+    <a href="dashboard.html" class="btn-primary" style="margin-top:18px;max-width:260px;text-decoration:none;display:inline-flex">Back to Dashboard</a>
+  </section>
+
+  <!-- FAILED -->
+  <section id="vi-failed" class="vi-screen">
+    <div class="state-icon" style="background:var(--red-bg)"><span class="mi" style="color:var(--red)">error</span></div>
+    <div class="state-title">Some answers didn't upload</div>
+    <div class="state-sub">Your internet connection may have dropped. Retry each one below — you'll need to re-record it.</div>
+    <div id="viFailedList"></div>
+  </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="app.js?v=9"></script>
+<script src="yorkstjohn-data.js"></script>
+<script src="video-interview-config.js"></script>
+<script src="video-interview-engine.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  window.initVideoInterview('yorkstjohn');
+  if (window.startPresence) window.startPresence('Recorded Video Interview');
+});
+</script>
+</body>
+</html>

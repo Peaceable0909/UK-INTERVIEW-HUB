@@ -365,19 +365,21 @@ async function selectStudent(userId){
 
   try{
     // Load all data for this student in parallel
-    var [progRes, mocksRes, checksRes] = await Promise.all([
-      supabaseClient.from('student_progress').select('ai_scores, updated_at').eq('user_id', userId).single(),
+    var [progRes, mocksRes, checksRes, videoRes] = await Promise.all([
+      supabaseClient.from('student_progress').select('ai_scores, updated_at, student_id, selected_course, interview_date').eq('user_id', userId).single(),
       supabaseClient.from('mock_interview_sessions').select('*').eq('user_id', userId).order('completed_at', {ascending:false}),
-      supabaseClient.from('student_checklists').select('*').eq('user_id', userId)
+      supabaseClient.from('student_checklists').select('*').eq('user_id', userId),
+      supabaseClient.from('video_interview_sessions').select('*, video_interview_answers(*)').eq('user_id', userId).order('started_at', {ascending:false})
     ]);
 
-    renderDetail(student, progRes.data, mocksRes.data||[], checksRes.data||[]);
+    renderDetail(student, progRes.data, mocksRes.data||[], checksRes.data||[], videoRes.data||[]);
   }catch(e){
     document.getElementById('main-panel').innerHTML = '<div class="loading" style="color:#f87171">Error loading data: '+e.message+'</div>';
   }
 }
 
-function renderDetail(student, progress, mocks, checklists){
+function renderDetail(student, progress, mocks, checklists, videoSessions){
+  videoSessions = videoSessions || [];
   var name = student ? (student.full_name || student.email || 'Unknown') : 'Unknown';
   var aiScores = (progress && progress.ai_scores) || {};
   var aiKeys = Object.keys(aiScores);
@@ -386,6 +388,7 @@ function renderDetail(student, progress, mocks, checklists){
   var tags = '';
   if(aiKeys.length) tags += '<span class="dh-tag practice"><span class="mi fill" style="font-size:14px">quiz</span>'+aiKeys.length+' Practice Q&As</span>';
   if(mocks.length)  tags += '<span class="dh-tag mock"><span class="mi fill" style="font-size:14px">mic</span>'+mocks.length+' Mock Interview'+(mocks.length>1?'s':'')+'</span>';
+  if(videoSessions.length) tags += '<span class="dh-tag mock"><span class="mi fill" style="font-size:14px">videocam</span>'+videoSessions.length+' Video Interview'+(videoSessions.length>1?'s':'')+'</span>';
   if(checklists.length){
     var cd=0,ct=0;
     checklists.forEach(function(c){ if(c.items){ Object.values(c.items).forEach(function(v){ct++;if(v)cd++;}); } });
@@ -406,6 +409,7 @@ function renderDetail(student, progress, mocks, checklists){
     +'<button class="tab-btn active" onclick="switchTab(\'practice\',this)"><span class="mi fill">quiz</span>AI Practice</button>'
     +'<button class="tab-btn" onclick="switchTab(\'mock\',this)"><span class="mi fill">mic</span>AI Coach</button>'
     +'<button class="tab-btn" onclick="switchTab(\'checklist\',this)"><span class="mi fill">checklist</span>Checklist</button>'
+    +'<button class="tab-btn" onclick="switchTab(\'video\',this)"><span class="mi fill">videocam</span>Video Interview</button>'
     +'</div>'
 
     // Practice panel
@@ -421,6 +425,11 @@ function renderDetail(student, progress, mocks, checklists){
     // Checklist panel
     +'<div class="tab-panel" id="tab-checklist">'
     + renderChecklists(checklists)
+    +'</div>'
+
+    // Video interview panel
+    +'<div class="tab-panel" id="tab-video">'
+    + renderVideoInterviews(videoSessions, progress)
     +'</div>';
 
   document.getElementById('main-panel').innerHTML = html;
@@ -518,6 +527,126 @@ function renderMocks(mocks){
       +'</div></div>'
       +'</div>';
   }).join('');
+}
+
+function renderVideoInterviews(videoSessions, progress){
+  var info = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:16px">'
+    +'<div><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Application ID</div><div style="font-size:13px;font-weight:700;margin-top:2px">'+escHtml((progress&&progress.student_id)||'—')+'</div></div>'
+    +'<div><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Programme</div><div style="font-size:13px;font-weight:700;margin-top:2px">'+escHtml((progress&&progress.selected_course)||'—')+'</div></div>'
+    +'<div><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Interview Date</div><div style="font-size:13px;font-weight:700;margin-top:2px">'+(progress&&progress.interview_date?fmtDate(progress.interview_date):'—')+'</div></div>'
+    +'<div><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Status</div><div style="font-size:13px;font-weight:700;margin-top:2px">'+(videoSessions.length?videoStatusLabel(videoSessions[0]):'Not started')+'</div></div>'
+    +'</div>';
+
+  if(!videoSessions.length) return info + '<div class="empty-section"><span class="mi">videocam</span>No recorded interview yet</div>';
+
+  var header = videoSessions.length > 1
+    ? '<div class="sec-title">'+videoSessions.length+' attempts — most recent first</div>'
+    : '';
+
+  return info + header + videoSessions.map(function(session, si){
+    var answers = (session.video_interview_answers||[]).slice().sort(function(a,b){ return a.question_index - b.question_index; });
+    var uploaded = answers.filter(function(a){ return a.upload_status==='uploaded'; }).length;
+    var chipClass = session.status==='completed'?'ready':session.status==='abandoned'?'poor':'needs';
+
+    var qRows = answers.map(function(a){
+      var dur = a.duration_seconds!=null ? Math.floor(a.duration_seconds/60)+':'+String(Math.round(a.duration_seconds%60)).padStart(2,'0') : '—';
+      var canPlay = a.storage_path && a.upload_status==='uploaded';
+      return '<div class="mq-row dv-item">'
+        +'<div class="mq-badge '+(a.upload_status==='uploaded'?'pass':'fail')+'"><span class="mi" style="font-size:13px">'+(a.upload_status==='uploaded'?'check':'close')+'</span></div>'
+        +'<div class="mq-info">'
+        +'<div class="mq-q">Q'+(a.question_index+1)+(a.question_category?' · '+escHtml(a.question_category):'')+': '+escHtml(a.question_text)+'</div>'
+        +'<div class="mq-transcript">'+dur+' · '+videoUploadLabel(a.upload_status)+'</div>'
+        +'<div class="dv-player"></div>'
+        +'</div>'
+        +(canPlay
+          ? '<div style="display:flex;gap:8px;flex-shrink:0">'
+            +'<button type="button" class="mi" title="Play" style="font-size:22px;color:#4ade80;background:none;border:none;cursor:pointer" onclick="playStudentVideo(this,\''+a.storage_path.replace(/'/g,"\\'")+'\')">play_circle</button>'
+            +'<button type="button" class="mi" title="Delete — student can re-record this question" style="font-size:22px;color:#f87171;background:none;border:none;cursor:pointer" onclick="deleteStudentVideo(this,\''+session.id+'\','+a.question_index+',\''+a.storage_path.replace(/'/g,"\\'")+'\')">delete</button>'
+            +'</div>'
+          : '')
+        +'</div>';
+    }).join('');
+
+    return '<div class="mock-session" id="vs-'+si+'">'
+      +'<div class="mock-session-hdr" onclick="toggleVideoSession('+si+')">'
+      +'<div class="mock-ring"><div style="width:44px;height:44px;border-radius:50%;background:rgba(196,18,48,.15);display:flex;align-items:center;justify-content:center"><span class="mi fill" style="color:#f87171;font-size:20px">videocam</span></div></div>'
+      +'<div class="mock-session-info">'
+      +'<div class="mock-session-date">Attempt '+(videoSessions.length-si)+' of '+videoSessions.length+' &nbsp;·&nbsp; '+(session.started_at?fmtDate(session.started_at):'Unknown date')+'</div>'
+      +'<div class="mock-session-sub">'+uploaded+'/'+session.question_count+' uploaded</div>'
+      +'</div>'
+      +'<span class="mock-chip '+chipClass+'">'+videoStatusLabel(session)+'</span>'
+      +'<span class="mi mock-chev">expand_more</span>'
+      +'</div>'
+      +'<div class="mock-body"><div class="mock-content">'
+      +(qRows||'<div class="empty-section">No question details</div>')
+      +'</div></div>'
+      +'</div>';
+  }).join('');
+}
+
+function videoStatusLabel(session){
+  if(session.status==='completed') return 'Completed';
+  if(session.status==='abandoned') return 'Abandoned';
+  return 'In Progress';
+}
+
+function videoUploadLabel(status){
+  if(status==='uploaded') return 'Uploaded';
+  if(status==='uploading') return 'Uploading…';
+  if(status==='failed') return 'Failed';
+  return 'Pending';
+}
+
+async function playStudentVideo(btn, storagePath){
+  var item = btn.closest('.dv-item');
+  var wrap = item ? item.querySelector('.dv-player') : null;
+  var orig = btn.textContent;
+  btn.textContent = 'progress_activity';
+  btn.disabled = true;
+  try{
+    var res = await supabaseClient.storage.from('interview-videos').createSignedUrl(storagePath, 300);
+    if(res.error) throw res.error;
+    var vid = document.createElement('video');
+    vid.controls = true;
+    vid.style.cssText = 'width:100%;border-radius:8px;margin-top:6px;background:#000';
+    vid.src = res.data.signedUrl;
+    if(wrap){ wrap.innerHTML=''; wrap.appendChild(vid); vid.play().catch(function(){}); }
+    btn.style.display = 'none';
+  }catch(e){
+    alert('Could not load video: ' + e.message);
+    btn.textContent = orig;
+    btn.disabled = false;
+  }
+}
+
+async function deleteStudentVideo(btn, sessionId, questionIndex, storagePath){
+  if(!confirm('Delete this recording? The student will be able to re-record just this question — everything else they already answered stays untouched.')) return;
+  btn.disabled = true;
+  var orig = btn.textContent;
+  btn.textContent = 'progress_activity';
+  try{
+    var delRes = await supabaseClient.storage.from('interview-videos').remove([storagePath]);
+    if(delRes.error) throw delRes.error;
+    var updRes = await supabaseClient.from('video_interview_answers').update({
+      storage_path: null, mime_type: null, file_size_bytes: null, duration_seconds: null,
+      recorded_at: null, upload_status: 'pending', error_message: null, updated_at: new Date().toISOString()
+    }).eq('session_id', sessionId).eq('question_index', questionIndex);
+    if(updRes.error) throw updRes.error;
+    var sessRes = await supabaseClient.from('video_interview_sessions').update({
+      status: 'in_progress', completed_at: null, updated_at: new Date().toISOString()
+    }).eq('id', sessionId).eq('status', 'completed');
+    if(sessRes.error) throw sessRes.error;
+    if(selectedId) selectStudent(selectedId);
+  }catch(e){
+    alert('Delete failed: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = orig;
+  }
+}
+
+function toggleVideoSession(idx){
+  var el = document.getElementById('vs-'+idx);
+  if(el) el.classList.toggle('open');
 }
 
 function renderChecklists(checklists){
