@@ -2859,7 +2859,7 @@
       }
 
       // ===== PREP SELECTION =====
-      function selectPrep(prepId) {
+      async function selectPrep(prepId) {
         currentPrep = prepId;
         localStorage.setItem('last_school', 'ukvi');
         if (window.sessionReady) await window.sessionReady;
