@@ -628,21 +628,25 @@
       /* ===== TEXTAREA ===== */
       textarea.sim-input {
         background: var(--bg-input);
-        border: none;
-        border-bottom: 2px solid var(--border-default);
-        border-radius: 0;
+        border: 1px solid var(--border-default);
+        border-radius: 12px;
         color: var(--text-primary);
         font-family: "Inter", sans-serif;
         font-size: 14px;
+        line-height: 1.65;
         outline: none;
-        transition: border-color 0.2s;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s,
+          background-color 0.2s;
         resize: vertical;
-        padding: 12px 0;
+        padding: 14px 16px;
         width: 100%;
       }
       textarea.sim-input:focus {
-        border-bottom-color: var(--text-link);
+        border-color: var(--text-link);
         background: var(--bg-surface);
+        box-shadow: 0 0 0 3px rgba(0, 52, 120, 0.12);
       }
       textarea.sim-input::placeholder {
         color: var(--text-muted);
@@ -752,6 +756,71 @@
       }
       .mobile-tab-bar {
         display: none;
+      }
+
+      /* ===== AI PRACTICE LAYOUT ===== */
+      .practice-tab {
+        width: 100%;
+        margin-inline: auto;
+      }
+      .practice-title {
+        line-height: 1.12;
+        letter-spacing: -0.025em;
+      }
+      .practice-question p {
+        overflow-wrap: anywhere;
+      }
+      .practice-answer {
+        min-height: 190px;
+      }
+      .practice-actions {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .practice-status {
+        align-items: flex-start;
+        line-height: 1.55;
+      }
+      .ukvi-topbar-title {
+        max-width: 260px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      @media (max-width: 640px) {
+        .ukvi-header-start {
+          gap: 8px;
+        }
+        .ukvi-change-btn {
+          min-width: 36px;
+          justify-content: center;
+          padding-inline: 8px;
+        }
+        .ukvi-topbar-title {
+          max-width: 30vw;
+        }
+        .practice-title {
+          font-size: clamp(1.65rem, 7vw, 2rem);
+        }
+        .practice-answer {
+          min-height: 160px;
+        }
+        .practice-actions {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+        .practice-actions button {
+          width: 100%;
+          min-height: 44px;
+          justify-content: center;
+        }
+      }
+      @media (max-width: 380px) {
+        .ukvi-topbar-title {
+          max-width: 82px;
+        }
       }
 
       /* ===== ACCESSIBILITY ===== */
@@ -1007,15 +1076,15 @@
 ====================================================== -->
     <div id="s-main" class="screen">
       <header
-        class="top-nav fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 h-14"
+        class="top-nav fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-3 sm:px-5 h-14"
       >
-        <div class="flex items-center gap-3">
+        <div class="ukvi-header-start flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
           <button
             onclick="goBack()"
-            class="btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
+            class="ukvi-change-btn btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider shrink-0"
           >
             <span class="material-symbols-outlined text-sm">arrow_back</span
-            >Change
+            ><span class="hidden sm:inline">Change</span>
           </button>
           <a href="index.html"
             class="btn-ghost flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
@@ -1023,15 +1092,15 @@
             title="Back to Hub"
           ><span class="material-symbols-outlined text-sm">home</span><span class="hidden sm:inline">Hub</span></a>
           <div class="w-px h-5 bg-border"></div>
-          <div>
+          <div class="min-w-0">
             <div
-              class="font-headline font-bold text-sm text-on-surface"
+              class="ukvi-topbar-title font-headline font-bold text-sm text-on-surface"
               id="tb-title"
             >
               UKVI Credibility Interview
             </div>
             <div
-              class="font-label text-xs text-primary font-bold"
+              class="ukvi-topbar-subtitle hidden sm:block font-label text-xs text-primary font-bold"
               id="tb-subtitle"
             >
               Genuine Student Requirement • ST 5.1
@@ -1039,7 +1108,7 @@
           </div>
         </div>
         <div class="ukvi-badge hidden md:flex">UKVI Prep</div>
-        <div class="flex items-center gap-2">
+        <div class="ukvi-header-actions flex items-center gap-2 shrink-0">
           <a href="dashboard.html"
             class="btn-primary flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-label font-bold uppercase tracking-wider"
             style="text-decoration:none"
@@ -2408,27 +2477,28 @@
 
           <!-- AI PRACTICE TAB -->
           <div
-            class="tc px-6 md:px-10 py-8 max-w-4xl"
+            class="tc practice-tab px-4 sm:px-6 md:px-10 py-8 max-w-4xl"
             id="tab-practice"
             style="padding-top: 60px"
           >
-            <span
-              class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
-              >Module 6 — AI Simulation</span
-            >
-            <h2 class="font-headline text-3xl font-black text-on-surface mb-2">
-              Practice with UKVI-Focused AI Feedback
-            </h2>
-            <p class="text-muted text-sm mb-6">
-              Type your answer. Our AI evaluates against ST 5.1 refusal criteria
-              using Puter.js.
-            </p>
+            <div class="mb-6">
+              <span
+                class="font-label text-xs font-bold uppercase tracking-widest text-primary/70 mb-2 block"
+                >Module 6 — AI Simulation</span
+              >
+              <h2 class="practice-title font-headline text-3xl font-black text-on-surface mb-2">
+                Practice with UKVI-Focused AI Feedback
+              </h2>
+              <p class="text-muted text-sm">
+                Build a clear, specific answer and get feedback against the ST 5.1 credibility criteria.
+              </p>
+            </div>
 
             <!-- Question Display -->
-            <div class="panel p-5 mb-6">
+            <div class="panel practice-question p-4 sm:p-5 mb-5">
               <div class="flex items-start gap-3">
                 <span class="q-num" id="ukvi-question-num">Q1</span>
-                <div>
+                <div class="min-w-0">
                   <p class="font-bold text-base mb-1" id="ukvi-question-text">
                     Why have you chosen to study this programme in the UK?
                   </p>
@@ -2440,15 +2510,21 @@
             </div>
 
             <!-- Answer Input -->
-            <textarea
-              class="sim-input mb-4"
-              id="ukvi-answer-input"
-              rows="6"
-              placeholder="Type your answer here... (e.g., 'I chose the UK because...')"
-            ></textarea>
+            <div class="practice-response panel p-4 sm:p-5 mb-5">
+              <label
+                for="ukvi-answer-input"
+                class="font-label text-sm font-bold text-on-surface block mb-2"
+                >Your answer</label
+              >
+              <textarea
+                class="sim-input practice-answer"
+                id="ukvi-answer-input"
+                rows="6"
+                placeholder="Type your answer here... (e.g., 'I chose the UK because...')"
+              ></textarea>
 
-            <!-- Action Buttons -->
-            <div class="flex flex-wrap gap-3 mb-6">
+              <!-- Action Buttons -->
+              <div class="practice-actions mt-4">
               <button
                 class="btn-primary px-5 py-2.5 rounded-xl font-label font-bold uppercase tracking-wider text-xs flex items-center gap-2"
                 id="aiFeedbackBtn"
@@ -2471,6 +2547,7 @@
               >
                 Reset
               </button>
+              </div>
             </div>
 
             <!-- Feedback Area -->
@@ -2553,7 +2630,7 @@
 
             <!-- AI Status -->
             <div
-              class="panel-tinted p-4 rounded-xl mt-4 text-xs text-muted flex items-center gap-2"
+              class="panel-tinted practice-status p-4 rounded-xl mt-4 text-xs text-muted flex items-center gap-2"
             >
               <span class="material-symbols-outlined text-primary text-base"
                 >info</span
@@ -2894,7 +2971,24 @@
           document.getElementById(linkId).classList.add("active");
           document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
           const mobileId = "mt-" + tabId;
-          if (document.getElementById(mobileId)) document.getElementById(mobileId).classList.add("active");
+          const mobileTab = document.getElementById(mobileId);
+          if (mobileTab) {
+            mobileTab.classList.add("active");
+            requestAnimationFrame(() => {
+              const tabScroller = document.querySelector(".mobile-tab-bar > div");
+              if (!tabScroller) return;
+              const tabRect = mobileTab.getBoundingClientRect();
+              const scrollerRect = tabScroller.getBoundingClientRect();
+              const tabLeft = tabRect.left - scrollerRect.left + tabScroller.scrollLeft;
+              const tabRight = tabLeft + tabRect.width;
+              const visibleLeft = tabScroller.scrollLeft;
+              const visibleRight = visibleLeft + tabScroller.clientWidth;
+              let targetLeft = visibleLeft;
+              if (tabLeft < visibleLeft) targetLeft = tabLeft - 8;
+              else if (tabRight > visibleRight) targetLeft = tabRight - tabScroller.clientWidth + 8;
+              tabScroller.scrollTo({ left: targetLeft, behavior: "smooth" });
+            });
+          }
         } else {
           document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
           document.getElementById(linkId).classList.add("active");
